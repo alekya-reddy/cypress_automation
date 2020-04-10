@@ -1,7 +1,9 @@
+import {base_url, automationUser, automationUserPassword} from './constants.js'
+
 export const login_pathfactory = () => {
-    cy.visit('https://automation.pathfactory-staging.com')
-    cy.get('[id="login"]').type('qa-automation').should('have.value', 'qa-automation')
-    cy.get('[id="password"]').type('Capybara123')
+    cy.visit(base_url)
+    cy.get('[id="login"]').type(automationUser).should('have.value', 'qa-automation')
+    cy.get('[id="password"]').type(automationUserPassword)
     cy.get('input[value="Log in"]').click()
     cy.url().should('include', '/authoring/content-library')
 }
@@ -15,6 +17,7 @@ export const client_hq_toggle_on = (toggle_id) => {
         let color = toggle.css("background-color") 
         if (color == 'rgb(221, 221, 221)'){
             toggle.click()
+            cy.contains('Save').click()
         }
     })
 }
@@ -23,12 +26,13 @@ export const client_hq_toggle_off = (toggle_id) => {
     //Toggle off clientHQ 
     /*cy.get('a[href="/authoring/content-library/settings"]').click() 
     cy.contains('a', "Client HQs").click()*/  //Apparently, this link is covered up by the parent div, but it was fine in the before hook??? 
-    cy.visit("https://automation.pathfactory-staging.com/authoring/content-library/settings/organization-management")
+    cy.visit(`${base_url}/authoring/content-library/settings/organization-management`)
     cy.contains('a', /^automation$/).click()
     cy.get(toggle_id).then((toggle)=>{
         let color = toggle.css("background-color") 
         if (color == 'rgb(0, 169, 203)'){
             toggle.click()
+            cy.contains('Save').click()
         }
     })
 }
@@ -38,7 +42,7 @@ export const configure_webdomain = (config) => {
     cy.get('[data-qa-hook="title-bar"]').invoke('text').then((text)=>{
         if(text !== 'Website Domains'){
             cy.log("Going to webdomain area")
-            cy.visit('https://automation.pathfactory-staging.com/authoring/content-library/settings/organization/website-domains')
+            cy.visit(`${base_url}/authoring/content-library/settings/organization/website-domains`)
         } else {
             cy.log("Already in webdomain area")
         }
