@@ -1,8 +1,8 @@
 import { Common } from "./Common";
 
 export class WebdomainSettings extends Common { 
-    constructor(){
-        super();
+    constructor(env, org, userName, password){
+        super(env, org, userName, password);
         this.orgSettingsBaseUrl = `${this.baseUrl}/authoring/content-library/settings/organization`;
         this.webdomainUrl = `${this.orgSettingsBaseUrl}/website-domains`;
         this.webdomainTitle = 'Website Domains';

@@ -1,5 +1,6 @@
-import { authoring } from '../support/pageObject.js';
+import { createAuthoringInstance } from '../support/pageObject.js';
 
+const authoring = createAuthoringInstance(); 
 const domain = `${Cypress.env('TEST_ENV')}-wp.com`
 const domain_inactive_message = "To activate the promoter, contact your administrator to enable the domain" 
 

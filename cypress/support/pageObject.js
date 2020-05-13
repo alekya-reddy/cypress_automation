@@ -4,10 +4,19 @@ import {ClientHQ} from './ClientHQ.js';
 import {WebdomainSettings} from './WebdomainSettings.js';
 import {WebsiteTools} from './WebsiteTools.js';
 
-export const authoring = {
-    common: new Common(),
-    contentLibrary: new ContentLibrary(),
-    clientHQ: new ClientHQ(),
-    webdomainSettings: new WebdomainSettings(),
-    websiteTools: new WebsiteTools()
+export const createAuthoringInstance = function(config = {}){
+    const env = config.env ? config.env : Cypress.env('TEST_ENV');
+    const org = config.org ? config.org : 'automation';
+    const username = config.username? config.username : "qa-automation";
+    const password = config.password ? config.password : "Capybara123";
+
+    return (
+        {
+            common: new Common(env, org, username, password),
+            contentLibrary: new ContentLibrary(env, org, username, password),
+            clientHQ: new ClientHQ(env, org, username, password),
+            webdomainSettings: new WebdomainSettings(env, org, username, password),
+            websiteTools: new WebsiteTools(env, org, username, password)
+        }
+    );
 }

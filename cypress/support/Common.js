@@ -1,17 +1,11 @@
 
 export class Common {
-    constructor(env = Cypress.env('TEST_ENV'), userName = "qa-automation", password = "Capybara123"){
+    constructor(env, org, userName, password){
         this.userName = userName;
         this.password = password;
+        this.org = org;
         this.env = env;
-        this.baseUrl = (function(testEnv){
-            switch(testEnv) {
-                case 'pathfactory-staging':
-                    return "https://automation.pathfactory-staging.com";
-                case 'pathfactory-qa':
-                    return "https://automation.pathfactory-qa.com";
-            }
-        })(env);
+        this.baseUrl = `https://${org}.${env}.com`;
         this.loginUrl = `${this.baseUrl}/users/sign_in`; 
         this.userNameInputLocator = '[id="login"]';
         this.passwordInputLocator = '[id="password"]';
