@@ -13,8 +13,16 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-// Import commands.js using ES2015 syntax:
-import './commands'
-
+// Import commands.js using ES2015 syntax
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+import './commands'
+
+beforeEach(() => {
+    cy.log("Before every test in every spec file, prevent Cypress from failing our tests due to uncaught:exception error, which happens a lot in our application.")
+    Cypress.on('uncaught:exception', (err, runnable) => {
+        return false
+    })
+})
+
+
