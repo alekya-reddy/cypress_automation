@@ -1,11 +1,12 @@
 
 export class Common {
-    constructor(env, org, userName, password){
+    constructor(env, org, userName, password, customBaseUrl){
         this.userName = userName;
         this.password = password;
         this.org = org;
         this.env = env;
-        this.baseUrl = `https://${org}.${env}.com`;
+        this.customBaseUrl = customBaseUrl;
+        this.baseUrl = customBaseUrl ? customBaseUrl : `https://${org}.${env}.com`;
         this.loginUrl = `${this.baseUrl}/users/sign_in`; 
         this.userNameInputLocator = '[id="login"]';
         this.passwordInputLocator = '[id="password"]';

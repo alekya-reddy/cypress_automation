@@ -1,8 +1,8 @@
 import { Common } from "./Common";
 
 export class WebsiteTools extends Common {
-    constructor(env, org, userName, password){
-        super(env, org, userName, password);
+    constructor(env, org, userName, password, customBaseUrl){
+        super(env, org, userName, password, customBaseUrl);
         this.websiteToolsUrl = `${this.baseUrl}/authoring/content-library/website-tools`;
         this.pageSidebarLocator = "[data-qa-hook='page-sidebar']";
         this.webdomainLinkLocator = `${this.pageSidebarLocator} > a`;

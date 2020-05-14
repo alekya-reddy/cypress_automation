@@ -1,8 +1,8 @@
 import { Common } from "./Common";
 
 export class ClientHQ extends Common { 
-    constructor(env, org, userName, password){
-        super(env, org, userName, password);
+    constructor(env, org, userName, password, customBaseUrl){
+        super(env, org, userName, password, customBaseUrl);
         this.clientHQUrl = `${this.baseUrl}/authoring/content-library/settings/organization-management`;
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
     }
