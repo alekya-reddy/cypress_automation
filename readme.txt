@@ -62,7 +62,7 @@ You can get around this by using an it block as a before hook, and for beforeEac
 
 -Cypress runs each cy.get command asynchronously. That means you can't save the returned element into a variable to be used later.
 You have to work within the callback function. 
--You can do a synchronous version of get by using cy.$('selector')
+-You can do a synchronous version of get by using Cypress.$('selector')
 
 -Cypress will fail your test if it detects an uncaught exception error in the browser console. To turn this off, insert
 
@@ -81,6 +81,41 @@ you can turn it off by adding
  "modifyObstructiveCode": false
 
  to the cypress.json file. 
+
+
+-You can't use promises in Cypress, or async await to get around its annoying asynchronous nature. Even if you find a workaround,
+which I did, if you use any promise whatsoever, it'll completely screw up the order in which cy commands are run... a complete mess 
+-Here's what I tried:
+
+hasText(locator, matchText, waitTime){
+        cy.log('checking if element has text')
+        const executor = (resolve, reject) => {
+            let textFound = false;
+            let time = 0; 
+
+            const checkText = () => {
+                let elemText = Cypress.$(locator).text(); 
+                textFound = elemText.includes(matchText); 
+                time += 500;
+                if (textFound == true){
+                    clearInterval();
+                    resolve("Text found");
+                } else if (time > waitTime) {
+                    clearInterval();
+                    reject("Text not found");
+                }
+            }
+
+            setInterval(checkText, 500);
+        }
+
+        return new Promise(executor);
+   
+    }
+
+-Cypress doesn't tell you which line failed, making it much harder to debug. Sure, it shows you snapshots of the webpage at each step, but I don't find that useful honestly...
+I prefer to know exactly what line a test fails so that I can pause at that line and inspect the dom manually 
+
 
 
  Cypress useful tips
@@ -163,3 +198,26 @@ cy.document().then((doc) => {
 		// Do something 
 	}
 })
+
+
+
+When using cy.contains, always specific the element type if want to locate by element text
+eg) cy.contains('button', 'button label')
+If only do cy.contains('button label'), cypress might locate the lowest ordered element that contains the text, which could end up being a non-clickable span 
+<button><span>button label</span></button>
+
+
+
+-when using waits inside chained gets or contains, there is potential to fail. I suspect the reason is Cypress will immediately get the 
+first set of elements matching the first 'get' before expected change happens, then in the chained contains, 
+it will wait on that change from among the found elements. Since elements were pulled from an earlier state, Cypress will not find 
+what you're expecting. 
+-So if using wait times, make sure to do it all in a single command, not in a chained command 
+eg) cy.get('elem').contains('text', {timeout: 10000}) --> potential to fail do this instead:
+cy.contains('elem', 'text', {timeout: 10000})
+
+
+
+to wait, use cy.wait(timeInMilliseconds)
+
+to pause for debugging, use cy.pause()

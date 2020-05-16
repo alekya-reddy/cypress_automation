@@ -3,6 +3,7 @@ import {ContentLibrary} from './ContentLibrary.js';
 import {ClientHQ} from './ClientHQ.js';
 import {WebdomainSettings} from './WebdomainSettings.js';
 import {WebsiteTools} from './WebsiteTools.js';
+import {Vex} from './Vex.js';
 import {constants} from './constants.js';
 
 export const createAuthoringInstance = function(config = {}){
@@ -18,7 +19,8 @@ export const createAuthoringInstance = function(config = {}){
             contentLibrary: new ContentLibrary(env, org, username, password, customBaseUrl),
             clientHQ: new ClientHQ(env, org, username, password, customBaseUrl),
             webdomainSettings: new WebdomainSettings(env, org, username, password, customBaseUrl),
-            websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl)
+            websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl),
+            vex: new Vex(env, org, username, password, customBaseUrl)
         }
     );
 }

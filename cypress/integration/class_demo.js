@@ -2,7 +2,7 @@ import { createAuthoringInstance } from '../support/pageObject.js';
 
 const authoring = createAuthoringInstance(); // Create authoring page object instance like this. If want to login as different user than the default 'qa-automation', 
 // or use different org than default 'automation', or use different domain than default 'pathfactory-qa', pass in arguments to the function: 
-// const authoring = createAuthoringInstance({env: Cypress.env('TEST_ENV'), org: 'authoring', username: 'qa-automation', password: 'Capybara123', customBaseUrl: false}); 
+// const defaultAuthoring = createAuthoringInstance({env: 'pathfactory-staging', org: 'default', username: 'Bobman', password: 'Password123', customBaseUrl: 'https://default.staging2.lookbookhq.com'}); 
 
 const domain = `${Cypress.env('TEST_ENV')}-wp.com`
 const domain_inactive_message = "To activate the promoter, contact your administrator to enable the domain" 

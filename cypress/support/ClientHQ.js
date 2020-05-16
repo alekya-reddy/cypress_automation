@@ -7,7 +7,7 @@ export class ClientHQ extends Common {
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
     }
 
-    visitClientHQ(){
+    visit(){
         cy.visit(this.clientHQUrl);
     }
 

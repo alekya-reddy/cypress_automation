@@ -11,7 +11,7 @@ export class WebdomainSettings extends Common {
         this.cookieConsentToggleLocator = '[data-qa-hook="requireCookieConsent"]';
     }
 
-    visitWebdomain(){
+    visit(){
         cy.visit(this.webdomainUrl);
     }
 
