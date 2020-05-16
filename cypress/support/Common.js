@@ -53,26 +53,7 @@ export class Common {
         })
     }
 
-    elementHasText(locator, textToMatch, waitTime, conditionObject){
-        conditionObject.matchFound = 'no';
-        for(let i = 0; i <= waitTime; i += 500){
-            cy.log("loop i = " + i)
-            cy.get('body').then(()=>{
-                if(conditionObject.matchFound == 'no'){
-                    cy.get(locator).invoke('text').then((text)=>{
-                        if(text.includes(textToMatch)){
-                            conditionObject.matchFound = true;
-                            cy.log(`Match found: ${conditionObject.matchFound}`)
-                        } else {
-                            cy.wait(500)
-                        }
-                    })
-                }
-            })
-        }
-    }
-
-    doIfElementHasText(locator, textToMatch, waitTime, callback){
+    doIfElementWithTextExists(locator, textToMatch, waitTime, callback){
         // My God - this was such a hard engineering problem to solve because Cypress developers went out of their way to make conditional testing a major pain
         // Well, I've bested them...
         // Use this function to do conditional testing where you want to wait for a condition to be true before moving on WITHOUT having to use a hard wait 
@@ -84,8 +65,8 @@ export class Common {
         // callback = the function that is called if text is found on the element  
         let matchFound = false;
         for(let i = 0; i <= waitTime; i += 500){
-            cy.get('body', {log: false}).then(()=>{
-                if(!matchFound){
+            cy.get('body', {log: false}).then((body)=>{
+                if(!matchFound && body.find(locator).length > 0){
                     cy.get(locator, {log: false}).invoke('text').then((text)=>{
                         if(text.includes(textToMatch)){
                             matchFound = true;

@@ -17,34 +17,12 @@ export class Vex extends Common {
     }
 
     addVirtualEvent(eventName){
-        cy.log('going to vex')
         this.goToPage(this.vexPageTitle, this.vexUrl)
-        cy.log('clicking add virtual event')
         cy.contains('button', 'Add Virtual Event').click()
-        cy.log('typing event name into modal')
         cy.get(this.eventNameInput).type(eventName)
-        cy.log('clicking button to add virtual event')
         cy.get(this.addEventModalFooter).contains('button', 'Add Virtual Event').click()
-        /*cy.wait(2000) // I'd like to avoid arbitrary wait times, but because Cypress doesn't provide ability to wait for a check on an element to return true before returning false, hard waits become necessary
-        cy.get(this.antModalBody).invoke('text').then((text)=>{
-            if(text.includes('has already been taken')) {
-                cy.contains('button', 'Cancel').click()
-            }
-        })*/
 
-        /*let conditionObject = {};
-        this.elementHasText(this.antModalBody, 'has already been taken', 2000, conditionObject)
-        cy.get('body').then(()=>{
-            if(conditionObject.matchFound == true){
-                cy.log(`Match found, so click the button`)
-                cy.contains('button', 'Cancel').click()
-            } else if (conditionObject.matchFound == 'no') {
-                cy.log(conditionObject.matchFound)
-                cy.log(`no match found, so don't click the button`)
-            }
-        })*/
-
-        this.doIfElementHasText(this.antModalBody, 'has already been taken', 2000, ()=>{
+        this.doIfElementWithTextExists(this.antModalBody, 'has already been taken', 10000, ()=>{
             cy.contains('button', 'Cancel').click()
         })
         
