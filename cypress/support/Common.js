@@ -13,6 +13,7 @@ export class Common {
         this.submitButtonLocator = 'input[value="Log in"]'; 
         this.pageTitleLocator = '[data-qa-hook="title-bar"]'; 
         this.editIcon = 'i[title="Edit"]';
+        this.antModal = 'div[class="ant-modal"]';
     }
 
     visitHomeUrl(){
@@ -30,13 +31,10 @@ export class Common {
     login(user = this.userName, password = this.password) {
         cy.visit(this.baseUrl)
         cy.get('body').then((body)=>{
-            if(body.find('a:contains(Sign in with email and password)').length > 0){
-                return 'Sign in with email and password'
-            } else {
-                return false
+            const linkText = 'Sign in with email and password';
+            if(body.find(`a:contains(${linkText})`).length > 0){
+                cy.contains(linkText).click()
             }
-        }).then((linkText)=>{
-            cy.contains(linkText).click()
         })
         cy.get(this.userNameInputLocator).type(user).should('have.value', user)
         cy.get(this.passwordInputLocator).type(password)

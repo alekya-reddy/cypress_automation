@@ -27,6 +27,7 @@
 
 Cypress.Commands.add("ifElementHasText", (locator, textToMatch, waitTime, callBack) => {
     // Use this function to do conditional testing where you want to wait for an element with text to exist before doing something, otherwise move on 
+    // You do not need to use this function if element with text appears immediately - use this function only if it takes time for this element to exist, if at all
     // Eg. You click a button. As soon as X is true, do A, otherwise wait for maximum of 10 seconds for X to be true before moving on
     // Such a simple concept, yet Cypress developers refuse to give this to us because they hate conditional testing.
     // locator = the locator for the element that might contain the text
