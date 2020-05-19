@@ -41,12 +41,22 @@ if going with default values for username, login and org, or specific which org,
 -The common class also includes login functions even though these are not common elements to entire app - don't really want to create a seperate class for login 
 -For example, the navigation links, the top menu to access org settings, common generic elements such as toggles and checkboxes - these would be part of the common class
 -The common class will have children classes representing each webpage of the app. Example, target, recommend, website tools, web ex, org settings, clienthq etc
+
 -Children classes will inherit all properties from the parent common class, so all children classes will have access to the same locators as the common class, just like in the actual application
 -Any part of the app that is accessible only from a specific url should be considered part of the same class.
 -For example, anything only accessible from https://newqa.pathfactory-qa.com/authoring/content-library/content is considered as part of the content-library class
--Anything that is accessible from all parts of the app, or the same element is present across multiple urls should go into common class
--Use this rule of thumb to decide where a locator should go, or create a new class when the need arises 
--On consumption side, these classes can follow the same organization
+-There are cases where the same div[data-qa-hook='whatever'] can be found across multiple parts of the app. It could be that they are simply re-used generic components. 
+In this case, it would make sense to put into the locators for these componenents into the common class. However, it could also be that the same data-qa-hook is just a 
+coincidence and the developers could easily change it to something else later on. In this case, it is better to err on the side of putting the locator for this element 
+into the child class (not the common class). Use your judgement.   
+
+-The commands.js file in support folder contains custom cypress functions. To keep things organized, only include functions here if they are useful functions for 
+cypress testing in general. For example, a function that checks if an element with specific text exists, and if yes, invoke a callback. Any function which requires
+app-spefific urls or locators should not go into the commands.js file - these should go into one of the classes. 
+
+-Use these rules of thumb to decide where a locator or function should go, or create a new class when the need arises 
+
+-On consumption side, these classes can follow the same organization principle 
 
 
 Cypress quirks
@@ -430,6 +440,10 @@ doIfElementHasText(locator, textToMatch, waitTime, callback){
             cy.contains('button', 'Cancel').click()
         })
 
+
+I just found out you can call cypress custom commands inside the classes just like regular cypress commands. So instead of putting the doIfElementHasText 
+function into the common class, I'm going to put it into the custom cypress comnands as it's useful for any testing with Cypress,
+not just our app. 
 
 
 

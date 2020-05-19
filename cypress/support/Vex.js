@@ -21,14 +21,11 @@ export class Vex extends Common {
         cy.contains('button', 'Add Virtual Event').click()
         cy.get(this.eventNameInput).type(eventName)
         cy.get(this.addEventModalFooter).contains('button', 'Add Virtual Event').click()
-
-        this.doIfElementWithTextExists(this.antModalBody, 'has already been taken', 10000, ()=>{
+        cy.ifElementHasText(this.antModalBody, 'has already been taken', 10000, () => {
             cy.contains('button', 'Cancel').click()
         })
-        
         cy.get(this.antModalBody).should('not.be.visible')
-        cy.contains(this.eventCardLocator, eventName, {timeout: 10000}).should('exist')
-        
+        cy.contains(this.eventCardLocator, eventName, {timeout: 10000}).should('exist')   
     }
 
     checkEventExists(eventName){

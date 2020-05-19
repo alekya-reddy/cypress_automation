@@ -53,31 +53,4 @@ export class Common {
         })
     }
 
-    doIfElementWithTextExists(locator, textToMatch, waitTime, callback){
-        // My God - this was such a hard engineering problem to solve because Cypress developers went out of their way to make conditional testing a major pain
-        // Well, I've bested them...
-        // Use this function to do conditional testing where you want to wait for a condition to be true before moving on WITHOUT having to use a hard wait 
-        // Eg. You click a button, if X happens do A, else do B... You want to wait maximum of 10 seconds for X to happen. If X happens sooner than the 10 seconds, 
-        // go ahead and do A without waiting the full 10 secs. Such a simple concept, and Cypress developers refuse to give this to us because they hate conditional testing.
-        // locator = the locator for the element that might contain the text
-        // textToMatch = the text that might appear on the element
-        // waitTime = the maximum wait time in milliseconds 
-        // callback = the function that is called if text is found on the element  
-        let matchFound = false;
-        for(let i = 0; i <= waitTime; i += 500){
-            cy.get('body', {log: false}).then((body)=>{
-                if(!matchFound && body.find(locator).length > 0){
-                    cy.get(locator, {log: false}).invoke('text').then((text)=>{
-                        if(text.includes(textToMatch)){
-                            matchFound = true;
-                            callback();
-                        } else {
-                            cy.wait(500, {log: false})
-                        }
-                    })
-                }
-            })
-        }
-    }
-
 }

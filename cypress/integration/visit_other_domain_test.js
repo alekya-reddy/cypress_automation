@@ -6,10 +6,6 @@ const domain = `${Cypress.env('TEST_ENV')}-wp.com`
 const domain_inactive_message = "To activate the promoter, contact your administrator to enable the domain" 
 
 describe('Various proof of concept tests', function() {
-    /*it("should use commands", ()=>{
-        cy.login(defaultOrg.common.baseUrl, defaultOrg.common.userName, defaultOrg.common.password)
-    })*/
-
     it('should successfully do stuff in a different org than automation-org', function(){
         defaultOrg.common.login();
         defaultOrg.vex.addVirtualEvent('Test 2');
