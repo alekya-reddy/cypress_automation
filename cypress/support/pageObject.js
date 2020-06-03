@@ -1,9 +1,9 @@
-import { Common } from './Common.js'; 
-import {ContentLibrary} from './ContentLibrary.js';
-import {ClientHQ} from './ClientHQ.js';
-import {WebdomainSettings} from './WebdomainSettings.js';
-import {WebsiteTools} from './WebsiteTools.js';
-import {Vex} from './Vex.js';
+import { Common } from './authoringClasses/Common.js'; 
+import {ContentLibrary} from './authoringClasses/ContentLibrary.js';
+import {ClientHQ} from './authoringClasses/ClientHQ.js';
+import {WebdomainSettings} from './authoringClasses/WebdomainSettings.js';
+import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
+import {Vex} from './authoringClasses/Vex.js';
 import {constants} from './constants.js';
 
 export const createAuthoringInstance = function(config = {}){

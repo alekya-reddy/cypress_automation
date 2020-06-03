@@ -11,9 +11,12 @@ export class Common {
         this.userNameInputLocator = '[id="login"]';
         this.passwordInputLocator = '[id="password"]';
         this.submitButtonLocator = 'input[value="Log in"]'; 
-        this.pageTitleLocator = '[data-qa-hook="title-bar"]'; 
+        this.pageTitleBar = '[data-qa-hook="title-bar"]';
+        this.pageTitleLocator = '[data-qa-hook="title-bar"] > h1'; 
+        this.pageBody = '[data-qa-hook="page-body"]';
         this.editIcon = 'i[title="Edit"]';
         this.antModal = 'div[class="ant-modal"]';
+        this.vexNavigation = 'li[role="menuitem"] > a[href="/authoring/content-library/virtual-events"]'
     }
 
     visitHomeUrl(){

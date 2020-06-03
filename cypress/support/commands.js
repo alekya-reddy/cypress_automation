@@ -52,4 +52,42 @@ Cypress.Commands.add("ifElementHasText", (locator, textToMatch, waitTime, callBa
     }
 })
 
+Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack) => {
+    // locator = the locator of the element that you are checking for
+    // waitTime = the maximum wait time in milliseconds 
+    // callback = the function that is called if element exists (note: use arrow function for callback or else the 'this' context might be lost) 
 
+    let matchFound = false;
+    for(let i = 0; i <= waitTime; i += 500){
+        cy.get('body', {log: false}).then((body)=>{
+            if(!matchFound && body.find(locator).length > 0){
+                matchFound = true;
+                callBack();
+            } else if (!matchFound) {
+                cy.wait(500, {log: false})
+            }
+        })
+    }
+})
+
+Cypress.Commands.add("containsExact", (locator, exact_text_to_match)=>{
+    let text_regex = new RegExp(`^${exact_text_to_match}$`);
+    cy.contains(locator, text_regex);
+})
+
+Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
+    let matchFound = false;
+    for(let i = 0; i < waitTime; i += 500){
+        cy.get('body', {log: false}).then((body)=>{
+            let matches = Cypress.$(locator).filter(function(){
+                return Cypress.$(this).text() == exact_text_to_match;
+            })
+            if(!matchFound && matches.length > 0){
+                matchFound = true 
+                callBack();
+            } else if (!matchFound){
+                cy.wait(500, {log: false})
+            }
+        })
+    }
+})

@@ -2,5 +2,6 @@
     "env": {
         "TEST_ENV": "pathfactory-staging"
     },
-    "modifyObstructiveCode": false
+    "modifyObstructiveCode": false,
+    "video": false
 }
