@@ -11,7 +11,7 @@ export class Vex extends Common {
         this.specificEventCardLocator = function(event){ return `[class*="card-list-item"]:contains('${event}')` };
         this.moreActionsButton = "button:contains('More Actions')";
         this.configureButton = "button:contains('Configure')";
-        this.removeButton = "li:contains('Remove') > span";
+        this.removeDropdownButton = "li:contains('Remove') > span";
         this.eventNameInput = 'input[name="name"]';
         this.addEventModalFooter = '[class="ant-modal-footer"]';
         this.antModalBody = '[class="ant-modal-body"]';
@@ -26,6 +26,16 @@ export class Vex extends Common {
         this.antModalContent = '[class="ant-modal-content"]';
         this.antCardHeadWrapper = '[class="ant-card-head-wrapper"]';
         this.antDescriptionsContent = '[class="ant-descriptions-item-content"]';
+        this.sessionNameInput = 'input[name="name"]';
+        this.sessionSlugInput = 'input[name="slug"]';
+        this.sessionDescriptionInput = 'textarea[name="description"]';
+        this.privateRadio = "input[value='private']";
+        this.publicRadio = "input[value='public']";
+        this.selectVideoButton = "button:contains('Select On Demand Video')";
+        this.onDemandTitleLocator = '[class="ant-card-meta-title"]';
+        this.addContentButton = "button:contains('Add Content')";
+        this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
+        this.removeButton = "button:contains('Remove')";
     }
 
     visit(){
@@ -52,7 +62,7 @@ export class Vex extends Common {
             cy.containsExact(this.eventCardTitle, eventName).parent().parent().parent().within(() => {
                 cy.get(this.moreActionsButton).click()
             })
-            cy.get(this.removeButton).click()
+            cy.get(this.removeDropdownButton).click()
             cy.get(this.antModalContent).within(()=>{
                 cy.contains('Yes').click()
             })
@@ -66,7 +76,7 @@ export class Vex extends Common {
         const slug = config.slug;
         const description = config.description; 
 
-        cy.get(this.specificEventCardLocator(event)).contains('button', 'Configure').click()
+        this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
         slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
@@ -77,14 +87,8 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event){
-        cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
-            if(text !== event){
-                this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
-                cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
-                    cy.get(this.configureButton).click()
-                })
-                cy.get(this.pageTitleLocator).invoke('text').should('have.value', event)
-            }
+        cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
+            cy.get(this.configureButton).click()
         })
     }
 
@@ -111,11 +115,83 @@ export class Vex extends Common {
             cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
                 cy.get(this.moreActionsButton).click(); 
             })
-            cy.get(this.removeButton).click()
+            cy.get(this.removeDropdownButton).click()
             cy.get(this.antModalContent).within(()=>{
                 cy.contains('Yes').click()
             })
         })
         cy.containsExact(this.sessionCardTitle, sessionName).should('not.exist')
+    }
+
+    goToSessionConfig(sessionName){
+        cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
+            cy.get(this.configureButton).click(); 
+        })
+        cy.get(this.pageTitleLocator).should('contain', sessionName);
+    }
+
+    pickOnDemandVideo(content){
+        cy.get(this.selectVideoButton).click();
+        cy.get(this.modal).within(()=>{
+            cy.get(this.contentPickerSearchBar).clear().type(content);
+            cy.contains(this.contentPickerItem, content).click();
+            cy.get(this.selectVideoButton).click();
+        })
+        cy.get(this.modal).should('not.exist');
+    }
+
+    configureSession(config){
+        const name = config.name;
+        const newName = config.newName;
+        const visibility = config.visibility;
+        const slug = config.slug;
+        const description = config.description; 
+        const type = config.type;
+        const video = config.video;
+
+        this.goToSessionConfig(name);
+
+        newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
+
+        if(visibility == 'Private'){
+            cy.get(this.privateRadio).click();
+        } else if (visibility == 'Public'){
+            cy.get(this.publicRadio).click();
+        } 
+
+        slug ? cy.get(this.sessionSlugInput).clear().type(slug) : null;
+
+        description ? cy.get(this.sessionDescriptionInput).clear().type(description) : null;
+
+         if(type == 'On Demand'){
+             cy.get(this.onDemandRadio).click()
+         }
+
+         this.pickOnDemandVideo(video);
+
+         cy.get(this.saveButton).click()
+         cy.get('body').should('contain', "The record was saved successfully")
+    }
+
+    addSupplementalContent(contents){
+        cy.get(this.addContentButton).click();
+        cy.get(this.modal).within(()=>{
+            contents.forEach((content)=>{
+                cy.get(this.contentPickerSearchBar).clear().type(content);
+                cy.contains(this.contentPickerItem, content).click();
+            })
+            cy.get(this.addContentButton).click();
+        })
+        cy.get(this.modal).should('not.exist');
+    }
+
+    removeSupplementalContent(content){
+        cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().parent().within(()=>{
+            cy.get(this.removeButton).click();
+        })
+        cy.get(this.antModalContent).within(()=>{
+            cy.contains('Yes').click()
+        })
+        cy.containsExact(this.supplementalContentCardTitle, content).should('not.exist');
     }
 }
