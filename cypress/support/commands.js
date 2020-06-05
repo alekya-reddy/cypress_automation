@@ -91,3 +91,35 @@ Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_mat
         })
     }
 })
+
+Cypress.Commands.add("getIframeBody", (iframeLocator)=>{
+    // Highly advised that you use cy.waitFOrIframeToLoad before calling this function, unless you're certain iframe is fully loaded already 
+    // If iframe is not fully loaded by the time this gets called, it will get a 'snapshot' of the half-loaded body, which will not update as more elements load 
+    cy.get(iframeLocator).should('exist')
+    cy.document().then((doc) => {
+        let iframe = doc.querySelector(iframeLocator)                             // querySelector is vanilla javascript function to find elements 
+        let body = iframe.contentWindow.document.querySelector('body')            // use javascript to find body within the iframe 
+        let jElement = Cypress.$(body)                                            // convert js html element to jquery 
+        cy.wrap(jElement)                                                         // wrap jquery element with cypress commands, allowing you to chain off this element using cypress
+    })
+})
+
+Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLocator, maxWait) => {
+    // elementIndicatorLocator is the element whose presence in the iframe would indirectly indicate that the iframe has fully loaded its contents
+    // maxWait is the maximum wait time. If element exists before that time, then there will be no more waiting 
+
+    cy.get(iframeLocator).should('exist') 
+    let indicatorLoaded = false
+    for(let i = 500; i<maxWait ; i += 500){
+        cy.document({log: false}).then((doc)=>{
+            let iframe = doc.querySelector(iframeLocator) 
+            let element = iframe.contentWindow.document.querySelector(elementIndicatorLocator)
+            if( !indicatorLoaded && element){
+                indicatorLoaded = true
+            } else if ( !indicatorLoaded ) {
+                cy.wait(500, {log: false})
+            }
+        })
+    }
+})
+  

@@ -15,6 +15,10 @@ To open debugger while you are writing/editing test files, navigate to the Cypre
 
 npx cypress open 
 
+or
+
+node_modules/.bin/cypress open
+
 Then, from the window that opens, double click the file you want to run
 If using debugger, you can set your env variables in cypress.json (for example, TEST_ENV=pathfactory-staging)
 
@@ -265,5 +269,23 @@ to wait, use cy.wait(timeInMilliseconds)
 to pause for debugging, use cy.pause()
 
 
+POTENTIAL CATASTROPHIC SHOW-STOPPING PITFALLS!!!!!
+---------------------------------------------------
+ "modifyObstructiveCode": false 
 
+ If you add the above to cypress.json, it will prevent Cypress from automatically turning off code that blocks cypress. 
+ Apparently this is code that Cypress deems is unnecessary and obsolete and so would have zero impact on the app by turning it off...
+ Still, kinda alarming that Cypress potentially needs to modify the website in order for it to work. That just doesn't seem like smart design to me, given they cannot
+ possibly anticipate why a website would have these pieces of code in it. 
 
+For some reason, when visiting consumption pages on our app, the pathfactory-staging domain will cause either promoters to not show up, or cause VEX to become a 
+blank screen. Changing to the lookbookhq domain will solve the issue. If you have Cypress open, once you visit a pathfactory-staging domain, even if you change 
+domain back to lookbookhq in the test code and then re-run, this will not solve issue. You must CLOSE the cypress browser, then re-run for it to work. 
+
+Cypress apparently runs its test inside an iframe. Websites that block iframes obviously are a problem. Well, it's a good thing Cypress automatically removes 
+xframe options so that this is not a problem... Except when the website loads in other sites, perhaps in a frame, that have the same xframe option set to same 
+origin. Then Cypress will crap out. Also, if you set chromeWebSecurity to false in cypress.json, this will prevent Cypress from automatically removing these 
+xframe options. But why would you set chromeWebSecurity to false in the first place, you ask? Because you need to do that in order to implement the workaround
+to interact with elements inside an iframe!!!!!!!      
+
+Cypress - stupidly designed, in my opinion. 

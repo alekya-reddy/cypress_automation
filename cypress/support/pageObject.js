@@ -6,6 +6,9 @@ import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
 import {Vex} from './authoringClasses/Vex.js';
 import {constants} from './constants.js';
 
+import { CommonCX } from './consumptionClasses/CommonCX.js';
+import { VexCX } from './consumptionClasses/VexCX.js';
+
 export const createAuthoringInstance = function(config = {}){
     const env = config.env ? config.env : constants.testENV;
     const org = config.org ? config.org : constants.automationSubdomain;
@@ -21,6 +24,19 @@ export const createAuthoringInstance = function(config = {}){
             webdomainSettings: new WebdomainSettings(env, org, username, password, customBaseUrl),
             websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl),
             vex: new Vex(env, org, username, password, customBaseUrl)
+        }
+    );
+}
+
+export const createConsumptionInstance = function(config = {}){
+    const env = config.env ? config.env : constants.testENV;
+    const org = config.org ? config.org : constants.automationSubdomain;
+    const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
+
+    return (
+        {
+            common: new CommonCX(env, org, customBaseUrl),
+            vex: new VexCX(env, org, customBaseUrl)
         }
     );
 }

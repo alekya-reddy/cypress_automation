@@ -9,7 +9,7 @@ const videos = [
     {
         internalTitle: 'Wistia - Used in Cypress automation for VEX testing',
         type: 'Wistia',
-        url: 'https://trialscope.wistia.com/embed/iframe/5f2j8dgfm3'
+        url: 'https://trialscope.wistia.com/medias/wmcbpksnc9' // Embed iframe format not supported on VEX 'https://trialscope.wistia.com/embed/iframe/5f2j8dgfm3'
     },
     {
         internalTitle: 'Brightcove - Used in Cypress automation to test VEX',
