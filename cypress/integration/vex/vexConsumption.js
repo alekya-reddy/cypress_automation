@@ -89,6 +89,21 @@ const sessions = [
 ]
 
 describe('VEX - Consumption', function(){
+    /*it('The event page should have the correct sessions displayed, and the links to sessions page, and the link back to event page, should work', function(){
+        cy.visit(event.url)
+
+        // Expect the number of sessions to be equal to the number of public sessions we have added to the event 
+        //let privateSessions = sessions.filter((session)=>{ return session.visibility == 'Private'; })
+        //cy.get('body').find(consumption.vex.eventSessionTitle).should('have.length', sessions.length - privateSessions.length) // Comment out for now as this is existing bug where removed sessions still show up on consumption
+
+        sessions.forEach((session)=>{
+            if(session.name == 'Private') { return } // Skip this case, will test in another it function
+            cy.containsExact(consumption.vex.eventSessionTitle, session.name).should('exist').click()
+            cy.url().should('eq', session.url)
+            cy.contains('a', event.name).click()
+        })
+    })
+
     it('Videos from supported video hosting sites should display on VEX', function(){
         sessions.forEach((session)=>{
             if(session.name == 'Private'){
@@ -128,19 +143,47 @@ describe('VEX - Consumption', function(){
         })
     })
 
-    /*it('Sessions set to private should not be visible and should not be accessible', function(){
+    it('Sessions set to private should not be visible and should not be accessible', function(){
+        sessions.forEach((session)=>{
+            if(session.name == 'Private'){
+                cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
+                    expect(response.status).to.eq(404)
+                })
 
+                cy.visit(event.url)
+                cy.containsExact(consumption.vex.eventSessionTitle, session.name).should('not.exist')
+            }
+        })
     })
 
-    it('A session should have the correct settings based on how it was configured', function(){
+    it('A session should have the correct name, description, supplemental content', function(){
+        let session = sessions.find((session)=>{
+            // This finds the session from within the array that is needed for this test - so that order of array doesn't matter
+            return session.name == 'Youtube';
+        })
 
-    })
-
-    it('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in the corner', function(){
-
-    })
-
-    it('The event page should have the correct title, description and sessions. The breadcrumb navigation at the top should work', function(){
-
+        cy.visit(session.url)
+        cy.containsExact('div', session.name).should('exist')
+        cy.containsExact('div', session.description).should('exist')
+        cy.contains('a', event.name).siblings('span').invoke('text').then((text)=>{
+            // This is checking for the 'bread crumb' navigation at the top that shows you which session you have navigated to 
+            expect(text).to.eq(session.name) 
+        })
+        cy.get('ul').within(()=>{
+            // This checks that the number of supplemental content is exactly what was added to this session 
+            cy.get(`a[href*="${event.slug}"]`).should('have.length', session.supplementalContent.length)
+        })
+        session.supplementalContent.forEach((content)=>{
+            // This checks that the correct supplemental content are listed 
+            cy.containsExact('a', content).should('exist')
+        })
     })*/
+
+    it('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
+        let session = sessions[0]
+        cy.visit(session.url)
+        cy.waitForIframeToLoad(consumption.vex.youtubeIframe, consumption.vex.videoPlayer, 3000)
+        cy.wait(3000)
+        consumption.vex.youTube.pause()
+    })
 })

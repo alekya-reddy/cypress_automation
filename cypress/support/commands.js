@@ -122,4 +122,17 @@ Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLoca
         })
     }
 })
+
+Cypress.Commands.add("invokeWithinFrame", (iframeLocator, elementLocator, method)=>{
+    cy.get(iframeLocator).should('exist')
+    cy.document().then((doc) => {
+        let iframe = doc.querySelector(iframeLocator)                            
+        let element = iframe.contentWindow.document.querySelector(elementLocator)          
+        eval(`element.${method}`)                                                   
+    })
+})
+
+
+
+
   
