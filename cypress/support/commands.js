@@ -105,6 +105,7 @@ Cypress.Commands.add("getIframeBody", (iframeLocator)=>{
 })
 
 Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLocator, maxWait) => {
+    // This command waits for the iframe to load a specific element. Does not fail test if condition never becomes true 
     // elementIndicatorLocator is the element whose presence in the iframe would indirectly indicate that the iframe has fully loaded its contents
     // maxWait is the maximum wait time. If element exists before that time, then there will be no more waiting 
 
@@ -123,12 +124,44 @@ Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLoca
     }
 })
 
-Cypress.Commands.add("invokeWithinFrame", (iframeLocator, elementLocator, method)=>{
-    cy.get(iframeLocator).should('exist')
+Cypress.Commands.add("invokeWithinFrame", (iframeLocator, elementLocator, method, maxWait = 3000, state = {})=>{
+    // If you want to invoke an element's methods from within an iframe, use this command 
+    // state is an object (optional) that you pass in. Results returned from method will be passed in as state.result. 
+    // Note: you cannot directly 'return' any values from a cy command due to async - hence, take advantage of javascript object mutation  
+
+    cy.waitForIframeToLoad(iframeLocator, elementLocator, maxWait)
     cy.document().then((doc) => {
         let iframe = doc.querySelector(iframeLocator)                            
         let element = iframe.contentWindow.document.querySelector(elementLocator)          
-        eval(`element.${method}`)                                                   
+        state.result = eval(`element.${method}`)                                            
+    })
+})
+
+Cypress.Commands.add("waitForFrameElementCondition", (iframeLocator, elementLocator, maxWait, checkCondition) => {
+    // This command waits for an iframed element condition to be true before moving to the next cy command
+    // Does not fail the test if condition never becomes true. Useful if waiting for iframed video player to play before calling pause on it 
+    // checkCondition is a callback that will be passed an html element. checkCondition must return true/false.
+    // The element passed into checkCondition is an html element, so in order to get its properties, you have to use vanilla javascript 
+
+    let conditionMet = false
+    cy.waitForIframeToLoad(iframeLocator, elementLocator, maxWait)
+    for(let i = 500; i<maxWait ; i += 500){
+        cy.document({log: false}).then((doc)=>{
+            let iframe = doc.querySelector(iframeLocator) 
+            let element = iframe.contentWindow.document.querySelector(elementLocator)
+            if( !conditionMet && checkCondition(element)){
+                conditionMet = true
+            } else if ( !conditionMet ) {
+                cy.wait(500, {log: false})
+            }
+        })
+    }
+})
+
+Cypress.Commands.add("invokeJS", (elementLocator, method, state={})=>{
+    cy.document().then((doc) => {                          
+        let element = doc.querySelector(elementLocator)          
+        state.result = eval(`element.${method}`)                                                   
     })
 })
 

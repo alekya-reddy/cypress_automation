@@ -3,20 +3,42 @@ import { CommonCX } from "./CommonCX";
 export class VexCX extends CommonCX {
     constructor(env, org, customBaseUrl){
         super(env, org, customBaseUrl);
-        this.youtubeIframe = 'iframe[title="YouTube video player"]';
-        this.vimeoIframe = 'iframe[src*="vimeo"]';
-        this.vidyardIframe = 'iframe[class*="vidyard-iframe"]';
-        this.videoPlayer = 'video'; // The element to check for to verify video player has loaded into iframe
-        this.wistiaPlayer = 'div[class="w-ui-container"]';
         this.eventSessionTitle = 'div[class*="pf-event-session-item-title"]';
-        this.youTube = {
+        this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
-            _iframeLocator: 'iframe[title="YouTube video player"]',
-            _videoPlayerLocator: 'video',
-            play: function(){ cy.invokeWithinFrame(this._iframeLocator, this._videoPlayerLocator, 'play()') },
-            pause: function(){ cy.invokeWithinFrame(this._iframeLocator, this._videoPlayerLocator, 'pause()') },
-            getCurrentTime: function(){ cy.invokeWithinFrame(this._iframeLocator, this._videoPlayerLocator, 'getCurrentTime()') },
-            paused: function(){ cy.invokeWithinFrame(this._iframeLocator, this._videoPlayerLocator, 'paused') }
+            iframe: 'iframe[title="YouTube video player"]',
+            videoPlayer: 'video',
+            play: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
+            pause: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
+            getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'getCurrentTime()', undefined, state) },
+            paused: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) }
+        };
+        this.vimeo = {
+            // Playing around on the dev console on regular browser, I'm blocked from accessing iframe due to cross-frame issue. I'm amazed I can bypass that through Cypess
+            iframe: 'iframe[src*="vimeo"]',
+            videoPlayer: 'video',
+            play: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
+            pause: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
+            getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
+            paused: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) }
+        };
+        this.vidyard = {
+            iframe: 'iframe[class*="vidyard-iframe"]',
+            videoPlayer: 'video',
+            splashScreen: '[class^="splash-screen-thumbnail"]',
+            play: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
+            pause: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
+            getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
+            paused: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
+            clickSplashScreen: function(){ cy.invokeWithinFrame(this.iframe, this.splashScreen, 'click()') }
+        };
+        this.wistia = {
+            // Wistia doesn't need an iframe, which is nice...
+            videoPlayer: 'video',
+            play: function(){ cy.invokeJS(this.videoPlayer, 'play()') },
+            pause: function(){ cy.invokeJS(this.videoPlayer, 'pause()') },
+            getCurrentTime: function(state){ cy.invokeJS(this.videoPlayer, 'currentTime', state) },
+            paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
         }
     }
 }

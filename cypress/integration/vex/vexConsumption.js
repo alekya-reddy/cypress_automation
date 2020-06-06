@@ -88,8 +88,16 @@ const sessions = [
     }
 ]
 
+const contentSource = {
+    'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/12/contents/12876/bae16c4c-c2b9-40c4-930a-8188a145fbbb.png' : 'https://cdn.pathfactory-qa.com/assets/20/contents/17245/a4db9dff-4c5d-4535-b623-eb6709aacb8d.png',
+    'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/preprocessed/12/c4b50a8d-1963-4cea-993f-3d9fcc749c9d/c4b50a8d-1963-4cea-993f-3d9fcc749c9d.pdf' : 'https://cdn.pathfactory-qa.com/assets/preprocessed/20/52d3aabd-f911-448f-a4dc-be937e8ea399/52d3aabd-f911-448f-a4dc-be937e8ea399.pdf',
+    'Website - Used by Cypress automation for VEX testing' : 'https://en.wikipedia.org/wiki/SpaceX'
+}
+
 describe('VEX - Consumption', function(){
-    /*it('The event page should have the correct sessions displayed, and the links to sessions page, and the link back to event page, should work', function(){
+    // At the moment, don't need to toggle on VEX to see your configured VEX events and sessions on consumption side 
+
+    it('The event page should have the correct sessions displayed, and the links to sessions page, and the link back to event page, should work', function(){
         cy.visit(event.url)
 
         // Expect the number of sessions to be equal to the number of public sessions we have added to the event 
@@ -116,25 +124,25 @@ describe('VEX - Consumption', function(){
     
             switch(session.name){
                 case 'Youtube':
-                    cy.waitForIframeToLoad(consumption.vex.youtubeIframe, consumption.vex.videoPlayer, 3000)
-                    cy.getIframeBody(consumption.vex.youtubeIframe).within(()=>{
-                        cy.get(consumption.vex.videoPlayer).should('exist')
+                    cy.waitForIframeToLoad(consumption.vex.youtube.iframe, consumption.vex.youtube.videoPlayer, 3000)
+                    cy.getIframeBody(consumption.vex.youtube.iframe).within(()=>{
+                        cy.get(consumption.vex.youtube.videoPlayer).should('exist')
                     })
                     break;
                 case 'Vimeo':
-                    cy.waitForIframeToLoad(consumption.vex.vimeoIframe, consumption.vex.videoPlayer, 3000)
-                    cy.getIframeBody(consumption.vex.vimeoIframe).within(()=>{
-                        cy.get(consumption.vex.videoPlayer).should('exist')
+                    cy.waitForIframeToLoad(consumption.vex.vimeo.iframe, consumption.vex.vimeo.videoPlayer, 3000)
+                    cy.getIframeBody(consumption.vex.vimeo.iframe).within(()=>{
+                        cy.get(consumption.vex.vimeo.videoPlayer).should('exist')
                     })
                     break;
                 case 'Vidyard':
-                    cy.waitForIframeToLoad(consumption.vex.vidyardIframe, consumption.vex.videoPlayer, 3000)
-                    cy.getIframeBody('iframe').within(()=>{
-                        cy.get(consumption.vex.videoPlayer).should('exist')
+                    cy.waitForIframeToLoad(consumption.vex.vidyard.iframe, consumption.vex.vidyard.videoPlayer, 3000)
+                    cy.getIframeBody(consumption.vex.vidyard.iframe).within(()=>{
+                        cy.get(consumption.vex.vidyard.videoPlayer).should('exist')
                     })
                     break;
                 case 'Wistia':
-                    cy.get(consumption.vex.wistiaPlayer).should('exist')
+                    cy.get(consumption.vex.wistia.videoPlayer).should('exist')
                     break;
                 case 'Brightcove':
                     // Not currently supported 
@@ -177,13 +185,61 @@ describe('VEX - Consumption', function(){
             // This checks that the correct supplemental content are listed 
             cy.containsExact('a', content).should('exist')
         })
-    })*/
+    })
 
     it('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
-        let session = sessions[0]
+        const session = sessions.find((session)=>{
+            return session.name == 'Youtube';
+        })
+
         cy.visit(session.url)
-        cy.waitForIframeToLoad(consumption.vex.youtubeIframe, consumption.vex.videoPlayer, 3000)
+
+        // On first page visit, only 1 iframe should be on screen  - the video's
+        cy.get('iframe').should('have.length', 1)
+        cy.get(consumption.vex.youtube.iframe).should('exist')
+
+        // Verify can pause, play video, and check video current time 
+        cy.waitForFrameElementCondition(consumption.vex.youtube.iframe, consumption.vex.youtube.videoPlayer, 3000, (elem)=> { return elem.paused == false; })
+        consumption.vex.youtube.pause()
         cy.wait(3000)
-        consumption.vex.youTube.pause()
+        consumption.vex.youtube.play()
+        cy.wait(3000)
+        consumption.vex.youtube.pause()
+        let state = {} // Technique to pull values out asynchronously - pass in objects - they get mutated within the cy commands
+        consumption.vex.youtube.getCurrentTime(state)
+        // calling state.result at this line would result in undefined because this line is run before any cy commands has been executed 
+        cy.get('body').then(()=>{
+            // Get the object property in a subsequent cy command - this guarantees property will be accessed after previous command has mutated object 
+            expect(state.result).to.be.within(3,4)
+            state.lastTime = state.result; // Save the current time for use later 
+        })
+
+        // Resume playing video - it wil play as cycle through content
+        consumption.vex.youtube.play()
+
+        // Cycle through the contents and verify source is correct 
+        session.supplementalContent.forEach((content)=>{
+            cy.contains('a', content).should('exist').click()
+            cy.get('iframe').should('have.length', 2)
+            cy.get(consumption.vex.youtube.iframe).should('exist')
+            cy.get(`iframe[src="${contentSource[content]}"]`).should('exist')
+        })
+
+        // Verify video still playing 
+        consumption.vex.youtube.paused(state)
+        cy.get('body').then(()=>{
+            expect(state.result).to.be.false // Check it's not paused, therefore is playing 
+        })
+
+        // Close the supplemental content and verify that only the video is displayed
+        cy.contains('a', '[Close Content]').should('exist').click()
+        cy.get('iframe').should('have.length', 1)
+        cy.get(consumption.vex.youtube.iframe).should('exist')
+
+        // Redundant check to make sure video has been playing - this time by checking its time stamp 
+        consumption.vex.youtube.getCurrentTime(state)
+        cy.get('body').then(()=>{
+            expect(state.result).to.be.greaterThan(state.lastTime)
+        })
     })
 })
