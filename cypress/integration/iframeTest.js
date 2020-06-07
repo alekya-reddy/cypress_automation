@@ -1,12 +1,11 @@
 import { createConsumptionInstance } from '../support/pageObject.js';
 import { constants } from '../support/constants.js';
+import { createAuthoringInstance } from '../support/pageObject.js';
 
-const consumption = createConsumptionInstance({
-    env: Cypress.env('TEST_ENV'), 
-    org: 'automation', 
-    // No idea why, but need to use lookbook domain on consumption or Vex will be blank and promoters will not show up
-    get customBaseUrl(){ return `https://${this.org}.${constants.lookbookhqDomain}`; } 
-});
+const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
+const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
+//const authoring = createAuthoringInstance();
+//const consumption = createConsumptionInstance()
 
 const event = {
     name: 'vexConsumption.js',
@@ -107,7 +106,7 @@ describe('VEX - Consumption', function(){
         //cy.shouldExistInIframe("#widget2", "#player").within(()=>{ cy.get('[class="html5-video-container"]').should('exist') }) 
     })*/
 
-    it('vimeo', function(){
+    /*it('vimeo', function(){
         let state = {}
         let session = sessions[1]
         cy.visit(session.url)
@@ -178,5 +177,21 @@ describe('VEX - Consumption', function(){
         cy.get('body').then(()=>{
             expect(state.result).to.be.true
         })
+    })*/
+
+    it('', function(){
+        authoring.common.login()
+    })
+
+    it('', function(){
+        let session = sessions[0]
+        //cy.visit(session.url)
+        //cy.visit('https://default.staging2.lookbookhq.com/customtrackurl2/st-patrick-cat')
+        //cy.visit('https://default.pathfactory-staging.com/customtrackurl2/st-patrick-cat')
+        //cy.visit('https://newqa.pathfactory-qa.com/customurl/crew-dragon-launch-d')
+        //cy.visit('https://newqa.qa.lookbookhq.com/customurl/crew-dragon-launch-d')
+        //cy.visit('https://internal.lookbookhq.com/1/tribute-to-hayao-miyazaki-from-dono-on-v')
+        //cy.visit('https://internal.pathfactory.com/1/tribute-to-hayao-miyazaki-from-dono-on-v')
+        cy.visit(session.url)
     })
 })

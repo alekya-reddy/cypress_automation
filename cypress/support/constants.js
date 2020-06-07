@@ -10,5 +10,6 @@ export const constants = {
         } else if (env == 'pathfactory-qa'){
             return "qa.lookbookhq.com";
         }
-    })(Cypress.env('TEST_ENV'))
+    })(Cypress.env('TEST_ENV')),
+    pathfactoryDomain: `${Cypress.env('TEST_ENV')}.com`
 }
