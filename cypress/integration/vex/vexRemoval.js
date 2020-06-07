@@ -2,14 +2,12 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 import { createConsumptionInstance } from '../../support/pageObject.js';
 import { constants } from '../../support/constants.js';
 
-// Because this file also goes onto consumption side, which must be lookbook domain or else Cypress will be stupid, authoring must also be on lookbook domain
-// Even if you separate out authoring from consumption between it functions, visiting a pathfactory domain even once will ruin all subsequent consumption page visits 
-const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
-const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
+const authoring = createAuthoringInstance(); 
+const consumption = createConsumptionInstance();
 
 const event = {
     event: 'vexRemoval.js',
-    slug: 'vexRemoval-js',
+    slug: 'vexremoval-js',
     get url(){ return `${consumption.common.baseUrl}/${this.slug}`; }
 }
 
@@ -43,6 +41,7 @@ const sessions = [
 ]
 
 // This test file will verify that removing sessions and events from VEX will also remove from consumption side 
+// As of June 5, 2020, this test will fail due to bug where removing session does not remove it from consumption side
 describe('VEX - Virtual Event', function() {
     it('Set up an event and then verify it can be seen on consumption side', function() {
         // Toggle on VEX
@@ -70,14 +69,27 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.goToEventConfig(event.event)
         authoring.vex.removeSession(sessions[1].name)
 
-        // Now visit the event to confirm that only 1 session remains, and the removed one is not visible 
-        cy.visit(event.url)
-        cy.containsExact(consumption.vex.eventSessionTitle, sessions[0].name).should('exist')
-        cy.containsExact(consumption.vex.eventSessionTitle, sessions[1].name).should('not.exist')
-        cy.get('body').find(consumption.vex.eventSessionTitle).should('have.length', 1)
+        // Use cy.request to get the body contents - can't visit due to Cypess bug where page is blank on pathfactory domain.
+        // Even visiting pathfactory domain in separate it function, then visiting lookbook domain on consumption side would cause consumption to be blank.
+        // Can get around this by doing everything on lookbookhq domain, but this requires you to toggle on lookbookhq domain permanently.
+        // THis will cause some of our capybara tests to fail. So, gotta toggle it on as needed. However, you cannot toggle on lookbook in the same test file.
+        // This is because that requires you to login via pathfactory to switch to lookbook, which means any lookbook consumption you visit subsequently will be blank. 
+        // So you have to put the domain switching into a separate file, which will work.... as long as you do that first, then the test, then a file to switch back.
+        // EXCEPT that <<<!!!!!CYPRESS!!!!!>>> doesn't support the ability to run tests in a specific order. In fact, many people have complained about this, and 
+        // Cypress's response is "that's an anti-pattern, your tests should be self-contained... blah-blah-blah"
+        // listen here Cypress, the only reason we gotta separate out this test into separate files is <<<!!!!BECAUSE!!!!!>>>>> of your STUPID software
+        // that is FULL of bugs and annoying limitations. Holy crap. No hovering. Can't handle iframes. Blank pages. After hooks don't work. Can't run tests in specific order...
+        // So long story short, if your test requires you to visit both authoring and consumption, use cy.request so that you don't have to actually visit the page.
+        // Look in the body of the request for whatever you're looking for. This requires you to know what the body is going to look like, so good luck with that. 
+        cy.request(event.url).then((response)=>{
+            expect(response.body).to.include(`${event.slug}/${sessions[0].slug}`)
+            expect(response.body).to.not.include(`${event.slug}/${sessions[1].slug}`)
+        })
+
         cy.request({url: sessions[1].url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)
         })
+
     })
 
     it('Delete the event and verify event page is not available', function(){

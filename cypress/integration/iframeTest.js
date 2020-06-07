@@ -2,9 +2,9 @@ import { createConsumptionInstance } from '../support/pageObject.js';
 import { constants } from '../support/constants.js';
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
+//const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
 const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
-//const authoring = createAuthoringInstance();
+const authoring = createAuthoringInstance();
 //const consumption = createConsumptionInstance()
 
 const event = {
@@ -179,9 +179,9 @@ describe('VEX - Consumption', function(){
         })
     })*/
 
-    it('', function(){
+    /*it('', function(){
         authoring.common.login()
-    })
+    })*/
 
     it('', function(){
         let session = sessions[0]
@@ -192,6 +192,24 @@ describe('VEX - Consumption', function(){
         //cy.visit('https://newqa.qa.lookbookhq.com/customurl/crew-dragon-launch-d')
         //cy.visit('https://internal.lookbookhq.com/1/tribute-to-hayao-miyazaki-from-dono-on-v')
         //cy.visit('https://internal.pathfactory.com/1/tribute-to-hayao-miyazaki-from-dono-on-v')
+        //cy.visit(session.url)
+        //cy.wait(5000)
+        /*cy.getCookies().then((cookies)=>{
+            cookies.forEach((cookie)=>{
+                cy.log(cookie.name)
+                cy.clearCookie(cookie.name)
+            })
+        })
         cy.visit(session.url)
+        cy.document().then((doc)=>{
+            let topIframe = window.top.document.querySelector('iframe')
+            cy.log(topIframe)
+        })
+        cy.reload()*/
+        cy.request('https://automation.pathfactory-staging.com/vexconsumption-js').then((response)=>{
+            //expect(JSON.stringify(response.body)).to.include(`${event.slug}/${sessions[0].slug}`)
+            //expect(JSON.stringify(response.body)).to.not.include(`${event.slug}/${sessions[1].slug}`)
+            expect(response.body).to.have.string('vexconsumption-js/youtube')
+        })
     })
 })
