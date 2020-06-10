@@ -1,5 +1,5 @@
-import { createAuthoringInstance } from '../../support/pageObject.js';
-import { constants } from '../../support/constants.js';
+import { createAuthoringInstance } from '../support/pageObject.js';
+import { constants } from '../support/constants.js';
 
 const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
 

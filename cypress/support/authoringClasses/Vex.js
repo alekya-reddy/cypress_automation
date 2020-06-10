@@ -36,6 +36,10 @@ export class Vex extends Common {
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
         this.removeButton = "button:contains('Remove')";
+        this.appearancePreviewHeaderTitle = "div[data-qa-hook='header-title-show']";
+        this.appearancePreviewHeaderTitleInput = "input[name='headerTitle']";
+        this.appearancePreviewHeaderSubtitle = "div[data-qa-hook='header-subtitle-show']";
+        this.appearancePreviewHeaderSubtitleInput = "input[name='headerSubtitle']";
     }
 
     visit(){
@@ -71,7 +75,7 @@ export class Vex extends Common {
     }
 
     configureEvent(config){
-        const event = config.event;
+        const event = config.event || config.name;
         const newEventName = config.newEventName;
         const slug = config.slug;
         const description = config.description; 
