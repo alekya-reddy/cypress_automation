@@ -11,5 +11,11 @@ export const constants = {
             return "qa.lookbookhq.com";
         }
     })(Cypress.env('TEST_ENV')),
-    pathfactoryDomain: `${Cypress.env('TEST_ENV')}.com`
+    pathfactoryDomain: `${Cypress.env('TEST_ENV')}.com`,
+    adminUser: 'user-automation',
+    adminUserPassword: "Capybara123",
+    authorUser: 'qa-author',
+    authorUserPassword: "Capybara123",
+    reporterUser: 'qa-reporter',
+    reporterUserPassword: "Capybara123"
 }

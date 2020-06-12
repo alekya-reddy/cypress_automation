@@ -2,9 +2,9 @@ import { createConsumptionInstance } from '../support/pageObject.js';
 import { constants } from '../support/constants.js';
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-//const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
+const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
 const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
-const authoring = createAuthoringInstance();
+//const authoring = createAuthoringInstance();
 //const consumption = createConsumptionInstance()
 
 const event = {
@@ -206,10 +206,28 @@ describe('VEX - Consumption', function(){
             cy.log(topIframe)
         })
         cy.reload()*/
-        cy.request('https://automation.pathfactory-staging.com/vexconsumption-js').then((response)=>{
+        /*cy.request('https://automation.pathfactory-staging.com/vexconsumption-js').then((response)=>{
             //expect(JSON.stringify(response.body)).to.include(`${event.slug}/${sessions[0].slug}`)
             //expect(JSON.stringify(response.body)).to.not.include(`${event.slug}/${sessions[1].slug}`)
             expect(response.body).to.have.string('vexconsumption-js/youtube')
-        })
+        })*/
+        //cy.visit('https://automation.pathfactory-staging.com/vexappearance-js/youtube')
+        //cy.visit('https://automation.staging2.lookbookhq.com')
+        //authoring.common.login()
+    })
+
+    it('', function(){
+        cy.visit('https://automation.staging2.lookbookhq.com/vexappearance-js/youtube')
+        //cy.visit('https://www.wikipedia.org')
+        cy.wait(10000)
+    })
+
+    it('', function(){
+        authoring.common.login()
+    })
+
+    it('', function(){
+        cy.visit('https://automation.staging2.lookbookhq.com/vexappearance-js/youtube')
+        //cy.visit('https://www.wikipedia.org')
     })
 })

@@ -22,9 +22,33 @@ node_modules/.bin/cypress open
 Then, from the window that opens, double click the file you want to run
 If using debugger, you can set your env variables in cypress.json (for example, TEST_ENV=pathfactory-staging)
 
-If you are done editing, and just want to run one specific file, you can type into terminal: 
+Using the UI, you can run all spec files (they MUST be inside the integration folder -- if you want to change the name of folder, you can, but no point doing this).
+You can also run just 1 specific file by clicking on it. 
+
+You can also run files from the command line: 
 
 npx cypress run --env TEST_ENV=pathfactory-qa --browser chrome --spec cypress/integration/new_website_test.js
+
+Note: you do not need to include the --env parameter if you already have it in the cypress.json file
+
+If you want to run a selection of files, one method is to copy the files you want to run into a separate folder (I have set up the runSelectFiles folder for this).
+Then, in commpand line, specify that folder: 
+
+npx cypress run --browser chrome --spec cypress/integration/runSelectFiles/*  
+
+Alternatively, type out the command you want, including all the spec files you want to run, into a text document and then copy+paste onto the terminal. 
+I have created the file runSelectFiles.txt within the runSelectFiles folder for this purpose. It's much easier to edit the specs in this .txt document than to
+do it on the command line. 
+
+If you want to run files in a specific order, one way is to number the files (Cypress sorts them alphanumerically).
+Alternatively, use the runSelectFile.txt (or any other .txt file). Type out the 'npx cypress run' command for each spec file in the order that you want in the .txt file,
+making sure the format comforms the bash syntax. Then, in the terminal, type the command -sh <path to your .txt file>
+Eg) sh cypress/integration/runSelectFiles/runSelectFiles.txt 
+Note that doing it this way has drawbacks. You will not get a summary of passed/failed tests files, so you need to readh them individually in the terminal. 
+More importantly, each test file need to open and close the cypress app, which takes extra time. If you have many specs, this will add significantly to run time. 
+
+There is NOT a built-in way to run a specific set of folders, NOR is there a built-in way to run spec files in a specific order without using these workarounds. 
+
 
 From above, you can infer that --env allows you To declare whatever env variables you want (env variables must be separated by a comma). 
 This is equivalent to declaring env variables in cypress.json, and the way you call it in the test file is the same, eg Cypress.env('TEST_ENV')
@@ -32,9 +56,12 @@ Declaring env variables in the command line will overrite whatever is in cypress
 You can set whatever browser you want using --browser
 You can run whichever file you want using --spec 
 
-To turn off video recording, you can pass in argument --config video=false
+To turn off video recording, you can pass in argument --config video=false 
+You can also set this in cypress.json (which I have already)
 
 eg) npx cypress run --env TEST_ENV=pathfactory-qa --config video=false  --browser chrome --spec cypress/integration/visit_other_domain_test.js
+
+Note: You cannot set --browser in the cypress.json file. You have to do it in the command line. 
 
 
 
