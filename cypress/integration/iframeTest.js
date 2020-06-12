@@ -217,17 +217,14 @@ describe('VEX - Consumption', function(){
     })
 
     it('', function(){
-        cy.visit('https://automation.staging2.lookbookhq.com/vexappearance-js/youtube')
-        //cy.visit('https://www.wikipedia.org')
-        cy.wait(10000)
-    })
-
-    it('', function(){
-        authoring.common.login()
-    })
-
-    it('', function(){
-        cy.visit('https://automation.staging2.lookbookhq.com/vexappearance-js/youtube')
-        //cy.visit('https://www.wikipedia.org')
+        //cy.visit('https://automation.staging2.lookbookhq.com/vexappearance-js/youtube')
+        //cy.visit('https://pf-xframe-options.glitch.me')
+        //cy.visit('https://www.google.com')
+        //cy.wait(10000)
+        cy.request('https://automation.pathfactory-staging.com/vexappearance-js/youtube').then((response)=>{
+            cy.log(response.headers)
+            cy.log(response.body)
+        })
+        cy.visit('https://automation.pathfactory-staging.com/vexappearance-js/youtube')
     })
 })

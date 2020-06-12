@@ -20,7 +20,8 @@ describe('VEX - Virtual Event', function() {
         cy.get('body').should('contain', 'The Virtual Events module is not enabled for your instance');
     })
     //Not testing when 1 off but other is on because eventually it'll just be the vex toggle 
-    after(()=>{
+    it('Afterhook to turn off vex', ()=>{
+        authoring.common.login()
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'off');
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
     })

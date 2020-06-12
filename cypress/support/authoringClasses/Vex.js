@@ -38,7 +38,7 @@ export class Vex extends Common {
         this.removeButton = "button:contains('Remove')";
         this.appearancePreviewHeaderTitle = "div[data-qa-hook='header-title-show']";
         this.appearancePreviewHeaderTitleInput = "input[name='headerTitle']";
-        this.appearancePreviewHeaderSubtitle = "div[data-qa-hook='header-subtitle-show']";
+        this.appearancePreviewHeaderSubtitle = "div[data-qa-hook^='header-subtitle']";
         this.appearancePreviewHeaderSubtitleInput = "input[name='headerSubtitle']";
     }
 

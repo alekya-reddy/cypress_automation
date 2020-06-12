@@ -1,36 +1,35 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 import { constants } from '../../support/constants.js';
 
-
 const authoring = createAuthoringInstance(); 
 
 const users = [
     {
         role: 'superuser',
         roleDescription: "Superuser should have full access to VEX",
-        username: constants.automationUser,
-        password: constants.automationUserPassword,
+        username: constants.orgs[authoring.common.org].superUser,
+        password: constants.orgs[authoring.common.org].superUserPassword,
         eventsPageAccess: true
     },
     {
         role: 'admin',
         roleDescription: "Admin user should have full access to VEX",
-        username: constants.adminUser,
-        password: constants.adminUserPassword,
+        username: constants.orgs[authoring.common.org].adminUser,
+        password: constants.orgs[authoring.common.org].adminUserPassword,
         eventsPageAccess: true
     },
     {
         role: 'author',
         roleDescription: "Author user should have full access to VEX",
-        username: constants.authorUser,
-        password: constants.authorUserPassword,
+        username: constants.orgs[authoring.common.org].authorUser,
+        password: constants.orgs[authoring.common.org].authorUserPassword,
         eventsPageAccess: true
     },
     {
         role: 'reporter',
         roleDescription: "Reporter should have no access to VEX",
-        username: constants.reporterUser,
-        password: constants.reporterUserPassword,
+        username: constants.orgs[authoring.common.org].reporterUser,
+        password: constants.orgs[authoring.common.org].reporterUserPassword,
         eventsPageAccess: false
     }
 ]

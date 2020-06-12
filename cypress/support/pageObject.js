@@ -10,12 +10,24 @@ import { CommonCX } from './consumptionClasses/CommonCX.js';
 import { VexCX } from './consumptionClasses/VexCX.js';
 
 export const createAuthoringInstance = function(config = {}){
+    // Set up default values for your convenience 
     const env = config.env ? config.env : constants.testENV;
-    const org = config.org ? config.org : constants.automationSubdomain;
-    const username = config.username? config.username : constants.automationUser;
-    const password = config.password ? config.password : constants.automationUserPassword;
-    const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
+    const org = config.org ? config.org : constants.orgs['automation'].name 
+    const username = config.username? config.username : constants.orgs[org].defaultUser; 
+    const password = config.password ? config.password : constants.orgs[org].defaultUserPassword; 
+    const tld = config.tld ? config.tld : false;
+    //const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
+    const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
+        if(configCustomBaseUrl){
+            return configCustomBaseUrl;
+        } else if ((configTld == 'pathfactory' || configTld == 'lookbookhq' ) && configOrg) {
+            return `https://${configOrg}.${constants[`${configTld}Domain`]}`;
+        } else {
+            return false;
+        }
+    })(config.customBaseUrl, tld, config.org);
 
+    // Return the page object instance initialized with all the classes and the locators/helper functions contained within 
     return (
         {
             common: new Common(env, org, username, password, customBaseUrl),
@@ -30,8 +42,18 @@ export const createAuthoringInstance = function(config = {}){
 
 export const createConsumptionInstance = function(config = {}){
     const env = config.env ? config.env : constants.testENV;
-    const org = config.org ? config.org : constants.automationSubdomain;
-    const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
+    const org = config.org ? config.org : constants.orgs['automation'].name 
+    const tld = config.tld ? config.tld : false;
+    //const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
+    const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
+        if(configCustomBaseUrl){
+            return configCustomBaseUrl;
+        } else if ((configTld == 'pathfactory' || configTld == 'lookbookhq' ) && configOrg) {
+            return `https://${configOrg}.${constants[`${configTld}Domain`]}`;
+        } else {
+            return false;
+        }
+    })(config.customBaseUrl, tld, config.org);
 
     return (
         {

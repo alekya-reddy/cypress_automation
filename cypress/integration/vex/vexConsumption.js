@@ -1,12 +1,6 @@
 import { createConsumptionInstance } from '../../support/pageObject.js';
-import { constants } from '../../support/constants.js';
 
-const consumption = createConsumptionInstance({
-    env: Cypress.env('TEST_ENV'), 
-    org: 'automation', 
-    // No idea why, but need to use lookbook domain on consumption or Vex will be blank and promoters will not show up
-    get customBaseUrl(){ return `https://${this.org}.${constants.lookbookhqDomain}`; } 
-});
+const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'});
 
 const event = {
     name: 'vexConsumption.js',
@@ -88,9 +82,18 @@ const sessions = [
     }
 ]
 
+// The below is configured for automation org
+/*
 const contentSource = {
     'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/12/contents/12876/bae16c4c-c2b9-40c4-930a-8188a145fbbb.png' : 'https://cdn.pathfactory-qa.com/assets/20/contents/17245/a4db9dff-4c5d-4535-b623-eb6709aacb8d.png',
     'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/preprocessed/12/c4b50a8d-1963-4cea-993f-3d9fcc749c9d/c4b50a8d-1963-4cea-993f-3d9fcc749c9d.pdf' : 'https://cdn.pathfactory-qa.com/assets/preprocessed/20/52d3aabd-f911-448f-a4dc-be937e8ea399/52d3aabd-f911-448f-a4dc-be937e8ea399.pdf',
+    'Website - Used by Cypress automation for VEX testing' : 'https://en.wikipedia.org/wiki/SpaceX'
+}
+*/
+
+const contentSource = {
+    'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12954/d8058125-c1a5-41d3-9f66-cf8176fe2040.png' : 'https://cdn.pathfactory-qa.com/assets/20/contents/17245/a4db9dff-4c5d-4535-b623-eb6709aacb8d.png',
+    'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12955/ae090cdf-c888-41f1-9c5c-5f20fee9acce.pdf' : 'https://cdn.pathfactory-qa.com/assets/preprocessed/20/52d3aabd-f911-448f-a4dc-be937e8ea399/52d3aabd-f911-448f-a4dc-be937e8ea399.pdf',
     'Website - Used by Cypress automation for VEX testing' : 'https://en.wikipedia.org/wiki/SpaceX'
 }
 
@@ -101,8 +104,8 @@ describe('VEX - Consumption', function(){
         cy.visit(event.url)
 
         // Expect the number of sessions to be equal to the number of public sessions we have added to the event 
-        //let privateSessions = sessions.filter((session)=>{ return session.visibility == 'Private'; })
-        //cy.get('body').find(consumption.vex.eventSessionTitle).should('have.length', sessions.length - privateSessions.length) // Comment out for now as this is existing bug where removed sessions still show up on consumption
+        let privateSessions = sessions.filter((session)=>{ return session.visibility == 'Private'; })
+        cy.get('body').find(consumption.vex.eventSessionTitle).should('have.length', sessions.length - privateSessions.length) 
 
         sessions.forEach((session)=>{
             if(session.name == 'Private') { return } // Skip this case, will test in another it function
