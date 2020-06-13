@@ -1,9 +1,7 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 import { createConsumptionInstance } from '../../support/pageObject.js';
 
-//const authoring = createAuthoringInstance(); 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
-//const consumption = createConsumptionInstance();
 const consumption  = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
@@ -47,8 +45,6 @@ describe('VEX - Virtual Event', function() {
     it('Set up an event and then verify it can be seen on consumption side', function() {
         // Toggle on VEX
         authoring.common.login();
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'on');
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
 
         // Add event (and delete it if previously added already)
         authoring.vex.visit();
@@ -102,10 +98,4 @@ describe('VEX - Virtual Event', function() {
             expect(response.status).to.eq(404)
         })
     })
-
-    /*it('Afterhook - reset to pathfactory domain and toggle off VEX', ()=>{
-        authoring.common.login();
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'off');
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-    })*/
 })

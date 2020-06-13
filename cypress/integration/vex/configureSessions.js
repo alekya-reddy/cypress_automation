@@ -1,6 +1,5 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 
-//const authoring = createAuthoringInstance(); 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = 'configureSessions';
@@ -53,13 +52,8 @@ const session = {
 
 describe('VEX - Virtual Event', function() {
     before(()=>{
+        // Clean up - delete previously added event
         authoring.common.login();
-
-        // Login and toggle on vex
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'on');
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
-
-        // Clean up - delete previously added event 
         authoring.vex.deleteVirtualEvent(event);
     })
 
@@ -137,10 +131,4 @@ describe('VEX - Virtual Event', function() {
             cy.containsExact(authoring.vex.supplementalContentCardTitle, contents[i]).should('exist');
         }
     })
-
-    /*it("This is a pseudo after hook because there is bug with cypress's after hooks where clicks don't work if an earlier it block fails", ()=>{
-        authoring.common.login();
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'off');
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-    })*/
 })

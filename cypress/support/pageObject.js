@@ -16,7 +16,6 @@ export const createAuthoringInstance = function(config = {}){
     const username = config.username? config.username : constants.orgs[org].defaultUser; 
     const password = config.password ? config.password : constants.orgs[org].defaultUserPassword; 
     const tld = config.tld ? config.tld : false;
-    //const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
     const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
         if(configCustomBaseUrl){
             return configCustomBaseUrl;
@@ -44,7 +43,6 @@ export const createConsumptionInstance = function(config = {}){
     const env = config.env ? config.env : constants.testENV;
     const org = config.org ? config.org : constants.orgs['automation'].name 
     const tld = config.tld ? config.tld : false;
-    //const customBaseUrl = config.customBaseUrl ? config.customBaseUrl : false;
     const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
         if(configCustomBaseUrl){
             return configCustomBaseUrl;

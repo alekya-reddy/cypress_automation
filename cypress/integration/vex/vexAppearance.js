@@ -1,6 +1,5 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 
-//const authoring = createAuthoringInstance(); 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
@@ -13,9 +12,6 @@ const event = {
 describe('VEX - Virtual Event', function() {
     it('Test appearance configuration', function() {
         authoring.common.login();
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'on');
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
-
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Appearance Setup').click()
@@ -29,9 +25,4 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.appearancePreviewHeaderSubtitleInput).parent().contains('Save').click()
         cy.get(authoring.vex.appearancePreviewHeaderSubtitle, {timeout: 5000}).should('contain', event.headerSubtitle)
     })
-    /*it('This is an afterhook to toggle off vex', ()=>{
-        authoring.common.login()
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'off')
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off')
-    })*/
 })
