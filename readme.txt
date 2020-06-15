@@ -107,6 +107,24 @@ Use these rules of thumb to decide where a locator or function should go, or cre
 On consumption side, these classes can follow the same organization principle 
 
 
+Automation Testing Using Multiple Orgs
+---------------------------------------
+Now that we are switching over to Cypress, this is the perfect opportunity to change the way we do automation testing. We will no longer do automation testing only 
+one 1 organzation. This creates many problems where previous test files contaiminate the environment, causing test failues for subsequent tests. By splitting our 
+tests up into different orgs, we reduce the chances of this happening. Furthermore, by having different orgs, this eliminates the need to go into client hq to toggle
+features on and off. For new features such as website tools or vex, this will save a lot of time and reduce test flakiness - simply by having fewer steps. 
+
+Each area of our app should have its own organization. For example, 1 org for VEX, 1 for target, 1 for recommend etc. In fact, a good rule of thumb is 1 org for each 
+of the authoring classes in this repo. 
+
+The cypress repo is set up in such a way that switching between orgs and different users is very easy. Just use the pageObject builders in the pageObject.js file.  
+
+In the constants.js file, this contains all the details for each org and their users. The pageObject.js file will use these constants to automatically instantiate 
+a page-object with the correct base url. You just have to put in the 'org' and 'tld' arguments when creating the pageObject instance. Or, you want to go into some random org,
+just put in the base url directly. Or, if you want to work within our traditional 'automation' org, you don't even need to put in any arguments into the builder.
+The pageObject builder is very easy and convenient to use due to its ability to automatically set default values for the base url and user.  
+
+
 Cypress quirks
 --------------
 

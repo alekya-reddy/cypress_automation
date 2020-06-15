@@ -4,6 +4,8 @@ export class VexCX extends CommonCX {
     constructor(env, org, customBaseUrl){
         super(env, org, customBaseUrl);
         this.eventSessionTitle = 'div[class*="pf-event-session-item-title"]';
+        this.eventHeroTitle = "div[class^='pf-event-hero-title']";
+        this.eventHeroSubtitle = "div[class^='pf-event-hero-subtitle']";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',

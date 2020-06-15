@@ -95,7 +95,6 @@ const contentSource = {
 }
 
 describe('VEX - Consumption', function(){
-    // At the moment, don't need to toggle on VEX to see your configured VEX events and sessions on consumption side 
 
     it('The event page should have the correct sessions displayed, and the links to sessions page, and the link back to event page, should work', function(){
         cy.visit(event.url)
