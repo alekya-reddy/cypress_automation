@@ -5,21 +5,14 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const consumption  = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
-    event: 'vexRemoval.js',
+    name: 'vexRemoval.js',
     slug: 'vexremoval-js',
     get url(){ return `${consumption.common.baseUrl}/${this.slug}`; }
 }
 
-const contents = [
-    'Image - Used by Cypress automation for VEX testing',
-    'PDF - Used by Cypress automation for VEX testing',
-    'Website - Used by Cypress automation for VEX testing'
-]
-
 const sessions = [
     {
         name: 'Youtube',
-        supplementalContent: contents,
         visibility: 'Public',
         slug: 'youtube',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -29,7 +22,6 @@ const sessions = [
     },
     {
         name: 'Vimeo',
-        supplementalContent: contents,
         visibility: 'Public',
         slug: 'vimeo',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -48,22 +40,21 @@ describe('VEX - Virtual Event', function() {
 
         // Add event (and delete it if previously added already)
         authoring.vex.visit();
-        authoring.vex.deleteVirtualEvent(event.event)
-        authoring.vex.addVirtualEvent(event.event)
+        authoring.vex.deleteVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event.name)
         authoring.vex.configureEvent(event)
 
         // Add session and configure sessions
         sessions.forEach((session)=>{
             authoring.vex.visit()
-            authoring.vex.goToEventConfig(event.event)
+            authoring.vex.goToEventConfig(event.name)
             authoring.vex.addSession(session.name)
             authoring.vex.configureSession(session)
-            //authoring.vex.addSupplementalContent(session.supplementalContent)
         })
 
         // Now remove one of the sessions
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.event)
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.removeSession(sessions[1].name)
 
         // Visit the consumption page and verify that the removed session isn't accessible 
@@ -80,7 +71,7 @@ describe('VEX - Virtual Event', function() {
     it('Delete the event and verify event page is not available', function(){
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.deleteVirtualEvent(event.event)
+        authoring.vex.deleteVirtualEvent(event.name)
         cy.wait(2000)
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)

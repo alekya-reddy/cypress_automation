@@ -75,8 +75,8 @@ export class Vex extends Common {
     }
 
     configureEvent(config){
-        const event = config.event || config.name; // You can pass in property event or name - either would work 
-        const newEventName = config.newEventName;
+        const event = config.name; 
+        const newEventName = config.newName;
         const slug = config.slug;
         const description = config.description; 
 

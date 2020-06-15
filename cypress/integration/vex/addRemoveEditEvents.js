@@ -5,7 +5,7 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const event = {
     name: 'Test 1',
     newName: 'Test 1.1',
-    customSlug: 'test-1-1-slug',
+    slug: 'test-1-1-slug',
     description: 'Test 1 description'
 }
 
@@ -44,15 +44,10 @@ describe('VEX - Virtual Event', function() {
 
         // Verify can configure event 
         authoring.vex.addVirtualEvent(event.name)
-        authoring.vex.configureEvent({
-            event: event.name,
-            newEventName: event.newName,
-            slug: event.customSlug,
-            description: event.description 
-        })
+        authoring.vex.configureEvent(event)
         cy.reload()
         cy.get(authoring.vex.eventNameInput).should('have.value', event.newName)
-        cy.get(authoring.vex.eventSlugInput).should('have.value', event.customSlug)
+        cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
         //cy.get(authoring.vex.eventDescription).should('have.value', event.description) // not currently working 
 
         // Verify can add sessions to event 
@@ -67,7 +62,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit();
         cy.containsExact(authoring.vex.eventCardTitle, event.newName).parent().parent().parent().within(() => {
             cy.get(authoring.vex.eventCardTitle).should('have.contain', event.newName)
-            cy.contains(authoring.vex.antDescriptionsContent, event.customSlug).should('exist')
+            cy.contains(authoring.vex.antDescriptionsContent, event.slug).should('exist')
             cy.containsExact(authoring.vex.antDescriptionsContent, `${sessions.length - 1}`)
         })
     })
