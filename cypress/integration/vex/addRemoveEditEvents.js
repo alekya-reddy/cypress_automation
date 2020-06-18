@@ -38,8 +38,19 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit();
         cy.get(authoring.vex.addEventButton).should('exist');
 
-        // Verify can add and remove event
+        // Verify can add event
         authoring.vex.addVirtualEvent(event.name) // Function already contains assertion that event was successfully created 
+
+        // Verify that you cannot add an event with same name as existing one 
+        authoring.vex.addVirtualEvent(event.name, ()=>{
+            // If event has duplicate name, then this callback will be invoked 
+            cy.contains(authoring.vex.antModalBody, "has already been taken").should('exist')
+            cy.contains('button', 'Cancel').click()
+            cy.get(authoring.vex.antModalBody).should('not.be.visible')
+            cy.containsExact(authoring.vex.eventCardTitle, event.name).should('have.length', 1)
+        })
+
+        // Verify can delete an event 
         authoring.vex.deleteVirtualEvent(event.name) // Already contains assertion that event successfully deleted 
 
         // Verify can configure event 
@@ -48,7 +59,7 @@ describe('VEX - Virtual Event', function() {
         cy.reload()
         cy.get(authoring.vex.eventNameInput).should('have.value', event.newName)
         cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
-        //cy.get(authoring.vex.eventDescription).should('have.value', event.description) // not currently working 
+        cy.get(authoring.vex.eventDescription).should('have.value', event.description) 
 
         // Verify can add sessions to event 
         sessions.forEach((session)=>{

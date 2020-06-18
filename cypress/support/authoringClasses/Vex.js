@@ -46,7 +46,7 @@ export class Vex extends Common {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(eventName){
+    addVirtualEvent(eventName, callBackIfDuplicate = false){
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(()=>{
             cy.get(this.addEventButton).click()
@@ -54,7 +54,12 @@ export class Vex extends Common {
         cy.get(this.eventNameInput).clear().type(eventName)
         cy.get(this.addEventModalFooter).contains('button', 'Add Virtual Event').click()
         cy.ifElementHasText(this.antModalBody, 'has already been taken', 1500, () => {
-            cy.contains('button', 'Cancel').click()
+            if(callBackIfDuplicate){
+                callBackIfDuplicate();
+                return;
+            } else {
+                cy.contains('button', 'Cancel').click()
+            }
         })
         cy.get(this.antModalBody).should('not.be.visible')
         cy.containsExact(this.eventCardTitle, eventName).should('exist')
@@ -152,6 +157,7 @@ export class Vex extends Common {
         const description = config.description; 
         const type = config.type;
         const video = config.video;
+        const contents = config.contents;
 
         this.goToSessionConfig(name);
 
@@ -171,7 +177,13 @@ export class Vex extends Common {
              cy.get(this.onDemandRadio).click()
          }
 
-         this.pickOnDemandVideo(video);
+         if(video){
+            this.pickOnDemandVideo(video);
+         }
+
+         if(contents){
+             this.addSupplementalContent(contents);
+         }
 
          cy.get(this.saveButton).click()
          cy.get('body').should('contain', "The record was saved successfully")

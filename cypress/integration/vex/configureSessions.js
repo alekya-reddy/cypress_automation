@@ -100,7 +100,7 @@ describe('VEX - Virtual Event', function() {
             cy.contains(authoring.vex.contentPickerItem, videos[0].internalTitle).click();
             cy.get(authoring.vex.contentPickerSearchBar).clear().type(videos[1].internalTitle);
             cy.contains(authoring.vex.contentPickerItem, videos[1].internalTitle).click();
-            cy.contains('div', 'Cannot add more than 1 item');
+            cy.containsExact('p', 'Cannot add more than 1 item.').should('exist');
             cy.get(authoring.vex.cancelButton).click(); 
         })
 

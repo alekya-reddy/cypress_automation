@@ -172,7 +172,7 @@ describe('VEX - Consumption', function(){
         cy.visit(session.url)
         cy.containsExact('div', session.name).should('exist')
         cy.containsExact('div', session.description).should('exist')
-        cy.contains('a', event.name).siblings('span').invoke('text').then((text)=>{
+        cy.get(`a:contains("${event.name}")`).eq(1).siblings('span').invoke('text').then((text)=>{
             // This is checking for the 'bread crumb' navigation at the top that shows you which session you have navigated to 
             expect(text).to.eq(session.name) 
         })

@@ -2,10 +2,11 @@ import { createConsumptionInstance } from '../support/pageObject.js';
 import { constants } from '../support/constants.js';
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
+//const authoring = createAuthoringInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`}); 
 const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
 //const authoring = createAuthoringInstance();
 //const consumption = createConsumptionInstance()
+const authoring = createAuthoringInstance({org: 'default', tld: 'lookbookhq', username: 'liming', password: 'Password1234'})
 
 const event = {
     name: 'vexConsumption.js',
@@ -183,7 +184,7 @@ describe('VEX - Consumption', function(){
         authoring.common.login()
     })*/
 
-    it('', function(){
+    /*it('', function(){
         let session = sessions[0]
         //cy.visit(session.url)
         //cy.visit('https://default.staging2.lookbookhq.com/customtrackurl2/st-patrick-cat')
@@ -210,7 +211,7 @@ describe('VEX - Consumption', function(){
             //expect(JSON.stringify(response.body)).to.include(`${event.slug}/${sessions[0].slug}`)
             //expect(JSON.stringify(response.body)).to.not.include(`${event.slug}/${sessions[1].slug}`)
             expect(response.body).to.have.string('vexconsumption-js/youtube')
-        })*/
+        })
         //cy.visit('https://automation.pathfactory-staging.com/vexappearance-js/youtube')
         //cy.visit('https://automation.staging2.lookbookhq.com')
         //authoring.common.login()
@@ -226,5 +227,15 @@ describe('VEX - Consumption', function(){
             cy.log(response.body)
         })
         cy.visit('https://automation.pathfactory-staging.com/vexappearance-js/youtube')
+    })*/
+
+    it('', function(){
+        let title = "Name.com/hello?foo=bar&heads=up"
+        authoring.common.login()
+        //authoring.contentLibrary.searchContentByTitle(title)
+        
+        authoring.contentLibrary.deleteContent("Delete Test")
+        authoring.contentLibrary.addContentByUrl({internalTitle: "Delete Test", url: "https://www.youtube.com/watch?v=zqE-ultsWt0"})
     })
+
 })

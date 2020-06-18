@@ -70,7 +70,8 @@ Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack) => {
 })
 
 Cypress.Commands.add("containsExact", (locator, exact_text_to_match)=>{
-    let text_regex = new RegExp(`^${exact_text_to_match}$`);
+    let matchString = exact_text_to_match.replace(/\?/, `\\?`).replace(/\./, `\\.`).replace(/\//, `\\/`)
+    let text_regex = new RegExp(`^${matchString}$`);
     cy.contains(locator, text_regex);
 })
 

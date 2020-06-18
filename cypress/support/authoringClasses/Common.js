@@ -23,6 +23,10 @@ export class Common {
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';
+        this.deleteIcon = 'i[title="delete"]';
+        this.modal = 'div[data-qa-hook="modal"]';
+        this.clearSearchIcon = 'i[title="Clear search"]';
+        this.antNotification = "div[class^='ant-notification-notice']";
     }
 
     visitHomeUrl(){
