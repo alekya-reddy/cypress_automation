@@ -1,5 +1,4 @@
-import { createAuthoringInstance } from '../../support/pageObject.js';
-import { createConsumptionInstance } from '../../support/pageObject.js';
+import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'});

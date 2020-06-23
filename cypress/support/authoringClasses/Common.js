@@ -27,6 +27,7 @@ export class Common {
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
         this.antNotification = "div[class^='ant-notification-notice']";
+        this.antSelectItem = "span[class='ant-select-selection-item']";
     }
 
     visitHomeUrl(){

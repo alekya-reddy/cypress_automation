@@ -17,6 +17,12 @@ export class Vex extends Common {
         this.antModalBody = '[class="ant-modal-body"]';
         this.eventSlugInput = 'input[name="customUrl"]';
         this.eventDescription = 'textarea[name="description"]';
+        this.eventFormPicker = '#rc_select_1';
+        this.eventFormTitle = "input[name='captureConfig.pageTitle']";
+        this.eventFormMessage = "textarea[name='captureConfig.pageDescription']";
+        this.noRegistrationNeededOption = 'None (Registration Not Required)';
+        this.antDropdownContainer = "div[class*='ant-select-dropdown']";
+        this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
         this.sessionNameInput = 'input[name="name"]';
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
@@ -209,5 +215,20 @@ export class Vex extends Common {
             cy.contains('Yes').click()
         })
         cy.containsExact(this.supplementalContentCardTitle, content).should('not.exist');
+    }
+
+    configureForm(form){
+        const name = form.name; 
+        const title = form.title;
+        const message = form.message;
+
+        cy.get(this.eventFormPicker).parent().parent().click()
+        cy.get(this.antDropdownContainer).within(()=>{
+            cy.get(this.antDropdownOption(name)).click()
+        })
+        title == '' ? cy.get(this.eventFormTitle).clear() : cy.get(this.eventFormTitle).clear().type(title)
+        message == '' ? cy.get(this.eventFormMessage).clear() : cy.get(this.eventFormMessage).clear().type(message)
+        cy.get(this.saveButton).click()
+        cy.get('body').should('contain', 'The record was saved successfully')
     }
 }
