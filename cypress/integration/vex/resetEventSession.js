@@ -31,7 +31,11 @@ const originalSession = {
     visibility: 'Public',
     description: 'Session description',
     type: 'On Demand',
-    video: 'Youtube - Used in Cypress automation for VEX testing'
+    video: 'Youtube - Used in Cypress automation for VEX testing',
+    thumbnail: {
+        category: 'Stock Images',
+        url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg'
+    }
 }
 
 const newSession = {
@@ -41,7 +45,11 @@ const newSession = {
     visibility: 'Private',
     description: 'New description',
     type: 'Live',
-    video: 'Vimeo - Used in Cypress automation for VEX testing'
+    video: 'Vimeo - Used in Cypress automation for VEX testing',
+    thumbnail: {
+        category: 'Stock Images',
+        url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-labrador.jpg' 
+    }
 }
 
 
@@ -92,6 +100,7 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.sessionSlugInput).clear().type(newSession.slug)
         cy.get(authoring.vex.sessionDescriptionInput).clear().type(newSession.description)
         cy.get(authoring.vex.liveRadio).click()
+        authoring.vex.selectThumbnail(newSession.thumbnail)
         authoring.vex.pickOnDemandVideo(newSession.video)
         cy.get(authoring.vex.resetButton).should('not.be.disabled').click()
 
@@ -104,5 +113,6 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.onDemandRadio).parent().should('have.class', 'ant-radio ant-radio-checked')
         cy.get(authoring.vex.liveRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
         cy.get(authoring.vex.onDemandTitleLocator).should('contain', originalSession.video)
+        cy.get(`img[src="${originalSession.thumbnail.url}"]`).should('exist')
     })
 })

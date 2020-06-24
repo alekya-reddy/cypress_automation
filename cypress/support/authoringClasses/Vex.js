@@ -47,6 +47,8 @@ export class Vex extends Common {
         this.appearancePreviewHeaderSubtitle = "div[data-qa-hook^='header-subtitle']";
         this.appearancePreviewHeaderSubtitleInput = "input[name='headerSubtitle']";
         this.resetButton = "button:contains('Reset')";
+        this.selectImageButton = "button:contains('Change Image')";
+        this.thumbnailSelector = "#thumbnail-selector";
     }
 
     visit(){
@@ -167,6 +169,7 @@ export class Vex extends Common {
         const type = config.type;
         const video = config.video;
         const contents = config.contents;
+        const thumbnail = config.thumbnail;
 
         this.goToSessionConfig(name);
 
@@ -190,6 +193,10 @@ export class Vex extends Common {
 
          if(video){
             this.pickOnDemandVideo(video);
+         }
+
+         if(thumbnail){
+             this.selectThumbnail(thumbnail);
          }
 
          if(contents){
@@ -235,5 +242,18 @@ export class Vex extends Common {
         message == '' ? cy.get(this.eventFormMessage).clear() : cy.get(this.eventFormMessage).clear().type(message)
         cy.get(this.saveButton).click()
         cy.get('body').should('contain', 'The record was saved successfully')
+    }
+
+    selectThumbnail(config){
+        const category = config.category // Values can be "Stock Images", "Thumbnail Images" or "Uncategorized"
+        const url = config.url
+
+        cy.get(this.selectImageButton).click()
+        cy.get(this.thumbnailSelector).should('exist').within(()=>{
+            cy.contains('li', category).click()
+            cy.get(`img[src="${url}"]`).click()
+            cy.get(this.saveButton).click()
+        })
+        cy.get(`img[src="${url}"]`).should('exist')
     }
 }
