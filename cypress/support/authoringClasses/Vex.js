@@ -46,6 +46,7 @@ export class Vex extends Common {
         this.appearancePreviewHeaderTitleInput = "input[name='headerTitle']";
         this.appearancePreviewHeaderSubtitle = "div[data-qa-hook^='header-subtitle']";
         this.appearancePreviewHeaderSubtitleInput = "input[name='headerSubtitle']";
+        this.resetButton = "button:contains('Reset')";
     }
 
     visit(){
@@ -90,12 +91,14 @@ export class Vex extends Common {
         const newEventName = config.newName;
         const slug = config.slug;
         const description = config.description; 
+        const form = config.form;
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
         slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
         description ? cy.get(this.eventDescription).clear().type(description) : null;
+        form ? this.configureForm(form) : null;
 
         cy.contains('button', 'Save').click();
         cy.get(this.pageBody).should('contain', 'The record was saved successfully');
@@ -181,6 +184,8 @@ export class Vex extends Common {
 
          if(type == 'On Demand'){
              cy.get(this.onDemandRadio).click()
+         } else if (type == 'Live'){
+             cy.get(this.liveRadio).click()
          }
 
          if(video){
