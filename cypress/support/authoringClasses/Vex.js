@@ -23,6 +23,7 @@ export class Vex extends Common {
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
         this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
+        this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.sessionNameInput = 'input[name="name"]';
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
@@ -38,6 +39,12 @@ export class Vex extends Common {
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
+        this.startTimeInput = "input[name='startTime']";
+        this.endTimeInput = "input[name='endTime']";
+        this.timeZonePicker = "#rc_select_2";
+        this.liveTypePicker = "#rc_select_3";
+        this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
+        this.noPasswordRadio = "input[value='no_password']";
         this.onDemandTitleLocator = '[class="ant-card-meta-title"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
@@ -49,6 +56,7 @@ export class Vex extends Common {
         this.resetButton = "button:contains('Reset')";
         this.selectImageButton = "button:contains('Change Image')";
         this.thumbnailSelector = "#thumbnail-selector";
+        this.dateTimePickerContainer = "div[class='ant-picker-panel']";
     }
 
     visit(){
@@ -170,6 +178,7 @@ export class Vex extends Common {
         const video = config.video;
         const contents = config.contents;
         const thumbnail = config.thumbnail;
+        const live = config.live;
 
         this.goToSessionConfig(name);
 
@@ -197,6 +206,10 @@ export class Vex extends Common {
 
          if(thumbnail){
              this.selectThumbnail(thumbnail);
+         }
+
+         if(live){
+             this.configureLive(live);
          }
 
          if(contents){
@@ -255,5 +268,37 @@ export class Vex extends Common {
             cy.get(this.saveButton).click()
         })
         cy.get(`img[src="${url}"]`).should('exist')
+    }
+
+    configureLive(config){
+        // start and end must have format: MMM DD, YYYY HH:MMxm
+        // omit any leading zeroes 
+        // eg) Jun 5, 2020 4:00pm  eg) Mar 10, 2000 12:15am
+        // As of June 24, 2020, the time will be off by a few hours unless you manually click the time 
+        const start = config.start
+        const end = config.end
+        const timeZone = config.timeZone // Go to the app and get the exact text for this value  
+        const type = config.type // Values can be 'Zoom' or 'Content Library' 
+        const zoomNum = config.zoomNum 
+        const zoomPW = config.zoomPW // "No Password" will turn off password requirement; all other values will set that value as the password 
+        const video = config.video
+
+        cy.get(this.startTimeInput).click().clear().type(start + '\n')
+        cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        cy.get(this.timeZonePicker).parent().parent().click()
+        cy.get(this.antDropdownContainer).within(()=>{
+            cy.get(this.antDropdownOption(timeZone)).click()
+        })
+        cy.get(this.liveTypePicker).parent().parent().click()
+        cy.get(this.antDropdownContainer).within(()=>{
+            cy.get(this.selectOption(type)).click()
+        })
+        cy.get(this.zoomNumInput).clear().type(zoomNum)
+        if(zoomPW == 'No Password'){
+            cy.get(this.noPasswordRadio).click()
+        }
+        if(video){
+
+        }
     }
 }
