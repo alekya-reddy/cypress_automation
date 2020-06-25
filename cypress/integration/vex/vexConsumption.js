@@ -79,15 +79,6 @@ const sessions = [
     }
 ]
 
-// The below is configured for automation org
-/*
-const contentSource = {
-    'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/12/contents/12876/bae16c4c-c2b9-40c4-930a-8188a145fbbb.png' : 'https://cdn.pathfactory-qa.com/assets/20/contents/17245/a4db9dff-4c5d-4535-b623-eb6709aacb8d.png',
-    'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/preprocessed/12/c4b50a8d-1963-4cea-993f-3d9fcc749c9d/c4b50a8d-1963-4cea-993f-3d9fcc749c9d.pdf' : 'https://cdn.pathfactory-qa.com/assets/preprocessed/20/52d3aabd-f911-448f-a4dc-be937e8ea399/52d3aabd-f911-448f-a4dc-be937e8ea399.pdf',
-    'Website - Used by Cypress automation for VEX testing' : 'https://en.wikipedia.org/wiki/SpaceX'
-}
-*/
-
 const contentSource = {
     'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12954/d8058125-c1a5-41d3-9f66-cf8176fe2040.png' : 'https://cdn.pathfactory-qa.com/assets/122/contents/17527/7e237afe-3aac-4d8b-bbeb-1a297fcd6fba.png',
     'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12955/ae090cdf-c888-41f1-9c5c-5f20fee9acce.pdf' : 'https://cdn.pathfactory-qa.com/assets/122/contents/17526/6521cdc6-5677-493b-8040-3b0c3178a74e.pdf',

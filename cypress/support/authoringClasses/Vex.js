@@ -41,10 +41,12 @@ export class Vex extends Common {
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.startTimeInput = "input[name='startTime']";
         this.endTimeInput = "input[name='endTime']";
-        this.timeZonePicker = "#rc_select_2";
-        this.liveTypePicker = "#rc_select_3";
+        this.timeZonePicker = 'div[class="ant-row ant-form-item"]:contains("Time Zone")';
+        this.liveTypePicker = 'div[class="ant-row ant-form-item"]:contains("Live Content Type")'; 
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
         this.noPasswordRadio = "input[value='no_password']";
+        this.applyPasswordRadio = "input[value='apply_password']";
+        this.zoomPWInput = "input[name='liveContentConfig.zoomMeetingPassword']";
         this.onDemandTitleLocator = '[class="ant-card-meta-title"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
@@ -274,7 +276,7 @@ export class Vex extends Common {
         // start and end must have format: MMM DD, YYYY HH:MMxm
         // omit any leading zeroes 
         // eg) Jun 5, 2020 4:00pm  eg) Mar 10, 2000 12:15am
-        // As of June 24, 2020, the time will be off by a few hours unless you manually click the time 
+        // As of June 24, 2020, the day will be off by 1 and hours off by 4 unless you manually click the time - likely a bug or the UI wasn't meant for typing 
         const start = config.start
         const end = config.end
         const timeZone = config.timeZone // Go to the app and get the exact text for this value  
@@ -285,20 +287,37 @@ export class Vex extends Common {
 
         cy.get(this.startTimeInput).click().clear().type(start + '\n')
         cy.get(this.endTimeInput).click().clear().type(end + '\n')
-        cy.get(this.timeZonePicker).parent().parent().click()
+        cy.get(this.timeZonePicker).click()
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.antDropdownOption(timeZone)).click()
         })
-        cy.get(this.liveTypePicker).parent().parent().click()
+        cy.get(this.liveTypePicker).click()
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.selectOption(type)).click()
         })
-        cy.get(this.zoomNumInput).clear().type(zoomNum)
+        if(zoomNum){
+            cy.get(this.zoomNumInput).clear().type(zoomNum)
+        }
         if(zoomPW == 'No Password'){
             cy.get(this.noPasswordRadio).click()
+        } else if(zoomPW) {
+            cy.get(this.applyPasswordRadio),click()
+            cy.get(this.zoomPWInput).clear().type(zoomPW)
         }
         if(video){
-
+            if(type == 'Content Library'){
+                cy.get('button:contains("Select Live Video")').click();
+                // When type is content library, this causes 2 video picker modals to open, 1 stacked on top of each other such that you only see 1
+                // This was causing ambiguous match error. No impact on page function, but a bug regardless. 
+                cy.get(this.modal).eq(1).within(()=>{
+                    cy.get(this.contentPickerSearchBar).clear().type(video);
+                    cy.contains(this.contentPickerItem, video).click();
+                    cy.get(this.selectVideoButton).click();
+                })
+                cy.get(this.modal).should('not.exist');
+            } else {
+                this.pickOnDemandVideo(video)
+            }
         }
     }
 }

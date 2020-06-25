@@ -92,6 +92,27 @@ Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_mat
     }
 })
 
+Cypress.Commands.add("ifNoElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
+    let matchFound = false;
+    for(let i = 0; i < waitTime; i += 500){
+        cy.get('body', {log: false}).then((body)=>{
+            let matches = Cypress.$(locator).filter(function(){
+                return Cypress.$(this).text() == exact_text_to_match;
+            })
+            if(!matchFound && matches.length > 0){
+                matchFound = true 
+            } else if (!matchFound){
+                cy.wait(500, {log: false})
+            }
+        })
+    }
+    cy.get('body', {log: false}).then(()=>{
+        if(!matchFound){
+            callBack()
+        }
+    })
+})
+
 Cypress.Commands.add("getIframeBody", (iframeLocator)=>{
     // Highly advised that you use cy.waitFOrIframeToLoad before calling this function, unless you're certain iframe is fully loaded already 
     // If iframe is not fully loaded by the time this gets called, it will get a 'snapshot' of the half-loaded body, which will not update as more elements load 
