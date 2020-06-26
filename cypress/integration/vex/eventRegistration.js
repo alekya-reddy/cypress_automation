@@ -48,7 +48,7 @@ describe('VEX - Virtual Event', function() {
         cy.containsExact(consumption.vex.eventFormTitle, event.form.title).should('exist')
         cy.containsExact(consumption.vex.eventFormMessage, event.form.message).should('exist')
 
-        // After filling out form, should be able to access session freely without having ot refill form 
+        // After filling out form, should be able to access session freely without having to refill form 
         cy.get('#firstName').clear().type('Joe')
         cy.contains('button', 'Submit').click()
         cy.url().should('eq', event.sessionUrl)

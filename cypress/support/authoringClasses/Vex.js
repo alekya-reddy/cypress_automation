@@ -65,7 +65,7 @@ export class Vex extends Common {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(eventName, callBackIfDuplicate = false){
+    addVirtualEvent(eventName, callBackIfDuplicate = false, checkSuccess = true){
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(()=>{
             cy.get(this.addEventButton).click()
@@ -81,7 +81,9 @@ export class Vex extends Common {
             }
         })
         cy.get(this.antModalBody).should('not.be.visible')
-        cy.containsExact(this.eventCardTitle, eventName).should('exist')
+        if (checkSuccess){
+            cy.containsExact(this.eventCardTitle, eventName).should('exist')
+        }
     }
 
     deleteVirtualEvent(eventName){
