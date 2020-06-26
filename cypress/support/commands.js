@@ -51,14 +51,15 @@ Cypress.Commands.add("ifElementHasText", (locator, textToMatch, waitTime, callBa
     }
 })
 
-Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack) => {
+Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack, container = 'body') => {
     // locator = the locator of the element that you are checking for
     // waitTime = the maximum wait time in milliseconds 
     // callback = the function that is called if element exists (note: use arrow function for callback or else the 'this' context might be lost) 
+    // container = the container within which to find the element. Default value is 'body' to get entire document 
 
     let matchFound = false;
     for(let i = 0; i <= waitTime; i += 500){
-        cy.get('body', {log: false}).then((body)=>{
+        cy.get(container, {log: false}).then((body)=>{
             if(!matchFound && body.find(locator).length > 0){
                 matchFound = true;
                 callBack();
@@ -92,10 +93,10 @@ Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_mat
     }
 })
 
-Cypress.Commands.add("ifNoElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
+Cypress.Commands.add("ifNoElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack, container = 'body')=>{
     let matchFound = false;
     for(let i = 0; i < waitTime; i += 500){
-        cy.get('body', {log: false}).then((body)=>{
+        cy.get(container, {log: false}).then((body)=>{
             let matches = Cypress.$(locator).filter(function(){
                 return Cypress.$(this).text() == exact_text_to_match;
             })
@@ -106,7 +107,7 @@ Cypress.Commands.add("ifNoElementWithExactTextExists", (locator, exact_text_to_m
             }
         })
     }
-    cy.get('body', {log: false}).then(()=>{
+    cy.get(container, {log: false}).then(()=>{
         if(!matchFound){
             callBack()
         }

@@ -59,6 +59,15 @@ export class Vex extends Common {
         this.selectImageButton = "button:contains('Change Image')";
         this.thumbnailSelector = "#thumbnail-selector";
         this.dateTimePickerContainer = "div[class='ant-picker-panel']";
+        this.monthPickerButton = "button[class='ant-picker-month-btn']";
+        this.yearPickerButton = "button[class='ant-picker-year-btn']";
+        this.decadePickerButton = "button[class='ant-picker-decade-btn']";
+        this.pickerCell = "div[class='ant-picker-cell-inner']";
+        this.nextDecadeButton = "button[class='ant-picker-header-super-next-btn']";
+        this.prevDecadeButton = "button[class='ant-picker-header-super-prev-btn']";
+        this.timePickercell = "div[class='ant-picker-time-panel-cell-inner']";
+        this.antPickerContainer = "div[class='ant-picker-panel-container']";
+        this.antPickerDropdown = "div[class^='ant-picker-dropdown']";
     }
 
     visit(){
@@ -275,10 +284,13 @@ export class Vex extends Common {
     }
 
     configureLive(config){
-        // start and end must have format: MMM DD, YYYY HH:MMxm
+        // start and end can be entered as a string, which would be typed into input field, 
+        // or these could be a config object that will be passed into the pickDate function which would click the date-time on the date-picker UI component 
+        // if string, start and end must have format: MMM DD, YYYY HH:MMxm
         // omit any leading zeroes 
         // eg) Jun 5, 2020 4:00pm  eg) Mar 10, 2000 12:15am
-        // As of June 24, 2020, the day will be off by 1 and hours off by 4 unless you manually click the time - likely a bug or the UI wasn't meant for typing 
+        // As of June 24, 2020, the day and time will be off by a bit if date-time is typed into the input field (likely a bug)
+        // If you require exact date/time, pass in the config object
         const start = config.start
         const end = config.end
         const timeZone = config.timeZone // Go to the app and get the exact text for this value  
@@ -287,8 +299,18 @@ export class Vex extends Common {
         const zoomPW = config.zoomPW // "No Password" will turn off password requirement; all other values will set that value as the password 
         const video = config.video
 
-        cy.get(this.startTimeInput).click().clear().type(start + '\n')
-        cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        if(typeof start == 'string'){
+            cy.get(this.startTimeInput).click().clear().type(start + '\n')
+        } else {
+            start.pickerNum = 0
+            this.pickDate(start)
+        }
+        if(typeof end == 'string'){
+            cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        } else {
+            end.pickerNum = 1
+            this.pickDate(end)
+        }
         cy.get(this.timeZonePicker).click()
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.antDropdownOption(timeZone)).click()
@@ -321,5 +343,57 @@ export class Vex extends Common {
                 this.pickOnDemandVideo(video)
             }
         }
+    }
+
+    pickDate(config){
+        const picker = config.picker // The locator of the date picker 
+        const pickerNum = config.pickerNum || 0 // Integer - there could be more than 1 date picker on the DOM. This specifies which one. 
+        const month = config.month // Values can be: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
+        const year = config.year // Must be string, format xxxx
+        const day = config.day // Must be string, format xx (do NOT include leading zeroes)
+        const hour = config.hour // Must be string, fornat xx (include leading zeroes)
+        const minute = config.minute // String, values can be: 00, 15, 30, 45
+        const xm = config.xm // String, values can be: AM, PM (all caps)
+
+        const monthAsNumber = {
+            Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06', Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12'
+        }
+
+        const findDecade = (year) => {
+            let decadeStart = year.slice(0, -1) + '0'
+            let decadeEnd = year.slice(0, -1) + '9'
+            let decadeToFind = `${decadeStart}-${decadeEnd}`
+
+            for(let i = 0; i <= 10 ; i++){
+                cy.ifNoElementWithExactTextExists(this.decadePickerButton, decadeToFind, 1000, ()=>{
+                    cy.get(this.decadePickerButton).invoke('text').then((text)=>{
+                        let buttonYearStart = parseInt(text.slice(0, 4))
+                        if(buttonYearStart < parseInt(decadeStart)){
+                            cy.get(this.nextDecadeButton).click()
+                        } else {
+                            cy.get(this.prevDecadeButton).click()
+                        }
+                    })
+                }, this.antPickerContainer)
+            }
+        }
+
+        cy.get(picker).click()
+        cy.get(this.antPickerDropdown).eq(pickerNum).within(()=>{
+            cy.get(this.yearPickerButton).click() 
+            findDecade(year)
+            cy.contains(this.pickerCell, year).click()
+            cy.ifElementExists(this.monthPickerButton, 1000, ()=>{
+                // If you don't scroll through decades, month picker button will still be visible 
+                // If you do scroll through decades before picking a year, month picker button will disappear, so skip this step and go directly to picking a month
+                cy.get(this.monthPickerButton).click()
+            }, this.antPickerContainer)
+            cy.contains(this.pickerCell, month).click() 
+            cy.get(`td[title="${year}-${monthAsNumber[month]}-${day.length == 2 ? day : "0" + day}"]`).click()
+            cy.contains(this.timePickercell, hour).click()
+            cy.contains(this.timePickercell, minute).click()
+            cy.contains(this.timePickercell, xm).click()
+            cy.contains('button', 'Ok').click()
+        })
     }
 }

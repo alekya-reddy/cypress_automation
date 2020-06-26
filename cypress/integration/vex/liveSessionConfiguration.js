@@ -17,8 +17,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2040 8:00pm',
-            end: 'Jun 24, 2041 8:00pm',
+            startStr: 'Jun 24, 2040 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2041 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2041',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -36,8 +54,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2011 8:00pm',
+            startStr: 'Jun 24, 2010 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2011 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2011',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -55,8 +91,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2040 8:00pm',
+            startStr: 'Jun 24, 2010 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2040 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -78,8 +132,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2040 8:00pm',
-            end: 'Jun 24, 2041 8:00pm',
+            startStr: 'Jun 24, 2040 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2041 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2041',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -97,8 +169,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2000 8:00pm',
-            end: 'Jun 24, 2010 8:00pm',
+            startStr: 'Jun 24, 2000 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2000',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2010 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -116,8 +206,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2040 8:00pm',
+            startStr: 'Jun 24, 2010 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2040 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -135,8 +243,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2040 8:00pm',
-            end: 'Jun 24, 2041 8:00pm',
+            startStr: 'Jun 24, 2040 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2041 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2041',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -154,8 +280,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2000 8:00pm',
-            end: 'Jun 24, 2010 8:00pm',
+            startStr: 'Jun 24, 2000 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2000',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2010 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -175,8 +319,26 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2040 8:00pm',
+            startStr: 'Jun 24, 2010 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2040 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2040',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -199,6 +361,7 @@ const contentSource = {
 // These sessions can use 'zoom' for a real-live experience
 // These can also be 'fake-live' where an existing content library video is passed off as a 'live' video 
 // Live zoom sessions can also have on-demand video configured as a fallback when the live zoom session ends 
+// Note: Will not be using a real zoom id number, so zoom won't actually connect to a meeting. That's ok. Zoom's sdk is not in our control - just test that it is there. 
 describe('VEX - Virtual Event Live Sessions', function() {
     it('Add and configure any live sessions which do not already exist', function() {
         authoring.common.login();
@@ -209,6 +372,12 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.ifNoElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 1000, ()=>{
                 authoring.vex.addSession(session.name)
                 authoring.vex.configureSession(session)
+                /* Necessary to repeat picking date due to bug where picking it for first time will cause day and hour to shift*/
+                authoring.vex.pickDate(session.live.start)
+                session.live.end.pickerNum = 1
+                authoring.vex.pickDate(session.live.end)
+                cy.get(authoring.vex.saveButton).click()
+                /**************************************************************************************************************/
                 cy.containsExact('a', event.name).click()
             })
         })
@@ -279,6 +448,13 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.vex.removeSession(sessions[2].name)
         authoring.vex.addSession(sessions[2].name)
         authoring.vex.configureSession(sessions[2])
+        /*It is necessary to repeat picking the date due to bug where 1st time picking date will cause day and hour to shift*/
+        authoring.vex.pickDate(sessions[2].live.start)
+        sessions[2].live.end.pickerNum = 1
+        authoring.vex.pickDate(sessions[2].live.end)
+        cy.get(authoring.vex.saveButton).click()
+        /*******************************************************************************************************************/
+
     })
 
     it('Go to consumption, visit the live sessions, and verify that we see the expected behavior', function(){
@@ -287,7 +463,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
             if(session.expect == 'pending'){
                 // If visiting before the scheduled live session...
                 cy.get('body').should('contain', 'The session will start soon.')
-                cy.get('body').should('contain', `Please come back at`) // Once the finicky date picker is fixed, we can now reliably expect the correct 'come back at' date 
+                cy.get('body').should('contain', `Please come back at ${session.live.startStr}`) 
             } else if (session.expect == 'ended'){
                 // If session has ended and no on-demand video is set as a fallback...
                 cy.get('body').should('contain', 'The session has finished.')
@@ -317,24 +493,24 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('exist')
                 })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', 'EDT') // Ideally, check for the exact date, but date picker input keeps shifting day and hour
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr) 
             } else if(session.live.status == 'upcoming'){
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', 'EDT')
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
             } else if(session.live.status == 'ended' && session.live.video){
                 // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section 
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.contain', 'EDT')
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.contain', session.live.startStr)
             } else if (session.live.status == 'ended' && !session.live.video){
-                // If session has ended and there's no on-demand configured as a fall back, it still goes into the 'upcoming' section, illogical as this may be 
+                // If session has ended and there's no on-demand configured as a fall back, it still goes into the 'upcoming' section
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', 'EDT')
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
             }  
         })
 
@@ -355,4 +531,5 @@ describe('VEX - Virtual Event Live Sessions', function() {
          cy.get('iframe').should('have.length', 1)
          cy.get(consumption.vex.zoomIframe).should('exist')
     })
+
 })
