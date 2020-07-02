@@ -19,6 +19,7 @@ describe('VEX - Virtual Event', function() {
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
+        cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
         cy.contains('a', 'Appearance Setup').click()
         cy.containsExact('[class="ant-card-head"]', 'Event Appearance').should('exist')
         cy.contains('a', 'Preview Event').should('have.attr', 'href', event.url)
