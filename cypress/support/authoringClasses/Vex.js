@@ -39,6 +39,7 @@ export class Vex extends Common {
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
+        this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = "input[name='startTime']";
         this.endTimeInput = "input[name='endTime']";
         this.timeZonePicker = 'div[class="ant-row ant-form-item"]:contains("Time Zone")';
@@ -177,6 +178,16 @@ export class Vex extends Common {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
             cy.get(this.selectVideoButton).click();
+        })
+        cy.get(this.modal).should('not.exist');
+    }
+
+    pickLiveContentVideo(content){
+        cy.get(this.selectLiveContentButton).click();
+        cy.get(this.modal).within(()=>{
+            cy.get(this.contentPickerSearchBar).clear().type(content);
+            cy.contains(this.contentPickerItem, content).click();
+            cy.get(this.selectLiveContentButton).click();
         })
         cy.get(this.modal).should('not.exist');
     }
@@ -329,19 +340,7 @@ export class Vex extends Common {
             cy.get(this.zoomPWInput).clear().type(zoomPW)
         }
         if(video){
-            if(type == 'Content Library'){
-                cy.get('button:contains("Select Live Video")').click();
-                // When type is content library, this causes 2 video picker modals to open, 1 stacked on top of each other such that you only see 1
-                // This was causing ambiguous match error. No impact on page function, but a bug regardless. 
-                cy.get(this.modal).eq(1).within(()=>{
-                    cy.get(this.contentPickerSearchBar).clear().type(video);
-                    cy.contains(this.contentPickerItem, video).click();
-                    cy.get(this.selectVideoButton).click();
-                })
-                cy.get(this.modal).should('not.exist');
-            } else {
-                this.pickOnDemandVideo(video)
-            }
+            this.pickLiveContentVideo(video)
         }
     }
 

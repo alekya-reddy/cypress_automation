@@ -6,7 +6,8 @@ import { createAuthoringInstance } from '../support/pageObject.js';
 const consumption = createConsumptionInstance({customBaseUrl: `https://automation.${constants.lookbookhqDomain}`});
 //const authoring = createAuthoringInstance();
 //const consumption = createConsumptionInstance()
-const authoring = createAuthoringInstance({org: 'default', tld: 'lookbookhq', username: 'liming', password: 'Password1234'})
+//const authoring = createAuthoringInstance({org: 'default', tld: 'lookbookhq', username: 'liming', password: 'Password1234'})
+const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
     name: 'vexConsumption.js',
@@ -230,12 +231,7 @@ describe('VEX - Consumption', function(){
     })*/
 
     it('', function(){
-        let title = "Name.com/hello?foo=bar&heads=up"
-        authoring.common.login()
-        //authoring.contentLibrary.searchContentByTitle(title)
         
-        authoring.contentLibrary.deleteContent("Delete Test")
-        authoring.contentLibrary.addContentByUrl({internalTitle: "Delete Test", url: "https://www.youtube.com/watch?v=zqE-ultsWt0"})
     })
 
 })

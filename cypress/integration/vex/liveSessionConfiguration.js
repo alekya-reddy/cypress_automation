@@ -44,6 +44,7 @@ const sessions = [
             video: false,
             status: 'upcoming'
         },
+        video: false,
         contents: false,
         expect: "pending"
     },
@@ -81,6 +82,7 @@ const sessions = [
             video: false,
             status: 'ended'
         },
+        video: false,
         contents: false,
         expect: "ended"
     },
@@ -118,6 +120,7 @@ const sessions = [
             video: false,
             status: 'live'
         },
+        video: false,
         contents: [
             'PDF - Used by Cypress automation for VEX testing',
             'Website - Used by Cypress automation for VEX testing',
@@ -156,9 +159,10 @@ const sessions = [
             type: 'Zoom',
             zoomNum: '111 111 111',
             zoomPW: 'No Password',
-            video: 'Youtube - Used in Cypress automation for VEX testing',
+            video: false,
             status: 'upcoming'
         },
+        video: 'Youtube - Used in Cypress automation for VEX testing',
         contents: false,
         expect: 'pending'
     },
@@ -193,11 +197,12 @@ const sessions = [
             type: 'Zoom',
             zoomNum: '111 111 111',
             zoomPW: 'No Password',
-            video: 'Youtube - Used in Cypress automation for VEX testing',
+            video: false,
             status: 'ended'
         },
+        video: 'Youtube - Used in Cypress automation for VEX testing',
         contents: false,
-        expect: 'on-demand'
+        expect: 'youtube'
     },
     {
         name: 'Live zoom with on-demand current',
@@ -230,15 +235,16 @@ const sessions = [
             type: 'Zoom',
             zoomNum: '111 111 111',
             zoomPW: 'No Password',
-            video: 'Youtube - Used in Cypress automation for VEX testing',
+            video: false,
             status: 'live'
         },
+        video: 'Youtube - Used in Cypress automation for VEX testing',
         contents: false,
         expect: 'zoom'
     },
     {
-        name: 'Live on-demand before start',
-        slug: 'live-on-demand-before-start',
+        name: 'Live content before start',
+        slug: 'live-content-before-start',
         get url(){ return `${event.url}/${this.slug}`; },
         visibility: 'Public',
         type: 'Live',
@@ -270,12 +276,13 @@ const sessions = [
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'upcoming'
         },
+        video: false,
         contents: false,
         expect: 'pending'
     },
     {
-        name: 'Live on-demand after end',
-        slug: 'live-on-demand-after-end',
+        name: 'Live content after end',
+        slug: 'live-content-after-end',
         get url(){ return `${event.url}/${this.slug}`; },
         visibility: 'Public',
         type: 'Live',
@@ -307,14 +314,13 @@ const sessions = [
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'ended'
         },
+        video: false,
         contents: false,
-        expect: 'on-demand'
+        expect: 'ended'
     },
-    /*{
-        // Currently there is a bug where having this configuration set to public will cause all of consumption side to go blank
-        // Once this has been fixed, go to qa and staging autonation-vex org and set this back to public 
-        name: 'Live on-demand current',
-        slug: 'live-on-demand-current',
+    {
+        name: 'Live content current',
+        slug: 'live-content-current',
         get url(){ return `${event.url}/${this.slug}`; },
         visibility: 'Public',
         type: 'Live',
@@ -346,9 +352,48 @@ const sessions = [
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'live'
         },
+        video: false,
         contents: false,
-        expect: 'on-demand'
-    }*/
+        expect: 'youtube'
+    },
+    {
+        name: 'Live content with on-demand after end',
+        slug: 'live-content-with-on-demand-after-end',
+        get url(){ return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            startStr: 'Jun 24, 2000 8:00pm',
+            start: {
+                picker: authoring.vex.startTimeInput,
+                month: 'Jun',
+                year: '2000',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            endStr: 'Jun 24, 2010 8:00pm',
+            end: {
+                picker: authoring.vex.endTimeInput,
+                month: 'Jun',
+                year: '2010',
+                day: '24',
+                hour: '08',
+                minute: '00',
+                xm: 'PM'
+            },
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            zoomNum: false,
+            zoomPW: false,
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            status: 'ended'
+        },
+        video: 'Vimeo - Used in Cypress automation for VEX testing',
+        contents: false,
+        expect: 'vimeo'
+    }
 ]
 
 const contentSource = {
@@ -372,12 +417,12 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.ifNoElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 1000, ()=>{
                 authoring.vex.addSession(session.name)
                 authoring.vex.configureSession(session)
-                /* Necessary to repeat picking date due to bug where picking it for first time will cause day and hour to shift*/
+                // Necessary to repeat picking date due to bug where picking it for first time will cause day and hour to shift
                 authoring.vex.pickDate(session.live.start)
                 session.live.end.pickerNum = 1
                 authoring.vex.pickDate(session.live.end)
                 cy.get(authoring.vex.saveButton).click()
-                /**************************************************************************************************************/
+                //*************************************************************************************************************
                 cy.containsExact('a', event.name).click()
             })
         })
@@ -415,11 +460,19 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.applyPasswordRadio).should('not.exist')
 
         // Pressing 'Select Live Video' button should open up video picker 
-        cy.contains('button', 'Select Live Video').should('exist').click()
+        cy.get(authoring.vex.selectLiveContentButton).should('exist').click()
         cy.get(authoring.vex.contentPickerSearchBar).should('exist') 
-        cy.get(authoring.vex.modal).eq(1).within(()=>{
-            cy.contains('button', 'Cancel').click()
+        cy.get(authoring.vex.modal).within(()=>{
+            cy.contains("h3", "Select Live Content Video").should('exist')
+            cy.get(authoring.vex.cancelButton).click()
         }) 
+
+        // Pressing 'Select on demand video' should open a different video picker
+        cy.get(authoring.vex.selectVideoButton).click()
+        cy.get(authoring.vex.modal).within(()=>{
+            cy.contains("h3", "Select On Demand Video").should('exist')
+            cy.get(authoring.vex.cancelButton).click()
+        })
 
         // If live content type is zoom, should see zoom configuration options 
         cy.get(authoring.vex.liveTypePicker).click()
@@ -448,18 +501,21 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.vex.removeSession(sessions[2].name)
         authoring.vex.addSession(sessions[2].name)
         authoring.vex.configureSession(sessions[2])
-        /*It is necessary to repeat picking the date due to bug where 1st time picking date will cause day and hour to shift*/
+        //It is necessary to repeat picking the date due to bug where 1st time picking date will cause day and hour to shift
         authoring.vex.pickDate(sessions[2].live.start)
         sessions[2].live.end.pickerNum = 1
         authoring.vex.pickDate(sessions[2].live.end)
         cy.get(authoring.vex.saveButton).click()
-        /*******************************************************************************************************************/
+        //******************************************************************************************************************
 
     })
 
     it('Go to consumption, visit the live sessions, and verify that we see the expected behavior', function(){
         sessions.forEach((session)=>{
-            cy.visit(session.url)
+            //cy.visit(session.url)
+            cy.visit(event.url)
+            cy.get(`a[href="/${event.slug}/${session.slug}"]`).click()
+            cy.url().should('eq', session.url)
             if(session.expect == 'pending'){
                 // If visiting before the scheduled live session...
                 cy.get('body').should('contain', 'The session will start soon.')
@@ -473,14 +529,25 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 cy.getIframeBody('iframe').within(()=>{
                     cy.get(consumption.vex.zoomRootDiv).should('exist')
                 })
-            } else if (session.expect == 'on-demand'){
+            } else if (session.expect == 'youtube'){
                 // If 'fake-live' session is in progress (using an on-demand video and passing it off as 'live')
                 // or if live zoom session has ended and an on-demand video is available as a fallback...
                 cy.waitForIframeToLoad('iframe', consumption.vex.youtube.videoPlayer, 10000)
                 cy.getIframeBody('iframe').within(()=>{
                     cy.get(consumption.vex.youtube.videoPlayer).should('exist')
                 })
+            } else if (session.expect == 'vimeo'){
+                cy.waitForIframeToLoad(consumption.vex.vimeo.iframe, consumption.vex.vimeo.videoPlayer, 10000)
+                cy.getIframeBody(consumption.vex.vimeo.iframe).within(()=>{
+                    cy.get(consumption.vex.vimeo.videoPlayer).should('exist')
+                })
             }
+        })
+
+        // Visit each session again, except this time visit the url directly 
+        // Note: There is currently a bug where visiting sessions that are live contents that have no on-demand as a fallback would result in 500 error page, but visiting by clicking the link on event page does not cause this bug 
+        sessions.forEach((session)=>{
+            cy.visit(session.url) // Cypress will automatically fail if getting status 500 error 
         })
 
         // On the event page on consumption side, the session cards should contain the correct information about their live status 
@@ -499,13 +566,13 @@ describe('VEX - Virtual Event Live Sessions', function() {
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
-            } else if(session.live.status == 'ended' && session.live.video){
+            } else if(session.live.status == 'ended' && session.video){
                 // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section 
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.contain', session.live.startStr)
-            } else if (session.live.status == 'ended' && !session.live.video){
+            } else if (session.live.status == 'ended' && !session.video){
                 // If session has ended and there's no on-demand configured as a fall back, it still goes into the 'upcoming' section
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
