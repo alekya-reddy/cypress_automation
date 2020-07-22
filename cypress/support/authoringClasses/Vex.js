@@ -47,7 +47,7 @@ export class Vex extends Common {
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
         this.noPasswordRadio = "input[value='no_password']";
         this.applyPasswordRadio = "input[value='apply_password']";
-        this.zoomPWInput = "input[name='liveContentConfig.zoomMeetingPassword']";
+        this.zoomPWInput = "input[name='meetingPassword']";
         this.onDemandTitleLocator = '[class="ant-card-meta-title"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';

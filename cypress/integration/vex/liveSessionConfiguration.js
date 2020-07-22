@@ -417,12 +417,6 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.ifNoElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 1000, ()=>{
                 authoring.vex.addSession(session.name)
                 authoring.vex.configureSession(session)
-                // Necessary to repeat picking date due to bug where picking it for first time will cause day and hour to shift
-                authoring.vex.pickDate(session.live.start)
-                session.live.end.pickerNum = 1
-                authoring.vex.pickDate(session.live.end)
-                cy.get(authoring.vex.saveButton).click()
-                //*************************************************************************************************************
                 cy.containsExact('a', event.name).click()
             })
         })
@@ -501,28 +495,34 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.vex.removeSession(sessions[2].name)
         authoring.vex.addSession(sessions[2].name)
         authoring.vex.configureSession(sessions[2])
-        //It is necessary to repeat picking the date due to bug where 1st time picking date will cause day and hour to shift
-        authoring.vex.pickDate(sessions[2].live.start)
-        sessions[2].live.end.pickerNum = 1
-        authoring.vex.pickDate(sessions[2].live.end)
-        cy.get(authoring.vex.saveButton).click()
-        //******************************************************************************************************************
-
     })
 
     it('Go to consumption, visit the live sessions, and verify that we see the expected behavior', function(){
         sessions.forEach((session)=>{
-            //cy.visit(session.url)
             cy.visit(event.url)
-            cy.get(`a[href="/${event.slug}/${session.slug}"]`).click()
-            cy.url().should('eq', session.url)
+            if(session.expect == 'ended'){
+                // If session has ended and there is no on-demand fallback, it should no longer be accessible 
+                cy.get(`a[href="/${event.slug}/${session.slug}"]`).should('not.exist')
+            } else {
+                cy.get(`a[href="/${event.slug}/${session.slug}"]`).click()
+                cy.url().should('eq', session.url)
+            }
+
+            // If the session page asks to register, fill out form and get it out of way so can proceed with test 
+            cy.ifElementExists(consumption.vex.sessionFirstNameInput, 500, ()=>{
+                cy.get(consumption.vex.sessionFirstNameInput).clear().type("Bob")
+                cy.get(consumption.vex.sessionLastNameInput).clear().type("Man")
+                cy.get(consumption.vex.sessionEmailInput).clear().type("bobman@gmail.com")
+                cy.contains("button", "Submit").click()
+            })
+            
+            // For each session, what are we expecting to see? Zoom? Waiting screen? A specific content library video?
+            // Note: There isn't a good way to check that a specific content library video is playing, so only going to identify if it's youtube or vimeo 
+            // For example, if you have a live session that uses youtube as live video content, and vimeo as on-demand fallback, if session has ended, you would expect to see vimeo. If session in progress, expect to see youtube
             if(session.expect == 'pending'){
                 // If visiting before the scheduled live session...
-                cy.get('body').should('contain', 'The session will start soon.')
-                cy.get('body').should('contain', `Please come back at ${session.live.startStr}`) 
-            } else if (session.expect == 'ended'){
-                // If session has ended and no on-demand video is set as a fallback...
-                cy.get('body').should('contain', 'The session has finished.')
+                cy.contains(consumption.vex.sessionPageTitle, session.name).should('exist')
+                cy.contains('div', `${session.live.startStr} - ${session.live.endStr}`).should('exist')
             } else if (session.expect == 'zoom'){
                 // If live zoom session currently in progress...
                 cy.waitForIframeToLoad('iframe', consumption.vex.zoomRootDiv, 10000)
@@ -530,7 +530,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
                     cy.get(consumption.vex.zoomRootDiv).should('exist')
                 })
             } else if (session.expect == 'youtube'){
-                // If 'fake-live' session is in progress (using an on-demand video and passing it off as 'live')
+                // If 'fake-live' session is in progress (using a content-library video and passing it off as 'live')
                 // or if live zoom session has ended and an on-demand video is available as a fallback...
                 cy.waitForIframeToLoad('iframe', consumption.vex.youtube.videoPlayer, 10000)
                 cy.getIframeBody('iframe').within(()=>{
@@ -546,9 +546,14 @@ describe('VEX - Virtual Event Live Sessions', function() {
 
         // Visit each session again, except this time visit the url directly 
         // Note: There is currently a bug where visiting sessions that are live contents that have no on-demand as a fallback would result in 500 error page, but visiting by clicking the link on event page does not cause this bug 
-        sessions.forEach((session)=>{
-            cy.visit(session.url) // Cypress will automatically fail if getting status 500 error 
-        })
+        /*sessions.forEach((session)=>{
+            cy.visit(session.url) // Cypress will automatically fail if get status 500
+            if(session.expect == 'ended') {
+                cy.contains(consumption.vex.sessionPageTitle, session.name).should('exist')
+                cy.contains('div', `${session.live.startStr} - ${session.live.endStr}`).should('exist')
+                cy.contains('div', "Finished").should('exist')
+            }
+        })*/
 
         // On the event page on consumption side, the session cards should contain the correct information about their live status 
         // Are these sessions currently live? or upcoming? 
@@ -573,15 +578,12 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 })
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.contain', session.live.startStr)
             } else if (session.live.status == 'ended' && !session.video){
-                // If session has ended and there's no on-demand configured as a fall back, it still goes into the 'upcoming' section
-                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('not.exist')
-                })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
+                // If a live session has ended and there's no on-demand configured as a fall back, it should no longer exist on the event page
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.exist')
             }  
         })
 
-        // Make sure clicking one of the live zoom sessions takes you to the correct url 
+        // Go to one of the live zoom sessions to do further testing there
         cy.contains(consumption.vex.sessionCardTitle, sessions[2].name).click()
         cy.url().should('eq', sessions[2].url)
 

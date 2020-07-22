@@ -32,10 +32,8 @@ const sessions = [
 ]
 
 // This test file will verify that removing sessions and events from VEX will also remove from consumption side 
-// As of June 5, 2020, this test will fail due to bug where removing session does not remove it from consumption side
 describe('VEX - Virtual Event', function() {
     it('Set up an event and then verify it can be seen on consumption side', function() {
-        // Toggle on VEX
         authoring.common.login();
 
         // Add event (and delete it if previously added already)

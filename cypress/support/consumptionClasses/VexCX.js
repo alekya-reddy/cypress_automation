@@ -10,6 +10,10 @@ export class VexCX extends CommonCX {
         this.eventFormMessage = 'div[class^="pf-event-main-description"]';
         this.zoomRootDiv = '#zmmtg-root';
         this.zoomIframe = "iframe[src^='/api/virtual_event_sessions']";
+        this.sessionPageTitle = "div[class^='pf-event-main-title']";
+        this.sessionFirstNameInput = "#firstName";
+        this.sessionLastNameInput = "#lastName";
+        this.sessionEmailInput = "#email";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
