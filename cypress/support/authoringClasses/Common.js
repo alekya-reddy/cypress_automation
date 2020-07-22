@@ -28,6 +28,7 @@ export class Common {
         this.clearSearchIcon = 'i[title="Clear search"]';
         this.antNotification = "div[class^='ant-notification-notice']";
         this.antSelectItem = "span[class='ant-select-selection-item']";
+        this.thumbnailSelector = "#thumbnail-selector";
     }
 
     visitHomeUrl(){
@@ -63,6 +64,25 @@ export class Common {
                 toggle.click()
             }
         })
+    }
+
+    pickThumbnail(config){
+        const category = config.category
+        const url = config.url
+        const name = config.name 
+
+        cy.get(this.thumbnailSelector).within(()=>{
+            cy.contains("li", category).click()
+            if(url){
+                cy.get(`img[src="${url}"]`).click() 
+            } else if (name) {
+                cy.contains('div', name).parent().get("img").click()
+            }
+            cy.contains("button", "Save").click()
+        })
+        if(url){
+            cy.get(`img[src="${url}"]`).should('exist')
+        }
     }
 
 }
