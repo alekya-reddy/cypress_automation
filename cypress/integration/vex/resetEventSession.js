@@ -7,9 +7,7 @@ const originalEvent = {
     slug: 'reset',
     description: 'Reset event',
     form: {
-        name: 'resetEventSession.js',
-        title: 'Form title',
-        message: 'form message'
+        name: 'resetEventSession.js'
     }
 }
 
@@ -19,9 +17,7 @@ const newEvent = {
     slug: 'differentslug',
     description: 'Different description',
     form: {
-        name: authoring.vex.noRegistrationNeededOption,
-        title: '',
-        message: ''
+        name: authoring.vex.noRegistrationNeededOption
     }
 }
 
@@ -76,8 +72,6 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.antDropdownContainer).within(()=>{
             cy.get(authoring.vex.antDropdownOption(newEvent.form.name)).click()
         })
-        cy.get(authoring.vex.eventFormTitle).clear()
-        cy.get(authoring.vex.eventFormMessage).clear()
 
         cy.get(authoring.vex.resetButton).should('not.be.disabled').click() 
 
@@ -86,8 +80,6 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.eventSlugInput).should('have.value', originalEvent.slug)
         cy.get(authoring.vex.eventDescription).should('contain', originalEvent.description)
         cy.containsExact(authoring.vex.antSelectItem, originalEvent.form.name).should('exist')
-        cy.get(authoring.vex.eventFormTitle).should('have.value', originalEvent.form.title)
-        cy.get(authoring.vex.eventFormMessage).should('have.value', originalEvent.form.message)
 
         // Now add a session and set it up 
         authoring.vex.addSession(originalSession.name)

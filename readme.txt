@@ -43,7 +43,7 @@ do it on the command line.
 If you want to run files in a specific order, one way is to number the files (Cypress sorts them alphanumerically).
 Alternatively, use the runSelectFile.txt (or any other .txt file). Type out the 'npx cypress run' command for each spec file in the order that you want in the .txt file,
 making sure the format comforms the bash syntax. Then, in the terminal, type the command -sh <path to your .txt file>
-Eg) sh cypress/integration/runSelectFiles/runSelectFiles.txt 
+Eg) sh runSelectFiles.txt 
 Note that doing it this way has drawbacks. You will not get a summary of passed/failed tests files, so you need to readh them individually in the terminal. 
 More importantly, each test file need to open and close the cypress app, which takes extra time. If you have many specs, this will add significantly to run time. 
 
@@ -312,6 +312,13 @@ cy.contains('elem', 'text', {timeout: 10000})
 to wait, use cy.wait(timeInMilliseconds)
 
 to pause for debugging, use cy.pause()
+
+
+
+Annoying Cypress Bugs
+-----------------------
+Any click event in the after block fails if one of the tests in an it block fails.
+
 
 
 POTENTIAL CATASTROPHIC SHOW-STOPPING PITFALLS!!!!!

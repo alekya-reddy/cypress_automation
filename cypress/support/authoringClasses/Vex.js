@@ -18,8 +18,6 @@ export class Vex extends Common {
         this.eventSlugInput = 'input[name="customUrl"]';
         this.eventDescription = 'textarea[name="description"]';
         this.eventFormPicker = '#rc_select_1';
-        this.eventFormTitle = "input[name='captureConfig.pageTitle']";
-        this.eventFormMessage = "textarea[name='captureConfig.pageDescription']";
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
         this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
@@ -48,7 +46,7 @@ export class Vex extends Common {
         this.noPasswordRadio = "input[value='no_password']";
         this.applyPasswordRadio = "input[value='apply_password']";
         this.zoomPWInput = "input[name='meetingPassword']";
-        this.onDemandTitleLocator = '[class="ant-card-meta-title"]';
+        this.onDemandTitleLocator = 'div[class="ant-space-item"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
         this.removeButton = "button:contains('Remove')";
@@ -268,15 +266,11 @@ export class Vex extends Common {
 
     configureForm(form){
         const name = form.name; 
-        const title = form.title;
-        const message = form.message;
 
         cy.get(this.eventFormPicker).parent().parent().click()
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.antDropdownOption(name)).click()
         })
-        title == '' ? cy.get(this.eventFormTitle).clear() : cy.get(this.eventFormTitle).clear().type(title)
-        message == '' ? cy.get(this.eventFormMessage).clear() : cy.get(this.eventFormMessage).clear().type(message)
         cy.get(this.saveButton).click()
         cy.get('body').should('contain', 'The record was saved successfully')
     }
