@@ -12,6 +12,7 @@ export class VexCX extends CommonCX {
         this.firstNameInput = "#firstName";
         this.lastNameInput = "#lastName";
         this.emailInput = "#email";
+        this.meetingPWInput = "#meetingPassword";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',

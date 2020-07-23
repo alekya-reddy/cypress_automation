@@ -40,7 +40,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'upcoming'
         },
@@ -78,7 +78,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'ended'
         },
@@ -116,7 +116,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'live'
         },
@@ -158,7 +158,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'upcoming'
         },
@@ -196,7 +196,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'ended'
         },
@@ -234,7 +234,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
-            zoomPW: 'No Password',
+            zoomAuth: 'No Password',
             video: false,
             status: 'live'
         },
@@ -272,7 +272,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
-            zoomPW: false,
+            zoomAuth: false,
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'upcoming'
         },
@@ -310,7 +310,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
-            zoomPW: false,
+            zoomAuth: false,
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'ended'
         },
@@ -348,7 +348,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
-            zoomPW: false,
+            zoomAuth: false,
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'live'
         },
@@ -386,7 +386,7 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
-            zoomPW: false,
+            zoomAuth: false,
             video: 'Youtube - Used in Cypress automation for VEX testing',
             status: 'ended'
         },

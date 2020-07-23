@@ -13,49 +13,88 @@ const event = {
 
 const session = {
     name: 'Zoom authentication',
-    slug: 'zoom-authentication',
+    slug: 'zoomauthentication-js',
     get url(){
         return `${event.url}/${this.slug}`
-    },
-    visibility: 'Public',
-    type: 'Live',
-    live: {
-        start: {
-            picker: authoring.vex.startTimeInput,
-            month: 'Jan',
-            year: '2020',
-            day: '1',
-            hour: '10',
-            minute: '45',
-            xm: 'AM'
-        },
-        end: {
-            picker: authoring.vex.endTimeInput,
-            month: 'Oct',
-            year: '2029',
-            day: '15',
-            hour: '05',
-            minute: '30',
-            xm: 'PM'
-        },
-        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-        type: 'Zoom',
-        zoomNum: '111 111 111',
-        zoomPW: 'No Password',
-        video: false,
     }
 }
 
-// Currently, zoom authentication does nothing - feature not yet implemented 
-describe('VEX - Virtual Event', function() {
-    it('Test that zoom attendee authentication works after setting it up on authoring side', function() {
-        /*
+/* Expected behavior for zoom authentication 
+    If 'no password' option is set, should be able to attend a zoom session.
+    If 'apply password automatically' option is set, the end user would see no difference than if no password were set. 
+    However, if the incorrect password is set on authoring side, attendees would not be able to attend. Cannot test this 
+    scenario as this would require a live zoom meeting, and there's no way to set one up to be open indefinitely. 
+    If 'require password' option is set, then attendees must enter the correct zoom password to be able to get into the zoom
+    session. In the case that the wrong password is entered on authorin side, attendees would be able to get into the 
+    session but the zoom meeeting itself would not connect. Again, can't test that zoom meeting actually connect. Can only
+    test using a dummy zoom meeting number. 
+*/
+describe('VEX - Virtual Event, zoom authentication', function() {
+    beforeEach(()=>{
         authoring.common.login()
-        authoring.vex.visit() 
-        //authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        //authoring.vex.addSession(session.name)
-        authoring.vex.configureSession(session)
-        */
+        authoring.vex.goToSessionConfig(session.name)
+    })
+
+    it('Zoom authentication set to no password needed', function() {
+        authoring.vex.configureLive({
+            zoomAuth: "No Password"
+        })
+        cy.contains("button", "Save").click()
+
+        cy.visit(session.url)
+        cy.get(consumption.vex.firstNameInput).should('exist')
+        cy.get(consumption.vex.lastNameInput).should('exist')
+        cy.get(consumption.vex.emailInput).should('exist')
+        cy.get(consumption.vex.meetingPWInput).should('not.exist')
+    })
+
+    it('Zoom authentication set to Apply Password Automatically For Attendee', function() {
+        authoring.vex.configureLive({
+            zoomAuth: "Apply Password Automatically For Attendee",
+            zoomPW: "12345"
+        })
+        cy.contains("button", "Save").click()
+
+        cy.visit(session.url)
+        cy.get(consumption.vex.firstNameInput).should('exist')
+        cy.get(consumption.vex.lastNameInput).should('exist')
+        cy.get(consumption.vex.emailInput).should('exist')
+        cy.get(consumption.vex.meetingPWInput).should('not.exist')
+    })
+
+    it('Zoom authentication set to Require Password From Attendee', function() {
+        authoring.vex.configureLive({
+            zoomAuth: "Require Password From Attendee",
+            zoomPW: "12345"
+        })
+        cy.contains("button", "Save").click()
+
+        cy.visit(session.url)
+        cy.get(consumption.vex.firstNameInput).should('exist')
+        cy.get(consumption.vex.lastNameInput).should('exist')
+        cy.get(consumption.vex.emailInput).should('exist')
+        cy.get(consumption.vex.meetingPWInput).should('exist')
+
+        // If you provide the wrong password, this should prevent you from attending 
+        cy.get(consumption.vex.firstNameInput).clear().type("Bob")
+        cy.get(consumption.vex.lastNameInput).clear().type("Man")
+        cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
+        cy.get(consumption.vex.meetingPWInput).clear().type("54321")
+        cy.contains("button", "Submit").click()
+        cy.contains('div', "Meeting password is invalid").should('exist')
+        cy.get('iframe').should('not.exist')
+        cy.get('form').should('exist')
+
+        // If you provide the right password, you should be able to attend session 
+        cy.get(consumption.vex.meetingPWInput).clear().type("12345")
+        cy.contains("button", "Submit").click()
+        cy.waitForIframeToLoad('iframe', consumption.vex.zoomRootDiv, 10000)
+        cy.getIframeBody('iframe').within(()=>{
+            cy.get(consumption.vex.zoomRootDiv).should('exist')
+        })
+        cy.get('form').should('not.exist')
+        cy.contains('div', "Meeting password is invalid").should('not.exist')
     })
 })

@@ -45,6 +45,7 @@ export class Vex extends Common {
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
         this.noPasswordRadio = "input[value='no_password']";
         this.applyPasswordRadio = "input[value='apply_password']";
+        this.requirePasswordRadio = "input[value='require_password']";
         this.zoomPWInput = "input[name='meetingPassword']";
         this.onDemandTitleLocator = 'div[class="ant-space-item"]';
         this.addContentButton = "button:contains('Add Content')";
@@ -301,36 +302,45 @@ export class Vex extends Common {
         const timeZone = config.timeZone // Go to the app and get the exact text for this value  
         const type = config.type // Values can be 'Zoom' or 'Content Library' 
         const zoomNum = config.zoomNum 
-        const zoomPW = config.zoomPW // "No Password" will turn off password requirement; all other values will set that value as the password 
+        const zoomAuth = config.zoomAuth // Values can be "No Password", "Require Password From Attendee", "Apply Password Automatically For Attendee"
+        const zoomPW = config.zoomPW 
         const video = config.video
 
         if(typeof start == 'string'){
             cy.get(this.startTimeInput).click().clear().type(start + '\n')
-        } else {
+        } else if (start) {
             start.pickerNum = 0
             this.pickDate(start)
         }
         if(typeof end == 'string'){
             cy.get(this.endTimeInput).click().clear().type(end + '\n')
-        } else {
+        } else if (end) {
             end.pickerNum = 1
             this.pickDate(end)
         }
-        cy.get(this.timeZonePicker).click()
-        cy.get(this.antDropdownContainer).within(()=>{
-            cy.get(this.antDropdownOption(timeZone)).click()
-        })
-        cy.get(this.liveTypePicker).click()
-        cy.get(this.antDropdownContainer).within(()=>{
-            cy.get(this.selectOption(type)).click()
-        })
+        if (timeZone){
+            cy.get(this.timeZonePicker).click()
+            cy.get(this.antDropdownContainer).within(()=>{
+                cy.get(this.antDropdownOption(timeZone)).click()
+            })
+        }
+        if(type){
+            cy.get(this.liveTypePicker).click()
+            cy.get(this.antDropdownContainer).within(()=>{
+                cy.get(this.selectOption(type)).click()
+            })
+        }
         if(zoomNum){
             cy.get(this.zoomNumInput).clear().type(zoomNum)
         }
-        if(zoomPW == 'No Password'){
+        if(zoomAuth == 'No Password'){
             cy.get(this.noPasswordRadio).click()
-        } else if(zoomPW) {
-            cy.get(this.applyPasswordRadio),click()
+        } else if (zoomAuth == "Require Password From Attendee"){
+            cy.get(this.requirePasswordRadio).click()
+        } else if (zoomAuth == "Apply Password Automatically For Attendee"){
+            cy.get(this.applyPasswordRadio).click()
+        }
+        if(zoomPW) {
             cy.get(this.zoomPWInput).clear().type(zoomPW)
         }
         if(video){
