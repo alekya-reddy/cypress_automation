@@ -20,6 +20,7 @@ export class Vex extends Common {
         this.eventFormPicker = '#rc_select_1';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
+        this.antDropDownScroller = `${this.antDropdownContainer} > div > div:nth-child(2)`;
         this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.sessionNameInput = 'input[name="name"]';
@@ -320,9 +321,15 @@ export class Vex extends Common {
         }
         if (timeZone){
             cy.get(this.timeZonePicker).click()
-            cy.get(this.antDropdownContainer).within(()=>{
-                cy.get(this.antDropdownOption(timeZone)).click()
+            cy.ifNoElementWithExactTextExists(this.antDropdownOption(timeZone), timeZone, 500, ()=>{
+                cy.scrollIntoViewWithin({
+                    scroller: this.antDropDownScroller,
+                    element: this.antDropdownOption(timeZone),
+                    text: timeZone,
+                    increment: 2
+                })
             })
+            cy.get(this.antDropdownOption(timeZone)).click({force: true})
         }
         if(type){
             cy.get(this.liveTypePicker).click()
