@@ -69,6 +69,31 @@ export class ContentLibrary extends Common{
         })
     }
 
+    deleteContentByUrl(config){
+        let urls = config.urls 
+        let verifyDeleted = config.verifyDeleted == false ? false : true
+
+        this.goToPage(this.pageTitle, this.pageUrl)
+        cy.reload()
+        cy.scrollIntoViewWithin({
+            scroller: this.scrollableTable,
+            increment: 10
+        })
+        urls.forEach((url)=>{
+            let url_no_protocol = url.replace(/^https?:\/\//,'')
+            cy.ifElementWithExactTextExists(this.urlCell, url_no_protocol, 500, () => {
+                cy.containsExact(this.urlCell, url_no_protocol).siblings(this.internalTitleCell).click()
+                cy.get(this.previewSideBar).within(()=>{
+                    cy.get(this.deleteIcon).click()
+                })
+                cy.get(this.deleteContentButton).click()
+                if(verifyDeleted) {
+                    cy.containsExact(this.urlCell, url_no_protocol).should('not.exist')
+                }
+            })
+        })
+    }
+
     addContentByUrl(config){
         const internalTitle = config.internalTitle;
         const url = config.url;
@@ -81,7 +106,7 @@ export class ContentLibrary extends Common{
             cy.get(this.internalTitleInput).clear().type(internalTitle)
         })
         cy.contains('button', 'Done').click()
-        cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, "")).should('exist')
+        cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, "")).should('exist', {timeout: 5000})
     }
 
     sideBarEdit(config){
@@ -108,6 +133,7 @@ export class ContentLibrary extends Common{
         }
         if(internalTitle){
             cy.get(this.sideBarElements.internalTitle).click()
+            cy.get(this.sideBarElements.internalTitle).click() // Cypress bug: need to repeat or else first click will open then immediately close the input field
             cy.get(this.sideBarElements.internalTitle).within(()=>{
                 cy.get(this.sideBarElements.internalTitleInput).clear().type(internalTitle)
                 cy.contains("button", "Save").click()

@@ -1,7 +1,7 @@
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-//const authoring = createAuthoringInstance({org: 'newqa', customBaseUrl: "https://newqa.pathfactory-qa.com/", username: "liming", password: "Password123"});
-const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}) 
+const authoring = createAuthoringInstance({org: 'newqa', customBaseUrl: "https://newqa.pathfactory-qa.com/", username: "liming", password: "Password123"});
+//const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}) 
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
     /*it("Test scrolling within content library", ()=>{
@@ -15,7 +15,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         cy.containsExact('div[data-qa-hook="table-cell-internal-title"]', "Myrbetriq").should('exist')
     })*/
 
-    it("Test scrolling within timezone picker in VEX", ()=>{
+    /*it("Test scrolling within timezone picker in VEX", ()=>{
         let timeZones = [
             '(GMT+13:00) Tokelau Is.',
             '(GMT-05:00) Eastern Time (US & Canada)'
@@ -25,6 +25,10 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         authoring.vex.goToEventConfig("test lab")
         authoring.vex.goToSessionConfig("test time zone")
         authoring.vex.configureLive({timeZone: timeZones[1]})
+    })*/
+
+    it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
     })
 
 })

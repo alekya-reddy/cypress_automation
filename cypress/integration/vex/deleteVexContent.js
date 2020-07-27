@@ -33,9 +33,7 @@ describe('VEX - Virtual Event', function() {
         // Clean up - delete previously added event and contents 
         authoring.common.login();
         authoring.vex.deleteVirtualEvent(event);
-        contents.forEach((content)=>{
-            authoring.contentLibrary.deleteContent(content.internalTitle)
-        })
+        authoring.contentLibrary.deleteContentByUrl({urls: [contents[0].url, contents[1].url]})
     })
 
     it('Verify that deleting content associated with VEX does not result in internal server error', function() {
@@ -62,7 +60,7 @@ describe('VEX - Virtual Event', function() {
         authoring.contentLibrary.sideBarEdit({
             search: contents[1].internalTitle,
             publicTitle: "Different public title",
-            //internalTitle: "Different internal title", // will add this back in once I get around to implementing 'deleteContentByUrl' 
+            internalTitle: "Different internal title", 
             description: "Different description",
             slug: "different-slug",
             thumbnail: {
@@ -72,11 +70,9 @@ describe('VEX - Virtual Event', function() {
         })
         
         // Verify content currently used as a VEX video cannot be deleted 
-        authoring.contentLibrary.deleteContent(contents[1].internalTitle, ()=>{
-            // For video content, expect a warning message that it is tied to a VEX session and cannot be deleted 
-            cy.contains(authoring.contentLibrary.antNotification, `${contents[1].internalTitle} cannot be deleted as it is used in the following Virtual Event Session: ${session.name}`).should('exist')
-            cy.containsExact(authoring.contentLibrary.internalTitleCell, contents[1].internalTitle).should('exist')
-        })
+        authoring.contentLibrary.deleteContentByUrl({urls: [contents[1].url], verifyDeleted: false})
+        cy.contains(authoring.contentLibrary.antNotification, `Different internal title cannot be deleted as it is used in the following Virtual Event Session: ${session.name}`).should('exist')
+        cy.containsExact(authoring.contentLibrary.internalTitleCell, 'Different internal title').should('exist')
 
         // Go into the session and verify that supplemental content is gone since it was deleted 
         authoring.vex.visit()
@@ -87,10 +83,10 @@ describe('VEX - Virtual Event', function() {
         // Now remove the session and verify that video can now be deleted from content library
         cy.contains('a', event).click()
         authoring.vex.removeSession(session.name)
-        authoring.contentLibrary.visit()
-        authoring.contentLibrary.deleteContent(contents[1].internalTitle)
+        authoring.contentLibrary.deleteContentByUrl({urls:[contents[1].url]})
 
         // Now add the video back as well as the session, then delete the event, and make sure video can be deleted 
+        cy.reload()
         contents.forEach((content)=>{
             authoring.contentLibrary.addContentByUrl(content)
         })
