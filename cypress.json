@@ -1,6 +1,6 @@
  {
     "env": {
-        "TEST_ENV": "pathfactory-qa"
+        "TEST_ENV": "pathfactory-staging"
     },
     "video": false,
     "chromeWebSecurity": false

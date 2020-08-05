@@ -15,13 +15,11 @@ const sessions = [
         slug: 'live-zoom',
         get url(){ return `${event.url}/${this.slug}`; }
     },
-    /*{
-        // There is existing bug where a live session that uses video from content library would cause consumption page to go blank 
-        // The session for this one is temporarily set to private so that it doesn't block the rest of the test
+    {
         name: 'live-video',
         slug: 'live-video',
         get url(){ return `${event.url}/${this.slug}`; }
-    },*/
+    },
     {
         // This case will fail as there's a bug where thumbnail doesn't apply to on-demand videos
         name: 'on-demand',
@@ -71,6 +69,18 @@ describe('VEX - Virtual Event', function() {
             cy.get(`a[href="/${event.slug}/${session.slug}"]`).within(()=>{
                 cy.get(`img[src="${session.thumbnail.url}"]`).should('exist')
             })
+        })
+
+        // Reset the thumbnail for 1 of the sessions and verify it goes to the green default thumbnail
+        authoring.vex.visit() 
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionConfig(sessions[0].name)
+        authoring.vex.resetThumbnail()
+        
+        // Go to consumption page and verify thumbnail falls back to the default green thumbnail
+        cy.visit(event.url)
+        cy.get(`a[href="/${event.slug}/${sessions[0].slug}"]`).within(()=>{
+            cy.get(`img[src*="default.png"]`).should('exist')
         })
 
     })

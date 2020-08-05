@@ -5,6 +5,7 @@ export class Vex extends Common {
         super(env, org, userName, password, customBaseUrl);
         this.vexUrl = `${this.baseUrl}/authoring/content-library/virtual-events`;
         this.virtualEventHomeTitle = 'Virtual Events';
+        this.recordSavedMessage = 'The record was saved successfully';
         this.addEventButton = "button:contains('Add Virtual Event')";
         this.eventCardLocator = '[class*="card-list-item"]';
         this.eventCardTitle = '[class*="ant-card-head-title"]';
@@ -125,7 +126,7 @@ export class Vex extends Common {
         form ? this.configureForm(form) : null;
 
         cy.contains('button', 'Save').click();
-        cy.get(this.pageBody).should('contain', 'The record was saved successfully');
+        cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 
     goToEventConfig(event){
@@ -241,7 +242,7 @@ export class Vex extends Common {
          }
 
          cy.get(this.saveButton).click()
-         cy.get('body').should('contain', "The record was saved successfully")
+         cy.get('body').should('contain', this.recordSavedMessage)
     }
 
     addSupplementalContent(contents){
@@ -274,7 +275,7 @@ export class Vex extends Common {
             cy.get(this.antDropdownOption(name)).click()
         })
         cy.get(this.saveButton).click()
-        cy.get('body').should('contain', 'The record was saved successfully')
+        cy.get('body').should('contain', this.recordSavedMessage)
     }
 
     selectThumbnail(config){
@@ -288,6 +289,13 @@ export class Vex extends Common {
             cy.get(this.saveButton).click()
         })
         cy.get(`img[src="${url}"]`).should('exist')
+    }
+
+    resetThumbnail(){
+        cy.contains("button", "Clear").click()
+        cy.get("body").should("contain", "No image selected")
+        cy.get(this.saveButton).click()
+        cy.get("body").should("contain", this.recordSavedMessage)
     }
 
     configureLive(config){

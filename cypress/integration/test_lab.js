@@ -27,8 +27,35 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         authoring.vex.configureLive({timeZone: timeZones[1]})
     })*/
 
-    it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+    it("Test xhr request reading", ()=>{
+        cy.server()
+        //cy.route('POST', 'https://spcollector.pathfactory-development.com/com.snowplowanalytics.snowplow/tp2').as('tp2')
+        cy.route("GET", "https://content-upload-test2.glitch.me/dreams").as("dreams")
+        cy.visit("https://content-upload-test2.glitch.me/")
+        //cy.wait('@tp2')
+        cy.wait("@dreams")
+        /*cy.get('@tp2').then((xhr)=>{
+            expect(xhr.status).to.eq(200)
+            cy.log(xhr.requestBody)
+        })*/
+        cy.get("@dreams").then((xhr)=>{
+            expect(xhr.status).to.eq(200)
+        })
+        /*cy.route('POST', 'http://qa-spcollector.pathfactory-development.com/com.snowplowanalytics.snowplow/tp2').as('tp2')
+        cy.visit("https://content-upload-test2.glitch.me/")
+        cy.reload()
+        cy.get("#qa-website-tools-inpage-carousel-item-0").click()
+        cy.wait("@tp2")
+        cy.get("@tp2").then((xhr)=>{
+            expect(xhr.status).to.eq(200)
+            cy.log(xhr.requestBody)
+        })*/
+        //cy.visit("https://content-upload-test2.glitch.me")
+        //cy.visit("https://limingorg.staging2.lookbookhq.com/c/a-cat-s-parade-on-vi?x=xcKKJa")
     })
+
+    /*it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })*/
 
 })
