@@ -8,11 +8,12 @@ export class VexCX extends CommonCX {
         this.eventHeroSubtitle = "div[class^='pf-event-hero-subtitle']";
         this.zoomRootDiv = '#zmmtg-root';
         this.zoomIframe = "iframe[src^='/api/virtual_event_sessions']";
-        this.sessionPageTitle = "div[class^='pf-event-main-title']";
+        this.sessionPageTitle = "div[class^='pf-event-session-title']";
         this.firstNameInput = "#firstName";
         this.lastNameInput = "#lastName";
         this.emailInput = "#email";
         this.meetingPWInput = "#meetingPassword";
+        this.closeContentButton = "button[title='Close']";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
@@ -48,6 +49,13 @@ export class VexCX extends CommonCX {
             pause: function(){ cy.invokeJS(this.videoPlayer, 'pause()') },
             getCurrentTime: function(state){ cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
-        }
+        };
+        this.brightcove = {
+            videoPlayer: 'video',
+            play: function(){ cy.invokeJS(this.videoPlayer, 'play()') },
+            pause: function(){ cy.invokeJS(this.videoPlayer, 'pause()') },
+            getCurrentTime: function(state){ cy.invokeJS(this.videoPlayer, 'currentTime', state) },
+            paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
+        };
     }
 }

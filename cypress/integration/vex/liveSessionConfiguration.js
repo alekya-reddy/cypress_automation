@@ -502,9 +502,9 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.visit(event.url)
             if(session.expect == 'ended'){
                 // If session has ended and there is no on-demand fallback, it should no longer be accessible 
-                cy.get(`a[href="/${event.slug}/${session.slug}"]`).should('not.exist')
+                cy.contains(consumption.vex.eventSessionTitle, session.name).should('not.exist')
             } else {
-                cy.get(`a[href="/${event.slug}/${session.slug}"]`).click()
+                cy.contains(consumption.vex.eventSessionTitle, session.name). should('exist').click()
                 cy.url().should('eq', session.url)
             }
 
@@ -544,16 +544,18 @@ describe('VEX - Virtual Event Live Sessions', function() {
             }
         })
 
-        // Visit each session again, except this time visit the url directly 
-        // Note: There is currently a bug where visiting sessions that are live contents that have no on-demand as a fallback would result in 500 error page, but visiting by clicking the link on event page does not cause this bug 
-        /*sessions.forEach((session)=>{
-            cy.visit(session.url) // Cypress will automatically fail if get status 500
-            if(session.expect == 'ended') {
-                cy.contains(consumption.vex.sessionPageTitle, session.name).should('exist')
-                cy.contains('div', `${session.live.startStr} - ${session.live.endStr}`).should('exist')
-                cy.contains('div', "Finished").should('exist')
+        // Visit each session again, except this time visit the url directly
+        // There was a bug where visiting url directly would result in 500 error if session is live and no on-demand fallback is configured 
+        sessions.forEach((session)=>{
+            if(session.expect !== 'ended'){
+                cy.visit(session.url) // Cypress will automatically fail if get status 500
             }
-        })*/
+            else if(session.expect == 'ended') {
+                cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
+                    expect(response.status).to.eq(500)
+                })
+            }
+        })
 
         // On the event page on consumption side, the session cards should contain the correct information about their live status 
         // Are these sessions currently live? or upcoming? 
@@ -596,7 +598,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
         })
 
          // Close the supplemental content and verify that only the zoom iframe is still open
-         cy.contains('a', '[Close Content]').click()
+         cy.get(consumption.vex.closeContentButton).click()
          cy.get('iframe').should('have.length', 1)
          cy.get(consumption.vex.zoomIframe).should('exist')
     })
