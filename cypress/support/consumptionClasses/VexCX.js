@@ -9,6 +9,7 @@ export class VexCX extends CommonCX {
         this.zoomRootDiv = '#zmmtg-root';
         this.zoomIframe = "iframe[src^='/api/virtual_event_sessions']";
         this.sessionPageTitle = "div[class^='pf-event-session-title']";
+        this.sessionCardTitle = "div[class^='pf-event-session-item-title']";
         this.firstNameInput = "#firstName";
         this.lastNameInput = "#lastName";
         this.emailInput = "#email";
