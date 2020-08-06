@@ -28,6 +28,9 @@ const session = {
     session. In the case that the wrong password is entered on authorin side, attendees would be able to get into the 
     session but the zoom meeeting itself would not connect. Again, can't test that zoom meeting actually connect. Can only
     test using a dummy zoom meeting number. 
+
+    If form requires a zoom password, if you are visiting with same email that you used before (and entered the password), you won't be asked for it again
+    if revisiting on a fresh incognito browser.
 */
 describe('VEX - Virtual Event, zoom authentication', function() {
     beforeEach(()=>{
@@ -96,5 +99,14 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         })
         cy.get('form').should('not.exist')
         cy.contains('div', "Meeting password is invalid").should('not.exist')
+    })
+
+    it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
+        cy.visit(`${session.url}?lb_email=bobman%40gmail.com`)
+        cy.wait(1000)
+        cy.get(consumption.vex.firstNameInput).should('not.exist')
+        cy.get(consumption.vex.lastNameInput).should('not.exist')
+        cy.get(consumption.vex.emailInput).should('not.exist')
+        cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
 })
