@@ -48,7 +48,6 @@ const event = 'User Roles'
 describe('VEX - User roles', function() {
     it('Before hook to turn on VEX', function(){
         authoring.common.login()
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'on')
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on')
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event)
@@ -88,7 +87,6 @@ describe('VEX - User roles', function() {
 
     it('After hook to turn off VEX', function(){
         authoring.common.login()
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.newNavigationToggle, 'off')
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off')
     })
 })

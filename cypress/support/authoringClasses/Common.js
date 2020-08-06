@@ -18,7 +18,7 @@ export class Common {
         this.editPencil = 'i[class*="fa-pencil"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.antModal = 'div[class="ant-modal"]';
-        this.vexNavigation = 'li[role="menuitem"] > a[href="/authoring/content-library/virtual-events"]';
+        this.vexNavigation = '#virtual-events';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';

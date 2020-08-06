@@ -8,7 +8,6 @@ export class ClientHQ extends Common {
         this.domainPreview = '[data-qa-hook="preview-section-default-tld"]';
         this.domainInput = '#defaultTld';
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
-        this.newNavigationToggle = '[data-qa-hook="enableNewNavigation"]';
         this.virtualEventToggle = '[data-qa-hook="enableVirtualEvents"]';
     }
 
