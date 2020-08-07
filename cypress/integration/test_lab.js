@@ -1,6 +1,6 @@
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: 'newqa', customBaseUrl: "https://newqa.pathfactory-qa.com/", username: "liming", password: "Password123"});
+const authoring = createAuthoringInstance({org: 'default', tld: "pathfactory", username: "liming", password: "Password123"});
 //const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}) 
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
@@ -42,6 +42,12 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
 
     it("should always pass", ()=>{
         cy.visit("https://www.google.com")
+        //cy.visit("https://automation-vex.staging2.lookbookhq.com/livesessionconfiguration-js") // works
+        //cy.visit("https://automation-vex.pathfactory-staging.com/livesessionconfiguration-js") // doesn't work 
+        //cy.visit("https://automation-vex.qa.lookbookhq.com/livesessionconfiguration-js") // works
+        //cy.visit("https://automation-vex.pathfactory-qa.com/livesessionconfiguration-js") // doesn't work
+        //cy.visit("https://automation-vex.pathfactory.com/livesessionconfiguration-js") // doesn't work
+        //cy.visit("https://automation-vex.lookbookhq.com/livesessionconfiguration-js") // doesn't work 
     })
 
 })
