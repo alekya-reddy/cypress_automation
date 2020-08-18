@@ -47,7 +47,14 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         //cy.visit("https://automation-vex.qa.lookbookhq.com/livesessionconfiguration-js") // works
         //cy.visit("https://automation-vex.pathfactory-qa.com/livesessionconfiguration-js") // doesn't work
         //cy.visit("https://automation-vex.pathfactory.com/livesessionconfiguration-js") // doesn't work
-        //cy.visit("https://automation-vex.lookbookhq.com/livesessionconfiguration-js") // doesn't work 
+        //cy.visit("https://automation-vex.lookbookhq.com/livesessionconfiguration-js") // doesn't work - works now - just need https enabled
+        //cy.visit("https://default.staging2.lookbookhq.com/l/limingexplore2") // works 
+        //cy.visit("http://pathfactory-staging-wp.com/wordpress/staging-web-promoter-testing/") // doesn't work 
+        //cy.visit("https://internal.lookbookhq.com/1/luciaaaa") // works 
+        //cy.visit("https://internal.lookbookhq.com/l/limingexplore") // works 
+        //cy.visit("https://internal.lookbookhq.com/c/abm-is-b2b-truth-5?x=lWMqTn")
+        //cy.visit("https://automation-vex.lookbookhq.com/c/index-html?x=kpMsxq") // doesn't work - need to enable https? - yes, need https
+        //cy.visit("https://automation-vex.lookbookhq.com/c/njgzzk8yvzgylw4oe4hl?x=nEdySZ") // doesn't work - need to enable https? - yes, need https
     })
 
 })

@@ -77,6 +77,7 @@ describe('VEX - Virtual Event Registration', function() {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
+        cy.clearCookies()
     })
 
     it("Event with no form configured", ()=>{
@@ -174,7 +175,7 @@ describe('VEX - Virtual Event Registration', function() {
         cy.visit(event.url)
         cy.get('form').should('exist')
 
-        cy.visit(event.url + `?lb_email=bobman2%40gmail.com`)   
+        cy.visit(event.url + `?lb_email=bobman${Math.random()}%40gmail.com`) // Must randomize or else will remember you from previous visit and not ask for name
         cy.wait(1000)     
         cy.get('form').should('not.exist')
 
