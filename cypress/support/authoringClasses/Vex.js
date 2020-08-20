@@ -49,6 +49,7 @@ export class Vex extends Common {
         this.applyPasswordRadio = "input[value='apply_password']";
         this.requirePasswordRadio = "input[value='require_password']";
         this.zoomPWInput = "input[name='meetingPassword']";
+        this.webexLinkInput = "input[name='liveContentConfig.webexMeetingDestination']";
         this.onDemandTitleLocator = 'div[class="ant-space-item"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
@@ -313,6 +314,7 @@ export class Vex extends Common {
         const zoomNum = config.zoomNum 
         const zoomAuth = config.zoomAuth // Values can be "No Password", "Require Password From Attendee", "Apply Password Automatically For Attendee"
         const zoomPW = config.zoomPW 
+        const webexLink = config.webexLink
         const video = config.video
 
         if(typeof start == 'string'){
@@ -357,6 +359,9 @@ export class Vex extends Common {
         }
         if(zoomPW) {
             cy.get(this.zoomPWInput).clear().type(zoomPW)
+        }
+        if(webexLink){
+            cy.get(this.webexLinkInput).clear().type(webexLink)
         }
         if(video){
             this.pickLiveContentVideo(video)

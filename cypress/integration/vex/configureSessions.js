@@ -87,12 +87,19 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.onDemandRadio).parent().should('have.class', 'ant-radio ant-radio-checked'); 
         cy.contains(authoring.vex.onDemandTitleLocator, session.video).should('exist');
 
-        // Make sure all video content types are available to be added as the 'on demand' video (Youtube, Vimeo, Vidyard, Brightcove, Wistia)
+        // Test the video picker
         cy.get(authoring.vex.selectVideoButton).click();
         cy.get(authoring.vex.modal).within(()=>{
+            // Make sure all video content types are available to be added as the 'on demand' video (Youtube, Vimeo, Vidyard, Brightcove, Wistia)
             videos.forEach((video)=>{
                 cy.get(authoring.vex.contentPickerSearchBar).clear().type(video.internalTitle);
                 cy.contains(authoring.vex.contentPickerItem, video.internalTitle).should('exist');
+            })
+
+            // Make sure other content types are not seen here
+            contents.forEach((content)=>{
+                cy.get(authoring.vex.contentPickerSearchBar).clear().type(content);
+                cy.contains(authoring.vex.contentPickerItem, content).should('not.exist');
             })
             
             // Make sure only 1 can be chosen at at time.
