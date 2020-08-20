@@ -558,27 +558,48 @@ describe('VEX - Virtual Event Live Sessions', function() {
         })
 
         // On the event page on consumption side, the session cards should contain the correct information about their live status 
-        // Are these sessions currently live? or upcoming? 
-        // Kinda hard to check that these are sorted into 'upcoming' or 'on-denand' section because there is no distinction between the sections
-        // So check for presence of date on the card title - this indirectly checks which of these 2 sections the session is sorted into 
+        // These sessions should be sorted into the correct categories ("Agenda" or "On Demand")
         cy.visit(event.url)
         sessions.forEach((session)=>{
             if(session.live.status == 'live'){
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('exist')
+                    cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
                 })
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr) 
+
+                // If live session is currently live, it should be in the "Agenda" section 
+                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
+                })
+                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
+                })
             } else if(session.live.status == 'upcoming'){
+                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
+                    cy.containsExact('div', 'Live').should('not.exist') // live session is still pending, so no live label
+                })
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
+
+                // If live session is upcoming, it should be in the "Agenda" section 
+                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
+                })
+                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
+                })
+            } else if(session.live.status == 'ended' && session.video){ 
                 cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
                     cy.containsExact('div', 'Live').should('not.exist')
                 })
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
-            } else if(session.live.status == 'ended' && session.video){
-                // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section 
-                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('not.exist')
+
+                // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section
+                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
                 })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.contain', session.live.startStr)
+                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
+                })
             } else if (session.live.status == 'ended' && !session.video){
                 // If a live session has ended and there's no on-demand configured as a fall back, it should no longer exist on the event page
                 cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.exist')
