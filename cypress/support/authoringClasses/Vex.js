@@ -3,6 +3,7 @@ import { Common } from "./Common";
 export class Vex extends Common {
     constructor(env, org, userName, password, customBaseUrl){
         super(env, org, userName, password, customBaseUrl);
+        this.vexEventPageTitle = "Virtual Events";
         this.vexUrl = `${this.baseUrl}/authoring/content-library/virtual-events`;
         this.virtualEventHomeTitle = 'Virtual Events';
         this.recordSavedMessage = 'The record was saved successfully';
@@ -71,6 +72,11 @@ export class Vex extends Common {
         this.timePickercell = "div[class='ant-picker-time-panel-cell-inner']";
         this.antPickerContainer = "div[class='ant-picker-panel-container']";
         this.antPickerDropdown = "div[class^='ant-picker-dropdown']";
+        this.groupNameInput = "input[name='name']";
+        this.groupRow = ".ant-list-item";
+        this.sessionRow = ".ant-list-item";
+        this.removeGroupButton = "span:contains('Remove')";
+        this.renameGroupButton = "button:contains('Rename')";
     }
 
     visit(){
@@ -418,5 +424,96 @@ export class Vex extends Common {
             cy.contains(this.timePickercell, xm).click()
             cy.contains('button', 'Ok').click()
         })
+    }
+
+    goToSessionGroup(){
+        cy.url().then((url)=>{
+            // If not already in the session groups page, go there
+            if(!url.includes("/session-groups")){
+                cy.containsExact("a", "Session Groups").click()
+            }
+        })
+    }
+
+    addSessionGroup(name){
+        this.goToSessionGroup()
+        cy.contains("button", "Add Group").click()
+        cy.contains(this.antModal, "Add Group").within(()=>{
+            cy.get(this.groupNameInput).clear().type(name)
+            cy.contains("button", "Submit").click()
+        })
+        cy.containsExact("span", name).should("exist")
+    }
+
+    renameSessionGroup(config){
+        const name = config.name
+        const newName = config.newName 
+
+        this.goToSessionGroup()
+        cy.contains(this.groupRow, name).within(()=>{
+            cy.get(this.renameGroupButton).click()
+        }) 
+        cy.contains(this.antModal, "Edit Session Group").within(()=>{
+            cy.get(this.groupNameInput).clear().type(newName) 
+            cy.contains("button", "Submit").click()
+        })  
+        cy.containsExact("span", newName).should("exist")     
+    }
+
+    addToGroup(config){
+        let group = config.name
+        let sessions = [config.sessions].flat() // You can enter either 1 session or an array of sessions 
+
+        // Select the correct group
+        cy.contains(this.groupRow, group).within(()=>{
+            cy.contains("button", "Manage Sessions").click()
+        })
+
+        // Add sessions to the group
+        cy.contains("button", "Add Sessions to Group").click()
+        cy.contains(this.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click() // this opens the dropdown list 
+        sessions.forEach((session)=>{
+            cy.get(this.antDropdownOption(session)).click()
+        })    
+        cy.contains(this.antModal, "Add Sessions to Group").contains("button", "Submit").click({force: true}) // have to force click because dropdown is in the way
+        
+        // Verify they got added 
+        sessions.forEach((session)=>{
+            cy.containsExact("span", session).should("exist")
+        })
+    }
+
+    removeFromGroup(config){
+        let group = config.name
+        let sessions = [config.sessions].flat() // You can enter either 1 session or an array of sessions 
+
+        // Select the correct group
+        cy.contains(this.groupRow, group).within(()=>{
+            cy.contains("button", "Manage Sessions").click()
+        })
+
+        // Remove sessions from the group
+        sessions.forEach((session)=>{
+            cy.contains(this.sessionRow, session).contains("button", "Remove").click()
+            cy.get(this.antModalBody).contains("button", "Yes").click()
+        })
+       
+        // Verify they got removed
+        sessions.forEach((session)=>{
+            cy.containsExact("span", session).should("not.exist")
+        })
+    }
+
+    deleteSessionGroup(name){
+        this.goToSessionGroup()
+        cy.ifElementWithExactTextExists("span", name, 1000, ()=>{
+            cy.contains(this.groupRow, name).within(()=>{
+                cy.get(this.removeGroupButton).click()
+            })
+            cy.get(this.antModalBody).within(()=>{
+                cy.contains("button", "Yes").click()
+            })
+        })
+        cy.containsExact("span", name).should("not.exist")
     }
 }
