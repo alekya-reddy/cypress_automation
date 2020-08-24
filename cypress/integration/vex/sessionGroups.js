@@ -177,13 +177,75 @@ describe('VEX - Sessions Groups', function() {
             cy.get(consumption.vex.sessionCardTitle).should("have.length", 1)
             cy.contains(consumption.vex.sessionCardTitle, groupB.sessions).should('exist')
         })
+
+        cy.contains(consumption.vex.sessionGroup, groupC.name).should('not.exist')
     })
 
-    /*it("Test all the cancel buttons within the session group page, then test for edge case bugs", ()=>{
+    it("Test all the cancel buttons within the session group page, and test the input field error validations", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        cy.ifElementWithExactTextExists(authoring.vex.sessionCardTitle, "Delete me", 3000, ()=>{ 
+            authoring.vex.removeSession("Delete me")
+        })
+        authoring.vex.addSession("Delete me")
+        authoring.vex.goToSessionGroup() 
 
+        // "Add Group" input field validation - and test its cancel button
+        cy.contains("button", "Add Group").click()
+        cy.contains(authoring.vex.antModal, "Add Group").should("exist").within(()=>{
+            cy.get(authoring.vex.groupNameInput).clear()
+            cy.contains("button", "Submit").click()
+            cy.contains("can't be blank").should("exist")
+            cy.get(authoring.vex.groupNameInput).clear().type(groupA.name)
+            cy.contains("button", "Submit").click()
+            cy.contains("has already been taken").should('exist')
+            cy.contains("button", "Cancel").click()
+        })
+        cy.contains(authoring.vex.antModal, "Add Group").should("not.be.visible")
+
+        // Add sessions to group cancel 
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Manage Sessions").click()
+        cy.contains("button", "Add Sessions to Group").click()
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").should("exist").contains("button", "Cancel").click()
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").should("not.be.visible")
+
+        // "Edit group name" input field validation, and test its cancel button
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Rename").click()
+        cy.contains(authoring.vex.antModal, "Edit Session Group").should("exist").within(()=>{
+            cy.get(authoring.vex.groupNameInput).clear()
+            cy.contains("button", "Submit").click()
+            cy.contains("can't be blank").should("exist")
+            cy.get(authoring.vex.groupNameInput).clear().type(groupB.name)
+            cy.contains("button", "Submit").click()
+            cy.contains("has already been taken").should('exist')
+            cy.contains("button", "Cancel").click()
+        })
+        cy.contains(authoring.vex.antModal, "Edit Session Group").should("not.be.visible")
+
+        // Remove group cancel 
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Remove").click()
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.be.visible")
+
+        // Remove session from group cancel 
+        cy.contains(authoring.vex.sessionRow, groupA.sessions[0]).contains("button", "Remove").click()
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.be.visible")
+
+        // Add a session to a group, verify that the session is no longer in the options if you try to add another session (there was bug where it was still available as option, leading to internal server error)
+        cy.contains("button", "Add Sessions to Group").click()
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
+        cy.get(authoring.vex.antDropdownOption("Delete me")).should('exist').click()
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("button", "Submit").click({force: true})
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
+        cy.get(authoring.vex.antDropdownOption("Delete me")).should('not.exist')
+        // then delete that session and revisit group (there was a bug where this caused internal server error)
+        cy.contains("a", "Event Setup").click()
+        authoring.vex.removeSession("Delete me")
+        cy.contains("a", "Session Groups").click()
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Manage Sessions").click()
+        cy.contains("span", "Delete me").should('not.exist')
     })
 
-    it("Test the error validations for various input fields", ()=>{
-
-    })*/
 })
