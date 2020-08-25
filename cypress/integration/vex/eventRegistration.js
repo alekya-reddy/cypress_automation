@@ -44,13 +44,13 @@ const sessions = [
 
 const noForm = { 
     name: "None (Registration Not Required)",
-    expectedFormFieldLocators: [consumption.vex.firstNameInput, consumption.vex.lastNameInput, consumption.vex.emailInput]
+    expectedFormFieldLocators: [consumption.vex.emailInput]
 }
 
 const form1 = {
     name: 'eventRegistration.js',
     fields: ["Company"],
-    expectedFormFieldLocators: [consumption.vex.firstNameInput, consumption.vex.lastNameInput, consumption.vex.emailInput, "#company"]
+    expectedFormFieldLocators: [consumption.vex.emailInput, "#company"]
 }
 
 const form2 = {
@@ -62,12 +62,12 @@ const form2 = {
 /*
 Expected behavior for registration:
 ALL live sessions will require a form to be filled regardless of whether or not a form is configured.
-The 3 required form fields that will always be present are first name, last name and email. Only these 3 fields are required to be filled in - all others can be ignored. 
-If a form is added that has any of those 3 fields missing, those fields will be present on the consumption side.
-If a form is added that has fields other than those 3 standard fields, then these fields should be present on consumption side.
+The only required form field that will always be present is email. This field is required to be filled in - all others can be ignored. 
+If a form is added that has this form missing, email field will be present on the consumption side.
+If a form is added that has other fields, then these fields should be present on consumption side.
 
 It is possible to automatically fill in the email field by visiting url with query string lb_email=liming%40gmail.com (%40 is encoding for @).
-This will negate the need to fill out the form on event page. You will still have to fill out first and last name on session page. 
+This will negate the need to fill out the form on event page.
 If you visit the event/session again in a fresh browser using same email, you will be recognized from before and not be required to register again. 
 */
 
@@ -103,7 +103,7 @@ describe('VEX - Virtual Event Registration', function() {
 
     })
 
-    it("Event with form - form lacks the 3 mandatory fields. The 3 fields should still show up. Only the 3 required fields need to be filled in", ()=>{
+    it("Event with form - form lacks the required email field. The email field should still show up. Only the email field needs to be filled in", ()=>{
         authoring.vex.configureForm(form1)
 
         // The form should show up on event page 
@@ -122,10 +122,8 @@ describe('VEX - Virtual Event Registration', function() {
             })
         })
 
-        // Only the 3 mandatory fields are required to be filled in (so not filling in company field)
+        // Only the email field is required to be filled in (so not filling in company field)
         cy.visit(event.url)
-        cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-        cy.get(consumption.vex.lastNameInput).clear().type("Man")
         cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
         cy.contains("button", "Submit").click()
         cy.get('form').should('not.exist')
@@ -139,7 +137,7 @@ describe('VEX - Virtual Event Registration', function() {
 
     })
 
-    it("Event with form - form has the 3 mandatory fields and more", ()=>{
+    it("Event with form - form has the mandatory email field and more", ()=>{
         authoring.vex.configureForm(form2)
 
         // The form should show up on event page 
@@ -171,7 +169,7 @@ describe('VEX - Virtual Event Registration', function() {
         cy.get('form').should('not.exist')
     })
 
-    it("Visiting with lb_email query string should make it unnecessary to fill out form on event page. On session page, only first and last names are needed.", ()=>{
+    it("Visiting with lb_email query string should make it unnecessary to fill out form", ()=>{
         cy.visit(event.url)
         cy.get('form').should('exist')
 
@@ -182,14 +180,6 @@ describe('VEX - Virtual Event Registration', function() {
         sessions.forEach((session)=>{
             cy.visit(session.url)
             if(session.name == "live current") {
-                form2.expectedFormFieldLocators.forEach((locator)=>{
-                    if(locator == consumption.vex.firstNameInput || locator == consumption.vex.lastNameInput){
-                        cy.get(locator).should('exist') 
-                    } else {
-                        cy.get(locator).should('not.exist')
-                    }
-                })
-            } else {
                 cy.wait(1000)
                 cy.get('form').should('not.exist')
             }

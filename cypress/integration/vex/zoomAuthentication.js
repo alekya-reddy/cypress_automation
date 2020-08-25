@@ -47,8 +47,6 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        //cy.get(consumption.vex.firstNameInput).should('exist')
-        //cy.get(consumption.vex.lastNameInput).should('exist')
         cy.get(consumption.vex.emailInput, {timeout: 10000}).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
@@ -61,8 +59,6 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        //cy.get(consumption.vex.firstNameInput).should('exist')
-        //cy.get(consumption.vex.lastNameInput).should('exist')
         cy.get(consumption.vex.emailInput).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
@@ -75,14 +71,10 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        //cy.get(consumption.vex.firstNameInput).should('exist')
-        //cy.get(consumption.vex.lastNameInput).should('exist')
         cy.get(consumption.vex.emailInput).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('exist')
 
         // If you provide the wrong password, this should prevent you from attending 
-        //cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-        //cy.get(consumption.vex.lastNameInput).clear().type("Man")
         cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
         cy.get(consumption.vex.meetingPWInput).clear().type("54321")
         cy.contains("button", "Submit").click()
@@ -104,8 +96,6 @@ describe('VEX - Virtual Event, zoom authentication', function() {
     it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
         cy.visit(`${session.url}?lb_email=bobman%40gmail.com`)
         cy.wait(1000)
-        cy.get(consumption.vex.firstNameInput).should('not.exist')
-        cy.get(consumption.vex.lastNameInput).should('not.exist')
         cy.get(consumption.vex.emailInput).should('not.exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })

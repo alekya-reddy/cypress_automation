@@ -68,8 +68,6 @@ describe('VEX - Webex', function() {
         cy.visit(session.url)
 
         // Fill out the registration form to get rid of it 
-        //cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-        //cy.get(consumption.vex.lastNameInput).clear().type("Man")
         cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
         cy.contains("button", "Submit").click()
 

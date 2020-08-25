@@ -517,8 +517,6 @@ describe('VEX - Virtual Event Live Sessions', function() {
 
             // If the session page asks to register, fill out form and get it out of way so can proceed with test 
             cy.ifElementExists(consumption.vex.emailInput, 500, ()=>{
-                //cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-                //cy.get(consumption.vex.lastNameInput).clear().type("Man")
                 cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
                 cy.contains("button", "Submit").click()
             })
