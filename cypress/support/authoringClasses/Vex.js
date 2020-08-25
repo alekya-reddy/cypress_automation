@@ -124,13 +124,24 @@ export class Vex extends Common {
         const slug = config.slug;
         const description = config.description; 
         const form = config.form;
+        const start = config.start
+        const end = config.end 
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
+
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
         slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
         description ? cy.get(this.eventDescription).clear().type(description) : null;
         form ? this.configureForm(form) : null;
+
+        if(start){
+            cy.get(this.startTimeInput).click().clear().type(start + '\n')
+        }
+
+        if(end){
+            cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        }
 
         cy.contains('button', 'Save').click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
