@@ -5,5 +5,5 @@ workflows:
   build:
     jobs:
       - cypress/run:
-          executor: cypress/browsers-chrome
+          executor: cypress/browsers-chrome69
           browser: chrome
