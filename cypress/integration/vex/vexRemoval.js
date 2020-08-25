@@ -57,8 +57,8 @@ describe('VEX - Virtual Event', function() {
 
         // Visit the consumption page and verify that the removed session isn't accessible 
         cy.visit(event.url)
-        cy.containsExact(consumption.vex.eventSessionTitle, sessions[0].name).should('exist')
-        cy.containsExact(consumption.vex.eventSessionTitle, sessions[1].name).should('not.exist')
+        cy.containsExact(consumption.vex.sessionCardTitle, sessions[0].name).should('exist')
+        cy.containsExact(consumption.vex.sessionCardTitle, sessions[1].name).should('not.exist')
 
         cy.request({url: sessions[1].url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)

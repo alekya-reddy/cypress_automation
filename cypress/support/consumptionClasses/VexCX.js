@@ -3,7 +3,6 @@ import { CommonCX } from "./CommonCX";
 export class VexCX extends CommonCX {
     constructor(env, org, customBaseUrl){
         super(env, org, customBaseUrl);
-        this.eventSessionTitle = 'div[class*="pf-event-session-item-title"]';
         this.eventHeroTitle = "div[class^='pf-event-hero-title']";
         this.eventHeroSubtitle = "div[class^='pf-event-hero-subtitle']";
         this.zoomRootDiv = '#zmmtg-root';

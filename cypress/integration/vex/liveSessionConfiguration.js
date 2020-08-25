@@ -412,12 +412,19 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
+        let check = {sessionAlreadyExists: false}
         sessions.forEach((session)=>{
             // Only add session if doesn't already exist. This way, can save time on the set up
-            cy.ifNoElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 1000, ()=>{
-                authoring.vex.addSession(session.name)
-                authoring.vex.configureSession(session)
-                cy.containsExact('a', event.name).click()
+            cy.get("body").then(()=>{ check.sessionAlreadyExists = false })
+            cy.ifElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 2000, ()=>{
+                check.sessionAlreadyExists = true
+            })
+            cy.get("body").then(()=>{
+                if(check.sessionAlreadyExists == false){
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.containsExact('a', event.name).click()
+                }
             })
         })
 
@@ -502,16 +509,16 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.visit(event.url)
             if(session.expect == 'ended'){
                 // If session has ended and there is no on-demand fallback, it should no longer be accessible 
-                cy.contains(consumption.vex.eventSessionTitle, session.name).should('not.exist')
+                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.exist')
             } else {
-                cy.contains(consumption.vex.eventSessionTitle, session.name). should('exist').click()
+                cy.contains(consumption.vex.sessionCardTitle, session.name). should('exist').click()
                 cy.url().should('eq', session.url)
             }
 
             // If the session page asks to register, fill out form and get it out of way so can proceed with test 
-            cy.ifElementExists(consumption.vex.firstNameInput, 500, ()=>{
-                cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-                cy.get(consumption.vex.lastNameInput).clear().type("Man")
+            cy.ifElementExists(consumption.vex.emailInput, 500, ()=>{
+                //cy.get(consumption.vex.firstNameInput).clear().type("Bob")
+                //cy.get(consumption.vex.lastNameInput).clear().type("Man")
                 cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
                 cy.contains("button", "Submit").click()
             })

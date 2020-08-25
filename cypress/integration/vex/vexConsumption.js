@@ -92,11 +92,11 @@ describe('VEX - Consumption', function(){
 
         // Expect the number of sessions to be equal to the number of public sessions we have added to the event 
         let privateSessions = sessions.filter((session)=>{ return session.visibility == 'Private'; })
-        cy.get('body').find(consumption.vex.eventSessionTitle).should('have.length', sessions.length - privateSessions.length) 
+        cy.get('body').find(consumption.vex.sessionCardTitle).should('have.length', sessions.length - privateSessions.length) 
 
         sessions.forEach((session)=>{
             if(session.name == 'Private') { return } // Skip this case, will test in another it function
-            cy.containsExact(consumption.vex.eventSessionTitle, session.name).should('exist').click()
+            cy.containsExact(consumption.vex.sessionCardTitle, session.name).should('exist').click()
             cy.url().should('eq', session.url)
             cy.contains('a', event.name).click()
         })
@@ -147,9 +147,8 @@ describe('VEX - Consumption', function(){
                 cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
                     expect(response.status).to.eq(404)
                 })
-
                 cy.visit(event.url)
-                cy.containsExact(consumption.vex.eventSessionTitle, session.name).should('not.exist')
+                cy.containsExact(consumption.vex.sessionCardTitle, session.name).should('not.exist')
             }
         })
     })

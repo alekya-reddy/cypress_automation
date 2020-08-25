@@ -47,9 +47,9 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        cy.get(consumption.vex.firstNameInput).should('exist')
-        cy.get(consumption.vex.lastNameInput).should('exist')
-        cy.get(consumption.vex.emailInput).should('exist')
+        //cy.get(consumption.vex.firstNameInput).should('exist')
+        //cy.get(consumption.vex.lastNameInput).should('exist')
+        cy.get(consumption.vex.emailInput, {timeout: 10000}).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
 
@@ -61,8 +61,8 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        cy.get(consumption.vex.firstNameInput).should('exist')
-        cy.get(consumption.vex.lastNameInput).should('exist')
+        //cy.get(consumption.vex.firstNameInput).should('exist')
+        //cy.get(consumption.vex.lastNameInput).should('exist')
         cy.get(consumption.vex.emailInput).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
@@ -75,14 +75,14 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.contains("button", "Save").click()
 
         cy.visit(session.url)
-        cy.get(consumption.vex.firstNameInput).should('exist')
-        cy.get(consumption.vex.lastNameInput).should('exist')
+        //cy.get(consumption.vex.firstNameInput).should('exist')
+        //cy.get(consumption.vex.lastNameInput).should('exist')
         cy.get(consumption.vex.emailInput).should('exist')
         cy.get(consumption.vex.meetingPWInput).should('exist')
 
         // If you provide the wrong password, this should prevent you from attending 
-        cy.get(consumption.vex.firstNameInput).clear().type("Bob")
-        cy.get(consumption.vex.lastNameInput).clear().type("Man")
+        //cy.get(consumption.vex.firstNameInput).clear().type("Bob")
+        //cy.get(consumption.vex.lastNameInput).clear().type("Man")
         cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
         cy.get(consumption.vex.meetingPWInput).clear().type("54321")
         cy.contains("button", "Submit").click()
