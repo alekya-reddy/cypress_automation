@@ -168,6 +168,7 @@ export class Vex extends Common {
         cy.get(this.antModalContent).within(()=>{ // must use arrow function notation or will lose 'this' context 
             cy.get(this.addSessionButton).click();
         })
+        cy.get(this.antModalContent).should("not.be.visible", {timeout: 20000})
         cy.get(this.antCardBody).contains(this.sessionCardTitle, sessionName).should('exist');
     }
 
@@ -188,7 +189,7 @@ export class Vex extends Common {
         cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
             cy.get(this.configureButton).click(); 
         })
-        cy.get(this.pageTitleLocator).should('contain', sessionName);
+        cy.get(this.pageTitleLocator).should('contain', sessionName, {timeout: 20000});
     }
 
     pickOnDemandVideo(content){
@@ -228,7 +229,7 @@ export class Vex extends Common {
         newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
 
         if(visibility == 'Private'){
-            cy.get(this.privateRadio).click();
+            cy.get(this.privateRadio).filter('.ant-radio-input').click();
         } else if (visibility == 'Public'){
             cy.get(this.publicRadio).click();
         } 
@@ -260,7 +261,7 @@ export class Vex extends Common {
          }
 
          cy.get(this.saveButton).click()
-         cy.get('body').should('contain', this.recordSavedMessage)
+         cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
     }
 
     addSupplementalContent(contents){

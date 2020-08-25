@@ -4,16 +4,20 @@ const authoring = createAuthoringInstance();
 
 describe('VEX - Virtual Event', function() {
     it('When virtual event is toggled on, vex navigation should be visible, and it should take you to vex page', function() {
-        authoring.common.login();
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
-        cy.get(authoring.common.vexNavigation).should('exist').should('not.have.attr', 'style', 'opacity: 0.5;').click();
-        cy.get(authoring.common.pageTitleLocator).should('contain', authoring.vex.virtualEventHomeTitle);
+        if(authoring.common.env !== 'prod'){ // No superuser access on prod 
+            authoring.common.login();
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
+            cy.get(authoring.common.vexNavigation).should('exist').should('not.have.attr', 'style', 'opacity: 0.5;').click();
+            cy.get(authoring.common.pageTitleLocator).should('contain', authoring.vex.virtualEventHomeTitle);
+        }
     })
     it('When virtual event toggled off, you should see a marketing text for VEX', function() {
-        authoring.common.login();
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-        cy.get(authoring.common.vexNavigation).should('exist').should('have.attr', 'style', 'opacity: 0.5;').click()
-        cy.contains('Looking for a virtual event experience that offers more than a typical webinar platform').should('exist')
-        cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist')
+        if(authoring.common.env !== 'prod'){
+            authoring.common.login();
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
+            cy.get(authoring.common.vexNavigation).should('exist').should('have.attr', 'style', 'opacity: 0.5;').click()
+            cy.contains('Looking for a virtual event experience that offers more than a typical webinar platform').should('exist')
+            cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist')
+        }
     })
 })

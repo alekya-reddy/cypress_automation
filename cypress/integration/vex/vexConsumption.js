@@ -1,5 +1,6 @@
-import { createConsumptionInstance } from '../../support/pageObject.js';
+import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
+const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'});
 const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'});
 
 const event = {
@@ -11,7 +12,7 @@ const event = {
 const sessions = [
     {
         name: 'Youtube',
-        supplementalContent: [
+        contents: [
             'Image - Used by Cypress automation for VEX testing',
             'PDF - Used by Cypress automation for VEX testing',
             'Website - Used by Cypress automation for VEX testing'
@@ -25,7 +26,7 @@ const sessions = [
     },
     {
         name: 'Vimeo',
-        supplementalContent: [],
+        contents: [],
         visibility: 'Public',
         slug: 'vimeo',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -35,7 +36,7 @@ const sessions = [
     },
     {
         name: 'Vidyard',
-        supplementalContent: [],
+        contents: [],
         visibility: 'Public',
         slug: 'vidyard',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -45,7 +46,7 @@ const sessions = [
     },
     {
         name: 'Wistia',
-        supplementalContent: [],
+        contents: [],
         visibility: 'Public',
         slug: 'wistia',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -55,7 +56,7 @@ const sessions = [
     },
     {
         name: 'Brightcove',
-        supplementalContent: [],
+        contents: [],
         visibility: 'Public',
         slug: 'brightcove',
         get url(){ return `${event.url}/${this.slug}`; },
@@ -65,7 +66,7 @@ const sessions = [
     },
     {
         name: 'Private',
-        supplementalContent: [
+        contents: [
             'Image - Used by Cypress automation for VEX testing',
             'PDF - Used by Cypress automation for VEX testing',
             'Website - Used by Cypress automation for VEX testing'
@@ -75,17 +76,48 @@ const sessions = [
         get url(){ return `${event.url}/${this.slug}`; },
         description: 'Private description',
         type: 'On Demand',
-        video: 'Slingshots of the Oceanic on Vimeo'
+        video: 'Youtube - Used in Cypress automation for VEX testing'
     }
 ]
 
 const contentSource = {
-    'Image - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12954/d8058125-c1a5-41d3-9f66-cf8176fe2040.png' : 'https://cdn.pathfactory-qa.com/assets/122/contents/17527/7e237afe-3aac-4d8b-bbeb-1a297fcd6fba.png',
-    'PDF - Used by Cypress automation for VEX testing' : Cypress.env('TEST_ENV') == 'pathfactory-staging' ? 'https://cdn.pathfactory-staging.com/assets/74/contents/12955/ae090cdf-c888-41f1-9c5c-5f20fee9acce.pdf' : 'https://cdn.pathfactory-qa.com/assets/122/contents/17526/6521cdc6-5677-493b-8040-3b0c3178a74e.pdf',
+    'Image - Used by Cypress automation for VEX testing' : (function (server){
+        if(server == 'pathfactory-staging'){
+            return 'https://cdn.pathfactory-staging.com/assets/74/contents/12954/d8058125-c1a5-41d3-9f66-cf8176fe2040.png';
+        } else if (server == 'pathfactory-qa'){
+            return 'https://cdn.pathfactory-qa.com/assets/122/contents/17527/7e237afe-3aac-4d8b-bbeb-1a297fcd6fba.png';
+        } else if (server == 'prod'){
+            return 'https://cdn.pathfactory.com/assets/10668/contents/181009/31cacbc2-e385-4a58-881e-8fb175dbfa5b.png';
+        }
+    })(Cypress.env("TEST_ENV")), 
+    'PDF - Used by Cypress automation for VEX testing' : (function (server){
+        if(server == 'pathfactory-staging'){
+            return 'https://cdn.pathfactory-staging.com/assets/74/contents/12955/ae090cdf-c888-41f1-9c5c-5f20fee9acce.pdf';
+        } else if (server == 'pathfactory-qa'){
+            return 'https://cdn.pathfactory-qa.com/assets/122/contents/17526/6521cdc6-5677-493b-8040-3b0c3178a74e.pdf';
+        } else if (server == 'prod'){
+            return 'https://cdn.pathfactory.com/assets/10668/contents/181010/26a87f6a-9067-4247-b2ef-30764379b980.pdf';
+        }
+    })(Cypress.env("TEST_ENV")),
     'Website - Used by Cypress automation for VEX testing' : 'https://en.wikipedia.org/wiki/SpaceX'
 }
 
 describe('VEX - Consumption', function(){
+    it("Set up for the test if not already done", ()=>{
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.configureEvent(event)
+                sessions.forEach((session)=>{
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.containsExact("a", event.name).click()
+                })
+            }
+        })
+    })
 
     it('The event page should have the correct sessions displayed, and the links to sessions page, and the link back to event page, should work', function(){
         cy.visit(event.url)
@@ -164,9 +196,9 @@ describe('VEX - Consumption', function(){
         cy.containsExact('div', session.description).should('exist')
         cy.get('ul').within(()=>{
             // This checks that the number of supplemental content is exactly what was added to this session 
-            cy.get(`a[href*="${event.slug}"]`).should('have.length', session.supplementalContent.length)
+            cy.get(`a[href*="${event.slug}"]`).should('have.length', session.contents.length)
         })
-        session.supplementalContent.forEach((content)=>{
+        session.contents.forEach((content)=>{
             // This checks that the correct supplemental content are listed 
             cy.containsExact('a', content).should('exist')
         })
@@ -203,7 +235,7 @@ describe('VEX - Consumption', function(){
         consumption.vex.youtube.play()
 
         // Cycle through the contents and verify source is correct 
-        session.supplementalContent.forEach((content)=>{
+        session.contents.forEach((content)=>{
             cy.contains('a', content).should('exist').click()
             cy.get('iframe').should('have.length', 2)
             cy.get(consumption.vex.youtube.iframe).should('exist')

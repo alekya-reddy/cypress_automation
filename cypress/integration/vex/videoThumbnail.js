@@ -21,7 +21,6 @@ const sessions = [
         get url(){ return `${event.url}/${this.slug}`; }
     },
     {
-        // This case will fail as there's a bug where thumbnail doesn't apply to on-demand videos
         name: 'on-demand',
         slug: 'on-demand',
         get url(){ return `${event.url}/${this.slug}`; }
