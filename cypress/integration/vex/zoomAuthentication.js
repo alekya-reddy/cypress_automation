@@ -45,7 +45,8 @@ describe('VEX - Virtual Event, zoom authentication', function() {
             zoomAuth: "No Password"
         })
         cy.contains("button", "Save").click()
-        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 20000})
+        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})
+        cy.wait(2000)
 
         cy.visit(session.url)
         cy.get(consumption.vex.emailInput, {timeout: 10000}).should('exist')
@@ -58,7 +59,8 @@ describe('VEX - Virtual Event, zoom authentication', function() {
             zoomPW: "12345"
         })
         cy.contains("button", "Save").click()
-        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 20000})
+        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})
+        cy.wait(2000)
 
         cy.visit(session.url)
         cy.get(consumption.vex.emailInput).should('exist')
@@ -71,7 +73,8 @@ describe('VEX - Virtual Event, zoom authentication', function() {
             zoomPW: "12345"
         })
         cy.contains("button", "Save").click()
-        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 20000})
+        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})
+        cy.wait(2000)
 
         cy.visit(session.url)
         cy.get(consumption.vex.emailInput).should('exist')
