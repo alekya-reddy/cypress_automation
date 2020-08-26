@@ -59,5 +59,10 @@ export class VexCX extends CommonCX {
             getCurrentTime: function(state){ cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
         };
+        this.rocketChat = {
+            iframe: "iframe[src*='rocket.pathfactory']",
+            container: "#rocket-chat",
+            messageInput: "textarea[name='msg']"
+        }
     }
 }

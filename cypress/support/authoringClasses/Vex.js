@@ -223,6 +223,7 @@ export class Vex extends Common {
         const contents = config.contents;
         const thumbnail = config.thumbnail;
         const live = config.live;
+        const widgets = config.widgets;
 
         this.goToSessionConfig(name);
 
@@ -262,6 +263,11 @@ export class Vex extends Common {
 
          cy.get(this.saveButton).click()
          cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
+
+        // Configure widgets after saving or else will reset all the changes you made 
+        if(widgets){
+            this.setRocketChat()
+        }
     }
 
     addSupplementalContent(contents){
@@ -436,6 +442,23 @@ export class Vex extends Common {
             cy.contains(this.timePickercell, xm).click()
             cy.contains('button', 'Ok').click()
         })
+    }
+
+    goToWidgets(){
+        cy.url().then((url)=>{
+            if(!url.includes("/widget")){
+                cy.containsExact("a", "Widgets").click()
+            }
+        })
+    }
+
+    setRocketChat(){
+        this.goToWidgets()
+        cy.ifElementExists("button:contains('Configure Chat')", 2000, ()=>{
+            cy.contains("button", "Configure Chat").click()
+            cy.contains("Chat has been configured.").should('exist')
+        })
+        cy.containsExact("a", "Session Details").click() 
     }
 
     goToSessionGroup(){
