@@ -77,6 +77,7 @@ export class Vex extends Common {
         this.sessionRow = ".ant-list-item";
         this.removeGroupButton = "span:contains('Remove')";
         this.renameGroupButton = "button:contains('Rename')";
+        this.trackProtectionArea = '.visitorGroupMultiSelect';
     }
 
     visit(){
@@ -150,6 +151,36 @@ export class Vex extends Common {
     goToEventConfig(event){
         cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
             cy.get(this.configureButton).click()
+        })
+    }
+
+    addTrackProtection(list){
+        let groups = [list].flat() 
+
+        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
+            cy.get("span[class='ant-select-selection-search']").click()
+        })
+        groups.forEach((group)=>{
+            cy.get(this.antDropdownOption(group)).click()
+        })
+        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
+            cy.get("span[class='ant-select-selection-search']").click()
+        })
+        groups.forEach((group)=>{
+            cy.contains('.ant-select-selection-item', group).should('exist')
+        })
+    }
+
+    removeTrackProtection(list){
+        let groups = [list].flat()
+
+        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
+            groups.forEach((group)=>{
+                cy.contains('.ant-select-selection-item', group).within(()=>{
+                    cy.get(".ant-select-selection-item-remove").click()
+                })
+                cy.contains('.ant-select-selection-item', group).should("not.exist")
+            })
         })
     }
 

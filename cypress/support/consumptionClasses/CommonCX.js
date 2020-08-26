@@ -5,5 +5,6 @@ export class CommonCX {
         this.env = env;
         this.customBaseUrl = customBaseUrl;
         this.baseUrl = customBaseUrl ? customBaseUrl : `https://${org}.${env}.com`;
+        this.trackProtectionEmailInput = "#visitor_email";
     }
 }
