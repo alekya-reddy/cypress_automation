@@ -8,7 +8,6 @@ export class ContentLibrary extends Common{
         this.contentSearchInput = "input[name='page-search']";
         this.internalTitleCell = "div[data-qa-hook='table-cell-internal-title']";
         this.urlCell = "div[data-qa-hook='table-cell-url']";
-        this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.sideBarElements = {
             publicTitle: "#content-sidebar-title",
             publicTitleInput: "textarea[name='title']",

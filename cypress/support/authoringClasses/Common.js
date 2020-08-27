@@ -30,6 +30,12 @@ export class Common {
         this.antSelectItem = "span[class='ant-select-selection-item']";
         this.thumbnailSelector = "#thumbnail-selector";
         this.scrollableTable = 'div[class*="table-body-container"]';
+        this.table = {
+            // Table cell div data-qa-hooks are reused to often that we should just place them all into common
+            cellName: "div[data-qa-hook='table-cell-name']",
+            cellCode: "div[data-qa-hook='table-cell-code']"
+        }
+        this.previewSideBar = "div[data-qa-hook='page-preview']";
     }
 
     visitHomeUrl(){

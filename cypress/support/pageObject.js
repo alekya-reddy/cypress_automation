@@ -4,6 +4,7 @@ import {ClientHQ} from './authoringClasses/ClientHQ.js';
 import {WebdomainSettings} from './authoringClasses/WebdomainSettings.js';
 import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
 import {Vex} from './authoringClasses/Vex.js';
+import {Widgets} from './authoringClasses/Widgets.js';
 import {constants} from './constants.js';
 
 import { CommonCX } from './consumptionClasses/CommonCX.js';
@@ -34,7 +35,8 @@ export const createAuthoringInstance = function(config = {}){
             clientHQ: new ClientHQ(env, org, username, password, customBaseUrl),
             webdomainSettings: new WebdomainSettings(env, org, username, password, customBaseUrl),
             websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl),
-            vex: new Vex(env, org, username, password, customBaseUrl)
+            vex: new Vex(env, org, username, password, customBaseUrl),
+            widgets: new Widgets(env, org, username, password, customBaseUrl)
         }
     );
 }
