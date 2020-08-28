@@ -11,7 +11,7 @@ This readme is just a running log of useful tidbits of information to help you g
 How to run tests on cypress
 ----------------------------
 
-To open debugger while you are writing/editing test files, navigate to the Cypress folder (or just open termina in Visual Code), then type into command line: 
+To open test-runner, navigate to the Cypress folder (or just open termina in Visual Code), then type into command line: 
 
 npx cypress open 
 
@@ -19,17 +19,19 @@ or
 
 node_modules/.bin/cypress open
 
-Then, from the window that opens, double click the file you want to run
-If using debugger, you can set your env variables in cypress.json (for example, TEST_ENV=pathfactory-staging)
+Then, from the window that opens, click the file you want to run
 
-Using the UI, you can run all spec files (they MUST be inside the integration folder -- if you want to change the name of folder, you can, but no point doing this).
+To set the server you are running on (QA, Staging, Prod), set the TEST_ENV variable in cypress.json (for example, TEST_ENV=pathfactory-staging)
+
+Using the UI, you can run all spec files (they MUST be inside the integration folder).
 You can also run just 1 specific file by clicking on it. 
 
 You can also run files from the command line: 
 
 npx cypress run --env TEST_ENV=pathfactory-qa --browser chrome --spec cypress/integration/new_website_test.js
 
-Note: you do not need to include the --env parameter if you already have it in the cypress.json file
+Note: you do not need to include the --env parameter if you already have it in the cypress.json file. Values passed through the command line will override
+values you set in cypress.json
 
 If you want to run a selection of files, one method is to copy the files you want to run into a separate folder (I have set up the runSelectFiles folder for this).
 Then, in commpand line, specify that folder: 
@@ -37,20 +39,19 @@ Then, in commpand line, specify that folder:
 npx cypress run --browser chrome --spec cypress/integration/runSelectFiles/*  
 
 Alternatively, type out the command you want, including all the spec files you want to run, into a text document and then copy+paste onto the terminal. 
-I have created the file runSelectFiles.txt within the runSelectFiles folder for this purpose. It's much easier to edit the specs in this .txt document than to
-do it on the command line. 
+I have created the file runSelectFiles.txt for this purpose. It's much easier to edit the specs in this .txt document than to do it on the command line. 
 
 If you want to run files in a specific order, one way is to number the files (Cypress sorts them alphanumerically).
-Alternatively, use the runSelectFile.txt (or any other .txt file). Type out the 'npx cypress run' command for each spec file in the order that you want in the .txt file,
+Alternatively, use the runSelectFile.txt. Type out the 'npx cypress run' command for each spec file in the order that you want in the .txt file,
 making sure the format comforms the bash syntax. Then, in the terminal, type the command -sh <path to your .txt file>
 Eg) sh runSelectFiles.txt 
 Note that doing it this way has drawbacks. You will not get a summary of passed/failed tests files, so you need to readh them individually in the terminal. 
-More importantly, each test file need to open and close the cypress app, which takes extra time. If you have many specs, this will add significantly to run time. 
+More importantly, each test file needs to open and close the cypress app, which takes extra time. If you have many specs, this will add significantly to run time. 
 
-There is NOT a built-in way to run a specific set of folders, NOR is there a built-in way to run spec files in a specific order without using these workarounds. 
+There is NOT a built-in way to run spec files in a specific order without using these workarounds. 
 
 
-From above, you can infer that --env allows you To declare whatever env variables you want (env variables must be separated by a comma). 
+When running on command line, --env allows you To declare whatever env variables you want (env variables must be separated by a comma). 
 This is equivalent to declaring env variables in cypress.json, and the way you call it in the test file is the same, eg Cypress.env('TEST_ENV')
 Declaring env variables in the command line will overrite whatever is in cypress.json, so you don't have to worry about deleting it from cypress.json when using command line 
 You can set whatever browser you want using --browser
@@ -64,12 +65,29 @@ eg) npx cypress run --env TEST_ENV=pathfactory-qa --config video=false  --browse
 Note: You cannot set --browser in the cypress.json file. You have to do it in the command line. 
 
 
+How to run cypress on CircleCI
+------------------------------
+To do this, the cypress repo needs a config.yml file, which I have already added 
+
+This file is the 'orb' that circleci needs to be able to run the tests on circleci
+
+The 'orb' is basically just a configuration file telling circleci what to do 
+
+Refer to these links for how to construction the 'orb':
+
+https://github.com/cypress-io/cypress-realworld-app/blob/develop/.circleci/config.yml
+https://github.com/cypress-io/cypress-docker-images/tree/master/browsers#cypressbrowsers
+https://circleci.com/orbs/registry/orb/cypress-io/cypress
+
+You can sign up for a personal circleci account. Create a clone of the cypress repo in your own github, and connect it to circleci 
+
+With every commit to this repo, circleci will automatically detect that and re-run the entire test suite 
 
 
 How the cypress repo is organized
 ---------------------------------
 
-Use classes to represent the organization of our app:
+Classes represent the different sections of our app (A 'section' is defined as any page or group of pages that is accessible via the same url path):
 -These classes will contain the links to various parts of the app (content library, settings, target etc)
 -These classes will contain the locators to various elements in the app
 -These classes will contain any text that we need to check against (like the page titles)
@@ -80,19 +98,25 @@ In essence, a class will contain locators, text, links and helper functions all 
 To use these classes in a test file, build a new page object instance using these classes at beginning of each test file. You can leave blank parameters 
 if going with default values for username, login and org, or specific which org, username, password 
 
-There will be a common class to represent locators, links and helper functions that are accessible or present in all parts of the application. 
-The common class also includes login functions even though these are not common elements to entire app - don't really want to create a seperate class for login 
-For example, the navigation links, the top menu to access org settings, common generic elements such as toggles and checkboxes - these would be part of the common class
-The common class will have children classes representing each webpage of the app. Example, target, recommend, website tools, web ex, org settings, clienthq etc
+import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 
-Children classes will inherit all properties from the parent common class, so all children classes will have access to the same locators as the common class, just like in the actual application
-Any part of the app that is accessible only from a specific url should be considered part of the same class.
+const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
+
+The common class contains locators, links and helper functions that are accessible or present in all parts of the application. 
+The common class also includes login functions
+For example, the navigation links, the top menu to access org settings, common generic elements such as toggles and checkboxes - these would be part of the common class
+The common class has children classes representing each section of the app. Example, target, recommend, website tools, web ex, org settings, clienthq etc
+
+Children classes inherit all properties from the parent common class, so all children classes will have access to the same locators as the common class, just like in the actual application
+Any part of the app that is accessible only from a particular url path should be considered part of the same class.
 For example, anything only accessible from https://newqa.pathfactory-qa.com/authoring/content-library/content is considered as part of the content-library class.
 There are cases where the same div[data-qa-hook='whatever'] can be found across multiple parts of the app. It could be that they are simply re-used generic components. 
 A good example of this would the the modal, which is ubiquitous throughout our app. 
 In this case, it would make sense to put into the locators for these ubiquitous componenents into the common class. 
-However, it could also be that the same data-qa-hook or id for an element is just a coincidence and the developers could easily change it to something else later on. 
-In this case, it is better to err on the side of putting the locator for this element into the child class (not the common class). 
+However, it could also be that the same data-qa-hook or id for an element is just a coincidence and they are not intended to represent the same thing. For example,
+id='name' for an input element, and id=name for a div element that contains something's name. In this case, put the element into the child class. 
+In general, it is better to err on the side of putting the locator into the child class rather than the common class. If it becomes apparent later on that this element 
+is reused throughout the app, then it is easy to copy the locator and paste into the common class. Since common class is the parent, all child classes still have access to it. 
 Use your judgement. 
 
 Avoid throwing every locator and helper function into the common class - I know this will be a temptation, but for the sake of keeping our 
@@ -106,6 +130,10 @@ Use these rules of thumb to decide where a locator or function should go, or cre
 
 On consumption side, these classes can follow the same organization principle 
 
+The constants.js file contains all the details for each org and their users, and any other global variables.
+
+The pageObject.js file contains the functions that build the authoring and consumption page objects using the classes.  
+
 
 Automation Testing Using Multiple Orgs
 ---------------------------------------
@@ -114,18 +142,25 @@ one 1 organzation. This creates many problems where previous test files contaimi
 tests up into different orgs, we reduce the chances of this happening. Furthermore, by having different orgs, this eliminates the need to go into client hq to toggle
 features on and off. For new features such as website tools or vex, this will save a lot of time and reduce test flakiness - simply by having fewer steps. 
 
-Each area of our app should have its own organization. For example, 1 org for VEX, 1 for target, 1 for recommend etc. In fact, a good rule of thumb is 1 org for each 
-of the authoring classes in this repo. 
+Another benefit of separating out testing into different orgs is that it avoids multiple people running automation tests on the same organization. If you are testing 
+vex, and I am testing target, we will be running automation tests on 2 different orgs. This will avoid much of the flakiness that we see with our old Capybara repo. 
 
-The cypress repo is set up in such a way that switching between orgs and different users is very easy. Just use the pageObject builders in the pageObject.js file.  
+Each of our products should have its own organization. For example, 1 org for VEX, 1 for target, 1 for recommend etc.  
 
-In the constants.js file, this contains all the details for each org and their users. The pageObject.js file will use these constants to automatically instantiate 
-a page-object with the correct base url. You just have to put in the 'org' and 'tld' arguments when creating the pageObject instance. Or, you want to go into some random org,
-just put in the base url directly. Or, if you want to work within our traditional 'automation' org, you don't even need to put in any arguments into the builder.
-The pageObject builder is very easy and convenient to use due to its ability to automatically set default values for the base url and user.  
+To build the page_object for different orgs, you need to specificy only the organization's subdomain, and the tld that you want to use. 
+
+const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
+const authoring2 = createAuthoringInstance({org: 'automation', tld: 'pathfactory'})
+
+The page_object builders will automatically construct the correct baseUrl based on these inputs and the TEST_ENV 
+Assuming you have set up the org in the constants.js file, the page_object builder will automatically know which user to use for your automation testing 
+
+You can also specify the baseUrl directly, as well as the user info 
+
+const authoring3 = createAuthoringInstance({ customBaseUrl: "default.pathfactory-staging.com", username: 'billybob', password: "billy123" })
 
 
-Cypress quirks
+Cypress Limitations
 --------------
 
 Cypress documents all their limitations here:
@@ -144,6 +179,25 @@ You can get around this by using an it block as a before hook, and for beforeEac
 Cypress runs each cy.get command asynchronously. That means you can't save the returned element into a variable to be used later.
 You have to work within the callback function. 
 You can do a synchronous version of get by using Cypress.$('selector')
+
+Since Cypress runs tests inside an iframe, it has to modify iframe-busting code to make it work. The only case where this will fail is if a script is coming from
+a different domain than the current page. In this case, whatever UI elements the script is supposed to drop onto the webpage will get blocked by the iframe busting
+code. FOR THIS REASON:
+
+1) WHEN TESTING ON CONSUMPTION, YOU MUST ALWAYS VISIT on HTTPS PROTOCOL AND YOU MUST ALWAYS VISIT ON LOOKBOOKHQ DOMAIN. 
+
+2) WE CANNOT TEST OLD WEBSITE CAMPAIGN PROMOTERS AND WEBSITE TOOLS ON CONSUMPTION BECAUSE THE WEBPAGE WILL BE A DIFFERENT DOMAIN FROM THE LOOKBOOKHQ SCRIPT
+
+The only solution to the above is if we get the developers to change
+
+if(window.self===window.top||"overlay"===e||"preview"===e) to if(window.Cypress||window.self===window.top||"overlay"===e||"preview"===e) 
+
+This should apply to the following scripts: 
+https://app.cdn.lookbookhq.com/staging2/jukebox/current/tracks.js?x=2
+https://app.cdn.lookbookhq.com/qa/jukebox/current/tracks.js?x=2
+https://app.cdn.lookbookhq.com/production/jukebox/current/tracks.js?x=2
+
+
 
 VERY IMPORTANT TO UNDERSTAND THE FOLLOWING: 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -174,7 +228,7 @@ you can turn it off by adding
  to the cypress.json file. (I have already done this for our repo) 
 
 
-You can't use promises in Cypress, or async await to get around its annoying asynchronous nature. Even if you find a workaround,
+You can't use promises in Cypress, or async await to get around its asynchronous nature. Even if you find a workaround,
 which I did, if you use any promise whatsoever, it'll completely screw up the order in which cy commands are run... a complete mess 
 Here's an example of me trying to force a promise into cypress (leading to massive failure):
 
@@ -204,8 +258,6 @@ hasText(locator, matchText, waitTime){
    
     }
 
-Cypress doesn't tell you which line failed, making it much harder to debug. Sure, it shows you snapshots of the webpage at each step, but I don't find that useful honestly...
-I prefer to know exactly what line a test fails so that I can pause at that line and inspect the dom manually.
 
 
 
@@ -320,24 +372,3 @@ Annoying Cypress Bugs
 Any click event in the after block fails if one of the tests in an it block fails.
 
 
-
-POTENTIAL CATASTROPHIC SHOW-STOPPING PITFALLS!!!!!
----------------------------------------------------
- "modifyObstructiveCode": false 
-
- If you add the above to cypress.json, it will prevent Cypress from automatically turning off code that blocks cypress. 
- Apparently this is code that Cypress deems is unnecessary and obsolete and so would have zero impact on the app by turning it off...
- Still, kinda alarming that Cypress potentially needs to modify the website in order for it to work. That just doesn't seem like smart design to me, given they cannot
- possibly anticipate why a website would have these pieces of code in it. 
-
-For some reason, when visiting consumption pages on our app, the pathfactory-staging domain will cause either promoters to not show up, or cause VEX to become a 
-blank screen. Changing to the lookbookhq domain will solve the issue. If you have Cypress open, once you visit a pathfactory-staging domain, even if you change 
-domain back to lookbookhq in the test code and then re-run, this will not solve issue. You must CLOSE the cypress browser, then re-run for it to work. 
-
-Cypress apparently runs its test inside an iframe. Websites that block iframes obviously are a problem. Well, it's a good thing Cypress automatically removes 
-xframe options so that this is not a problem... Except when the website loads in other sites, perhaps in a frame, that have the same xframe option set to same 
-origin. Then Cypress will crap out. Also, if you set chromeWebSecurity to false in cypress.json, this will prevent Cypress from automatically removing these 
-xframe options. But why would you set chromeWebSecurity to false in the first place, you ask? Because you need to do that in order to implement the workaround
-to interact with elements inside an iframe!!!!!!!      
-
-Cypress - stupidly designed, in my opinion. 
