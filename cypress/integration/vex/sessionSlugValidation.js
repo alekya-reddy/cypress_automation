@@ -79,6 +79,5 @@ describe('VEX - Virtual Event', function() {
                 cy.get(authoring.vex.sessionSlugInput).should('not.have.value', slug.value)
             }
         })
-        
     })
 })

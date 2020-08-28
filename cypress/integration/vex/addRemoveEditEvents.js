@@ -9,6 +9,11 @@ const event = {
     description: 'Test 1 description'
 }
 
+const event2 = {
+    name: "Test 2",
+    slug: "cannot-change-me"
+}
+
 const sessions = [
     {
         name: 'Session 1',
@@ -76,5 +81,17 @@ describe('VEX - Virtual Event', function() {
             cy.contains(authoring.vex.antDescriptionsContent, event.slug).should('exist')
             cy.containsExact(authoring.vex.antDescriptionsContent, `${sessions.length - 1}`)
         })
+
+        // Add another event and check the validation for event slug 
+        authoring.vex.deleteVirtualEvent(event2.name)
+        authoring.vex.addVirtualEvent(event2.name)
+        authoring.vex.goToEventConfig(event2.name)
+        cy.get(authoring.vex.eventSlugInput).clear().type(event.slug)
+        cy.contains("button", "Save").click()
+        cy.contains(authoring.vex.messages.saveFailed).should('exist')
+        cy.contains(authoring.vex.messages.duplicateEntry).should('exist')
+
+        // Not testing here, but when you enter blank event slug, it auto-generates a valid slug 
+        // Not testing here, but any invalid event slug input that is not a duplicate, it would auto-generate a valid slug 
     })
 })

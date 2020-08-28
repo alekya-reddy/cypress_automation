@@ -37,7 +37,9 @@ export class Common {
         }
         this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.messages = {
-            recordSaved: "The record was saved successfully"
+            recordSaved: "The record was saved successfully",
+            saveFailed: "There was a problem saving this record",
+            duplicateEntry: "is already taken"
         };
     }
 
