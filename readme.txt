@@ -180,6 +180,8 @@ Cypress runs each cy.get command asynchronously. That means you can't save the r
 You have to work within the callback function. 
 You can do a synchronous version of get by using Cypress.$('selector')
 
+Cypress doesn't have built-in functions to handle iframes. I have workarounds for that in the commands.js file - basically, go into the javascript directly. 
+
 Since Cypress runs tests inside an iframe, it has to modify iframe-busting code to make it work. The only case where this will fail is if a script is coming from
 a different domain than the current page. In this case, whatever UI elements the script is supposed to drop onto the webpage will get blocked by the iframe busting
 code. FOR THIS REASON:
