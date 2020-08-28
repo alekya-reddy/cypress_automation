@@ -36,6 +36,9 @@ export class Common {
             cellCode: "div[data-qa-hook='table-cell-code']"
         }
         this.previewSideBar = "div[data-qa-hook='page-preview']";
+        this.messages = {
+            recordSaved: "The record was saved successfully"
+        };
     }
 
     visitHomeUrl(){

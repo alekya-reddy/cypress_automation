@@ -78,6 +78,8 @@ export class Vex extends Common {
         this.removeGroupButton = "span:contains('Remove')";
         this.renameGroupButton = "button:contains('Rename')";
         this.trackProtectionArea = '.visitorGroupMultiSelect';
+        this.antRow = ".ant-row"; 
+        this.antSelector = ".ant-select-selector";
     }
 
     visit(){
@@ -581,5 +583,13 @@ export class Vex extends Common {
             })
         })
         cy.containsExact("span", name).should("not.exist")
+    }
+
+    setLanguage(language){
+        cy.contains(this.antRow, "Language").within(()=>{
+            cy.get(this.antSelector).click()
+        })
+        cy.get(this.antDropdownOption(language)).click()
+        cy.get(`span[title='${language}']`).should('exist')
     }
 }
