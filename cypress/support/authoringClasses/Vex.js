@@ -55,10 +55,16 @@ export class Vex extends Common {
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
         this.removeButton = "button:contains('Remove')";
-        this.appearancePreviewHeaderTitle = "div[data-qa-hook='header-title-show']";
-        this.appearancePreviewHeaderTitleInput = "input[name='headerTitle']";
-        this.appearancePreviewHeaderSubtitle = "div[data-qa-hook^='header-subtitle']";
-        this.appearancePreviewHeaderSubtitleInput = "input[name='headerSubtitle']";
+        this.appearance = {
+            headerTitle: "div[data-qa-hook^='header-title']",
+            headerTitleInput: "input[name='headerTitle']",
+            headerSubtitle: "div[data-qa-hook^='header-subtitle']",
+            headerSubtitleInput: "input[name='headerSubtitle']",
+            contentTitle: "div[data-qa-hook^='content-title']",
+            contentTitleInput: "input[name='contentTitle']",
+            contentDescription: "div[data-qa-hook^='content-description']",
+            contentDescriptionInput: "input[name='contentDescription']"
+        };
         this.resetButton = "button:contains('Reset')";
         this.selectImageButton = "button:contains('Change Image')";
         this.thumbnailSelector = "#thumbnail-selector";

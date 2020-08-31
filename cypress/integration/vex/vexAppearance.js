@@ -8,6 +8,8 @@ const event = {
     slug: 'vexappearance-js',
     headerTitle: 'Vex Appearance Title',
     headerSubtitle: 'Vex Appearance Subtitle',
+    contentTitle: "VEX Content Title",
+    contentDescription: "VEX Content Description",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
@@ -23,19 +25,37 @@ describe('VEX - Virtual Event', function() {
         cy.contains('a', 'Appearance Setup').click()
         cy.containsExact('[class="ant-card-head"]', 'Event Appearance').should('exist')
         cy.contains('a', 'Preview Event').should('have.attr', 'href', event.url)
-        cy.get(authoring.vex.appearancePreviewHeaderTitle).click()
-        cy.get(authoring.vex.appearancePreviewHeaderTitleInput).clear().type(event.headerTitle)
-        cy.get(authoring.vex.appearancePreviewHeaderTitleInput).parent().contains('Save').click()
-        cy.get(authoring.vex.appearancePreviewHeaderTitle, {timeout: 5000}).should('contain', event.headerTitle)
-        cy.get(authoring.vex.appearancePreviewHeaderSubtitle).click()
-        cy.get(authoring.vex.appearancePreviewHeaderSubtitleInput).clear().type(event.headerSubtitle)
-        cy.get(authoring.vex.appearancePreviewHeaderSubtitleInput).parent().contains('Save').click()
-        cy.get(authoring.vex.appearancePreviewHeaderSubtitle, {timeout: 5000}).should('contain', event.headerSubtitle)
+
+        // Set the header title 
+        cy.get(authoring.vex.appearance.headerTitle).click()
+        cy.get(authoring.vex.appearance.headerTitleInput).clear().type(event.headerTitle)
+        cy.get(authoring.vex.appearance.headerTitleInput).parent().contains('Save').click()
+        cy.get(authoring.vex.appearance.headerTitle, {timeout: 5000}).should('contain', event.headerTitle)
+
+        // Set the header subtitle
+        cy.get(authoring.vex.appearance.headerSubtitle).click()
+        cy.get(authoring.vex.appearance.headerSubtitleInput).clear().type(event.headerSubtitle)
+        cy.get(authoring.vex.appearance.headerSubtitleInput).parent().contains('Save').click()
+        cy.get(authoring.vex.appearance.headerSubtitle, {timeout: 5000}).should('contain', event.headerSubtitle)
+
+        // Set the content title 
+        cy.get(authoring.vex.appearance.contentTitle).click()
+        cy.get(authoring.vex.appearance.contentTitleInput).clear().type(event.contentTitle)
+        cy.get(authoring.vex.appearance.contentTitleInput).parent().contains("Save").click()
+        cy.get(authoring.vex.appearance.contentTitle, {timeout: 5000}).should('contain', event.contentTitle)
+
+        // Set the content description 
+        cy.get(authoring.vex.appearance.contentDescription).click()
+        cy.get(authoring.vex.appearance.contentDescriptionInput).clear().type(event.contentDescription)
+        cy.get(authoring.vex.appearance.contentDescriptionInput).parent().contains("Save").click()
+        cy.get(authoring.vex.appearance.contentDescription, {timeout: 5000}).should("contain", event.contentDescription)
     })
 
     it('Verify on consumption side that appearance settings got applied', function(){
         cy.visit(event.url)
         cy.contains(consumption.vex.eventHeroTitle, event.headerTitle).should('exist')
         cy.contains(consumption.vex.eventHeroSubtitle, event.headerSubtitle).should('exist')
+        cy.contains(consumption.vex.eventContentTitle, event.contentTitle).should('exist')
+        cy.contains(consumption.vex.eventContentDescription, event.contentDescription).should('exist')
     })
 })

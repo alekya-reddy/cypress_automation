@@ -5,6 +5,8 @@ export class VexCX extends CommonCX {
         super(env, org, customBaseUrl);
         this.eventHeroTitle = "div[class^='pf-event-hero-title']";
         this.eventHeroSubtitle = "div[class^='pf-event-hero-subtitle']";
+        this.eventContentTitle = ".pf-event-main-title";
+        this.eventContentDescription = ".pf-event-main-description";
         this.zoomRootDiv = '#zmmtg-root';
         this.zoomIframe = "iframe[src^='/api/virtual_event_sessions']";
         this.sessionPageTitle = "div[class^='pf-event-session-title']";
