@@ -126,7 +126,7 @@ describe('VEX - Virtual Event', function() {
             cy.get(authoring.vex.cancelButton).click();
         })
 
-        // Add supplemental contents of all valid media types (pdf, image, website), refresh and verify it has been saved 
+        // Add supplemental contents of all valid media types (pdf, image, website) and verify it has been saved 
         authoring.vex.addSupplementalContent(contents);
         contents.forEach((content)=>{
             cy.containsExact(authoring.vex.supplementalContentCardTitle, content).should('exist');

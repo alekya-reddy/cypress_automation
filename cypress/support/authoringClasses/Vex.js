@@ -53,7 +53,7 @@ export class Vex extends Common {
         this.webexLinkInput = "input[name='liveContentConfig.webexMeetingDestination']";
         this.onDemandTitleLocator = 'div[class="ant-space-item"]';
         this.addContentButton = "button:contains('Add Content')";
-        this.supplementalContentCardTitle = '[class="ant-card-head-title"]';
+        this.supplementalContentCardTitle = 'span[class^="ant-typography"]';
         this.removeButton = "button:contains('Remove')";
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
@@ -322,7 +322,7 @@ export class Vex extends Common {
     }
 
     removeSupplementalContent(content){
-        cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().parent().within(()=>{
+        cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().within(()=>{
             cy.get(this.removeButton).click();
         })
         cy.get(this.antModalContent).within(()=>{
