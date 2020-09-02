@@ -15,6 +15,7 @@ export class Vex extends Common {
         this.configureButton = "button:contains('Configure')";
         this.removeDropdownButton = "li:contains('Remove') > span";
         this.eventNameInput = 'input[name="name"]';
+        this.externalIDInput = "input[name='externalId']";
         this.addEventModalFooter = '[class="ant-modal-footer"]';
         this.antModalBody = '[class="ant-modal-body"]';
         this.eventSlugInput = 'input[name="customUrl"]';
@@ -136,13 +137,21 @@ export class Vex extends Common {
         const start = config.start
         const end = config.end
         const trackProtection = config.trackProtection 
+        const externalID = config.externalID 
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
+
         slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
+
         description ? cy.get(this.eventDescription).clear().type(description) : null;
+
+        if(externalID){
+            cy.get(this.externalIDInput).clear().type(externalID)
+        }
+
         form ? this.configureForm(form) : null;
 
         if(start){

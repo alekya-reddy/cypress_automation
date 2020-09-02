@@ -6,7 +6,8 @@ const event = {
     name: 'Test 1',
     newName: 'Test 1.1',
     slug: 'test-1-1-slug',
-    description: 'Test 1 description'
+    description: 'Test 1 description',
+    externalID: "someID"
 }
 
 const event2 = {
@@ -65,6 +66,7 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.eventNameInput).should('have.value', event.newName)
         cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
         cy.get(authoring.vex.eventDescription).should('have.value', event.description) 
+        cy.get(authoring.vex.externalIDInput).should("have.value", event.externalID)
 
         // Verify can add sessions to event 
         sessions.forEach((session)=>{
