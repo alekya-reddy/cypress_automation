@@ -1,9 +1,9 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 import { constants } from '../../support/constants.js';
 
-const authoring = createAuthoringInstance(); 
+const authoring = Cypress.env('TEST_ENV') == "prod" ? createAuthoringInstance({org: "automation-vex", tld: "lookbookhq"}) : createAuthoringInstance()
 
-const users = [
+let users = [
     {
         role: 'superuser',
         roleDescription: "Superuser should have full access to VEX",
@@ -42,13 +42,19 @@ const users = [
     }
 ]
 
+if (Cypress.env('TEST_ENV') == 'prod') {
+    users.shift() // Need to remove superuser from prod test because there are no super automation users on prod
+}
+
 const event = 'User Roles'
 
 // Bare bones test for now. Will update as user roles become more defined. 
 describe('VEX - User roles', function() {
     it('Before hook to turn on VEX', function(){
         authoring.common.login()
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on')
+        if (Cypress.env('TEST_ENV') !== 'prod') {
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on')
+        }
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event)
         authoring.vex.addVirtualEvent(event)
@@ -86,7 +92,9 @@ describe('VEX - User roles', function() {
     })
 
     it('After hook to turn off VEX', function(){
-        authoring.common.login()
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off')
+        if (Cypress.env('TEST_ENV') !== 'prod') {
+            authoring.common.login()
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off')
+        }
     })
 })
