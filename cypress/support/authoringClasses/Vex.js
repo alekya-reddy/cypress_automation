@@ -128,13 +128,14 @@ export class Vex extends Common {
     }
 
     configureEvent(config){
-        const event = config.name; 
-        const newEventName = config.newName;
-        const slug = config.slug;
-        const description = config.description; 
-        const form = config.form;
+        const event = config.name
+        const newEventName = config.newName
+        const slug = config.slug
+        const description = config.description
+        const form = config.form
         const start = config.start
-        const end = config.end 
+        const end = config.end
+        const trackProtection = config.trackProtection 
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
@@ -150,6 +151,10 @@ export class Vex extends Common {
 
         if(end){
             cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        }
+
+        if (trackProtection){
+            this.addTrackProtection(trackProtection)
         }
 
         cy.contains('button', 'Save').click();

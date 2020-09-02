@@ -19,6 +19,9 @@ const session = {
     }
 }
 
+const email = `bobman${Math.random()}@gmail.com` // Need to generate new email each time because it will remember you from last time, and not ask for meeting PW again
+const emailQueryString = email.replace("@", "%40") // @ won't work in a query string, so using %40 encoding
+
 /* Expected behavior for zoom authentication 
     If 'no password' option is set, should be able to attend a zoom session.
     If 'apply password automatically' option is set, the end user would see no difference than if no password were set. 
@@ -81,7 +84,7 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.get(consumption.vex.meetingPWInput).should('exist')
 
         // If you provide the wrong password, this should prevent you from attending 
-        cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
+        cy.get(consumption.vex.emailInput).clear().type(email)
         cy.get(consumption.vex.meetingPWInput).clear().type("54321")
         cy.contains("button", "Submit").click()
         cy.contains('div', "Meeting password is invalid").should('exist')
@@ -100,7 +103,7 @@ describe('VEX - Virtual Event, zoom authentication', function() {
     })
 
     it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
-        cy.visit(`${session.url}?lb_email=bobman%40gmail.com`)
+        cy.visit(`${session.url}?lb_email=${emailQueryString}`) 
         cy.wait(1000)
         cy.get(consumption.vex.emailInput).should('not.exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
