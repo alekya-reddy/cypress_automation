@@ -16,6 +16,7 @@ export class Vex extends Common {
         this.removeDropdownButton = "li:contains('Remove') > span";
         this.eventNameInput = 'input[name="name"]';
         this.externalIDInput = "input[name='externalId']";
+        this.cookieConsentCheckbox = "input[name='gdprCookieConsentEnabled']";
         this.addEventModalFooter = '[class="ant-modal-footer"]';
         this.antModalBody = '[class="ant-modal-body"]';
         this.eventSlugInput = 'input[name="customUrl"]';
@@ -128,6 +129,12 @@ export class Vex extends Common {
         cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
     }
 
+    goToEventConfig(event){
+        cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
+            cy.get(this.configureButton).click()
+        })
+    }
+
     configureEvent(config){
         const event = config.name
         const newEventName = config.newName
@@ -138,6 +145,8 @@ export class Vex extends Common {
         const end = config.end
         const trackProtection = config.trackProtection 
         const externalID = config.externalID 
+        const cookieConsent = config.cookieConsent 
+        const language = config.language
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
@@ -162,18 +171,55 @@ export class Vex extends Common {
             cy.get(this.endTimeInput).click().clear().type(end + '\n')
         }
 
+        if(language){
+            this.setLanguage(language)
+        }
+
         if (trackProtection){
             this.addTrackProtection(trackProtection)
+        }
+
+        if(cookieConsent == false || cookieConsent == true){
+            this.setCookieConsent(cookieConsent)
         }
 
         cy.contains('button', 'Save').click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 
-    goToEventConfig(event){
-        cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
-            cy.get(this.configureButton).click()
+    setCookieConsent(cookieConsent){
+        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+            if( (cookieConsent == false && attr.includes("ant-checkbox-checked")) || (cookieConsent == true && !attr.includes("ant-checkbox-checked")) ){
+                cy.get(this.cookieConsentCheckbox).click()
+            }
+        }) 
+        
+        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+            if(cookieConsent == false){
+                expect(attr.includes("ant-checkbox-checked")).to.be.false 
+            } else {
+                expect(attr.includes("ant-checkbox-checked")).to.be.true
+            }
         })
+    }
+
+    setLanguage(language){
+        cy.contains(this.antRow, "Language").within(()=>{
+            cy.get(this.antSelector).click()
+        })
+        cy.get(this.antDropdownOption(language)).click()
+        cy.get(`span[title='${language}']`).should('exist')
+    }
+
+    configureForm(form){
+        const name = form.name; 
+
+        cy.get(this.eventFormPicker).parent().parent().click()
+        cy.get(this.antDropdownContainer).within(()=>{
+            cy.get(this.antDropdownOption(name)).click()
+        })
+        cy.get(this.saveButton).click()
+        cy.get('body').should('contain', this.recordSavedMessage)
     }
 
     addTrackProtection(list){
@@ -343,17 +389,6 @@ export class Vex extends Common {
             cy.contains('Yes').click()
         })
         cy.containsExact(this.supplementalContentCardTitle, content).should('not.exist');
-    }
-
-    configureForm(form){
-        const name = form.name; 
-
-        cy.get(this.eventFormPicker).parent().parent().click()
-        cy.get(this.antDropdownContainer).within(()=>{
-            cy.get(this.antDropdownOption(name)).click()
-        })
-        cy.get(this.saveButton).click()
-        cy.get('body').should('contain', this.recordSavedMessage)
     }
 
     selectThumbnail(config){
@@ -605,11 +640,4 @@ export class Vex extends Common {
         cy.containsExact("span", name).should("not.exist")
     }
 
-    setLanguage(language){
-        cy.contains(this.antRow, "Language").within(()=>{
-            cy.get(this.antSelector).click()
-        })
-        cy.get(this.antDropdownOption(language)).click()
-        cy.get(`span[title='${language}']`).should('exist')
-    }
 }

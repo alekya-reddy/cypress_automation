@@ -11,9 +11,9 @@ export class VexCX extends CommonCX {
         this.zoomIframe = "iframe[src^='/api/virtual_event_sessions']";
         this.sessionPageTitle = "div[class^='pf-event-session-title']";
         this.sessionCardTitle = "div[class^='pf-event-session-card-title']";
-        this.firstNameInput = "#firstName";
-        this.lastNameInput = "#lastName";
-        this.emailInput = "#email";
+        this.firstNameInput = "#firstName"; // Should remove in future as this is now in CommonCX.js 
+        this.lastNameInput = "#lastName";  // Should remove in future as this is now in CommonCX.js 
+        this.emailInput = "#email";  // Should remove in future as this is now in CommonCX.js 
         this.meetingPWInput = "#meetingPassword";
         this.closeContentButton = "button[title='Close']";
         this.sessionGroup = ".pf-event-sessions";

@@ -41,6 +41,7 @@ export class Common {
             saveFailed: "There was a problem saving this record",
             duplicateEntry: "is already taken"
         };
+        this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
     }
 
     visitHomeUrl(){
