@@ -34,7 +34,7 @@ const formWithoutCookieConsent = {name: 'vexCookieConsent.js2'}
 const user = {email: "jo@gmail.com"}
 
 describe("VEX - Cookie Consent", ()=>{
-    /*it("Set up event if not already done", ()=>{
+    it("Set up event if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
@@ -171,14 +171,13 @@ describe("VEX - Cookie Consent", ()=>{
         cy.get(consumption.vex.header.cookieSettings).should('exist')
         cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist')
         consumption.vex.checkSessionCookie(5000)
-    })*/
+    })
     
     it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", ()=>{
         cy.visit(event.url)
         let cookieConsentOn = false
         cy.ifElementExists(consumption.vex.cookieConsent.messageBox, 5000, ()=>{
             cookieConsentOn = true
-            cy.log("IT IS ON!!!!")
         })
         cy.get("body").then(()=>{
             if(cookieConsentOn == false){
