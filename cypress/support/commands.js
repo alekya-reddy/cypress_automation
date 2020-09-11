@@ -95,15 +95,15 @@ Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_mat
 })
 
 Cypress.Commands.add("ifNoElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack, container = 'body')=>{
-    let matchFound = false;
+    let matchFound = true;
     for(let i = 0; i < waitTime; i += 500){
         cy.get(container, {log: false}).then((body)=>{
             let matches = Cypress.$(locator).filter(function(){
                 return Cypress.$(this).text() == exact_text_to_match;
             })
-            if(!matchFound && matches.length > 0){
-                matchFound = true 
-            } else if (!matchFound){
+            if(matches.length == 0){
+                matchFound = false
+            } else if (matchFound){
                 cy.wait(500, {log: false})
             }
         })

@@ -130,7 +130,7 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event){
-        cy.containsExact(this.eventCardTitle, event, {timeout: 10000}).parent().parent().parent().within(() => {
+        cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).parent().parent().parent().within(() => {
             cy.get(this.configureButton).click()
         })
     }

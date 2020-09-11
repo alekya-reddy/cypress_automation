@@ -11,7 +11,7 @@ const event = {
     }
 }
 
-const tp1 = {group: "vexTrackProtection1", allowedEmail: "qa@pathfactory.com"}
+const tp1 = {group: "vexTrackProtection1", allowedEmail: "random@pathfactory.com"}
 const tp2 = {group: "vexTrackProtection2", allowedEmail: "jimjam@haha.com"}
 
 describe("VEX - Track Protection", ()=>{

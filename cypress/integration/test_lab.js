@@ -94,6 +94,15 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         })
     })*/
 
+    /*it("content library 2", ()=>{
+        authoring.common.login()
+        authoring.contentLibrary.deleteContent("Test")
+        authoring.contentLibrary.deleteContent("Some video")
+        authoring.contentLibrary.addContentByUrl({internalTitle: "Test", url: "https://en.wikipedia.org/wiki/Second-rate"})
+        authoring.contentLibrary.addContentByUrl({internalTitle: "Some video", url: "https://www.youtube.com/watch?v=QHklmMiPqq8"})
+        
+    })*/
+
     it("should always pass", ()=>{
         cy.visit("https://www.google.com")
     })

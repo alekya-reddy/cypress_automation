@@ -103,7 +103,7 @@ export class ContentLibrary extends Common{
         cy.get(this.urlInput).type(url)
         cy.get(this.modal).contains('button', 'Add').click()
         cy.get(this.modal).within(()=>{
-            cy.get(this.internalTitleInput).clear().type(internalTitle)
+            cy.get(this.internalTitleInput, {timeout: 10000}).clear().type(internalTitle)
         })
         cy.contains('button', 'Done').click()
         cy.get(this.modal).should('not.exist', {timeout: 10000})
