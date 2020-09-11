@@ -70,10 +70,11 @@ Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack, container 
     }
 })
 
-Cypress.Commands.add("containsExact", (locator, exact_text_to_match)=>{
+Cypress.Commands.add("containsExact", (locator, exact_text_to_match, config = {})=>{
+    let timeout = config.timeout || 1000
     let matchString = exact_text_to_match.replace(/\?/, `\\?`).replace(/\./, `\\.`).replace(/\//, `\\/`)
     let text_regex = new RegExp(`^${matchString}$`);
-    cy.contains(locator, text_regex);
+    cy.contains(locator, text_regex, {timeout: timeout});
 })
 
 Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
@@ -222,6 +223,23 @@ Cypress.Commands.add("scrollIntoViewWithin", (config)=>{
             loop.count += 1
         })
         
+    }
+})
+
+Cypress.Commands.add("angryClick", (config)=>{
+    // Sometimes, our application requires multiple clicks to get something to work, but not when doing this manually 
+    const clickElement = config.clickElement // The element you want clicked
+    const repeat = config.repeat || 10 // How many times to try again before giving up 
+    const checkElement = config.checkElement // The element that should appear when clickElement is clicked
+
+    for(let i = 0; i < repeat; i++){
+        cy.get('body', {log: false}).then((body)=>{
+            let checkElementFound = body.find(checkElement).length
+            if(checkElementFound < 1){
+                cy.get(clickElement).click()
+                cy.wait(1000)
+            }
+        })
     }
 })
 

@@ -29,16 +29,14 @@ const session = {
 // Also check that you can still edit video used in VEX
 
 describe('VEX - Virtual Event', function() {
-    before(()=>{
+
+    it('Verify that deleting content associated with VEX does not result in internal server error', function() {
         // Clean up - delete previously added event and contents 
         authoring.common.login();
         authoring.vex.deleteVirtualEvent(event);
         authoring.contentLibrary.deleteContentByUrl({urls: [contents[0].url, contents[1].url]})
-    })
 
-    it('Verify that deleting content associated with VEX does not result in internal server error', function() {
         // Add content 
-        authoring.contentLibrary.visit()
         contents.forEach((content)=>{
             authoring.contentLibrary.addContentByUrl(content)
         })

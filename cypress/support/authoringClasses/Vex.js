@@ -109,15 +109,15 @@ export class Vex extends Common {
                 cy.contains('button', 'Cancel').click()
             }
         })
-        cy.get(this.antModalBody).should('not.be.visible')
+        cy.get(this.antModalBody).should('not.be.visible', {timeout: 10000})
         if (checkSuccess){
-            cy.containsExact(this.eventCardTitle, eventName).should('exist')
+            cy.containsExact(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
         }
     }
 
     deleteVirtualEvent(eventName){
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
-        cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 2000, () => {
+        cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.containsExact(this.eventCardTitle, eventName).parent().parent().parent().within(() => {
                 cy.get(this.moreActionsButton).click()
             })
@@ -130,7 +130,7 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event){
-        cy.containsExact(this.eventCardTitle, event).parent().parent().parent().within(() => {
+        cy.containsExact(this.eventCardTitle, event, {timeout: 10000}).parent().parent().parent().within(() => {
             cy.get(this.configureButton).click()
         })
     }
@@ -251,7 +251,7 @@ export class Vex extends Common {
     }
 
     addSession(sessionName, type = 'On Demand'){
-        cy.contains(this.antCardHeadWrapper, "Sessions").within(()=>{
+        cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
             cy.get(this.addSessionButton).click();
         })
         cy.get(this.antModalContent).within((modal)=>{
@@ -283,7 +283,7 @@ export class Vex extends Common {
     }
 
     goToSessionConfig(sessionName){
-        cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
+        cy.containsExact(this.sessionCardTitle, sessionName, {timeout: 10000}).parent().parent().parent().within(()=>{
             cy.get(this.configureButton).click(); 
         })
         cy.get(this.pageTitleLocator).should('contain', sessionName, {timeout: 20000});
@@ -322,8 +322,10 @@ export class Vex extends Common {
         const live = config.live;
         const widgets = config.widgets;
 
-        this.goToSessionConfig(name);
-
+        cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
+            this.goToSessionConfig(name);
+        })
+        
         newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
 
         if(visibility == 'Private'){

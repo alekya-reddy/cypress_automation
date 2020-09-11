@@ -63,13 +63,14 @@ export class ContentLibrary extends Common{
                 callback();
                 return;
             }
-            cy.containsExact(this.internalTitleCell, title).should('not.exist')
-            cy.get(this.clearSearchIcon).click()
         })
+        cy.ifNoElementWithExactTextExists(this.internalTitleCell, title, 10000, ()=>{}) // This just does a smart wait for content to disappear 
+        cy.containsExact(this.internalTitleCell, title).should('not.exist')
+        cy.get(this.clearSearchIcon).click()
     }
 
     deleteContentByUrl(config){
-        let urls = config.urls 
+        let urls = [config.urls].flat() 
         let verifyDeleted = config.verifyDeleted == false ? false : true
 
         this.goToPage(this.pageTitle, this.pageUrl)
@@ -105,6 +106,12 @@ export class ContentLibrary extends Common{
             cy.get(this.internalTitleInput).clear().type(internalTitle)
         })
         cy.contains('button', 'Done').click()
+        cy.get(this.modal).should('not.exist', {timeout: 10000})
+        cy.scrollIntoViewWithin({
+            scroller: this.scrollableTable,
+            element: this.urlCell,
+            text: url.replace(/^https?\:\/\//i, "")
+        })
         cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, "")).should('exist', {timeout: 5000})
     }
 
@@ -131,8 +138,10 @@ export class ContentLibrary extends Common{
             cy.contains(this.sideBarElements.publicTitle, publicTitle).should('exist')
         }
         if(internalTitle){
-            cy.get(this.sideBarElements.internalTitle).click()
-            cy.get(this.sideBarElements.internalTitle).click() // Cypress bug: need to repeat or else first click will open then immediately close the input field
+            cy.angryClick({
+                clickElement: this.sideBarElements.internalTitle,
+                checkElement: this.sideBarElements.internalTitleInput
+            })
             cy.get(this.sideBarElements.internalTitle).within(()=>{
                 cy.get(this.sideBarElements.internalTitleInput).clear().type(internalTitle)
                 cy.contains("button", "Save").click()
@@ -140,8 +149,10 @@ export class ContentLibrary extends Common{
             cy.contains(this.sideBarElements.internalTitle, internalTitle).should('exist')
         }
         if(description){
-            cy.get(this.sideBarElements.description).click()
-            cy.get(this.sideBarElements.description).click() // Cypress bug: need to repeat or else first click will open then immediately close the input field
+            cy.angryClick({
+                clickElement: this.sideBarElements.description,
+                checkElement: this.sideBarElements.descriptionInput
+            })
             cy.get(this.sideBarElements.description).within(()=>{
                 cy.get(this.sideBarElements.descriptionInput).clear().type(description)
                 cy.contains("button", "Save").click()
@@ -149,8 +160,10 @@ export class ContentLibrary extends Common{
             cy.contains(this.sideBarElements.description, description).should('exist')
         }
         if(slug){
-            cy.get(this.sideBarElements.slug).click()
-            cy.get(this.sideBarElements.slug).click() // Cypress bug: need to repeat or else first click will open then immediately close the input field
+            cy.angryClick({
+                clickElement: this.sideBarElements.slug,
+                checkElement: this.sideBarElements.slugInput
+            })
             cy.get(this.sideBarElements.slug).within(()=>{
                 cy.get(this.sideBarElements.slugInput).clear().type(slug)
                 cy.contains("button", "Save").click()

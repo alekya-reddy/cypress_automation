@@ -70,8 +70,6 @@ describe('VEX - Virtual Event', function() {
         cy.get('body').should('contain', "There was a problem saving this record")
 
         // Configure the session
-        cy.visit(authoring.vex.vexUrl);
-        authoring.vex.goToEventConfig(event);
         authoring.vex.configureSession(session);
 
         // Refresh and verify new session settings have been saved 

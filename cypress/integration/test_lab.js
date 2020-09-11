@@ -1,7 +1,7 @@
 import { createAuthoringInstance } from '../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: 'default', tld: "pathfactory", username: "liming", password: "Password123"});
-//const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
+//const authoring = createAuthoringInstance({org: 'default', tld: "pathfactory", username: "liming", password: "Password123"});
+const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
 
 const https = require("https")
 /*const options = {
@@ -74,6 +74,24 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
           })
         req.end()
 
+    })*/
+
+    /*it("content library", ()=>{
+        authoring.common.login()
+        authoring.contentLibrary.deleteContentByUrl({urls: "https://en.wikipedia.org/wiki/Second-rate"})
+        authoring.contentLibrary.addContentByUrl({internalTitle: "Test", url: "https://en.wikipedia.org/wiki/Second-rate"})
+        cy.reload()
+        authoring.contentLibrary.sideBarEdit({
+            search: "Test",
+            publicTitle: "Different public title",
+            internalTitle: "Different internal title", 
+            description: "Different description",
+            slug: "tester",
+            thumbnail: {
+                category: "Stock Images",
+                url: "https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg"
+            } 
+        })
     })*/
 
     it("should always pass", ()=>{
