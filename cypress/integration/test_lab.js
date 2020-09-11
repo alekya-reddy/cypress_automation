@@ -1,7 +1,25 @@
 import { createAuthoringInstance } from '../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: 'default', tld: "pathfactory", username: "liming", password: "Password123"});
-//const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}) 
+//const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
+
+const https = require("https")
+/*const options = {
+    hostname: "api.pipedream.com",
+    port: 443,
+    path: "/v1/sources/dc_nvu2zG/event_summaries?expand=event",
+    headers: {
+      "Authorization": "Bearer 6285575d515e110fb3ba5d0ea131f92d",
+    },
+}*/
+const options = {
+    hostname: "api.pipedream.com",
+    port: 443,
+    path: "/v1/sources/dc_lVu6y2/event_summaries?expand=event",
+    headers: {
+      "Authorization": "Bearer 391dbfbac8627689b173cabc4506b667",
+    },
+  }
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
     /*it("Test scrolling within content library", ()=>{
@@ -40,21 +58,26 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         })
     })*/
 
+    /*it("Webhook API test", ()=>{
+        const req = https.request(options, resp => {
+            let data = ""
+            resp.on("data", chunk => {
+              data += chunk
+            })
+            resp.on("end", () => {
+                cy.log(JSON.parse(data))
+                cy.log(JSON.parse(data).data[0].event)
+                //cy.log(JSON.parse(data).data[1].event)
+            })
+          }).on("error", err => {
+            cy.error("[error] " + err.message)
+          })
+        req.end()
+
+    })*/
+
     it("should always pass", ()=>{
         cy.visit("https://www.google.com")
-        //cy.visit("https://automation-vex.staging2.lookbookhq.com/livesessionconfiguration-js") // works
-        //cy.visit("https://automation-vex.pathfactory-staging.com/livesessionconfiguration-js") // doesn't work 
-        //cy.visit("https://automation-vex.qa.lookbookhq.com/livesessionconfiguration-js") // works
-        //cy.visit("https://automation-vex.pathfactory-qa.com/livesessionconfiguration-js") // doesn't work
-        //cy.visit("https://automation-vex.pathfactory.com/livesessionconfiguration-js") // doesn't work
-        //cy.visit("https://automation-vex.lookbookhq.com/livesessionconfiguration-js") // doesn't work - works now - just need https enabled
-        //cy.visit("https://default.staging2.lookbookhq.com/l/limingexplore2") // works 
-        //cy.visit("http://pathfactory-staging-wp.com/wordpress/staging-web-promoter-testing/") // doesn't work 
-        //cy.visit("https://internal.lookbookhq.com/1/luciaaaa") // works 
-        //cy.visit("https://internal.lookbookhq.com/l/limingexplore") // works 
-        //cy.visit("https://internal.lookbookhq.com/c/abm-is-b2b-truth-5?x=lWMqTn")
-        //cy.visit("https://automation-vex.lookbookhq.com/c/index-html?x=kpMsxq") // doesn't work - need to enable https? - yes, need https
-        //cy.visit("https://automation-vex.lookbookhq.com/c/njgzzk8yvzgylw4oe4hl?x=nEdySZ") // doesn't work - need to enable https? - yes, need https
     })
 
 })

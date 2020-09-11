@@ -51,4 +51,10 @@ describe("VEX - Form Webhook", ()=>{
         cy.containsExact("div", "View Logs").click() 
         cy.contains(authoring.common.modal, visitor.email).should("exist")
     })
+
+    // Session webhook 
+    // Activity webhook - specific content (supplemental)
+    // Activity webhook - specific content (video, live or on demand)
+    // Activity webhook - engagement score 
+    // Activity webhook - multiple asset engagement 
 })

@@ -231,9 +231,7 @@ export class Vex extends Common {
         groups.forEach((group)=>{
             cy.get(this.antDropdownOption(group)).click()
         })
-        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
-            cy.get("span[class='ant-select-selection-search']").click()
-        })
+        cy.get('body').click() // need to click away to close the dropdown menu
         groups.forEach((group)=>{
             cy.contains('.ant-select-selection-item', group).should('exist')
         })
