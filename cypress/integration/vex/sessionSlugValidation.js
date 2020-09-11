@@ -3,7 +3,7 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const genericErrorMessage = "There was a problem saving this record.";
-const duplicateMessage = "has already been taken";
+const duplicateMessage = "already exists";
 const invalidCharacterMessage = 'Only alphanumeric characters, hyphens and underscores are allowed';
 const successfulSaveMessage = "The record was saved successfully.";
 
@@ -49,15 +49,13 @@ const session2 = {
 }
 
 describe('VEX - Virtual Event', function() {
-    before(()=>{
+
+    it('Verify that session slugs are validated to make sure they are unique and valid', function() {
         // Clean up - delete previously added event
         authoring.common.login();
         authoring.vex.deleteVirtualEvent(event);
-    })
 
-    it('Verify that session slugs are validated to make sure they are unique and valid', function() {
         // Set up: Add event, add sessions to it
-        authoring.vex.visit();
         authoring.vex.addVirtualEvent(event);
         authoring.vex.goToEventConfig(event);
         authoring.vex.addSession(session1.name);

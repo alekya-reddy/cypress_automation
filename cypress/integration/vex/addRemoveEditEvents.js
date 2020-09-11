@@ -31,16 +31,15 @@ const sessions = [
 ]
 
 describe('VEX - Virtual Event', function() {
-    before(()=>{
-        authoring.common.login();
 
-        // Clean up previously added events
+    it('Confirm can add, remove and edit events', function() {
+        // Set up
+        authoring.common.login();
         authoring.vex.visit();
         authoring.vex.deleteVirtualEvent(event.name);
         authoring.vex.deleteVirtualEvent(event.newName);
-    })
 
-    it('Confirm can add, remove and edit events', function() {
+        // Go to Vex
         authoring.vex.visit();
         cy.get(authoring.vex.addEventButton).should('exist');
 

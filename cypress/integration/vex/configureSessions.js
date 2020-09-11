@@ -51,19 +51,16 @@ const session = {
 }
 
 describe('VEX - Virtual Event', function() {
-    before(()=>{
-        // Clean up - delete previously added event
-        authoring.common.login();
-        authoring.vex.deleteVirtualEvent(event);
-    })
 
     it('Verify that sessions can be configured', function() {
-        authoring.vex.visit();
+        // Clean up - delete previously added event
+        authoring.common.login()
+        authoring.vex.deleteVirtualEvent(event)
 
         // Set up: Add event, add session to it
-        authoring.vex.addVirtualEvent(event);
-        authoring.vex.goToEventConfig(event);
-        authoring.vex.addSession(session.name);
+        authoring.vex.addVirtualEvent(event)
+        authoring.vex.goToEventConfig(event)
+        authoring.vex.addSession(session.name)
 
         // Verify that cannot set session to public without first setting an on demand video 
         authoring.vex.goToSessionConfig(session.name)

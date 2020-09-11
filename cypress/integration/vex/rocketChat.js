@@ -47,7 +47,8 @@ const sessions = [
         video: 'Youtube - Used in Cypress automation for VEX testing',
         widgets: "Rocket Chat"
     },
-    {
+    /*{
+        // On demand sessions can no longer have rocket chat 
         name: "On-demand",
         slug: "on-demand",
         get url(){
@@ -57,7 +58,7 @@ const sessions = [
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing',
         widgets: "Rocket Chat"
-    },
+    },*/
     {
         name: "no-chat",
         slug: "no-chat",
@@ -117,6 +118,7 @@ describe("Vex - Rocket Chat", ()=>{
                 cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
                 cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
                     cy.get(consumption.vex.rocketChat.container).should('exist')
+                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
                     cy.contains(visitor.name).should("exist")
                 })
             } else {
@@ -140,6 +142,7 @@ describe("Vex - Rocket Chat", ()=>{
                 cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
                 cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
                     cy.get(consumption.vex.rocketChat.container).should('exist')
+                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
                     cy.contains(visitor.name).should("exist")
                 })
             } else {
@@ -155,6 +158,7 @@ describe("Vex - Rocket Chat", ()=>{
         cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
         cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
             cy.get(consumption.vex.rocketChat.container).should('exist')
+            cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
             cy.contains(visitor.name).should("exist")
         })
     })
@@ -183,6 +187,7 @@ describe("Vex - Rocket Chat", ()=>{
                 cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
                 cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
                     cy.get(consumption.vex.rocketChat.container).should('exist')
+                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
                     cy.contains(visitor.name).should("exist")
                 })
             } else {
