@@ -77,7 +77,7 @@ describe('VEX - Virtual Event', function() {
 
         // Return to home vex page and verify the card has correct event name, url, and number of sessions 
         authoring.vex.visit();
-        cy.containsExact(authoring.vex.eventCardTitle, event.newName).parent().parent().parent().within(() => {
+        cy.containsExact(authoring.vex.eventCardTitle, event.newName, {timeout: 15000}).parent().parent().parent().within(() => {
             cy.get(authoring.vex.eventCardTitle).should('have.contain', event.newName)
             cy.contains(authoring.vex.antDescriptionsContent, event.slug).should('exist')
             cy.containsExact(authoring.vex.antDescriptionsContent, `${sessions.length - 1}`)

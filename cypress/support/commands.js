@@ -132,7 +132,7 @@ Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLoca
     // elementIndicatorLocator is the element whose presence in the iframe would indirectly indicate that the iframe has fully loaded its contents
     // maxWait is the maximum wait time. If element exists before that time, then there will be no more waiting 
 
-    cy.get(iframeLocator).should('exist') 
+    cy.get(iframeLocator, {timeout: 10000}).should('exist') 
     let indicatorLoaded = false
     for(let i = 500; i<maxWait ; i += 500){
         cy.document({log: false}).then((doc)=>{
