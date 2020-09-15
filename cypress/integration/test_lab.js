@@ -3,23 +3,15 @@ import { createAuthoringInstance } from '../support/pageObject.js';
 //const authoring = createAuthoringInstance({org: 'default', tld: "pathfactory", username: "liming", password: "Password123"});
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
 
-const https = require("https")
+//const https = require("https")
 /*const options = {
-    hostname: "api.pipedream.com",
-    port: 443,
-    path: "/v1/sources/dc_nvu2zG/event_summaries?expand=event",
-    headers: {
-      "Authorization": "Bearer 6285575d515e110fb3ba5d0ea131f92d",
-    },
-}*/
-const options = {
     hostname: "api.pipedream.com",
     port: 443,
     path: "/v1/sources/dc_lVu6y2/event_summaries?expand=event",
     headers: {
       "Authorization": "Bearer 391dbfbac8627689b173cabc4506b667",
     },
-  }
+}*/
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
     /*it("Test scrolling within content library", ()=>{
@@ -103,8 +95,142 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         
     })*/
 
-    it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+    /*it("webhook test assertions", ()=>{
+        // API cut paste from Pipedream.com
+        const https = require("https")
+
+        const options = {
+            hostname: "api.pipedream.com",
+            port: 443,
+            path: "/v1/sources/dc_lVu6y2/event_summaries?expand=event",
+            headers: {
+                "Authorization": "Bearer 391dbfbac8627689b173cabc4506b667",
+            },
+        }
+
+        const req = https.request(options, resp => {
+            let data = ""
+            resp.on("data", chunk => {
+                data += chunk
+            })
+            resp.on("end", () => {
+                //cy.log(JSON.parse(data))
+                let webhookEvent = JSON.parse(data).data[0].event.body
+                cy.log(webhookEvent)
+                expect(webhookEvent.first_name).to.equal("yam")         
+            })
+        }).on("error", err => {
+            console.error("[error] " + err.message)
+        })
+        req.end()
+
+    })*/
+
+    /*it("webhook test delete", ()=>{
+        const https = require("https")
+
+        const options = {
+        hostname: "api.pipedream.com",
+        port: 443,
+        path: "/v1/sources/dc_lVu6y2/events",
+        method: "DELETE",
+        headers: {
+            "Authorization": "Bearer 391dbfbac8627689b173cabc4506b667",
+        },
+        }
+
+        const req = https.request(options, resp => {
+        let data = ""
+        resp.on("data", chunk => {
+            data += chunk
+        })
+        resp.on("end", () => {
+            console.log(JSON.parse(data))
+        })
+        }).on("error", err => {
+        console.error("[error] " + err.message)
+        })
+        req.end()
+    })*/
+
+    /*it("test cypress's request functions for webhooks", ()=>{
+        // Instead of using what Pipedream provides, just take its parameters and use tthese in cypress's built-in request 
+        // this way can take advanttage of cypress's built-in request testing functions
+        const event = {
+            company: "",
+            content_source_url: "",
+            content_title: "",
+            email: "yam6@gmail.com",
+            event_time: "2020-09-15T13:08:17-04:00",
+            experience_external_id: "externalid",
+            experience_name: "limingorg event",
+            first_name: "yam6",
+            form_name: "Standard",
+            job_title: "",
+            last_name: "yam6",
+            phone: ""
+        }
+        function req(event, retries = 60){
+            cy.request({
+                url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
+                headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
+            }).then((response)=>{
+                //cy.log(response)
+                //let webhookEvent = response.body.data[0].e.body
+                cy.log(`data length: ${response.body.data.length}`)
+                let events = response.body.data.map((data)=>{
+                    return data.e.body
+                })
+                let webhookEvent = events.find((data) => {
+                    cy.log(data)
+                    function checkMatch(){
+                        let match = true
+                        Object.getOwnPropertyNames(event).forEach((prop)=>{
+                            cy.log(`${prop}: ${data[prop]} == ${event[prop]}`)
+                            if(data[prop] !== event[prop]){
+                                match = false
+                            }
+                        })
+                        cy.log(`Match is: ${match}`)
+                        return match;
+                    }
+                    return checkMatch()
+                })
+                cy.log(`Webhook Event found: ${webhookEvent}`)
+                //if(webhookEvent.first_name !== "yam6" && retries > 0){
+                if(!webhookEvent && retries > 0){
+                    cy.wait(1000)
+                    req(event, retries - 1)
+                } else {
+                    expect(webhookEvent.first_name).to.equal("yam6") 
+                }
+            })
+        }
+
+        req(event)
+    })*/
+
+    it("test webhook command function", ()=>{
+        const event = {
+            company: "",
+            content_source_url: "",
+            content_title: "",
+            email: "yam6@gmail.com",
+            event_time: "2020-09-15T13:08:17-04:00",
+            experience_external_id: "externalid",
+            experience_name: "limingorg event",
+            first_name: "yam6",
+            form_name: "Standard",
+            job_title: "",
+            last_name: "yam6",
+            phone: ""
+        }
+
+        cy.assertWebhook(event)
     })
+
+    /*it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })*/
 
 })

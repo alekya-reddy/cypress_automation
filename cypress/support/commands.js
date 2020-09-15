@@ -243,6 +243,47 @@ Cypress.Commands.add("angryClick", (config)=>{
     }
 })
 
+Cypress.Commands.add("clearWebhooks", ()=>{
+    
+})
+
+Cypress.Commands.add("assertWebhook", (expectedEvent, retries = 60)=>{
+    // The following sends request to pipedream using our pipedream account's api key 
+    // expectedEvent is the webhook object you expect (key: value pairs) to have been sent to the pipedream endpoint 
+    // retries every second for up to 60 seconds by default, which you can set to something else 
+    // Uncomment any of the cy.log lines to help with debugging 
+    cy.request({
+        url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
+        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
+    }).then((response)=>{
+        let events = response.body.data.map((data)=>{
+            return data.e.body
+        })
+        let matchedEvent = events.find((event) => {
+            //cy.log(event)
+            function checkMatch(){
+                let match = true
+                Object.getOwnPropertyNames(expectedEvent).forEach((prop)=>{
+                    //cy.log(`${prop}: ${event[prop]} == ${expectedEvent[prop]}`)
+                    if(event[prop] !== expectedEvent[prop]){
+                        match = false
+                    }
+                })
+                //cy.log(`Match is: ${match}`)
+                return match;
+            }
+            return checkMatch()
+        })
+        //cy.log(`Webhook Event found: ${matchedEvent}`)
+        if(!matchedEvent && retries > 0){
+            cy.wait(1000)
+            cy.assertWebhook(expectedEvent, retries - 1)
+        } else {
+            expect(matchedEvent).to.exist 
+        }
+    })
+})
+
 
 
 
