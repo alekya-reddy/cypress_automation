@@ -42,6 +42,7 @@ export class Common {
             duplicateEntry: "is already taken"
         };
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
+        this.selectList = "div[data-qa-hook='select-list']";
     }
 
     visitHomeUrl(){

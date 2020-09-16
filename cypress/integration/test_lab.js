@@ -236,8 +236,21 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         cy.closeSession()
     })*/
 
-    it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+    it("test adding webhooks", ()=>{
+        authoring.common.login()
+        authoring.webhooks.visit()
+        authoring.webhooks.deleteWebhook("Test")
+        authoring.webhooks.addWebhook({
+            name: "Test",
+            url: "https://www.test.com",
+            type: "Visitor Session"
+        })
+        
+
     })
+
+    /*it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })*/
 
 })

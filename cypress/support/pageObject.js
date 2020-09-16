@@ -5,6 +5,7 @@ import {WebdomainSettings} from './authoringClasses/WebdomainSettings.js';
 import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
 import {Vex} from './authoringClasses/Vex.js';
 import {Widgets} from './authoringClasses/Widgets.js';
+import {Webhooks} from './authoringClasses/Webhooks.js';
 import {Settings} from './authoringClasses/Settings.js';
 import {constants} from './constants.js';
 
@@ -38,6 +39,7 @@ export const createAuthoringInstance = function(config = {}){
             websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl),
             vex: new Vex(env, org, username, password, customBaseUrl),
             widgets: new Widgets(env, org, username, password, customBaseUrl),
+            webhooks: new Webhooks(env, org, username, password, customBaseUrl),
             settings: new Settings(env, org, username, password, customBaseUrl)
         }
     );
