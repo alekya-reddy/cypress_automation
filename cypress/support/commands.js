@@ -244,14 +244,21 @@ Cypress.Commands.add("angryClick", (config)=>{
 })
 
 Cypress.Commands.add("clearWebhooks", ()=>{
-    
+    // This will clear up all events from the pipedream database 
+    cy.request({
+        url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
+        method: "DELETE",
+        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
+    })
 })
 
-Cypress.Commands.add("assertWebhook", (expectedEvent, retries = 60)=>{
+Cypress.Commands.add("assertWebhook", (config)=>{
     // The following sends request to pipedream using our pipedream account's api key 
-    // expectedEvent is the webhook object you expect (key: value pairs) to have been sent to the pipedream endpoint 
-    // retries every second for up to 60 seconds by default, which you can set to something else 
     // Uncomment any of the cy.log lines to help with debugging 
+    let find = config.find ? config.find : config // Function will return the first event that matches the fields provided in find (needs to be an object)
+    let assert = config.assert // This optional callback will take in the matching event and you can do whatever custom assertion test you want on it
+    let retries = Number.isInteger(config.retries) ? config.retries : 120 // By default, will retry every second for 120 seconds. You can set to any number of retries you want.
+
     cy.request({
         url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
         headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
@@ -263,9 +270,9 @@ Cypress.Commands.add("assertWebhook", (expectedEvent, retries = 60)=>{
             //cy.log(event)
             function checkMatch(){
                 let match = true
-                Object.getOwnPropertyNames(expectedEvent).forEach((prop)=>{
-                    //cy.log(`${prop}: ${event[prop]} == ${expectedEvent[prop]}`)
-                    if(event[prop] !== expectedEvent[prop]){
+                Object.getOwnPropertyNames(find).forEach((prop)=>{
+                    //cy.log(`${prop}: ${event[prop]} == ${find[prop]}`)
+                    if(event[prop] !== find[prop]){
                         match = false
                     }
                 })
@@ -276,10 +283,14 @@ Cypress.Commands.add("assertWebhook", (expectedEvent, retries = 60)=>{
         })
         //cy.log(`Webhook Event found: ${matchedEvent}`)
         if(!matchedEvent && retries > 0){
-            cy.wait(1000)
-            cy.assertWebhook(expectedEvent, retries - 1)
+            cy.wait(1000, {log: false})
+            //cy.log(retries)
+            cy.assertWebhook({find: find, assert: assert, retries: retries - 1})
         } else {
             expect(matchedEvent).to.exist 
+            if(assert){
+                assert(matchedEvent)  
+            }
         }
     })
 })

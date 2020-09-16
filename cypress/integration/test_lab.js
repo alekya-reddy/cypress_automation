@@ -215,17 +215,20 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
             company: "",
             content_source_url: "",
             content_title: "",
-            email: "yam6@gmail.com",
-            event_time: "2020-09-15T13:08:17-04:00",
+            email: "testa6@gmail.com",
             experience_external_id: "externalid",
             experience_name: "limingorg event",
-            first_name: "yam6",
+            first_name: "testa6",
             form_name: "Standard",
             job_title: "",
-            last_name: "yam6",
+            last_name: "testa6",
             phone: ""
         }
-
+        //cy.clearWebhooks()
+        cy.assertWebhook({find: event, assert: (matchedEvent)=>{
+            expect(matchedEvent.last_name).to.equal("testa6")
+            cy.log(matchedEvent.event_time)
+        }})
         cy.assertWebhook(event)
     })
 
