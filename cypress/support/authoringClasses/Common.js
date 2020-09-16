@@ -43,6 +43,7 @@ export class Common {
         };
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
         this.selectList = "div[data-qa-hook='select-list']";
+        this.selectValue = ".Select-value";
     }
 
     visitHomeUrl(){

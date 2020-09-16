@@ -236,7 +236,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         cy.closeSession()
     })*/
 
-    it("test adding webhooks", ()=>{
+    /*it("test adding webhooks", ()=>{
         authoring.common.login()
         authoring.webhooks.visit()
         authoring.webhooks.deleteWebhook("Test")
@@ -245,12 +245,21 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
             url: "https://www.test.com",
             type: "Visitor Session"
         })
-        
-
-    })
-
-    /*it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+        authoring.webhooks.configureWebhook({
+            name: "Test",
+            on_off: "on",
+            eventFields: {
+                Country: "country_time",
+                "Event Type": "event_type",
+                "Event Time": "event_time",
+                "Experience Name": "experience_name",
+                "Known Visitor Email": "known visitor email"
+            }
+        })
     })*/
+
+    it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })
 
 })
