@@ -295,6 +295,15 @@ Cypress.Commands.add("assertWebhook", (config)=>{
     })
 })
 
+Cypress.Commands.add("closeSession", ()=>{
+    cy.request({
+        url: `https://api.${Cypress.env('TEST_ENV')}.com/api/debug/close_sessions`,
+        method: "POST",
+        headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIz"},
+        timeout: 60000
+    })
+})
+
 
 
 

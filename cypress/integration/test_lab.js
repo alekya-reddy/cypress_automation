@@ -210,7 +210,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         req(event)
     })*/
 
-    it("test webhook command function", ()=>{
+    /*it("test webhook command function", ()=>{
         const event = {
             company: "",
             content_source_url: "",
@@ -230,10 +230,14 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
             cy.log(matchedEvent.event_time)
         }})
         cy.assertWebhook(event)
-    })
-
-    /*it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
     })*/
+
+    /*it("close sessions", ()=>{
+        cy.closeSession()
+    })*/
+
+    it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })
 
 })

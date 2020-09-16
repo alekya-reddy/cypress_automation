@@ -12,16 +12,28 @@ const event = {
     }
 }
 
-const visitor = {
-    name: "Penguin",
-    lastName: "Superbird",
-    email: "penguin.superbird@gmail.com"
+const formWebhook = {
+    first_name: "Penguin",
+    last_name: "Superbird",
+    email: "penguin.superbird@gmail.com",
+    company: "The Flightless Birds",
+    job_title: "Emperor",
+    phone: "1234",
+    opt_in: 'true',
+    visitor_name: "Penguin Superbird",
+    experience_external_id: "",
+    experience_name: "vexFormWebhook.js",
+    form_name: "vexFormWebhook.js",
+    webhook_name: "vexFormWebhook.js",
+    event_type: "Form Capture",
+    content_source_url: "",
+    content_title: "",
+    query_string: "",
+    utm_source: ""
 }
 
-const webhook = "vexFormWebhook.js"
-
 describe("VEX - Form Webhook", ()=>{
-    it("Set up the event if not already done", ()=>{
+    it("Set up the event if not already done, and clear all webhooks from pipedream database", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
@@ -31,30 +43,21 @@ describe("VEX - Form Webhook", ()=>{
                 authoring.vex.configureEvent(event)
             }
         })
+        cy.clearWebhooks()
     })
 
-    it("Visit the event, fill the form", ()=>{
+    it("Go to consumption and trigger all the webhooks - form, session, visitor activity (specific content, score, multiple asset)", ()=>{
+        // Fill out the form 
         cy.visit(event.url)
-        cy.get(consumption.vex.firstNameInput).clear().type(visitor.name)
-        cy.get(consumption.vex.lastNameInput).clear().type(visitor.lastName)
-        cy.get(consumption.vex.emailInput).clear().type(visitor.email) 
-        cy.get("input[name='optIn']").should("exist") // Might as well check that the opt-in appears here on form
-        cy.contains("button", "Submit").click() 
-        cy.get("form").should("not.exist")
-        cy.wait(2000) // Wait a while to ensure that webhook has had time to fire
+        consumption.vex.fillStandardForm(formWebhook)
+
+        // Visit session and interact with content for the configured amount of time to trigger the various hooks 
+
+        // Close sessions to force webhooks to fire
+        //cy.closeSession()
+
+        // Now check for all the webhooks 
+        cy.assertWebhook(formWebhook)
     })
 
-    it("Go to authoring and check the log to verify that the webhook fired", ()=>{
-        authoring.common.login()
-        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/config/webhooks`)
-        cy.contains(authoring.common.table.cellName, webhook).click() // opens right hand preview bar
-        cy.containsExact("div", "View Logs").click() 
-        cy.contains(authoring.common.modal, visitor.email).should("exist")
-    })
-
-    // Session webhook 
-    // Activity webhook - specific content (supplemental)
-    // Activity webhook - specific content (video, live or on demand)
-    // Activity webhook - engagement score 
-    // Activity webhook - multiple asset engagement 
 })

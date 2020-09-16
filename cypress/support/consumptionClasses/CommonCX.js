@@ -10,6 +10,11 @@ export class CommonCX {
             firstNameInput: "#firstName",
             lastNameInput: "#lastName",
             emailInput: "#email",
+            company: "#company",
+            title: "#title",
+            phone: "#phone",
+            optIn: "input[name='optIn'][value='true']",
+            optOut: "input[name='optIn'][value='false']",
             cookieConsentCheckbox: 'input[name="visitorCookieAccepted"]',
         },
         this.cookieConsent = {
@@ -82,6 +87,54 @@ export class CommonCX {
         cy.get(this.cookieSettings.toggle).should("contain", on_off)
         cy.get(this.cookieSettings.closeModal).click()
         cy.get(this.cookieSettings.modal).should('not.exist')
+    }
+
+    fillStandardForm(config){
+        const first_name = config.first_name
+        const last_name = config.last_name
+        const email = config.email
+        const company = config.company
+        const job_title = config.job_title
+        const phone = config.phone
+        const opt_in = config.opt_in 
+        const consent = config.consent 
+
+        if(first_name){
+            cy.get(this.standardForm.firstNameInput).clear().type(first_name)
+        }
+
+        if(last_name){
+            cy.get(this.standardForm.lastNameInput).clear().type(last_name)
+        }
+
+        if(email){
+            cy.get(this.standardForm.emailInput).clear().type(email) 
+        }
+
+        if(company){
+            cy.get(this.standardForm.company).clear().type(company)
+        }
+
+        if(job_title){
+            cy.get(this.standardForm.title).clear().type(job_title)
+        }
+
+        if(phone){
+            cy.get(this.standardForm.phone).clear().type(phone)
+        }
+        
+        if(opt_in == 'true'){
+            cy.get(this.standardForm.optIn).click()
+        } else if (opt_in == 'false'){
+            cy.get(this.standardForm.optOut).click()
+        }
+
+        if(consent){
+            cy.get(this.standardForm.cookieConsentCheckbox).click()
+        }
+
+        cy.contains("button", "Submit").click() 
+        cy.get("form").should("not.exist")
     }
 
 }
