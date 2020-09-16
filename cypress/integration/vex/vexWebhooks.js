@@ -81,7 +81,38 @@ const activityWebhook = {
     type: "Visitor Activity",
     on_off: 'on',
     eventFields: {
-        
+        "Event Time": "event_time",
+        "Known Visitor Email": "email",
+        "Visitor Activity Name": "visitor_activity_name",
+        "Experience Name": "experience_name",
+        "Experience External ID": "experience_external_id",
+        "Content External ID (Specific Content Engagement Only)": "content_external_id",
+        "Content Media Type (Specific Content Engagement Only)": "content_media_type",
+        "Content Source URL (Specific Content Engagement Only)": "content_source_url",
+        "Content Title (Specific Content Engagement Only)": "content_title",
+        "Content Type (Specific Content Engagement Only)": "content_type",
+        "Content URL (Specific Content Engagement Only)": "content_url",
+        "Event Type": "event_type",
+        "Is Known Visitor": "is_known_visitor",
+        "Known Visitor Email Domain": "known_visitor_email_domain",
+        "Session Assets Viewed": "session_assets_viewed",
+        "Session Business Units List - Time Thresholds Met": "session_business_units_list_time_thresholds_met",
+        "Session Content Count - Time Thresholds Met": "session_content_count_time_thresholds_met",
+        "Session Content External ID List - Time Thresholds Met": "session_content_external_id_list_time_thresholds_met",
+        "Session Content Journey": "session_content_journey",
+        "Session Content List - Time Thresholds Met": "session_content_list_time_thresholds_met",
+        "Session Content Types List - Time Thresholds Met": "session_content_types_list_time_thresholds_met",
+        "Session Start Time (UTC)": "session_start_time_utc",
+        "Session End Time (UTC)": "session_end_time_utc",
+        "Session Engagement Score": "session_engagement_score",
+        "Session Engagement Time": "session_engagement_time",
+        "Session Funnel Stages List - Time Thresholds Met": "session_funnel_stages_list_time_threshols_met",
+        "Session Topics List - Time Thresholds Met": "session_topics_list_time_thresholds_met",
+        "Visitor Activity Type": "visitor_activity_type",
+        "Webhook Name": "webhook_name",
+        "Session Total Views": "session_total_views",
+        "Session Last Viewed Content Source URL": "session_last_viewed_content_source_url",
+        "Session Last Viewed Content Title": "session_last_viewed_content_title"
     }
 }
 
@@ -116,6 +147,8 @@ describe("VEX - Form Webhook", ()=>{
                 authoring.webhooks.configureWebhook(formWebhook)
                 authoring.webhooks.addWebhook(sessionWebhook)
                 authoring.webhooks.configureWebhook(sessionWebhook)
+                authoring.webhooks.addWebhook(activityWebhook)
+                authoring.webhooks.configureWebhook(activityWebhook)
             }
         })
         cy.clearWebhooks()
