@@ -122,6 +122,11 @@ export class ContentLibrary extends Common{
         const description = config.description 
         const slug = config.slug 
         const thumbnail = config.thumbnail // requires fields "category" and "url" or "name", see function pickThumbnail in common class  
+        const contentType = config.contentType
+        const topics = config.topics
+        const funnelStages = config.funnelStages
+        const businessUnits = config.businessUnits 
+        const externalID = config.externalID 
 
         this.searchAndClickContent(search)
         cy.contains(this.previewSideBar, search).should('exist') 
