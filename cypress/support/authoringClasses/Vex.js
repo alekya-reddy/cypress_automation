@@ -88,6 +88,8 @@ export class Vex extends Common {
         this.trackProtectionArea = '.visitorGroupMultiSelect';
         this.antRow = ".ant-row"; 
         this.antSelector = ".ant-select-selector";
+        this.engagementThresholdInput = "input[name='engagementThreshold']";
+        this.engagementScoreInput = "input[name='engagementWeight']";
     }
 
     visit(){
@@ -254,7 +256,7 @@ export class Vex extends Common {
         cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
             cy.get(this.addSessionButton).click();
         })
-        cy.get(this.antModalContent).within((modal)=>{
+        cy.get(this.antModalContent).within(()=>{
             cy.get(this.sessionNameInput).type(sessionName)
         })
         if (type == 'On Demand') {
@@ -310,17 +312,19 @@ export class Vex extends Common {
     }
 
     configureSession(config){
-        const name = config.name;
-        const newName = config.newName;
-        const visibility = config.visibility;
-        const slug = config.slug;
-        const description = config.description; 
-        const type = config.type;
-        const video = config.video;
-        const contents = config.contents;
-        const thumbnail = config.thumbnail;
-        const live = config.live;
-        const widgets = config.widgets;
+        const name = config.name
+        const newName = config.newName
+        const visibility = config.visibility
+        const slug = config.slug
+        const description = config.description
+        const type = config.type
+        const video = config.video
+        const contents = config.contents
+        const thumbnail = config.thumbnail
+        const live = config.live
+        const widgets = config.widgets
+        const engagementThreshold = config.engagementThreshold
+        const engagementScore = config.engagementScore
 
         cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
             this.goToSessionConfig(name);
@@ -342,6 +346,14 @@ export class Vex extends Common {
              cy.get(this.onDemandRadio).click()
          } else if (type == 'Live'){
              cy.get(this.liveRadio).click()
+         }
+
+         if(engagementThreshold){
+             cy.get(this.engagementThresholdInput).clear().type(engagementThreshold)
+         }
+
+         if(engagementScore){
+             cy.get(this.engagementScoreInput).clear().type(engagementScore)
          }
 
          if(video){
@@ -638,6 +650,11 @@ export class Vex extends Common {
             })
         })
         cy.containsExact("span", name).should("not.exist")
+    }
+
+    backToEvent(event){
+        cy.containsExact("a", event).click()
+        cy.contains(this.pageTitleLocator, event).should('exist')
     }
 
 }

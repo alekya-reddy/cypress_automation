@@ -28,7 +28,7 @@ export class Webhooks extends Common {
         let alreadyExists = false
 
         this.goToPage(this.pageTitle, this.pageUrl)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 3000, ()=>{
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, ()=>{
             alreadyExists = true
         })
         cy.get('body').then(()=>{
@@ -98,7 +98,7 @@ export class Webhooks extends Common {
                     cy.get(this.selectValue).last().click()
                     cy.get(this.dropDownOption(field[0])).click()
                 }, 'div')
-                cy.contains(this.selectValue, field[0]).parents().eq(7).within(()=>{
+                cy.containsExact(this.selectValue, field[0]).parents().eq(7).within(()=>{
                     cy.get("#value").invoke('attr', 'value').then((value)=>{
                         if(value !== field[1]){
                             cy.get("#value").clear().type(field[1])
