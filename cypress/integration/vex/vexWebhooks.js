@@ -309,7 +309,7 @@ const supplementalSpecificContentWebhookEvent = {
 describe("VEX - Form Webhook", ()=>{
     it("Set up the event if not already done, and clear all webhooks from pipedream database", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){
+            if(response.status == 404 && Cypress.env('TEST_ENV') !== "prod"){
                 authoring.common.login()
                 authoring.vex.addVirtualEvent(event.name)
                 authoring.vex.configureEvent(event)
@@ -330,42 +330,46 @@ describe("VEX - Form Webhook", ()=>{
     })
 
     it("Go to consumption and trigger all the webhooks - form, session, visitor activity (specific content, score, multiple asset)", ()=>{
-        // Fill out the form 
-        cy.visit(event.url + `/?${formWebhookEvent.query_string}`)
-        consumption.vex.fillStandardForm(formWebhookEvent)
+        if(Cypress.env('TEST_ENV') !== "prod"){
+            // Fill out the form 
+            cy.visit(event.url + `/?${formWebhookEvent.query_string}`)
+            consumption.vex.fillStandardForm(formWebhookEvent)
 
-        // Visit session and interact with content for the configured amount of time to trigger the various hooks 
-        cy.visit(videoSession.url)
-        cy.wait(5000)
-        cy.containsExact("a", supplementalContent.publicTitle).click() // View supplemental
-        cy.wait(5000)
-        cy.get(`a[href="/${event.slug}/${videoSession.slug}"]`).click() // Close supplemental 
-        cy.wait(5000)
-        cy.containsExact("a", event.name).click() // Back to event page 
-        cy.get(`a[href="/${event.slug}/${webexSession.slug}"]`).click() // Visit the webex session
-        cy.waitForIframeToLoad("iframe", "div[class='meeting-controls']", 20000)
-        cy.getIframeBody("iframe").within(()=>{
-            cy.get(`h2:contains('${webexSession.live.webexLink}')`, {timeout: 20000}).should('exist')
-            cy.get("div[class='meeting-controls']").should('exist')
-        })
-        cy.wait(5000)
+            // Visit session and interact with content for the configured amount of time to trigger the various hooks 
+            cy.visit(videoSession.url)
+            cy.wait(5000)
+            cy.containsExact("a", supplementalContent.publicTitle).click() // View supplemental
+            cy.wait(5000)
+            cy.get(`a[href="/${event.slug}/${videoSession.slug}"]`).click() // Close supplemental 
+            cy.wait(5000)
+            cy.containsExact("a", event.name).click() // Back to event page 
+            cy.get(`a[href="/${event.slug}/${webexSession.slug}"]`).click() // Visit the webex session
+            cy.waitForIframeToLoad("iframe", "div[class='meeting-controls']", 20000)
+            cy.getIframeBody("iframe").within(()=>{
+                cy.get(`h2:contains('${webexSession.live.webexLink}')`, {timeout: 20000}).should('exist')
+                cy.get("div[class='meeting-controls']").should('exist')
+            })
+            cy.wait(5000)
+        }
     })
 
     it("Close sessions and check all the webhooks", ()=>{
-        // Closing sessions in separate it block so can go to different url and clear all cookeis 
-        // If you close sessions while browser still open on the experience, it immediately starts a new session that will appear in webhooks if close session again
-        authoring.common.login()
-        cy.closeSession()
+        if(Cypress.env('TEST_ENV') !== "prod"){
+            // Closing sessions in separate it block so can go to different url and clear all cookeis 
+            // If you close sessions while browser still open on the experience, it immediately starts a new session that will appear in webhooks if close session again
+            authoring.common.login()
+            cy.closeSession()
 
-        // Now check for all the webhooks 
-        // Note: not all fields will be verified. If field changes between runs, it is omitted from check.
-        // For example, time fields, city, country, device etc
-        cy.assertWebhook({find: formWebhookEvent, retries: 300})
-        cy.assertWebhook({find: engagementScoreWebhookEvent, retries: 300})
-        cy.assertWebhook({find: supplementalSpecificContentWebhookEvent, retries: 300})
-        cy.assertWebhook({find: sessionWebhookEvent, retries: 300})
-        // Multiple asset engagement webhook not firing
-        // Specific content webhook for video not firing 
+            // Now check for all the webhooks 
+            // Note: not all fields will be verified. If field changes between runs, it is omitted from check.
+            // For example, time fields, city, country, device etc
+            cy.assertWebhook({find: formWebhookEvent, retries: 300})
+            cy.assertWebhook({find: engagementScoreWebhookEvent, retries: 300})
+            cy.assertWebhook({find: supplementalSpecificContentWebhookEvent, retries: 300})
+            cy.assertWebhook({find: sessionWebhookEvent, retries: 300})
+            // Multiple asset engagement webhook not firing
+            // Specific content webhook for video not firing
+        } 
     })
 
 })
