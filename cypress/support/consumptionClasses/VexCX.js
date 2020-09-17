@@ -61,10 +61,31 @@ export class VexCX extends CommonCX {
             getCurrentTime: function(state){ cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
         };
+        this.zoom = {
+            iframe: "iframe",
+            container: '#zmmtg-root'
+        };
         this.rocketChat = {
             iframe: "iframe[src*='rocket.pathfactory']",
             container: "#rocket-chat",
             messageInput: "textarea[name='msg']"
+        };
+        this.messages = {
+            maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached."
         }
+    }
+
+    expectZoom(){
+        cy.waitForIframeToLoad(this.zoom.iframe, this.zoom.container, 10000)
+        cy.getIframeBody(this.zoom.iframe).within(()=>{
+            cy.get(this.zoom.container).should('exist')
+        })
+    }
+
+    expectYoutube(){
+        cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 5000)
+        cy.getIframeBody(this.youtube.iframe).within(()=>{
+            cy.get(this.youtube.videoPlayer).should('exist')
+        })
     }
 }

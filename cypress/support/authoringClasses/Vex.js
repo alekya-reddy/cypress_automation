@@ -90,6 +90,7 @@ export class Vex extends Common {
         this.antSelector = ".ant-select-selector";
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
+        this.maxAttendeesInput = "input[name='maximumAttendees']";
     }
 
     visit(){
@@ -325,10 +326,14 @@ export class Vex extends Common {
         const widgets = config.widgets
         const engagementThreshold = config.engagementThreshold
         const engagementScore = config.engagementScore
+        const maxAttendees = config.maxAttendees 
+        const stayOnPage = config.stayOnPage // Set to true if you know you want to stay on current session config page 
 
-        cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
-            this.goToSessionConfig(name);
-        })
+        if(!stayOnPage){
+            cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
+                this.goToSessionConfig(name);
+            })
+        }
         
         newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
 
@@ -366,6 +371,10 @@ export class Vex extends Common {
 
          if(live){
              this.configureLive(live);
+         }
+
+         if(maxAttendees && type !== "On Demand"){
+            cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
          }
 
          if(contents){
