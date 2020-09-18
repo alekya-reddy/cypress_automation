@@ -98,6 +98,7 @@ export class CommonCX {
         const phone = config.phone
         const opt_in = config.opt_in 
         const consent = config.consent 
+        const checkSuccess = config.checkSuccess == false ? false : true
 
         if(first_name){
             cy.get(this.standardForm.firstNameInput).clear().type(first_name)
@@ -134,7 +135,10 @@ export class CommonCX {
         }
 
         cy.contains("button", "Submit").click() 
-        cy.get("form").should("not.exist")
+
+        if(checkSuccess){
+            cy.get("form").should("not.exist")
+        }
     }
 
 }

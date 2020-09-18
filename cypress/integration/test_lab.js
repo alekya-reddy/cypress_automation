@@ -14,60 +14,7 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 }*/
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
-    /*it("Test scrolling within content library", ()=>{
-        authoring.common.login()
-        cy.scrollIntoViewWithin({
-            scroller: 'div[class*="table-body-container"]',
-            element: 'div[data-qa-hook="table-cell-internal-title"]',
-            text: "Myrbetriq",
-            increment: 2
-        })
-        cy.containsExact('div[data-qa-hook="table-cell-internal-title"]', "Myrbetriq").should('exist')
-    })*/
-
-    /*it("Test scrolling within timezone picker in VEX", ()=>{
-        let timeZones = [
-            '(GMT+13:00) Tokelau Is.',
-            '(GMT-05:00) Eastern Time (US & Canada)'
-        ]
-        authoring.common.login()
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig("test lab")
-        authoring.vex.goToSessionConfig("test time zone")
-        authoring.vex.configureLive({timeZone: timeZones[1]})
-    })*/
-
-    /*it("Test xhr request reading", ()=>{
-        cy.server()
-        //cy.route('POST', 'https://spcollector.pathfactory-development.com/com.snowplowanalytics.snowplow/tp2').as('tp2')
-        cy.route("GET", "https://content-upload-test2.glitch.me/dreams").as("dreams")
-        cy.visit("https://content-upload-test2.glitch.me/")
-        //cy.wait('@tp2')
-        cy.wait("@dreams")
-        cy.get('@tp2').then((xhr)=>{
-            expect(xhr.status).to.eq(200)
-            cy.log(xhr.requestBody)
-        })
-    })*/
-
-    /*it("Webhook API test", ()=>{
-        const req = https.request(options, resp => {
-            let data = ""
-            resp.on("data", chunk => {
-              data += chunk
-            })
-            resp.on("end", () => {
-                cy.log(JSON.parse(data))
-                cy.log(JSON.parse(data).data[0].event)
-                //cy.log(JSON.parse(data).data[1].event)
-            })
-          }).on("error", err => {
-            cy.error("[error] " + err.message)
-          })
-        req.end()
-
-    })*/
-
+   
     /*it("content library", ()=>{
         authoring.common.login()
         authoring.contentLibrary.deleteContentByUrl({urls: "https://en.wikipedia.org/wiki/Second-rate"})
@@ -236,7 +183,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         cy.closeSession()
     })*/
 
-    it("test adding webhooks", ()=>{
+    /*it("test adding webhooks", ()=>{
         authoring.common.login()
         authoring.webhooks.visit()
         authoring.webhooks.deleteWebhook("Test")
@@ -245,12 +192,40 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
             url: "https://www.test.com",
             type: "Visitor Session"
         })
-        
-
-    })
-
-    /*it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+        authoring.webhooks.configureWebhook({
+            name: "Test",
+            on_off: "on",
+            eventFields: {
+                Country: "country_time",
+                "Event Type": "event_type",
+                "Event Time": "event_time",
+                "Experience Name": "experience_name",
+                "Known Visitor Email": "known visitor email"
+            }
+        })
     })*/
+
+    /*it("", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig("rocketChat.js")
+        authoring.vex.goToSessionConfig("On-demand")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(authoring.vex.chat.toggle, "oN")
+        authoring.vex.addModerators("jo@gmail.com")
+        authoring.vex.addModerators(["ja@gmail.com", "ji@gmail.com", "je@gmail.com"])
+        authoring.vex.deleteModerators("jo@gmail.com")
+        authoring.vex.deleteModerators(["ja@gmail.com", "ji@gmail.com"])
+        authoring.vex.editModerator({moderator: "je@gmail.com", newEmail: "wa@gmail.com"})
+        authoring.vex.toggle(authoring.vex.chat.toggle, "OfF")
+        authoring.vex.configureSession({
+            name: "On-demand",
+            rocketChat: {on_off: "on", moderators: ["Poop@gmail.com"]}
+        })
+    })*/
+
+    it("should always pass", ()=>{
+        cy.visit("https://www.google.com")
+    })
 
 })

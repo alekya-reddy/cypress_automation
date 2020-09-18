@@ -72,7 +72,9 @@ Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack, container 
 
 Cypress.Commands.add("containsExact", (locator, exact_text_to_match, config = {})=>{
     let timeout = config.timeout || 1000
-    let matchString = exact_text_to_match.replace(/\?/, `\\?`).replace(/\./, `\\.`).replace(/\//, `\\/`)
+    let matchString = exact_text_to_match.replace(/\?/, `\\?`).replace(/\./, `\\.`).replace(/\//, `\\/`).replace(/\(/, `\\(`).replace(/\)/, `\\)`)
+    //let matchString = exact_text_to_match.replace(/([^a-zA-Z0-9\s])/g, '*') // escapes all non-alphanumeric characters
+    //cy.log(matchString)
     let text_regex = new RegExp(`^${matchString}$`);
     cy.contains(locator, text_regex, {timeout: timeout});
 })
@@ -261,7 +263,8 @@ Cypress.Commands.add("assertWebhook", (config)=>{
 
     cy.request({
         url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
-        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
+        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"},
+        log: false
     }).then((response)=>{
         let events = response.body.data.map((data)=>{
             return data.e.body
@@ -300,7 +303,8 @@ Cypress.Commands.add("closeSession", ()=>{
         url: `https://api.${Cypress.env('TEST_ENV')}.com/api/debug/close_sessions`,
         method: "POST",
         headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIz"},
-        timeout: 60000
+        timeout: 60000,
+        retryOnNetworkFailure: false // Set to false or cypress will spam up to 4 times
     })
 })
 

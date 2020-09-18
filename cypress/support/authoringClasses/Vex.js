@@ -88,6 +88,16 @@ export class Vex extends Common {
         this.trackProtectionArea = '.visitorGroupMultiSelect';
         this.antRow = ".ant-row"; 
         this.antSelector = ".ant-select-selector";
+        this.engagementThresholdInput = "input[name='engagementThreshold']";
+        this.engagementScoreInput = "input[name='engagementWeight']";
+        this.maxAttendeesInput = "input[name='maximumAttendees']";
+        this.chat = {
+            toggle: "button[data-qa-hook^='chat-widget']",
+            addModeratorButton: "button:contains('Add Moderator')",
+            emailInput: "input[name='email']",
+            emailRow: ".ant-list-item",
+            notAvailableText: "Live chat & session moderator settings are only available for live sessions."
+        }
     }
 
     visit(){
@@ -254,7 +264,7 @@ export class Vex extends Common {
         cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
             cy.get(this.addSessionButton).click();
         })
-        cy.get(this.antModalContent).within((modal)=>{
+        cy.get(this.antModalContent).within(()=>{
             cy.get(this.sessionNameInput).type(sessionName)
         })
         if (type == 'On Demand') {
@@ -310,21 +320,27 @@ export class Vex extends Common {
     }
 
     configureSession(config){
-        const name = config.name;
-        const newName = config.newName;
-        const visibility = config.visibility;
-        const slug = config.slug;
-        const description = config.description; 
-        const type = config.type;
-        const video = config.video;
-        const contents = config.contents;
-        const thumbnail = config.thumbnail;
-        const live = config.live;
-        const widgets = config.widgets;
+        const name = config.name
+        const newName = config.newName
+        const visibility = config.visibility
+        const slug = config.slug
+        const description = config.description
+        const type = config.type
+        const video = config.video
+        const contents = config.contents
+        const thumbnail = config.thumbnail
+        const live = config.live
+        const rocketChat = config.rocketChat
+        const engagementThreshold = config.engagementThreshold
+        const engagementScore = config.engagementScore
+        const maxAttendees = config.maxAttendees 
+        const stayOnPage = config.stayOnPage // Set to true if you know you want to stay on current session config page 
 
-        cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
-            this.goToSessionConfig(name);
-        })
+        if(!stayOnPage){
+            cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
+                this.goToSessionConfig(name);
+            })
+        }
         
         newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
 
@@ -344,6 +360,14 @@ export class Vex extends Common {
              cy.get(this.liveRadio).click()
          }
 
+         if(engagementThreshold){
+             cy.get(this.engagementThresholdInput).clear().type(engagementThreshold)
+         }
+
+         if(engagementScore){
+             cy.get(this.engagementScoreInput).clear().type(engagementScore)
+         }
+
          if(video){
             this.pickOnDemandVideo(video);
          }
@@ -356,6 +380,10 @@ export class Vex extends Common {
              this.configureLive(live);
          }
 
+         if(maxAttendees && type !== "On Demand"){
+            cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
+         }
+
          if(contents){
              this.addSupplementalContent(contents);
          }
@@ -364,8 +392,8 @@ export class Vex extends Common {
          cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
 
         // Configure widgets after saving or else will reset all the changes you made 
-        if(widgets){
-            this.setRocketChat()
+        if(rocketChat){
+            this.configureRocketChat(rocketChat)
         }
     }
 
@@ -532,21 +560,69 @@ export class Vex extends Common {
         })
     }
 
-    goToWidgets(){
+    goToChat(){
         cy.url().then((url)=>{
             if(!url.includes("/widget")){
-                cy.containsExact("a", "Widgets").click()
+                cy.containsExact("a", "Chat").click()
             }
         })
     }
 
-    setRocketChat(){
-        this.goToWidgets()
-        cy.ifElementExists("button:contains('Configure Chat')", 2000, ()=>{
-            cy.contains("button", "Configure Chat").click()
-            cy.contains("Chat has been configured.").should('exist')
+    configureRocketChat(config){
+        const on_off = config.on_off
+        const moderators = config.moderators
+
+        this.goToChat()
+        
+        if(on_off){
+            this.toggle(this.chat.toggle, on_off)
+        }
+
+        if(moderators){
+            this.addModerators(moderators)
+        }
+
+        this.backToSession()
+    }
+
+    addModerators(list){
+        const moderators = [list].flat()
+
+        moderators.forEach((moderator)=>{
+            cy.get(this.chat.addModeratorButton).click()
+            cy.contains(this.antModal, "Add Moderator").within(()=>{
+                cy.get(this.chat.emailInput).clear().type(moderator)
+                cy.contains("button", "Submit").click()
+            })
+            cy.contains(this.antModalBody, "Add Moderator").should("not.be.visible")
+            cy.containsExact("span", moderator).should("exist")
         })
-        cy.containsExact("a", "Session Details").click() 
+    }
+
+    deleteModerators(list){
+        const moderators = [list].flat()
+
+        moderators.forEach((moderator)=>{
+            cy.containsExact("span", moderator).parents(this.chat.emailRow).within(()=>{
+                cy.contains("button", "Remove").click()
+            })
+            cy.contains("button", "Yes").click()
+            cy.containsExact("span", moderator).should("not.exist")
+        })
+    }
+
+    editModerator(config){
+        const moderator = config.moderator
+        const newEmail = config.newEmail
+
+        cy.containsExact("span", moderator).parents(this.chat.emailRow).within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(this.antModal, "Edit Moderator").within(()=>{
+            cy.get(this.chat.emailInput).clear().type(newEmail)
+            cy.contains("button", "Submit").click()
+        })
+        cy.containsExact("span", newEmail).should("exist")
     }
 
     goToSessionGroup(){
@@ -638,6 +714,15 @@ export class Vex extends Common {
             })
         })
         cy.containsExact("span", name).should("not.exist")
+    }
+
+    backToEvent(event){
+        cy.containsExact("a", event).click()
+        cy.contains(this.pageTitleLocator, event).should('exist')
+    }
+
+    backToSession(){
+        cy.contains("a", "Session Details").click()
     }
 
 }

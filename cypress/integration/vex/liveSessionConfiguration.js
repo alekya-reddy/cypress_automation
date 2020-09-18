@@ -571,11 +571,6 @@ describe('VEX - Virtual Event Live Sessions', function() {
             if(session.expect !== 'ended'){
                 cy.visit(session.url) // Cypress will automatically fail if get status 500
             }
-            else if(session.expect == 'ended') {
-                cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
-                    expect(response.status).to.eq(500)
-                })
-            }
         })
 
         // On the event page on consumption side, the session cards should contain the correct information about their live status 

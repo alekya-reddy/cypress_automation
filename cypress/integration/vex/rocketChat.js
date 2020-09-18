@@ -27,7 +27,7 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        widgets: "Rocket Chat"
+        rocketChat: "Rocket Chat"
     },
     {
         name: "Live ended with on-demand",
@@ -45,7 +45,7 @@ const sessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        widgets: "Rocket Chat"
+        rocketChat: "Rocket Chat"
     },
     /*{
         // On demand sessions can no longer have rocket chat 
@@ -57,7 +57,6 @@ const sessions = [
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        widgets: "Rocket Chat"
     },*/
     {
         name: "no-chat",
@@ -71,7 +70,26 @@ const sessions = [
     },
 ]
 
-const form = {name: "rocketChat.js"}
+const rocketChatSession = {
+    name: `Rocket-Chat: Configurations, long (name) with. special! character$ 'as' "this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`,
+    slug: "rocket-chat-config",
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Zoom',
+        zoomNum: '111 111 111',
+        zoomAuth: 'No Password',
+    },
+    video: 'Youtube - Used in Cypress automation for VEX testing'
+}
+
+const form = {name: "Standard Form Short"}
 const noForm = { name: "None (Registration Not Required)" }
 
 const visitor = {
@@ -114,7 +132,7 @@ describe("Vex - Rocket Chat", ()=>{
         // Go to each session, and rocket chat should load where it is enabled 
         sessions.forEach((session)=>{
             cy.visit(session.url)
-            if(session.widgets){
+            if(session.rocketChat){
                 cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
                 cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
                     cy.get(consumption.vex.rocketChat.container).should('exist')
@@ -138,7 +156,7 @@ describe("Vex - Rocket Chat", ()=>{
         // Go to each session, and rocket chat should load where it is enabled 
         sessions.forEach((session)=>{
             cy.visit(session.url)
-            if(session.widgets){
+            if(session.rocketChat){
                 cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
                 cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
                     cy.get(consumption.vex.rocketChat.container).should('exist')
@@ -178,7 +196,7 @@ describe("Vex - Rocket Chat", ()=>{
         cy.clearCookies()
         sessions.forEach((session)=>{
             cy.visit(session.url)
-            if(session.widgets){
+            if(session.rocketChat){
                 cy.ifElementExists(consumption.vex.emailInput, 2000, ()=>{
                     // Live sessions will still ask you to provide email
                     cy.get(consumption.vex.emailInput).clear().type(visitor.email)
@@ -197,8 +215,39 @@ describe("Vex - Rocket Chat", ()=>{
         })
     })
 
-    /*it("Add new session, visit event, register, visit 1 session, then visit the new session through the event page", ()=>{
-        // This scenario currently can cause chat to not load without page refresh
-        // Can add this scenario once it is fixed 
+    /*it("Rocket chat configurations - turn on/off, moderators", ()=>{
+        // Add a new session for this scenario
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name) 
+        authoring.vex.removeSession(rocketChatSession.name)
+        authoring.vex.addSession(rocketChatSession.name)
+        authoring.vex.configureSession(rocketChatSession)
+
+        // Live session should have option to turn on chat 
+        authoring.vex.goToChat()
+        cy.get(authoring.vex.chat.toggle).should('exist')
+        cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
+        authoring.vex.backToSession()
+        
+        // On demand session should not have option to turn on chat 
+        authoring.vex.configureSession({type: "On Demand", stayOnPage: true})
+        authoring.vex.goToChat()
+        cy.get(authoring.vex.chat.toggle).should('not.exist')
+        cy.contains(authoring.vex.chat.notAvailableText).should('exist')
+        authoring.vex.backToSession()
+
+        // Verify that turning on chat will enable chat on consumption side 
+        authoring.vex.configureSession({type: "Live", stayOnPage: true})
+        authoring.vex.goToChat()
+        authoring.vex.toggle(authoring.vex.chat.toggle, "on")
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.fillStandardForm({email: "random@gmail.com"})
+        consumption.vex.expectRocketChat() 
+        cy.go("back")
+
+        // Verify that turning off rocket chat will turn it off on consumption side 
+        
     })*/
 })
