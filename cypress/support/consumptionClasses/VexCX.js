@@ -88,4 +88,11 @@ export class VexCX extends CommonCX {
             cy.get(this.youtube.videoPlayer).should('exist')
         })
     }
+
+    expectRocketChat(){
+        cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.container, 10000)
+        cy.getIframeBody(this.rocketChat.iframe).within(()=>{
+            cy.get(this.rocketChat.container).should('exist')
+        })
+    }
 }

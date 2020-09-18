@@ -72,11 +72,10 @@ export class Common {
         cy.url().should('include', '/authoring')
     }
 
-    toggle(toggle_locator, on_or_off) {
-        cy.get(toggle_locator).then((toggle)=>{
-            let color = toggle.css("background-color") 
-            if ( (color == 'rgb(0, 169, 203)' && on_or_off == 'off') || (color == 'rgb(221, 221, 221)' && on_or_off == 'on') ){
-                toggle.click()
+    toggle(toggleLocator, on_off){
+        cy.get(toggleLocator).invoke("text").then((toggleText)=>{
+            if(toggleText.toUpperCase() !== on_off.toUpperCase()){
+                cy.get(toggleLocator).click()
             }
         })
     }
