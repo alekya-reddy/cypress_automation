@@ -71,7 +71,7 @@ const sessions = [
 ]
 
 const rocketChatSession = {
-    name: `Rocket-Chat: Configurations, long (name) with. special! character$ 'as' "this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`,
+    name: `Rocket-Chat: Configurations, long (name) with. special! character$ as_"this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`, // Unfortunately, can't test single quoation due to cypress bug 
     slug: "rocket-chat-config",
     get url(){
         return `${event.url}/${this.slug}`
@@ -215,7 +215,7 @@ describe("Vex - Rocket Chat", ()=>{
         })
     })
 
-    /*it("Rocket chat configurations - turn on/off, moderators", ()=>{
+    it("Rocket chat configurations - turn on/off, moderators", ()=>{
         // Add a new session for this scenario
         authoring.common.login()
         authoring.vex.visit()
@@ -249,5 +249,5 @@ describe("Vex - Rocket Chat", ()=>{
 
         // Verify that turning off rocket chat will turn it off on consumption side 
         
-    })*/
+    })
 })

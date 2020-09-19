@@ -72,11 +72,9 @@ Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack, container 
 
 Cypress.Commands.add("containsExact", (locator, exact_text_to_match, config = {})=>{
     let timeout = config.timeout || 1000
-    let matchString = exact_text_to_match.replace(/\?/, `\\?`).replace(/\./, `\\.`).replace(/\//, `\\/`).replace(/\(/, `\\(`).replace(/\)/, `\\)`)
-    //let matchString = exact_text_to_match.replace(/([^a-zA-Z0-9\s])/g, '*') // escapes all non-alphanumeric characters
-    //cy.log(matchString)
-    let text_regex = new RegExp(`^${matchString}$`);
-    cy.contains(locator, text_regex, {timeout: timeout});
+    let escapedTextToMatch = exact_text_to_match.replace(/(\W)/g, '\\$1')
+    let text_regex = new RegExp(`^${escapedTextToMatch}$`)
+    cy.contains(locator, text_regex, {timeout: timeout})
 })
 
 Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
