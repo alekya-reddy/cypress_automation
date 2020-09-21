@@ -39,7 +39,10 @@ export class Common {
         this.messages = {
             recordSaved: "The record was saved successfully",
             saveFailed: "There was a problem saving this record",
-            duplicateEntry: "is already taken"
+            duplicateEntry: "is already taken",
+            duplicateEntry2: "has already been taken",
+            blankInput: "can't be blank",
+            invalidEmail: "invalid email"
         };
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
         this.selectList = "div[data-qa-hook='select-list']";
@@ -74,8 +77,14 @@ export class Common {
 
     toggle(toggleLocator, on_off){
         cy.get(toggleLocator).invoke("text").then((toggleText)=>{
-            if(toggleText.toUpperCase() !== on_off.toUpperCase()){
+            if( ["ON", "OFF"].includes(toggleText.toUpperCase()) && toggleText.toUpperCase() !== on_off.toUpperCase()){
                 cy.get(toggleLocator).click()
+            } else if( !["ON", "OFF"].includes(toggleText.toUpperCase()) ) {
+                cy.get(toggleLocator).invoke("attr", "aria-checked").then((ariaChecked)=>{
+                    if( (on_off.toUpperCase() == "ON" && ariaChecked == 'false') || (on_off.toUpperCase() == "OFF" && ariaChecked == 'true') ){
+                        cy.get(toggleLocator).click()
+                    }
+                })
             }
         })
     }

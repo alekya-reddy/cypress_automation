@@ -249,8 +249,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
 
         let text_regex = new RegExp(`^${escapedName}$`)
         cy.log(text_regex)
-        expect(text_regex.test(name)).to.be.true 
-
+        expect(text_regex.test(name)).to.be.true
     })
 
 })

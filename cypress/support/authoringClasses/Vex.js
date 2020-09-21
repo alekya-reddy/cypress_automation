@@ -92,7 +92,8 @@ export class Vex extends Common {
         this.engagementScoreInput = "input[name='engagementWeight']";
         this.maxAttendeesInput = "input[name='maximumAttendees']";
         this.chat = {
-            toggle: "button[data-qa-hook^='chat-widget']",
+            toggle: "button[data-qa-hook^='chat-widget-enable']",
+            readOnly: "button[data-qa-hook^='chat-widget-readonly']",
             addModeratorButton: "button:contains('Add Moderator')",
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item",
@@ -589,7 +590,7 @@ export class Vex extends Common {
         const moderators = [list].flat()
 
         moderators.forEach((moderator)=>{
-            cy.get(this.chat.addModeratorButton).click()
+            cy.get(this.chat.addModeratorButton, {timeout: 5000}).click()
             cy.contains(this.antModal, "Add Moderator").within(()=>{
                 cy.get(this.chat.emailInput).clear().type(moderator)
                 cy.contains("button", "Submit").click()
@@ -603,7 +604,7 @@ export class Vex extends Common {
         const moderators = [list].flat()
 
         moderators.forEach((moderator)=>{
-            cy.containsExact("span", moderator).parents(this.chat.emailRow).within(()=>{
+            cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
                 cy.contains("button", "Remove").click()
             })
             cy.contains("button", "Yes").click()
@@ -615,7 +616,7 @@ export class Vex extends Common {
         const moderator = config.moderator
         const newEmail = config.newEmail
 
-        cy.containsExact("span", moderator).parents(this.chat.emailRow).within(()=>{
+        cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
             cy.contains("button", "Edit").click()
         })
         cy.contains(this.antModal, "Edit Moderator").within(()=>{
