@@ -92,7 +92,7 @@ const sessions = [
 const groupA = {
     name: "Group A",
     sessions: sessions.map((session)=>{ return session.name }),
-    notExpected: ["Live ended without on-demand"]
+    notExpected: [] // It used to be that a live session that's ended without on-demand fallback would no longer be accessible, but this is no longer the case 
 }
 const groupB = {
     name: "Group B",

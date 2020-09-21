@@ -76,7 +76,7 @@ describe('VEX - Virtual Event', function() {
         cy.reload();
         cy.get(authoring.vex.sessionNameInput).should('have.value', session.newName);
         cy.get(authoring.vex.sessionSlugInput).should('have.value', session.slug);
-        cy.get(authoring.vex.sessionDescriptionInput).should('contain', session.description);
+        cy.get(authoring.vex.sessionDescription.editor).should('contain', session.description);
         cy.get(authoring.vex.publicRadio).parent().should('have.class', 'ant-radio ant-radio-checked'); 
         cy.get(authoring.vex.privateRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked'); 
         cy.get(authoring.vex.onDemandRadio).parent().should('have.class', 'ant-radio ant-radio-checked'); 

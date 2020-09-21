@@ -38,7 +38,11 @@ export class Vex extends Common {
         this.antDescriptionsContent = '[class="ant-descriptions-item-content"]';
         this.sessionNameInput = 'input[name="name"]';
         this.sessionSlugInput = 'input[name="slug"]';
-        this.sessionDescriptionInput = 'textarea[name="description"]';
+        this.sessionDescription = {
+            container: ".quill",
+            toolbar: ".ql-toolbar",
+            editor: ".ql-editor"
+        };
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
@@ -343,7 +347,9 @@ export class Vex extends Common {
             })
         }
         
-        newName ? cy.get(this.sessionNameInput).clear().type(newName) : null;
+        if(newName){
+            cy.get(this.sessionNameInput).clear().type(newName)
+        }
 
         if(visibility == 'Private'){
             cy.get(this.privateRadio).filter('.ant-radio-input').click();
@@ -351,46 +357,50 @@ export class Vex extends Common {
             cy.get(this.publicRadio).click();
         } 
 
-        slug ? cy.get(this.sessionSlugInput).clear().type(slug) : null;
+        if(slug){
+            cy.get(this.sessionSlugInput).clear().type(slug)
+        }
 
-        description ? cy.get(this.sessionDescriptionInput).clear().type(description) : null;
+        if(description){
+            cy.get(this.sessionDescription.editor).clear().type(description)
+        }
 
-         if(type == 'On Demand'){
-             cy.get(this.onDemandRadio).click()
-         } else if (type == 'Live'){
-             cy.get(this.liveRadio).click()
-         }
+        if(type == 'On Demand'){
+            cy.get(this.onDemandRadio).click()
+        } else if (type == 'Live'){
+            cy.get(this.liveRadio).click()
+        }
 
-         if(engagementThreshold){
-             cy.get(this.engagementThresholdInput).clear().type(engagementThreshold)
-         }
+        if(engagementThreshold){
+            cy.get(this.engagementThresholdInput).clear().type(engagementThreshold)
+        }
 
-         if(engagementScore){
-             cy.get(this.engagementScoreInput).clear().type(engagementScore)
-         }
+        if(engagementScore){
+            cy.get(this.engagementScoreInput).clear().type(engagementScore)
+        }
 
-         if(video){
-            this.pickOnDemandVideo(video);
-         }
+        if(video){
+        this.pickOnDemandVideo(video);
+        }
 
-         if(thumbnail){
-             this.selectThumbnail(thumbnail);
-         }
+        if(thumbnail){
+            this.selectThumbnail(thumbnail);
+        }
 
-         if(live){
-             this.configureLive(live);
-         }
+        if(live){
+            this.configureLive(live);
+        }
 
-         if(maxAttendees && type !== "On Demand"){
-            cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
-         }
+        if(maxAttendees && type !== "On Demand"){
+        cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
+        }
 
-         if(contents){
-             this.addSupplementalContent(contents);
-         }
+        if(contents){
+            this.addSupplementalContent(contents);
+        }
 
-         cy.get(this.saveButton).click()
-         cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
+        cy.get(this.saveButton).click()
+        cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
 
         // Configure widgets after saving or else will reset all the changes you made 
         if(rocketChat){

@@ -96,6 +96,20 @@ export class VexCX extends CommonCX {
         })
     }
 
+    expectVimeo(){
+        cy.waitForIframeToLoad(this.vimeo.iframe, this.vimeo.videoPlayer, 10000)
+        cy.getIframeBody(this.vimeo.iframe).within(()=>{
+            cy.get(this.vimeo.videoPlayer).should('exist')
+        })
+    }
+
+    expectVidyard(){
+        cy.waitForIframeToLoad(this.vidyard.iframe, this.vidyard.videoPlayer, 3000)
+        cy.getIframeBody(this.vidyard.iframe).within(()=>{
+            cy.get(this.vidyard.videoPlayer).should('exist')
+        })
+    }
+
     expectRocketChat(){
         cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.container, 10000)
         cy.getIframeBody(this.rocketChat.iframe).within(()=>{

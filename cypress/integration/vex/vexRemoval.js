@@ -16,7 +16,6 @@ const sessions = [
         visibility: 'Public',
         slug: 'youtube',
         get url(){ return `${event.url}/${this.slug}`; },
-        description: 'Youtube description',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'
     },
@@ -25,7 +24,6 @@ const sessions = [
         visibility: 'Public',
         slug: 'vimeo',
         get url(){ return `${event.url}/${this.slug}`; },
-        description: 'Vimeo description',
         type: 'On Demand',
         video: 'Vimeo - Used in Cypress automation for VEX testing'
     }

@@ -146,22 +146,13 @@ describe('VEX - Consumption', function(){
     
             switch(session.name){
                 case 'Youtube':
-                    cy.waitForIframeToLoad(consumption.vex.youtube.iframe, consumption.vex.youtube.videoPlayer, 3000)
-                    cy.getIframeBody(consumption.vex.youtube.iframe).within(()=>{
-                        cy.get(consumption.vex.youtube.videoPlayer).should('exist')
-                    })
+                    consumption.vex.expectYoutube()
                     break;
                 case 'Vimeo':
-                    cy.waitForIframeToLoad(consumption.vex.vimeo.iframe, consumption.vex.vimeo.videoPlayer, 3000)
-                    cy.getIframeBody(consumption.vex.vimeo.iframe).within(()=>{
-                        cy.get(consumption.vex.vimeo.videoPlayer).should('exist')
-                    })
+                    consumption.vex.expectVimeo()
                     break;
                 case 'Vidyard':
-                    cy.waitForIframeToLoad(consumption.vex.vidyard.iframe, consumption.vex.vidyard.videoPlayer, 3000)
-                    cy.getIframeBody(consumption.vex.vidyard.iframe).within(()=>{
-                        cy.get(consumption.vex.vidyard.videoPlayer).should('exist')
-                    })
+                    consumption.vex.expectVidyard()
                     break;
                 case 'Wistia':
                     cy.get(consumption.vex.wistia.videoPlayer).should('exist')

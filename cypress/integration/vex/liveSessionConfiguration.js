@@ -17,26 +17,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2040 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2040',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2041 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2041',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2040 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -55,26 +37,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2010 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2011 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2011',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -84,7 +48,7 @@ const sessions = [
         },
         video: false,
         contents: false,
-        expect: "ended"
+        expect: "zoom"
     },
     {
         name: 'Live zoom current',
@@ -93,16 +57,7 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2010 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2010 8:00pm',
             endStr: 'Jun 24, 2040 8:00pm',
             end: {
                 picker: authoring.vex.endTimeInput,
@@ -135,26 +90,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2040 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2040',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2041 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2041',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2040 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -173,26 +110,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2000 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2000',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2010 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2000 8:00pm',
+            end: 'Jun 24, 2010 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -211,26 +130,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2010 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2040 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2040',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Zoom',
             zoomNum: '111 111 111',
@@ -249,26 +150,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2040 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2040',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2041 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2041',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2040 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -287,26 +170,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2000 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2000',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2010 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2000 8:00pm',
+            end: 'Jun 24, 2010 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -325,26 +190,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2010 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2040 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2040',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -363,26 +210,8 @@ const sessions = [
         visibility: 'Public',
         type: 'Live',
         live: {
-            startStr: 'Jun 24, 2000 8:00pm',
-            start: {
-                picker: authoring.vex.startTimeInput,
-                month: 'Jun',
-                year: '2000',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
-            endStr: 'Jun 24, 2010 8:00pm',
-            end: {
-                picker: authoring.vex.endTimeInput,
-                month: 'Jun',
-                year: '2010',
-                day: '24',
-                hour: '08',
-                minute: '00',
-                xm: 'PM'
-            },
+            start: 'Jun 24, 2000 8:00pm',
+            end: 'Jun 24, 2010 8:00pm',
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Content Library',
             zoomNum: false,
@@ -424,7 +253,7 @@ const contentSource = {
 // Live zoom sessions can also have on-demand video configured as a fallback when the live zoom session ends 
 // Note: Will not be using a real zoom id number, so zoom won't actually connect to a meeting. That's ok. Zoom's sdk is not in our control - just test that it is there. 
 describe('VEX - Virtual Event Live Sessions', function() {
-   it('Add and configure any live sessions which do not already exist', function() {
+    it('Add and configure any live sessions which do not already exist', function() {
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
@@ -522,104 +351,66 @@ describe('VEX - Virtual Event Live Sessions', function() {
 
     it('Go to consumption, visit the live sessions, and verify that we see the expected behavior', function(){
         sessions.forEach((session)=>{
-            cy.visit(event.url)
-            if(session.expect == 'ended'){
-                // If session has ended and there is no on-demand fallback, it should no longer be accessible 
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.exist')
-            } else {
-                cy.contains(consumption.vex.sessionCardTitle, session.name). should('exist').click()
-                cy.url().should('eq', session.url)
-            }
-
-            // If the session page asks to register, fill out form and get it out of way so can proceed with test 
-            cy.ifElementExists(consumption.vex.emailInput, 500, ()=>{
-                cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
-                cy.contains("button", "Submit").click()
-            })
+            cy.visit(event.url + "/?lb_email=bobman%40gmail.com") // visit with lb_email query string so don't have to fuss around with registration form 
+            cy.contains(consumption.vex.sessionCardTitle, session.name). should('exist').click()
+            cy.url().should('eq', session.url)
             
             // For each session, what are we expecting to see? Zoom? Waiting screen? A specific content library video?
-            // Note: There isn't a good way to check that a specific content library video is playing, so only going to identify if it's youtube or vimeo 
-            // For example, if you have a live session that uses youtube as live video content, and vimeo as on-demand fallback, if session has ended, you would expect to see vimeo. If session in progress, expect to see youtube
             if(session.expect == 'pending'){
                 // If visiting before the scheduled live session...
                 cy.contains(consumption.vex.sessionPageTitle, session.name).should('exist')
-                cy.contains('div', `${session.live.startStr} - ${session.live.endStr}`).should('exist')
+                cy.contains('div', `${session.live.start} - ${session.live.end}`).should('exist')
             } else if (session.expect == 'zoom'){
-                // If live zoom session currently in progress...
-                cy.waitForIframeToLoad('iframe', consumption.vex.zoomRootDiv, 10000)
-                cy.getIframeBody('iframe').within(()=>{
-                    cy.get(consumption.vex.zoomRootDiv).should('exist')
-                })
+                consumption.vex.expectZoom()
             } else if (session.expect == 'youtube'){
-                // If 'fake-live' session is in progress (using a content-library video and passing it off as 'live')
-                // or if live zoom session has ended and an on-demand video is available as a fallback...
-                cy.waitForIframeToLoad('iframe', consumption.vex.youtube.videoPlayer, 10000)
-                cy.getIframeBody('iframe').within(()=>{
-                    cy.get(consumption.vex.youtube.videoPlayer).should('exist')
-                })
+                consumption.vex.expectYoutube()
             } else if (session.expect == 'vimeo'){
-                cy.waitForIframeToLoad(consumption.vex.vimeo.iframe, consumption.vex.vimeo.videoPlayer, 10000)
-                cy.getIframeBody(consumption.vex.vimeo.iframe).within(()=>{
-                    cy.get(consumption.vex.vimeo.videoPlayer).should('exist')
-                })
+                consumption.vex.expectVimeo()
             }
         })
 
         // Visit each session again, except this time visit the url directly
         // There was a bug where visiting url directly would result in 500 error if session is live and no on-demand fallback is configured 
         sessions.forEach((session)=>{
-            if(session.expect !== 'ended'){
-                cy.visit(session.url) // Cypress will automatically fail if get status 500
-            }
+            cy.visit(session.url) // Cypress will automatically fail if get status 500
         })
 
-        // On the event page on consumption side, the session cards should contain the correct information about their live status 
+        // On the event page on consumption side, the session cards should contain the correct information about their live status, date and name 
         // These sessions should be sorted into the correct categories ("Agenda" or "On Demand")
         cy.visit(event.url)
         sessions.forEach((session)=>{
-            if(session.live.status == 'live'){
-                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
-                })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr) 
-
+            if(session.live.status == 'live' || (session.live.status == 'ended' && !session.video) ){
                 // If live session is currently live, it should be in the "Agenda" section 
+                // Or if a live session has ended and has no on-demand fallback, it still behaves like it's live until somebody manually turns it off 
                 cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
                 cy.containsExact("h4", "Agenda").parent().within(()=>{
-                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
+                        cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
+                    })
                 })
             } else if(session.live.status == 'upcoming'){
-                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('not.exist') // live session is still pending, so no live label
-                })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
-
                 // If live session is upcoming, it should be in the "Agenda" section 
                 cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
                 cy.containsExact("h4", "Agenda").parent().within(()=>{
-                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
+                        cy.containsExact('div', 'Live').should('not.exist') // live session is still pending, so no live label
+                    })
                 })
             } else if(session.live.status == 'ended' && session.video){ 
-                cy.contains(consumption.vex.sessionCardTitle, session.name).within(()=>{
-                    cy.containsExact('div', 'Live').should('not.exist')
-                })
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('contain', session.live.startStr)
-
                 // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section
                 cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
-                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
+                    cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
+                        cy.containsExact('div', 'Live').should('not.exist')
+                    })
                 })
                 cy.containsExact("h4", "Agenda").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
-            } else if (session.live.status == 'ended' && !session.video){
-                // If a live session has ended and there's no on-demand configured as a fall back, it should no longer exist on the event page
-                cy.contains(consumption.vex.sessionCardTitle, session.name).should('not.exist')
-            }  
+            } 
         })
 
         // Go to one of the live zoom sessions to do further testing there
