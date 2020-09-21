@@ -65,10 +65,17 @@ export class VexCX extends CommonCX {
             iframe: "iframe",
             container: '#zmmtg-root'
         };
+        this.webex = {
+            iframe: "iframe[src^='/api/virtual_event_sessions/']",
+            video: "video",
+            meetingControls: ".meeting-controls",
+            meetingInfo: ".meeting-info"
+        }
         this.rocketChat = {
             iframe: "iframe[src*='rocket.pathfactory']",
             container: "#rocket-chat",
-            messageInput: "textarea[name='msg']"
+            messageInput: "textarea[name='msg']",
+            moderatorViewButton: "button:contains('Open Moderator View')"
         };
         this.messages = {
             maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached."
@@ -86,6 +93,34 @@ export class VexCX extends CommonCX {
         cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 5000)
         cy.getIframeBody(this.youtube.iframe).within(()=>{
             cy.get(this.youtube.videoPlayer).should('exist')
+        })
+    }
+
+    expectRocketChat(){
+        cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.container, 10000)
+        cy.getIframeBody(this.rocketChat.iframe).within(()=>{
+            cy.get(this.rocketChat.container).should('exist')
+        })
+    }
+
+    expectWebex(link){
+        cy.waitForIframeToLoad(this.webex.iframe, this.webex.meetingControls, 10000)
+        cy.getIframeBody(this.webex.iframe).within(()=>{
+            cy.get(this.webex.video, {timeout: 10000}).should('exist')
+            cy.get(this.webex.meetingControls, {timeout: 10000}).should('exist')
+            link ? cy.contains(this.webex.meetingInfo, link, {timeout: 10000}).should('exist') : null
+        })
+    }
+
+    chat(config){
+        const message = config.message
+        const user = config.user 
+
+        cy.getIframeBody(this.rocketChat.iframe).within(()=>{
+            cy.get(this.rocketChat.container).should('exist')
+            cy.get(this.rocketChat.messageInput).type(`${message}\n`)
+            cy.contains(message).should('exist')
+            cy.contains(user).should("exist")
         })
     }
 }

@@ -39,7 +39,10 @@ export class Common {
         this.messages = {
             recordSaved: "The record was saved successfully",
             saveFailed: "There was a problem saving this record",
-            duplicateEntry: "is already taken"
+            duplicateEntry: "is already taken",
+            duplicateEntry2: "has already been taken",
+            blankInput: "can't be blank",
+            invalidEmail: "invalid email"
         };
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
         this.selectList = "div[data-qa-hook='select-list']";
@@ -72,11 +75,16 @@ export class Common {
         cy.url().should('include', '/authoring')
     }
 
-    toggle(toggle_locator, on_or_off) {
-        cy.get(toggle_locator).then((toggle)=>{
-            let color = toggle.css("background-color") 
-            if ( (color == 'rgb(0, 169, 203)' && on_or_off == 'off') || (color == 'rgb(221, 221, 221)' && on_or_off == 'on') ){
-                toggle.click()
+    toggle(toggleLocator, on_off){
+        cy.get(toggleLocator).invoke("text").then((toggleText)=>{
+            if( ["ON", "OFF"].includes(toggleText.toUpperCase()) && toggleText.toUpperCase() !== on_off.toUpperCase()){
+                cy.get(toggleLocator).click()
+            } else if( !["ON", "OFF"].includes(toggleText.toUpperCase()) ) {
+                cy.get(toggleLocator).invoke("attr", "aria-checked").then((ariaChecked)=>{
+                    if( (on_off.toUpperCase() == "ON" && ariaChecked == 'false') || (on_off.toUpperCase() == "OFF" && ariaChecked == 'true') ){
+                        cy.get(toggleLocator).click()
+                    }
+                })
             }
         })
     }

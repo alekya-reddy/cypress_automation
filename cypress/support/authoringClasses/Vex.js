@@ -91,6 +91,14 @@ export class Vex extends Common {
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
         this.maxAttendeesInput = "input[name='maximumAttendees']";
+        this.chat = {
+            toggle: "button[data-qa-hook^='chat-widget-enable']",
+            readOnly: "button[data-qa-hook^='chat-widget-readonly']",
+            addModeratorButton: "button:contains('Add Moderator')",
+            emailInput: "input[name='email']",
+            emailRow: ".ant-list-item",
+            notAvailableText: "Live chat & session moderator settings are only available for live sessions."
+        }
     }
 
     visit(){
@@ -323,7 +331,7 @@ export class Vex extends Common {
         const contents = config.contents
         const thumbnail = config.thumbnail
         const live = config.live
-        const widgets = config.widgets
+        const rocketChat = config.rocketChat
         const engagementThreshold = config.engagementThreshold
         const engagementScore = config.engagementScore
         const maxAttendees = config.maxAttendees 
@@ -385,8 +393,8 @@ export class Vex extends Common {
          cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
 
         // Configure widgets after saving or else will reset all the changes you made 
-        if(widgets){
-            this.setRocketChat()
+        if(rocketChat){
+            this.configureRocketChat(rocketChat)
         }
     }
 
@@ -553,21 +561,69 @@ export class Vex extends Common {
         })
     }
 
-    goToWidgets(){
+    goToChat(){
         cy.url().then((url)=>{
             if(!url.includes("/widget")){
-                cy.containsExact("a", "Widgets").click()
+                cy.containsExact("a", "Chat").click()
             }
         })
     }
 
-    setRocketChat(){
-        this.goToWidgets()
-        cy.ifElementExists("button:contains('Configure Chat')", 2000, ()=>{
-            cy.contains("button", "Configure Chat").click()
-            cy.contains("Chat has been configured.").should('exist')
+    configureRocketChat(config){
+        const on_off = config.on_off
+        const moderators = config.moderators
+
+        this.goToChat()
+        
+        if(on_off){
+            this.toggle(this.chat.toggle, on_off)
+        }
+
+        if(moderators){
+            this.addModerators(moderators)
+        }
+
+        this.backToSession()
+    }
+
+    addModerators(list){
+        const moderators = [list].flat()
+
+        moderators.forEach((moderator)=>{
+            cy.get(this.chat.addModeratorButton, {timeout: 5000}).click()
+            cy.contains(this.antModal, "Add Moderator").within(()=>{
+                cy.get(this.chat.emailInput).clear().type(moderator)
+                cy.contains("button", "Submit").click()
+            })
+            cy.contains(this.antModalBody, "Add Moderator").should("not.be.visible")
+            cy.containsExact("span", moderator).should("exist")
         })
-        cy.containsExact("a", "Session Details").click() 
+    }
+
+    deleteModerators(list){
+        const moderators = [list].flat()
+
+        moderators.forEach((moderator)=>{
+            cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
+                cy.contains("button", "Remove").click()
+            })
+            cy.contains("button", "Yes").click()
+            cy.containsExact("span", moderator).should("not.exist")
+        })
+    }
+
+    editModerator(config){
+        const moderator = config.moderator
+        const newEmail = config.newEmail
+
+        cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(this.antModal, "Edit Moderator").within(()=>{
+            cy.get(this.chat.emailInput).clear().type(newEmail)
+            cy.contains("button", "Submit").click()
+        })
+        cy.containsExact("span", newEmail).should("exist")
     }
 
     goToSessionGroup(){
@@ -664,6 +720,10 @@ export class Vex extends Common {
     backToEvent(event){
         cy.containsExact("a", event).click()
         cy.contains(this.pageTitleLocator, event).should('exist')
+    }
+
+    backToSession(){
+        cy.contains("a", "Session Details").click()
     }
 
 }

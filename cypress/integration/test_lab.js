@@ -15,7 +15,7 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 
 describe("Testing lab - Use this spec file to test out new techniques, or to help troubleshoot... whatever you want", ()=>{
    
-    it("content library", ()=>{
+    /*it("content library", ()=>{
         authoring.common.login()
         authoring.contentLibrary.deleteContentByUrl({urls: "https://en.wikipedia.org/wiki/Second-rate"})
         authoring.contentLibrary.addContentByUrl({internalTitle: "Test", url: "https://en.wikipedia.org/wiki/Second-rate"})
@@ -31,7 +31,7 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
                 url: "https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg"
             } 
         })
-    })
+    })*/
 
     /*it("content library 2", ()=>{
         authoring.common.login()
@@ -205,8 +205,51 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         })
     })*/
 
-    /*it("should always pass", ()=>{
-        cy.visit("https://www.google.com")
+    /*it("", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig("rocketChat.js")
+        authoring.vex.goToSessionConfig("On-demand")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(authoring.vex.chat.toggle, "oN")
+        authoring.vex.addModerators("jo@gmail.com")
+        authoring.vex.addModerators(["ja@gmail.com", "ji@gmail.com", "je@gmail.com"])
+        authoring.vex.deleteModerators("jo@gmail.com")
+        authoring.vex.deleteModerators(["ja@gmail.com", "ji@gmail.com"])
+        authoring.vex.editModerator({moderator: "je@gmail.com", newEmail: "wa@gmail.com"})
+        authoring.vex.toggle(authoring.vex.chat.toggle, "OfF")
+        authoring.vex.configureSession({
+            name: "On-demand",
+            rocketChat: {on_off: "on", moderators: ["Poop@gmail.com"]}
+        })
     })*/
+
+    it("should always pass", ()=>{
+        //cy.visit("https://www.google.com")
+        let name = `Rocket-Chat: Configurations, long_(name) with. special! character$ as "this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`
+
+        function escapeNonAlphanumeric(text){
+            let charArray = text.split("")
+            let escapedCharArray = charArray.map((char)=>{
+                if(/[^a-zA-Z0-9\s]/.test(char)){
+                    return `\\${char}`
+                } else {
+                    return char
+                }
+            })
+            let escapedText = ""
+            escapedCharArray.forEach((char)=>{
+                escapedText = escapedText.concat(char)
+            })
+            return escapedText
+        }
+
+        let escapedName = escapeNonAlphanumeric(name)
+        cy.log(escapedName)
+
+        let text_regex = new RegExp(`^${escapedName}$`)
+        cy.log(text_regex)
+        expect(text_regex.test(name)).to.be.true
+    })
 
 })

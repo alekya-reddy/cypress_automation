@@ -27,7 +27,7 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        widgets: "Rocket Chat"
+        rocketChat: "Rocket Chat"
     },
     {
         name: "Live ended with on-demand",
@@ -45,20 +45,8 @@ const sessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        widgets: "Rocket Chat"
+        rocketChat: "Rocket Chat"
     },
-    /*{
-        // On demand sessions can no longer have rocket chat 
-        name: "On-demand",
-        slug: "on-demand",
-        get url(){
-            return `${event.url}/${this.slug}`
-        },
-        visibility: 'Public',
-        type: 'On Demand',
-        video: 'Youtube - Used in Cypress automation for VEX testing',
-        widgets: "Rocket Chat"
-    },*/
     {
         name: "no-chat",
         slug: "no-chat",
@@ -71,7 +59,26 @@ const sessions = [
     },
 ]
 
-const form = {name: "rocketChat.js"}
+const rocketChatSession = {
+    name: `Rocket-Chat: Configurations, long (name) with. special! character$ as_"this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`, // Unfortunately, can't test single quoation due to cypress bug 
+    slug: "rocket-chat-config",
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Zoom',
+        zoomNum: '111 111 111',
+        zoomAuth: 'No Password',
+    },
+    video: 'Youtube - Used in Cypress automation for VEX testing'
+}
+
+const form = {name: "Standard Form Short"}
 const noForm = { name: "None (Registration Not Required)" }
 
 const visitor = {
@@ -111,56 +118,41 @@ describe("Vex - Rocket Chat", ()=>{
         cy.contains("button", "Submit").click()
         cy.get('form').should('not.exist')
 
-        // Go to each session, and rocket chat should load where it is enabled 
-        sessions.forEach((session)=>{
-            cy.visit(session.url)
-            if(session.widgets){
-                cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
-                cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-                    cy.get(consumption.vex.rocketChat.container).should('exist')
-                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
-                    cy.contains(visitor.name).should("exist")
-                })
-            } else {
-                cy.wait(3000) // Wait 3 seconds - if check immediately, it could immediately conclude that rocket chat doesn't exist when in fact it will load a few seconds later
-                cy.get(consumption.vex.rocketChat.iframe).should('not.exist')
-            }
-        })
+        // Visit live session
+        cy.visit(sessions[0].url)
+        consumption.vex.expectRocketChat()
+        consumption.vex.chat({message: "Hi", user: visitor.name})
+
+        // Visit live session that has ended and is now showing on-demand
+        cy.visit(sessions[1].url)
+        consumption.vex.expectRocketChat()
+        consumption.vex.chat({message: "Hi", user: visitor.name})
+
+        // Visit the on-demand session
+        cy.visit(sessions[2].url)
+        consumption.vex.expectYoutube()
+        cy.get(consumption.vex.rocketChat.iframe).should('not.exist')
     })
 
     it("With form set, visit a session, fill form on session, which should add you to chat on all sessions with chat enabled", ()=>{
-        cy.clearCookies()
         cy.visit(sessions[0].url)
         cy.get(consumption.vex.emailInput).clear().type(visitor.email)
         cy.contains("button", "Submit").click()
         cy.get('form').should('not.exist')
+        consumption.vex.expectRocketChat()
+        consumption.vex.chat({message: "Hi", user: visitor.name})
 
-        // Go to each session, and rocket chat should load where it is enabled 
-        sessions.forEach((session)=>{
-            cy.visit(session.url)
-            if(session.widgets){
-                cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
-                cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-                    cy.get(consumption.vex.rocketChat.container).should('exist')
-                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
-                    cy.contains(visitor.name).should("exist")
-                })
-            } else {
-                cy.wait(3000) 
-                cy.get(consumption.vex.rocketChat.iframe).should('not.exist')
-            }
-        })
+        // Visit the live session that ended
+        cy.visit(sessions[1].url)
+        consumption.vex.expectRocketChat()
+        consumption.vex.chat({message: "Hi", user: visitor.name})
     })
 
     it("With form set, visit a session and register via lb_email query string, which should add you to chat", ()=>{
         cy.clearCookies()
         cy.visit(sessions[0].url + "/?lb_email=penguin%40gmail.com")
-        cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
-        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-            cy.get(consumption.vex.rocketChat.container).should('exist')
-            cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
-            cy.contains(visitor.name).should("exist")
-        })
+        consumption.vex.expectRocketChat()
+        consumption.vex.chat({message: "Hi", user: visitor.name})
     })
 
     it("Turn off form, visit each session and provide email, which should add you to chat on all sessions with chat enabled", ()=>{
@@ -169,36 +161,156 @@ describe("Vex - Rocket Chat", ()=>{
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureForm(noForm)
-        cy.wait(2000) // allow DB time to update before visiting consumption 
+        cy.wait(1500) // allow DB time to update before visiting consumption 
 
-        // Note: currenty, in scenario with no form, visiting on-demand session first will have no chat as user is unknown 
-        // Can add this scenario to testing later once it is fixed 
+        // A live session that has ended and is now showing on-demand should not have chat if there is no registration even if rocket chat enabled 
+        cy.visit(sessions[1].url)
+        consumption.vex.expectYoutube()
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
 
-        // Go to each session, and rocket chat should load where it is enabled 
-        cy.clearCookies()
-        sessions.forEach((session)=>{
-            cy.visit(session.url)
-            if(session.widgets){
-                cy.ifElementExists(consumption.vex.emailInput, 2000, ()=>{
-                    // Live sessions will still ask you to provide email
-                    cy.get(consumption.vex.emailInput).clear().type(visitor.email)
-                    cy.contains("button", "Submit").click()
-                })
-                cy.waitForIframeToLoad(consumption.vex.rocketChat.iframe, consumption.vex.rocketChat.container, 10000)
-                cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-                    cy.get(consumption.vex.rocketChat.container).should('exist')
-                    cy.get(consumption.vex.rocketChat.messageInput).type("Hi\n")
-                    cy.contains(visitor.name).should("exist")
-                })
-            } else {
-                cy.wait(3000) // Wait 3 seconds - if check immediately, it could immediately conclude that rocket chat doesn't exist when in fact it will load a few seconds later
-                cy.get(consumption.vex.rocketChat.iframe).should('not.exist')
-            }
-        })
+        // Now visit a live session, which should ask you to provide email even though form is disabled
+        cy.visit(sessions[0].url)
+        cy.get(consumption.vex.emailInput).clear().type(visitor.email)
+        cy.contains("button", "Submit").click()
+        consumption.vex.expectWebex()
+        consumption.vex.expectRocketChat()
+
+        // Visiting the live session that has ended (and has on-demand fallback) should now show the rocket chat 
+        cy.visit(sessions[1].url)
+        consumption.vex.expectYoutube()
+        consumption.vex.expectRocketChat()
+
+        // Confirm that the on-demand session has no rocket chat 
+        cy.visit(sessions[2].url)
+        consumption.vex.expectYoutube()
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
     })
 
-    /*it("Add new session, visit event, register, visit 1 session, then visit the new session through the event page", ()=>{
-        // This scenario currently can cause chat to not load without page refresh
-        // Can add this scenario once it is fixed 
-    })*/
+    it("Rocket chat configurations - turn on/off, moderators", ()=>{
+        const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
+        // Add a new session for this scenario
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name) 
+        authoring.vex.removeSession(rocketChatSession.name)
+        authoring.vex.addSession(rocketChatSession.name)
+        authoring.vex.configureSession(rocketChatSession)
+
+        // Live session should have option to turn on chat 
+        authoring.vex.goToChat()
+        cy.get(enableChatToggle).should('exist') //cy.get(authoring.vex.chat.toggle).should('exist')
+        cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
+        authoring.vex.backToSession()
+        
+        // On demand session should not have option to turn on chat 
+        authoring.vex.configureSession({type: "On Demand", stayOnPage: true})
+        authoring.vex.goToChat()
+        cy.get(enableChatToggle).should('not.exist') //cy.get(authoring.vex.chat.toggle).should('not.exist')
+        cy.contains(authoring.vex.chat.notAvailableText).should('exist')
+        authoring.vex.backToSession()
+
+        // Verify that turning on chat will enable chat on consumption side 
+        authoring.vex.configureSession({type: "Live", stayOnPage: true})
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "on") //authoring.vex.toggle(authoring.vex.chat.toggle, "on")
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.fillStandardForm({email: visitor.email})
+        consumption.vex.expectRocketChat() 
+        cy.go("back")
+
+        // Verify that turning off rocket chat will turn it off on consumption side 
+        authoring.vex.toggle(authoring.vex.chat.toggle, "off")
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectZoom() // This'll force most the page to load first, otherwise will immediately see that rocket chat doesn't exist and move on without waiting for page to load 
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
+        cy.go("back")
+
+        // Input validation check for adding moderator, and cancel button check 
+        authoring.vex.toggle(authoring.vex.chat.toggle, "on")
+        authoring.vex.addModerators(visitor.email)
+        cy.get(authoring.vex.chat.addModeratorButton).click() 
+        cy.contains(authoring.vex.antModal, "Add Moderator").should("exist").within(()=>{
+            cy.get(authoring.vex.chat.emailInput).clear()
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.blankInput).should('exist')
+            cy.get(authoring.vex.chat.emailInput).clear().type(visitor.email)
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.duplicateEntry2).should('exist')
+            cy.get(authoring.vex.chat.emailInput).clear().type("invalid    email")
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.invalidEmail).should('exist')
+            cy.contains("button", "Cancel").click()
+        })
+        cy.contains(authoring.vex.antModal, "Add Moderator").should("not.be.visible")
+
+        // Input validation check for editing moderator, and cancel button check 
+        authoring.vex.addModerators("test@gmail.com")
+        cy.containsExact("span", "test@gmail.com").parents(authoring.vex.chat.emailRow).within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(authoring.vex.antModal, "Edit Moderator").should("exist").within(()=>{
+            cy.get(authoring.vex.chat.emailInput).clear()
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.blankInput).should('exist')
+            cy.get(authoring.vex.chat.emailInput).clear().type(visitor.email)
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.duplicateEntry2).should('exist')
+            cy.get(authoring.vex.chat.emailInput).clear().type("invalid    email")
+            cy.contains('button', "Submit").click()
+            cy.contains(authoring.vex.messages.invalidEmail).should('exist')
+            cy.contains("button", "Cancel").click()
+        })
+        cy.contains(authoring.vex.antModal, "Edit Moderator").should("not.be.visible")
+
+        // Verify on consumption side that the moderator was added  
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('exist') // Unfortunately, clicking this will open a new tab to separate domain, which is not allowed within Cypress
+        cy.go("back")
+
+        // Edit moderator and verify on consumption side 
+        authoring.vex.editModerator({moderator: visitor.email, newEmail: "random@gmail.com"})
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('not.exist')
+        cy.go("back")
+
+        // Delete moderator 
+        authoring.vex.deleteModerators("random@gmail.com")
+
+        // Make chat read only - and verify on consumption as non-moderator 
+        authoring.vex.toggle(authoring.vex.chat.readOnly, "on")
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectRocketChat()
+        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
+            cy.contains("This room is read only").should("exist")
+        })
+        cy.go("back")
+
+        // Turn off read only mode 
+        authoring.vex.toggle(authoring.vex.chat.readOnly, "off")
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectRocketChat()
+        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
+            cy.contains("This room is read only").should("not.exist")
+        })
+        cy.go("back")
+
+        // Make the visitor a moderator then turn chat to read only mode - moderator should not be affected by read-only mode 
+        authoring.vex.toggle(authoring.vex.chat.readOnly, "on")
+        authoring.vex.addModerators(visitor.email)
+        cy.wait(1500)
+        cy.visit(rocketChatSession.url)
+        consumption.vex.expectRocketChat()
+        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
+            cy.contains("This room is read only").should("not.exist")
+        })
+
+        // Not going to test moderator functions of deleting/kicking out users as all of this occurs within the rocket chat browser - this is 3rd party software
+    })
 })
