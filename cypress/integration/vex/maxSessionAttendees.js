@@ -131,6 +131,8 @@ describe("VEX - maximum session attendees configuration", ()=>{
         cy.clearCookies()
         cy.visit(sessions.zoom.url)
         consumption.vex.fillStandardForm(visitor2)
+        cy.reload()
+        cy.wait(2000)
         cy.reload() // Bug: if only 1 slot left, last person to register directly to session will erroneously see max attendees reached message, refreshing allows you to attend
         consumption.vex.expectZoom()
 

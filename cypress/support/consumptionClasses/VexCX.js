@@ -83,14 +83,14 @@ export class VexCX extends CommonCX {
     }
 
     expectZoom(){
-        cy.waitForIframeToLoad(this.zoom.iframe, this.zoom.container, 10000)
+        cy.waitForIframeToLoad(this.zoom.iframe, this.zoom.container, 15000)
         cy.getIframeBody(this.zoom.iframe).within(()=>{
             cy.get(this.zoom.container).should('exist')
         })
     }
 
     expectYoutube(){
-        cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 5000)
+        cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 10000)
         cy.getIframeBody(this.youtube.iframe).within(()=>{
             cy.get(this.youtube.videoPlayer).should('exist')
         })
@@ -104,7 +104,7 @@ export class VexCX extends CommonCX {
     }
 
     expectVidyard(){
-        cy.waitForIframeToLoad(this.vidyard.iframe, this.vidyard.videoPlayer, 3000)
+        cy.waitForIframeToLoad(this.vidyard.iframe, this.vidyard.videoPlayer, 15000)
         cy.getIframeBody(this.vidyard.iframe).within(()=>{
             cy.get(this.vidyard.videoPlayer).should('exist')
         })

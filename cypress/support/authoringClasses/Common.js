@@ -77,9 +77,17 @@ export class Common {
 
     toggle(toggleLocator, on_off){
         cy.get(toggleLocator).invoke("text").then((toggleText)=>{
+            cy.log(toggleText.toUpperCase() == "ONOFF")
             if( ["ON", "OFF"].includes(toggleText.toUpperCase()) && toggleText.toUpperCase() !== on_off.toUpperCase()){
                 cy.get(toggleLocator).click()
-            } else if( !["ON", "OFF"].includes(toggleText.toUpperCase()) ) {
+            } else if (toggleText.toUpperCase() == "ONOFF"){
+                cy.get(toggleLocator).then((toggle)=>{
+                    let color = toggle.css("background-color") 
+                    if ( (color == 'rgb(0, 169, 203)' && on_off.toUpperCase() == 'OFF') || (color == 'rgb(221, 221, 221)' && on_off.toUpperCase() == 'ON') ){
+                        toggle.click()
+                    }
+                })
+            } else {
                 cy.get(toggleLocator).invoke("attr", "aria-checked").then((ariaChecked)=>{
                     if( (on_off.toUpperCase() == "ON" && ariaChecked == 'false') || (on_off.toUpperCase() == "OFF" && ariaChecked == 'true') ){
                         cy.get(toggleLocator).click()

@@ -224,6 +224,11 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         })
     })*/
 
+    /*it("drag and drop", ()=>{
+        authoring.common.login()
+        
+    })*/
+
     it("should always pass", ()=>{
         //cy.visit("https://www.google.com")
         let name = `Rocket-Chat: Configurations, long_(name) with. special! character$ as "this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`

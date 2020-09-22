@@ -306,7 +306,16 @@ Cypress.Commands.add("closeSession", ()=>{
     })
 })
 
+Cypress.Commands.add("position", { prevSubject: 'element'}, (subject, options)=>{
+    let position = subject[0].getBoundingClientRect()
+    cy.wrap(position)
+})
 
+Cypress.Commands.add("dragAndDrop", { prevSubject: 'element'}, (subject, options)=>{
+    subject.trigger('mousedown', { which: 1 })
+        .trigger('mousemove', { clientX: 100, clientY: 100 })
+        .trigger('mouseup', { force: true })
+})
 
 
   

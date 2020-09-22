@@ -69,6 +69,7 @@ export class Webhooks extends Common {
         const on_off = config.on_off // should be 'on' or 'off'
         const eventFields = config.eventFields // object: key must be the exact text of the event field 
 
+        this.goToPage(this.pageTitle, this.pageUrl)
         cy.angryClick({
             clickElement: this.table.cellName + `:contains('${name}')`,
             checkElement: this.webhookPreview.name + `:contains('${name}')`
