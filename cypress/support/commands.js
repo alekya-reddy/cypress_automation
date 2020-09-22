@@ -309,12 +309,59 @@ Cypress.Commands.add("closeSession", ()=>{
 Cypress.Commands.add("position", { prevSubject: 'element'}, (subject, options)=>{
     let position = subject[0].getBoundingClientRect()
     cy.wrap(position)
+    /*
+        Returned fields will be: 
+        x : position of left edge of element
+        y : position of top edge of element
+        width : width of element
+        height : height of element
+        top : same as y 
+        right : position of right edge of element
+        bottom : position of bottom edge of element 
+        left : same as x
+        reference: https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+    */
 })
 
-Cypress.Commands.add("dragAndDrop", { prevSubject: 'element'}, (subject, options)=>{
-    subject.trigger('mousedown', { which: 1 })
-        .trigger('mousemove', { clientX: 100, clientY: 100 })
-        .trigger('mouseup', { force: true })
+Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
+    const place = options.place // Calculations assume the default click position of 'center'!!
+    const referenceElement = options.to
+    let xPos = options.xPos
+    let yPos = options.yPos
+    const clickPosition = options.click || "center" // Where on subject element you are clicking, default is center
+
+    cy.get(referenceElement).position().then((ref)=>{
+        cy.get(subject).position().then((sub)=>{
+            switch(place){
+                case "above":
+                    xPos = Math.round((ref.left + ref.right)/2)
+                    yPos = ref.top - Math.round(sub.height/2)
+                    break;
+                case "below":
+                    xPos = Math.round((ref.left + ref.right)/2)
+                    yPos = ref.bottom + Math.round(sub.height/2)
+                    break;
+                case "left":
+                    xPos = ref.left - Math.round(sub.width/2)
+                    yPos = Math.round((ref.bottom + ref.top)/2)
+                    break;
+                case "right":
+                    xPos = ref.right + Matth.round(sub.width/2)
+                    yPos = Math.round((ref.bottom + ref.top)/2)
+                    break;
+            }
+
+            cy.get(subject).trigger("mousedown", { which: 1, force: true })
+                .trigger("mousemove", clickPosition, { pageX: xPos, pageY: yPos, force: true })
+                .trigger("mouseup", clickPosition, { force: true })
+        })
+    })
+
+
+    /*cy.log(subject) // Subject is a jquery selector
+    cy.get(subject).trigger('mousedown', { which: 1, force: true})
+        .trigger('mousemove', { pageX: 0, pageY: 0, force: true })
+        .trigger('mouseup', { force: true })*/
 })
 
 

@@ -125,8 +125,9 @@ describe("Vex - Rocket Chat", ()=>{
 
         // Visit live session that has ended and is now showing on-demand
         cy.visit(sessions[1].url)
-        consumption.vex.expectRocketChat()
-        consumption.vex.chat({message: "Hi", user: visitor.name})
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
+        //consumption.vex.expectRocketChat()
+        //consumption.vex.chat({message: "Hi", user: visitor.name})
 
         // Visit the on-demand session
         cy.visit(sessions[2].url)
@@ -175,10 +176,10 @@ describe("Vex - Rocket Chat", ()=>{
         consumption.vex.expectWebex()
         consumption.vex.expectRocketChat()
 
-        // Visiting the live session that has ended (and has on-demand fallback) should now show the rocket chat 
+        // Visiting the live session that has ended (and has on-demand fallback) should still not show the rocket chat 
         cy.visit(sessions[1].url)
         consumption.vex.expectYoutube()
-        consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist") // consumption.vex.expectRocketChat()
 
         // Confirm that the on-demand session has no rocket chat 
         cy.visit(sessions[2].url)

@@ -1,6 +1,6 @@
  {
     "env": {
-        "TEST_ENV": "prod"
+        "TEST_ENV": "pathfactory-qa"
     },
     "video": false,
     "chromeWebSecurity": false

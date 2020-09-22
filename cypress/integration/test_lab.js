@@ -226,7 +226,13 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
 
     /*it("drag and drop", ()=>{
         authoring.common.login()
-        
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig("Krishna Test Delete Later")
+        authoring.vex.goToSessionConfig("krishna live")
+        cy.containsExact("span", "Website - Used by Cypress automation for VEX testing", {timeout: 20000}).siblings(".anticon-menu").then((elem)=>{
+            cy.get(elem).drag({to: `li[class="ant-list-item"]:contains('PDF - Used by Cypress automation for VEX testing')`, place: 'below'})
+        })
+        //cy.containsExact("span", "Website - Used by Cypress automation for VEX testing", {timeout: 20000}).siblings(".anticon-menu").trigger('mousedown', { which: 1, force: true }).trigger("mousemove", {pageX: 0, pageY: 0, force: true}).trigger("mouseup", {force: true})
     })*/
 
     it("should always pass", ()=>{
