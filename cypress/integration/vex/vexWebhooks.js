@@ -308,6 +308,7 @@ const supplementalSpecificContentWebhookEvent = {
 
 describe("VEX - Form Webhook", ()=>{
     it("Set up the event if not already done, and clear all webhooks from pipedream database", ()=>{
+        cy.closeSession() // Closing sessions while all webhooks toggled off will purge all pent-up webhooks waiting to fire
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404 && Cypress.env('TEST_ENV') !== "prod"){
                 authoring.common.login()
