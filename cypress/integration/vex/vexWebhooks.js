@@ -308,32 +308,34 @@ const supplementalSpecificContentWebhookEvent = {
 
 describe("VEX - Form Webhook", ()=>{
     it("Set up the event if not already done, and clear all webhooks from pipedream database", ()=>{
-        cy.closeSession() // Closing sessions while all webhooks toggled off will purge all pent-up webhooks waiting to fire
-        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404 && Cypress.env('TEST_ENV') !== "prod"){
-                authoring.common.login()
-                authoring.vex.addVirtualEvent(event.name)
-                authoring.vex.configureEvent(event)
-                authoring.vex.addSession(videoSession.name)
-                authoring.vex.addSession(webexSession.name)
-                authoring.vex.configureSession(videoSession)
-                authoring.vex.backToEvent(event.name)
-                authoring.vex.configureSession(webexSession)
-                authoring.webhooks.addWebhook(formWebhook)
-                authoring.webhooks.configureWebhook(formWebhook)
-                authoring.webhooks.addWebhook(sessionWebhook)
-                authoring.webhooks.configureWebhook(sessionWebhook)
-                authoring.webhooks.addWebhook(activityWebhook)
-                authoring.webhooks.configureWebhook(activityWebhook)
-            } else {
-                // Need to turn on before each test
-                authoring.common.login()
-                authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "on"})
-                authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "on"})
-                authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "on"})
-            }
-        })
-        cy.clearWebhooks()
+        if(Cypress.env('TEST_ENV') !== "prod"){
+            cy.closeSession() // Closing sessions while all webhooks toggled off will purge all pent-up webhooks waiting to fire
+            cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+                if(response.status == 404){
+                    authoring.common.login()
+                    authoring.vex.addVirtualEvent(event.name)
+                    authoring.vex.configureEvent(event)
+                    authoring.vex.addSession(videoSession.name)
+                    authoring.vex.addSession(webexSession.name)
+                    authoring.vex.configureSession(videoSession)
+                    authoring.vex.backToEvent(event.name)
+                    authoring.vex.configureSession(webexSession)
+                    authoring.webhooks.addWebhook(formWebhook)
+                    authoring.webhooks.configureWebhook(formWebhook)
+                    authoring.webhooks.addWebhook(sessionWebhook)
+                    authoring.webhooks.configureWebhook(sessionWebhook)
+                    authoring.webhooks.addWebhook(activityWebhook)
+                    authoring.webhooks.configureWebhook(activityWebhook)
+                } else {
+                    // Need to turn on before each test
+                    authoring.common.login()
+                    authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "on"})
+                    authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "on"})
+                    authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "on"})
+                }
+            })
+            cy.clearWebhooks()
+        }
     })
 
     it("Go to consumption and trigger all the webhooks - form, session, visitor activity (specific content, score, multiple asset)", ()=>{
@@ -380,10 +382,12 @@ describe("VEX - Form Webhook", ()=>{
     })
 
     it("Turn off webhook after each test to prevent other sessions from firing, which would clog up pipeline and cause test to fail from timing out", ()=>{
-        authoring.common.login()
-        authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "off"})
-        authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "off"})
-        authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "off"})
+        if(Cypress.env('TEST_ENV') !== "prod"){
+            authoring.common.login()
+            authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "off"})
+            authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "off"})
+            authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "off"})
+        }
     })
 
 })

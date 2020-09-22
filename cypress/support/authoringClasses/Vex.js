@@ -606,7 +606,7 @@ export class Vex extends Common {
                 cy.contains("button", "Submit").click()
             })
             cy.contains(this.antModalBody, "Add Moderator").should("not.be.visible")
-            cy.containsExact("span", moderator).should("exist")
+            cy.containsExact("span", moderator, {timeout: 20000}).should("exist")
         })
     }
 
@@ -618,7 +618,7 @@ export class Vex extends Common {
                 cy.contains("button", "Remove").click()
             })
             cy.contains("button", "Yes").click()
-            cy.containsExact("span", moderator).should("not.exist")
+            cy.containsExact("span", moderator, {timeout: 20000}).should("not.exist")
         })
     }
 
@@ -633,7 +633,7 @@ export class Vex extends Common {
             cy.get(this.chat.emailInput).clear().type(newEmail)
             cy.contains("button", "Submit").click()
         })
-        cy.containsExact("span", newEmail).should("exist")
+        cy.containsExact("span", newEmail, {timeout: 20000}).should("exist")
     }
 
     goToSessionGroup(){

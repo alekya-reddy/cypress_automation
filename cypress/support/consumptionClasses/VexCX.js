@@ -83,42 +83,42 @@ export class VexCX extends CommonCX {
     }
 
     expectZoom(){
-        cy.waitForIframeToLoad(this.zoom.iframe, this.zoom.container, 15000)
+        cy.waitForIframeToLoad(this.zoom.iframe, this.zoom.container, 20000)
         cy.getIframeBody(this.zoom.iframe).within(()=>{
             cy.get(this.zoom.container).should('exist')
         })
     }
 
     expectYoutube(){
-        cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 10000)
+        cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 20000)
         cy.getIframeBody(this.youtube.iframe).within(()=>{
             cy.get(this.youtube.videoPlayer).should('exist')
         })
     }
 
     expectVimeo(){
-        cy.waitForIframeToLoad(this.vimeo.iframe, this.vimeo.videoPlayer, 10000)
+        cy.waitForIframeToLoad(this.vimeo.iframe, this.vimeo.videoPlayer, 20000)
         cy.getIframeBody(this.vimeo.iframe).within(()=>{
             cy.get(this.vimeo.videoPlayer).should('exist')
         })
     }
 
     expectVidyard(){
-        cy.waitForIframeToLoad(this.vidyard.iframe, this.vidyard.videoPlayer, 15000)
+        cy.waitForIframeToLoad(this.vidyard.iframe, this.vidyard.videoPlayer, 20000)
         cy.getIframeBody(this.vidyard.iframe).within(()=>{
             cy.get(this.vidyard.videoPlayer).should('exist')
         })
     }
 
     expectRocketChat(){
-        cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.container, 10000)
+        cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.container, 20000)
         cy.getIframeBody(this.rocketChat.iframe).within(()=>{
             cy.get(this.rocketChat.container).should('exist')
         })
     }
 
     expectWebex(link){
-        cy.waitForIframeToLoad(this.webex.iframe, this.webex.meetingControls, 10000)
+        cy.waitForIframeToLoad(this.webex.iframe, this.webex.meetingControls, 20000)
         cy.getIframeBody(this.webex.iframe).within(()=>{
             cy.get(this.webex.video, {timeout: 10000}).should('exist')
             cy.get(this.webex.meetingControls, {timeout: 10000}).should('exist')

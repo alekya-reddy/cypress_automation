@@ -247,7 +247,7 @@ describe("Vex - Rocket Chat", ()=>{
 
         // Input validation check for editing moderator, and cancel button check 
         authoring.vex.addModerators("test@gmail.com")
-        cy.containsExact("span", "test@gmail.com").parents(authoring.vex.chat.emailRow).within(()=>{
+        cy.containsExact("span", "test@gmail.com", {timeout: 20000}).parents(authoring.vex.chat.emailRow).within(()=>{
             cy.contains("button", "Edit").click()
         })
         cy.contains(authoring.vex.antModal, "Edit Moderator").should("exist").within(()=>{
