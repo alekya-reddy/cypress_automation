@@ -375,12 +375,14 @@ describe("VEX - Form Webhook", ()=>{
             cy.assertWebhook({find: sessionWebhookEvent, retries: 300})
             // Multiple asset engagement webhook not firing
             // Specific content webhook for video not firing
-
-            // Turn off webhook after each test to prevent other sessions from firing, which would clog up pipeline and cause test to fail from timing out
-            authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "off"})
-            authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "off"})
-            authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "off"})
         } 
+    })
+
+    it("Turn off webhook after each test to prevent other sessions from firing, which would clog up pipeline and cause test to fail from timing out", ()=>{
+        authoring.common.login()
+        authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "off"})
+        authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "off"})
+        authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "off"})
     })
 
 })
