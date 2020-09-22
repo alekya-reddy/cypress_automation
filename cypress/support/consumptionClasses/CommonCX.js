@@ -16,20 +16,20 @@ export class CommonCX {
             optIn: "input[name='optIn'][value='true']",
             optOut: "input[name='optIn'][value='false']",
             cookieConsentCheckbox: 'input[name="visitorCookieAccepted"]',
-        },
+        };
         this.cookieConsent = {
             messageBox: "#qa-cookie-consent",
             accept: "#qa-gdpr-cookie-consent-accept-button",
             decline: "#qa-gdpr-cookie-consent-decline-button"
-        },
+        };
         this.header = {
             cookieSettings: "#pf-event-cookie-consent-button"
-        },
+        };
         this.cookieSettings = {
             modal: "#qa-modal",
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
-        }
+        };
     }
 
     checkSessionCookie(wait){

@@ -126,8 +126,6 @@ describe("Vex - Rocket Chat", ()=>{
         // Visit live session that has ended and is now showing on-demand
         cy.visit(sessions[1].url)
         cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
-        //consumption.vex.expectRocketChat()
-        //consumption.vex.chat({message: "Hi", user: visitor.name})
 
         // Visit the on-demand session
         cy.visit(sessions[2].url)
@@ -145,8 +143,7 @@ describe("Vex - Rocket Chat", ()=>{
 
         // Visit the live session that ended
         cy.visit(sessions[1].url)
-        consumption.vex.expectRocketChat()
-        consumption.vex.chat({message: "Hi", user: visitor.name})
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
     })
 
     it("With form set, visit a session and register via lb_email query string, which should add you to chat", ()=>{

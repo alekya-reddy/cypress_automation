@@ -34,14 +34,14 @@ describe("VEX - Track Protection", ()=>{
     it("Visit event page on consumption side and verify that it asks for email", ()=>{
         cy.visit(event.url)
         cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
-        cy.contains("This content is protected").should("exist")
+        cy.contains("Email confirmation is required").should("exist")
         cy.get(consumption.common.trackProtectionEmailInput).clear().type("not_allowed@gmail.com\n")
         cy.contains("You are not allowed to access the Track").should('exist')
         cy.get(consumption.common.trackProtectionEmailInput).clear().type(tp1.allowedEmail + "\n")
-        cy.contains("Success! An email has been Sent").should('exist')
+        cy.contains("Success! An email has been sent").should('exist')
         cy.contains("a", "Go Back").click()
         cy.get(consumption.common.trackProtectionEmailInput).clear().type(tp2.allowedEmail + "\n")
-        cy.contains("Success! An email has been Sent").should('exist')
+        cy.contains("Success! An email has been sent").should('exist')
 
         // Not going into actual email to check - this is too much of a pain, especially with gmail 
         // Mailinator is more doable, but the wait time for the email to arrive in inbox makes the test very flaky 
