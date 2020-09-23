@@ -31,8 +31,8 @@ describe("VEX - Language Settings", ()=>{
 
         // Go to consumption side and verify the language on the track protection message 
         cy.visit(event.url)
-        cy.contains("h1", lang1.title).should('exist')
-        cy.contains("#helper_message", lang1.helper).should('exist')
+        cy.contains("h5", lang1.title).should('exist')
+        cy.contains(lang1.helper).should('exist')
 
         // Set the second language to verify can change the language once it is set 
         authoring.vex.visit()
@@ -43,7 +43,7 @@ describe("VEX - Language Settings", ()=>{
 
         // Go to consumption and verify second language 
         cy.visit(event.url)
-        cy.contains("h1", lang2.title).should('exist')
-        cy.contains("#helper_message", lang2.helper).should('exist')
+        cy.contains("h5", lang2.title).should('exist')
+        cy.contains(lang2.helper).should('exist')
     })
 })
