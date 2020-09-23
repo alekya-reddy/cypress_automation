@@ -349,6 +349,22 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
                     xPos = ref.right + Matth.round(sub.width/2)
                     yPos = Math.round((ref.bottom + ref.top)/2)
                     break;
+                case "bottom-right":
+                    xPos = ref.right + Matth.round(sub.width/2)
+                    yPos = ref.bottom + Math.round(sub.height/2)
+                    break;
+                case "bottom-left":
+                    xPos = ref.left - Math.round(sub.width/2)
+                    yPos = ref.bottom + Math.round(sub.height/2)
+                    break;
+                case "top-right":
+                    xPos = ref.right + Matth.round(sub.width/2)
+                    yPos = ref.top - Math.round(sub.height/2)
+                    break;
+                case "top-left":
+                    xPos = ref.left - Math.round(sub.width/2)
+                    yPos = ref.top - Math.round(sub.height/2)
+                    break;
             }
 
             cy.get(subject).trigger("mousedown", { which: 1, force: true })

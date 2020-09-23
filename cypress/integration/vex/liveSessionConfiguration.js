@@ -387,7 +387,9 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 })
                 cy.containsExact("h4", "Agenda").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
-                        cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
+                        if(session.live.status == 'live'){
+                            cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
+                        }
                     })
                 })
             } else if(session.live.status == 'upcoming'){
