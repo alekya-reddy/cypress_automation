@@ -427,10 +427,10 @@ describe('VEX - Virtual Event Live Sessions', function() {
             cy.get(`iframe[src="${contentSource[content]}"]`).should('exist')
         })
 
-         // Close the supplemental content and verify that only the zoom iframe is still open
-         cy.get(consumption.vex.closeContentButton).click()
-         cy.get('iframe').should('have.length', 1)
-         cy.get(consumption.vex.zoomIframe).should('exist')
+        // Close the supplemental content and verify that only the zoom iframe is still open
+        cy.get(consumption.vex.closeContentButton).click()
+        cy.get('iframe').should('have.length', 1)
+        cy.get(consumption.vex.zoomIframe).should('exist')
     })
 
 })
