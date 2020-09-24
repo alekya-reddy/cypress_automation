@@ -1,10 +1,10 @@
 
 export class CommonCX {
-    constructor(env, org, customBaseUrl){
+    constructor(env, org, tld, baseUrl){
         this.org = org;
+        this.tld = tld;
         this.env = env;
-        this.customBaseUrl = customBaseUrl;
-        this.baseUrl = customBaseUrl ? customBaseUrl : `https://${org}.${env}.com`;
+        this.baseUrl = baseUrl; 
         this.trackProtectionEmailInput = "#email";
         this.standardForm = {
             firstNameInput: "#firstName",

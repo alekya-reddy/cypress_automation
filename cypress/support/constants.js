@@ -1,24 +1,23 @@
 
 export const constants = {
-    testENV: Cypress.env('TEST_ENV'),
-    lookbookhqDomain: (function(env){
-        if(env == 'pathfactory-staging'){
-            return "staging2.lookbookhq.com";
-        } else if (env == 'pathfactory-qa'){
-            return "qa.lookbookhq.com";
-        } else if (env == 'prod'){
-            return "lookbookhq.com";
+    TEST_ENV: Cypress.env('TEST_ENV'),
+    envList: {
+        qa: "qa",
+        staging: "staging",
+        prod: "prod"
+    },
+    domain: {
+        lookbookhq: {
+            qa: "qa.lookbookhq.com",
+            staging: "staging2.lookbookhq.com",
+            prod: "lookbookhq.com"
+        },
+        pathfactory: {
+            qa: "pathfactory-qa.com",
+            staging: "pathfactory-staging.com",
+            prod: "pathfactory.com"
         }
-    })(Cypress.env('TEST_ENV')),
-    pathfactoryDomain: (function(env){
-        if(env == 'pathfactory-staging'){
-            return "pathfactory-staging.com";
-        } else if (env == 'pathfactory-qa'){
-            return "pathfactory-qa.com";
-        } else if (env == 'prod'){
-            return "pathfactory.com";
-        }
-    })(Cypress.env('TEST_ENV')),
+    },
     orgs: {
         'automation': {
             name: 'automation',

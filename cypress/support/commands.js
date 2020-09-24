@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+import {constants} from './constants.js'
+
 Cypress.Commands.add("ifElementHasText", (locator, textToMatch, waitTime, callBack) => {
     // Use this function to do conditional testing where you want to wait for an element with text to exist before doing something, otherwise move on 
     // You do not need to use this function if element with text appears immediately - use this function only if it takes time for this element to exist, if at all
@@ -298,7 +300,7 @@ Cypress.Commands.add("assertWebhook", (config)=>{
 
 Cypress.Commands.add("closeSession", ()=>{
     cy.request({
-        url: `https://api.${Cypress.env('TEST_ENV')}.com/api/debug/close_sessions`,
+        url: `https://api.${constants.domain.pathfactory[constants.TEST_ENV]}/api/debug/close_sessions`,
         method: "POST",
         headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIz"},
         timeout: 60000,
