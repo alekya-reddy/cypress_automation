@@ -88,11 +88,8 @@ describe('VEX - Webex', function() {
         cy.contains("button", "Submit").click()
 
         // Now check that the webex has loaded onto the dom and that correct meeting url is used 
-        cy.waitForIframeToLoad("iframe", "div[class='meeting-controls']", 20000)
-        cy.getIframeBody("iframe").within(()=>{
-            cy.get(`h2:contains('${session.live.webexLink}')`).should('exist')
-            cy.get("div[class='meeting-controls']").should('exist')
-        })
+        consumption.vex.expectWebex(session.live.webexLink)
+        cy.contains("a", "Click here to launch the meeting directly.").should('exist').should("have.attr", "href", session.live.webexLink)
 
         // Cycle through the webex session's content to make sure they display and that webex iframe still exists
         session.contents.forEach((content)=>{

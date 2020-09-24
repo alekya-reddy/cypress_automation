@@ -607,7 +607,7 @@ export class Vex extends Common {
                 cy.contains("button", "Submit").click()
             })
             cy.contains(this.antModalBody, "Add Moderator").should("not.be.visible")
-            cy.containsExact("span", moderator, {timeout: 20000}).should("exist")
+            cy.containsExact("span", moderator.toLowerCase(), {timeout: 20000}).should("exist")
         })
     }
 
@@ -619,7 +619,7 @@ export class Vex extends Common {
                 cy.contains("button", "Remove").click()
             })
             cy.contains("button", "Yes").click()
-            cy.containsExact("span", moderator, {timeout: 20000}).should("not.exist")
+            cy.containsExact("span", moderator.toLowerCase(), {timeout: 20000}).should("not.exist")
         })
     }
 

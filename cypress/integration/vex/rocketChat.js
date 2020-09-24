@@ -301,10 +301,11 @@ describe("Vex - Rocket Chat", ()=>{
 
         // Make the visitor a moderator then turn chat to read only mode - moderator should not be affected by read-only mode 
         authoring.vex.toggle(authoring.vex.chat.readOnly, "on")
-        authoring.vex.addModerators(visitor.email)
+        authoring.vex.addModerators(visitor.email.toUpperCase()) // If adding uppercase, should save as lower case (method checks for that already)
         cy.wait(1500)
         cy.visit(rocketChatSession.url)
         consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('exist')
         cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
             cy.contains("This room is read only").should("not.exist")
         })

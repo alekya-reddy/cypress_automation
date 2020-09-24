@@ -39,6 +39,8 @@ const contents = [
     'Image - Used by Cypress automation for VEX testing'
 ]
 
+const webpageAsVideo = "configureSessions.js" // The content type is set to video even though it is mediatype of webpage 
+
 const session = {
     name: 'Test Session Configuration',
     newName: 'New Session Name',
@@ -85,16 +87,20 @@ describe('VEX - Virtual Event', function() {
         // Test the video picker
         cy.get(authoring.vex.selectVideoButton).click();
         cy.get(authoring.vex.modal).within(()=>{
-            // Make sure all video content types are available to be added as the 'on demand' video (Youtube, Vimeo, Vidyard, Brightcove, Wistia)
+            // Make sure all  content with mediatype = video are available to be added as the 'on demand' video (Youtube, Vimeo, Vidyard, Brightcove, Wistia)
             videos.forEach((video)=>{
-                cy.get(authoring.vex.contentPickerSearchBar).clear().type(video.internalTitle);
-                cy.contains(authoring.vex.contentPickerItem, video.internalTitle).should('exist');
+                cy.get(authoring.vex.contentPickerSearchBar).clear().type(video.internalTitle)
+                cy.contains(authoring.vex.contentPickerItem, video.internalTitle).should('exist')
             })
 
-            // Make sure other content types are not seen here
+            // Content with content_type = video should also be listed here 
+            cy.get(authoring.vex.contentPickerSearchBar).clear().type(webpageAsVideo)
+            cy.contains(authoring.vex.contentPickerItem, webpageAsVideo).should('exist')
+
+            // Make sure other content/media types are not seen here
             contents.forEach((content)=>{
                 cy.get(authoring.vex.contentPickerSearchBar).clear().type(content);
-                cy.contains(authoring.vex.contentPickerItem, content).should('not.exist');
+                cy.contains(authoring.vex.contentPickerItem, content).should('not.exist')
             })
             
             // Make sure only 1 can be chosen at at time.
@@ -111,13 +117,19 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.saveButton).click(); 
         cy.contains(authoring.vex.onDemandTitleLocator, session.newVideo).should('exist');
 
-        // Make sure video media type cannot be added as supplemental content 
+        // Verify the contents listed in the supplemental content picker
         cy.get(authoring.vex.addContentButton).click();
         cy.get(authoring.vex.modal).within(()=>{
+            //Contents with media-type = video cannot be added as supplemental content 
             videos.forEach((video)=>{
                 cy.get(authoring.vex.contentPickerSearchBar).clear().type(video.internalTitle);
                 cy.contains(authoring.vex.contentPickerItem, video.internalTitle).should('not.exist');
             })
+
+            // Contents that aren't media-type = video but are content-type=video should be available here 
+            cy.get(authoring.vex.contentPickerSearchBar).clear().type(webpageAsVideo)
+            cy.contains(authoring.vex.contentPickerItem, webpageAsVideo).should('exist')
+
             cy.get(authoring.vex.cancelButton).click();
         })
 

@@ -16,6 +16,16 @@ const session = {
     slug: 'zoomauthentication-js',
     get url(){
         return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Zoom',
+        zoomNum: '1234',
+        zoomAuth: 'No Password'
     }
 }
 
@@ -94,12 +104,13 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         // If you provide the right password, you should be able to attend session 
         cy.get(consumption.vex.meetingPWInput).clear().type("12345")
         cy.contains("button", "Submit").click()
-        cy.waitForIframeToLoad('iframe', consumption.vex.zoomRootDiv, 10000)
-        cy.getIframeBody('iframe').within(()=>{
-            cy.get(consumption.vex.zoomRootDiv).should('exist')
-        })
+        consumption.vex.expectZoom()
         cy.get('form').should('not.exist')
         cy.contains('div', "Meeting password is invalid").should('not.exist')
+
+        // Also check that zoom has link to open up in separate tab in case of connectivity issues
+        cy.contains("a", "Click here to launch the meeting directly.").should('exist')
+        cy.get(`a[href^='https://zoom.us/j/${session.live.zoomNum}']`).should('exist')
     })
 
     it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
