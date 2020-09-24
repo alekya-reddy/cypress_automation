@@ -14,33 +14,32 @@ import { VexCX } from './consumptionClasses/VexCX.js';
 
 export const createAuthoringInstance = function(config = {}){
     // Set up default values for your convenience 
-    const env = config.env ? config.env : constants.testENV;
-    const org = config.org ? config.org : constants.orgs['automation'].name 
-    const username = config.username? config.username : constants.orgs[org].defaultUser; 
+    const env = constants //config.env ? config.env : constants.testENV;
+    const org = config.org ? config.org : "automation" 
+    const tld = config.tld ? config.tld : "pathfactory";
+    const username = config.username ? config.username : constants.orgs[org].defaultUser; 
     const password = config.password ? config.password : constants.orgs[org].defaultUserPassword; 
-    const tld = config.tld ? config.tld : false;
-    const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
-        if(configCustomBaseUrl){
-            return configCustomBaseUrl;
-        } else if ((configTld == 'pathfactory' || configTld == 'lookbookhq' ) && configOrg) {
-            return `https://${configOrg}.${constants[`${configTld}Domain`]}`;
+    const baseUrl = (()=>{
+        if(config.baseUrl){
+            return config.baseUrl
         } else {
-            return false;
+            return `https://${org}.${constants.domain[tld][constants.TEST_ENV]}`
         }
-    })(config.customBaseUrl, tld, config.org);
+    })()
+
 
     // Return the page object instance initialized with all the classes and the locators/helper functions contained within 
     return (
         {
-            common: new Common(env, org, username, password, customBaseUrl),
-            contentLibrary: new ContentLibrary(env, org, username, password, customBaseUrl),
-            clientHQ: new ClientHQ(env, org, username, password, customBaseUrl),
-            webdomainSettings: new WebdomainSettings(env, org, username, password, customBaseUrl),
-            websiteTools: new WebsiteTools(env, org, username, password, customBaseUrl),
-            vex: new Vex(env, org, username, password, customBaseUrl),
-            widgets: new Widgets(env, org, username, password, customBaseUrl),
-            webhooks: new Webhooks(env, org, username, password, customBaseUrl),
-            settings: new Settings(env, org, username, password, customBaseUrl)
+            common: new Common(env, org, tld, username, password, baseUrl),
+            contentLibrary: new ContentLibrary(env, org, tld, username, password, baseUrl),
+            clientHQ: new ClientHQ(env, org, tld, username, password, baseUrl),
+            webdomainSettings: new WebdomainSettings(env, org, tld, username, password, baseUrl),
+            websiteTools: new WebsiteTools(env, org, tld, username, password, baseUrl),
+            vex: new Vex(env, org, tld, username, password, baseUrl),
+            widgets: new Widgets(env, org, tld, username, password, baseUrl),
+            webhooks: new Webhooks(env, org, tld, username, password, baseUrl),
+            settings: new Settings(env, org, tld, username, password, baseUrl)
         }
     );
 }
@@ -49,20 +48,18 @@ export const createConsumptionInstance = function(config = {}){
     const env = config.env ? config.env : constants.testENV;
     const org = config.org ? config.org : constants.orgs['automation'].name 
     const tld = config.tld ? config.tld : false;
-    const customBaseUrl = (function(configCustomBaseUrl, configTld, configOrg){
-        if(configCustomBaseUrl){
-            return configCustomBaseUrl;
-        } else if ((configTld == 'pathfactory' || configTld == 'lookbookhq' ) && configOrg) {
-            return `https://${configOrg}.${constants[`${configTld}Domain`]}`;
+    const baseUrl = (()=>{
+        if(config.baseUrl){
+            return config.baseUrl
         } else {
-            return false;
+            return `https://${org}.${constants.domain[tld][constants.TEST_ENV]}`
         }
-    })(config.customBaseUrl, tld, config.org);
+    })()
 
     return (
         {
-            common: new CommonCX(env, org, customBaseUrl),
-            vex: new VexCX(env, org, customBaseUrl)
+            common: new CommonCX(env, org, tld, baseUrl),
+            vex: new VexCX(env, org, tld, baseUrl)
         }
     );
 }

@@ -1,8 +1,8 @@
 import { Common } from "./Common";
 
 export class Vex extends Common {
-    constructor(env, org, userName, password, customBaseUrl){
-        super(env, org, userName, password, customBaseUrl);
+    constructor(env, org, tld, userName, password, baseUrl){
+        super(env, org, tld, userName, password, baseUrl);
         this.vexEventPageTitle = "Virtual Events";
         this.vexUrl = `${this.baseUrl}/authoring/content-library/virtual-events`;
         this.virtualEventHomeTitle = 'Virtual Events';

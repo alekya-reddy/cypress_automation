@@ -4,7 +4,7 @@ const authoring = createAuthoringInstance();
 
 describe('VEX - Virtual Event', function() {
     it('When virtual event is toggled on, vex navigation should be visible, and it should take you to vex page', function() {
-        if(authoring.common.env !== 'prod'){ // No superuser access on prod 
+        if(authoring.common.env.TEST_ENV !== 'prod'){ // No superuser access on prod 
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
             cy.get(authoring.common.vexNavigation).should('exist').should('not.have.attr', 'style', 'opacity: 0.5;').click();
@@ -12,7 +12,7 @@ describe('VEX - Virtual Event', function() {
         }
     })
     it('When virtual event toggled off, you should see a marketing text for VEX', function() {
-        if(authoring.common.env !== 'prod'){
+        if(authoring.common.env.TEST_ENV !== 'prod'){
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
             cy.get(authoring.common.vexNavigation).should('exist').should('have.attr', 'style', 'opacity: 0.5;').click()

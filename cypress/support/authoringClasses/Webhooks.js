@@ -1,8 +1,8 @@
 import { Common } from "./Common";
 
 export class Webhooks extends Common { 
-    constructor(env, org, userName, password, customBaseUrl){
-        super(env, org, userName, password, customBaseUrl);
+    constructor(env, org, tld, userName, password, baseUrl){
+        super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/config/webhooks`;
         this.pageTitle = "Webhooks Configuration";
         this.addWebhookModal = {

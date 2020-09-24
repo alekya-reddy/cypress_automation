@@ -1,12 +1,12 @@
 
 export class Common {
-    constructor(env, org, userName, password, customBaseUrl){
+    constructor(env, org, tld, userName, password, baseUrl){
         this.userName = userName;
         this.password = password;
         this.org = org;
+        this.tld = tld;
         this.env = env;
-        this.customBaseUrl = customBaseUrl;
-        this.baseUrl = customBaseUrl ? customBaseUrl : `https://${org}.${env}.com`;
+        this.baseUrl = baseUrl; 
         this.loginUrl = `${this.baseUrl}/users/sign_in`; 
         this.userNameInputLocator = '[id="login"]';
         this.passwordInputLocator = '[id="password"]';
@@ -17,7 +17,7 @@ export class Common {
         this.editIcon = 'i[title="Edit"]';
         this.editPencil = 'i[class*="fa-pencil"]';
         this.modal = 'div[data-qa-hook="modal"]';
-        this.antModal = ".ant-modal"; //'div[class="ant-modal"]';
+        this.antModal = ".ant-modal"; 
         this.vexNavigation = '#virtual-events';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
