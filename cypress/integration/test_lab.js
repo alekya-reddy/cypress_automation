@@ -228,11 +228,14 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig("Krishna Test Delete Later")
-        authoring.vex.goToSessionConfig("krishna live")
-        cy.containsExact("span", "Website - Used by Cypress automation for VEX testing", {timeout: 20000}).siblings(".anticon-menu").then((elem)=>{
-            cy.get(elem).drag({to: `li[class="ant-list-item"]:contains('PDF - Used by Cypress automation for VEX testing')`, place: 'below'})
-        })
+        //authoring.vex.goToSessionConfig("krishna live")
+        //cy.containsExact("span", "Website - Used by Cypress automation for VEX testing", {timeout: 20000}).siblings(".anticon-menu").then((elem)=>{
+        //    cy.get(elem).drag({to: `li[class="ant-list-item"]:contains('PDF - Used by Cypress automation for VEX testing')`, place: 'below'})
+        //})
         cy.contains("a", "Navigation").click()
+        cy.containsExact("span", "test c").parents('.rst__row').children(".rst__moveHandle").trigger("dragstart")
+        cy.get("div[class='rst__row']:contains('test d')").trigger("drop").trigger("dragend")
+        
     })*/
 
     it("should always pass", ()=>{

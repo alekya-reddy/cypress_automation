@@ -159,6 +159,29 @@ describe('VEX - Sessions Groups', function() {
         authoring.vex.removeFromGroup(groupB)
         authoring.vex.addToGroup(groupB)
 
+        // Confirm the initial order of sessions in group A
+        cy.contains(authoring.vex.groupRow, groupA.name).within(()=>{
+            cy.contains("button", "Manage Sessions").click()
+        })
+        for(let i = 0; i < groupA.sessions.length ; i++){
+            cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").should("contain", groupA.sessions[i])
+        }
+
+        // Reorder content within group A
+        cy.containsExact("span", sessions[4].name, {timeout: 10000}).siblings(authoring.vex.draggableMenu).then((subject)=>{
+            cy.containsExact("span", sessions[0].name, {timeout: 10000}).siblings(authoring.vex.draggableMenu).then((target)=>{
+                cy.get(subject).drag({to: target, place: 'over'}) // this drags the on-demand session to the first slot 
+            })
+        })
+
+        // Confirm the new order within group A (will confirm order on consumption side later)
+        let expectedOrder = groupA.sessions
+        let poppedItem = expectedOrder.pop() // pops off the on-demand session
+        expectedOrder.unshift(poppedItem) // adds it back to beginning 
+        for(let i = 0; i < expectedOrder.length ; i++){
+            cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").should("contain", expectedOrder[i])
+        }
+
         // Go to consumption and verify that the sessions are grouped correctly 
         cy.visit(event.url)
         cy.contains(consumption.vex.sessionGroup, groupA.name).should('exist').within(()=>{
@@ -171,6 +194,11 @@ describe('VEX - Sessions Groups', function() {
                     cy.contains(consumption.vex.sessionCardTitle, session).should("exist")
                 }
             })
+
+            // Confirm the order of the sessions within Group A
+            for(let i = 0; i < expectedOrder.length ; i++){
+                cy.get(consumption.vex.sessionCardTitle).eq(i).should("contain", expectedOrder[i])
+            }
         })
 
         cy.contains(consumption.vex.sessionGroup, groupB.name).should('exist').within(()=>{

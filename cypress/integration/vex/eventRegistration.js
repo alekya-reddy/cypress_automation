@@ -77,7 +77,6 @@ describe('VEX - Virtual Event Registration', function() {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        cy.clearCookies()
     })
 
     it("Event with no form configured", ()=>{

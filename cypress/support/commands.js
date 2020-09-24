@@ -332,6 +332,8 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
 
     cy.get(referenceElement).position().then((ref)=>{
         cy.get(subject).position().then((sub)=>{
+            cy.log(ref)
+            cy.log(sub)
             switch(place){
                 case "above":
                     xPos = Math.round((ref.left + ref.right)/2)
@@ -346,11 +348,11 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
                     yPos = Math.round((ref.bottom + ref.top)/2)
                     break;
                 case "right":
-                    xPos = ref.right + Matth.round(sub.width/2)
+                    xPos = ref.right + Math.round(sub.width/2)
                     yPos = Math.round((ref.bottom + ref.top)/2)
                     break;
                 case "bottom-right":
-                    xPos = ref.right + Matth.round(sub.width/2)
+                    xPos = ref.right + Math.round(sub.width/2)
                     yPos = ref.bottom + Math.round(sub.height/2)
                     break;
                 case "bottom-left":
@@ -358,16 +360,19 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
                     yPos = ref.bottom + Math.round(sub.height/2)
                     break;
                 case "top-right":
-                    xPos = ref.right + Matth.round(sub.width/2)
+                    xPos = ref.right + Math.round(sub.width/2)
                     yPos = ref.top - Math.round(sub.height/2)
                     break;
                 case "top-left":
                     xPos = ref.left - Math.round(sub.width/2)
                     yPos = ref.top - Math.round(sub.height/2)
                     break;
+                case "over":
+                    xPos = Math.round((ref.right + ref.left)/2)
+                    yPos = Math.round((ref.bottom + ref.top)/2)
+                    break;
             }
-
-            cy.get(subject).trigger("mousedown", { which: 1, force: true })
+            cy.get(subject).trigger("mousedown", { which: 1, clickPosition, force: true })
                 .trigger("mousemove", clickPosition, { pageX: xPos, pageY: yPos, force: true })
                 .trigger("mouseup", clickPosition, { force: true })
         })

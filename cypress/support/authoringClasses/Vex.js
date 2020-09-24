@@ -102,7 +102,8 @@ export class Vex extends Common {
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item",
             notAvailableText: "Live chat & session moderator settings are only available for live sessions."
-        }
+        };
+        this.draggableMenu = ".anticon-menu";
     }
 
     visit(){
