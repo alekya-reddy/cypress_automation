@@ -1,5 +1,23 @@
 
 export const constants = {
+    env: Cypress.env('TEST_ENV'),
+    envList: {
+        qa: "qa",
+        staging: "staging",
+        prod: "prod"
+    },
+    domain: {
+        lookbookhq: {
+            qa: "qa.lookbookhq.com",
+            staging: "staging2.lookbookhq.com",
+            prod: "lookbookhq.com"
+        },
+        pathfactory: {
+            qa: "pathfactory-qa.com",
+            staging: "pathfactory-staging.com",
+            prod: "pathfactory.com"
+        }
+    },
     testENV: Cypress.env('TEST_ENV'),
     lookbookhqDomain: (function(env){
         if(env == 'pathfactory-staging'){
