@@ -40,6 +40,7 @@ describe("VEX - Reordering Supplemental Content", ()=>{
             }
         })
     })
+    
     it("Reorder supplemental content and confirm on consumption side", ()=>{
         // Get to the session
         authoring.common.login()
@@ -75,7 +76,6 @@ describe("VEX - Reordering Supplemental Content", ()=>{
             })
         })
         
-
         // Calculate the new expected order 
         let newOrder = []
         cy.get("body").then(()=>{
