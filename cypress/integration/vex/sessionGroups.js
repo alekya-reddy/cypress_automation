@@ -175,7 +175,7 @@ describe('VEX - Sessions Groups', function() {
         })
 
         // Confirm the new order within group A (will confirm order on consumption side later)
-        let expectedOrder = groupA.sessions
+        let expectedOrder = [...groupA.sessions]
         let poppedItem = expectedOrder.pop() // pops off the on-demand session
         expectedOrder.unshift(poppedItem) // adds it back to beginning 
         for(let i = 0; i < expectedOrder.length ; i++){

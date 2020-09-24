@@ -18,6 +18,7 @@ export class VexCX extends CommonCX {
         this.closeContentButton = "button[title='Close']";
         this.sessionGroup = ".pf-event-sessions";
         this.sessionListItem = ".pf-event-session-list-item";
+        this.sessionSidebar = ".pf-event-session-sidebar";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
