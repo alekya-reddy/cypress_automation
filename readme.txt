@@ -21,14 +21,14 @@ node_modules/.bin/cypress open
 
 Then, from the window that opens, click the file you want to run
 
-To set the server you are running on (QA, Staging, Prod), set the TEST_ENV variable in cypress.json (for example, TEST_ENV=pathfactory-staging)
+To set the server you are running on (qa, staging, prod), set the TEST_ENV variable in cypress.json (for example, TEST_ENV=staging)
 
 Using the UI, you can run all spec files (they MUST be inside the integration folder).
 You can also run just 1 specific file by clicking on it. 
 
 You can also run files from the command line: 
 
-npx cypress run --env TEST_ENV=pathfactory-qa --browser chrome --spec cypress/integration/new_website_test.js
+npx cypress run --env TEST_ENV=qa --browser chrome --spec cypress/integration/new_website_test.js
 
 Note: you do not need to include the --env parameter if you already have it in the cypress.json file. Values passed through the command line will override
 values you set in cypress.json
@@ -60,7 +60,7 @@ You can run whichever file you want using --spec
 To turn off video recording, you can pass in argument --config video=false 
 You can also set this in cypress.json (which I have already)
 
-eg) npx cypress run --env TEST_ENV=pathfactory-qa --config video=false  --browser chrome --spec cypress/integration/visit_other_domain_test.js
+eg) npx cypress run --env TEST_ENV=qa --config video=false  --browser chrome --spec cypress/integration/visit_other_domain_test.js
 
 Note: You cannot set --browser in the cypress.json file. You have to do it in the command line. 
 
