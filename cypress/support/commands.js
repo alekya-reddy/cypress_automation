@@ -82,7 +82,7 @@ Cypress.Commands.add("containsExact", (locator, exact_text_to_match, config = {}
 Cypress.Commands.add("ifElementWithExactTextExists", (locator, exact_text_to_match, waitTime, callBack)=>{
     let matchFound = false;
     for(let i = 0; i < waitTime; i += 500){
-        cy.get('body', {log: false}).then((body)=>{
+        cy.get('div', {log: false}).then(()=>{
             let matches = Cypress.$(locator).filter(function(){
                 return Cypress.$(this).text() == exact_text_to_match;
             })

@@ -95,6 +95,7 @@ export class Vex extends Common {
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
         this.maxAttendeesInput = "input[name='maximumAttendees']";
+        this.antCell = ".ant-table-cell";
         this.chat = {
             toggle: "button[data-qa-hook^='chat-widget-enable']",
             readOnly: "button[data-qa-hook^='chat-widget-readonly']",
@@ -104,6 +105,24 @@ export class Vex extends Common {
             notAvailableText: "Live chat & session moderator settings are only available for live sessions."
         };
         this.draggableMenu = ".anticon-menu";
+        this.pages = {
+            nameInput: "input[name='name']",
+            slugInput: "input[name='slug']",
+            addBlockButton: "button[class*='AddBlockButton']",
+            addHTMLButton: "button:contains('HTML')"
+        };
+        this.navigation = {
+            addButton: "button:contains('Add Navigation Item')",
+            labelInput: "input[name='title']",
+            linkInput: "input[name='link']",
+            newTabCheckBox: "input[name='newTab']",
+            navRow: ".rst__row",
+            navTitle: ".rst__rowTitle",
+            navSubtitle: ".rst__rowSubtitle",
+            navHandle: ".rst__moveHandle",
+            navContent: ".rst__rowContents",
+            navRemoveBox: ".rst__rowToolbar"
+        };
     }
 
     visit(){
@@ -733,8 +752,205 @@ export class Vex extends Common {
         cy.contains(this.pageTitleLocator, event).should('exist')
     }
 
+    goToEventSetup(){
+        cy.containsExact("a", "Event Setup", {timeout: 20000}).click()
+    }
+
     backToSession(){
         cy.contains("a", "Session Details").click()
     }
 
+    goToNavigation(){
+        cy.url().then((url)=>{
+            if(!url.includes("/navigation")){
+                cy.containsExact("a", "Navigation", {timeout: 10000}).click()
+            }
+        })
+    }
+
+    addNavItem(config){
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+
+        this.goToNavigation()
+        cy.get(this.navigation.addButton).click()
+        cy.contains(this.antModal, "Add Navigation Item").should('exist')
+        cy.get(this.navigation.labelInput).clear().type(label)
+        cy.get(this.antSelector).eq(0).click()
+        cy.get(this.antDropdownOption(type)).click()
+        if(source && type !== "Link"){
+            cy.get(this.antSelector).eq(1).click()
+            cy.get(this.antDropdownOption(source)).click()
+        } else if (source && type == "Link"){
+            cy.get(this.navigation.linkInput).clear().type(source)
+        }
+        if(newTab){
+            cy.get(this.navigation.newTabCheckBox).click()
+        }
+        cy.contains('button', "Submit").click()
+
+        if(verify){
+            cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
+            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
+                if(source && !newTab){
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
+                } else if(source && newTab){
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
+                }else if (type == "Text"){
+                    cy.containsExact(this.navigation.navSubtitle, type).should('exist')
+                }
+            })
+        }
+    }
+
+    deleteNavItems(list, verify){
+        const navItems = [list].flat()
+
+        this.goToNavigation()
+        navItems.forEach((navItem)=>{
+            cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, ()=>{
+                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(()=>{
+                    cy.contains("button", "Remove").click()
+                })
+            })
+            if(verify){
+                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
+            }
+        })
+    }
+
+    deleteAllNavItems(){
+        this.goToNavigation()
+        cy.ifElementExists(this.navigation.navRow, 2000, ()=>{
+            cy.get(this.navigation.navRow).then((rows)=>{
+                for(let i = rows.length - 1; i >= 0; i--){
+                    // Need to remove bottomost one first, and work your way up
+                    // If start at top, could delete a node that takes out several at once, but for loop keeps going
+                    cy.get(this.navigation.navRow).eq(i).within(()=>{
+                        cy.contains('button', 'Remove').click()
+                    })
+                }
+            })
+        })
+    }
+
+    attachSubNav(config){
+        // Tip: This function drags the subject by the draggable menu, and drops onto the target's "remove" button 
+        // To simply reorder nav items at the top level, you don't need this function. Just drag subject's menu over the target's menu 
+        // To make subject a second-level submenu of target, use this function
+        // To make subject a third-level submenu of target, which itself is a submenu of a first level nav-item, first drag subject to target
+        // This make make subject a second-level submenu alongside target, then drag subject to itself 
+        // This effectively drags the subject back, and then it will link up to the target as a third-level submenu 
+        const subject = config.subject // name of the nav item to be moved
+        const target = config.target // name of the nav item that subject will connect to 
+
+        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
+        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
+    }
+
 }
+
+const vexLandingPageMixin = {
+    goToLandingPage(){
+        cy.url().then((url)=>{
+            if(!url.includes("/pages")){
+                cy.containsExact("a", "Landing Pages").click()
+            }
+        })
+    },
+    addLandingPages(list, verify){
+        const pages = [list].flat()
+
+        this.goToLandingPage()
+        pages.forEach((page)=>{
+            cy.contains("button", "Add Page").click()
+            cy.contains(this.antModal, "Add Page").within(()=>{
+                cy.get(this.pages.nameInput).clear().type(page)
+                cy.contains("button", "Submit").click()
+            })
+            if(verify){
+                cy.contains(this.antModal, "Add Page").should("not.be.visible")
+                cy.containsExact(this.antCell, page).should('exist')
+            }
+        })
+    },
+    deleteLandingPages(list, verify){
+        const pages = [list].flat()
+
+        this.goToLandingPage()
+        pages.forEach((page)=>{
+            cy.ifElementWithExactTextExists(this.antCell, page, 1000, ()=>{
+                cy.containsExact(this.antCell, page).siblings("td:contains('Remove')").within(()=>{
+                    cy.contains('button', 'Remove').click()
+                })
+                cy.contains("button", "Yes").click()
+            })
+            if(verify){
+                cy.containsExact(this.antCell, page).should("not.exist")
+            }
+        })
+    },
+    editLandingPage(config){
+        const name = config.name
+        const newName = config.newName
+        const visibility = config.visibility ? config.visibility.toLowerCase() : false
+        const slug = config.slug
+        const verify = config.verify
+
+        this.goToLandingPage()
+        cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(this.antModal, "Edit Landing Page").within(()=>{
+            if(newName){
+                cy.get(this.pages.nameInput).clear().type(newName)
+            }
+            switch(visibility){
+                case "private":
+                    cy.get(this.privateRadio).click()
+                    break;
+                case "public":
+                    cy.get(this.publicRadio).click()
+                    break;
+            }
+            if(slug){
+                cy.get(this.pages.slugInput).clear().type(slug)
+            }
+            cy.contains("button", "Submit").click()
+        })
+        if(verify){
+            let checkName = newName ? newName : name 
+            cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
+            if(newName){ 
+                cy.containsExact(this.antCell, checkName).should('exist') 
+            }
+            if(visibility == 'public'){
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('exist')
+            }
+            if(visibility == 'private'){
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
+            }
+            if(slug){
+                cy.containsExact(this.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')
+            }
+        }
+    },
+    goToPageEditor(page){
+        cy.containsExact(this.antCell, page).siblings(`td:contains('Modify Page')`).within(()=>{
+            cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
+                cy.visit(`${this.baseUrl}${href}`)
+            })
+        })
+    },
+    addBasicBlock(){
+        // Assumes it's a fresh landing page with no existing blocks 
+        cy.get(this.pages.addBlockButton).click({force: true}) // Cypress was complaining that this button wasn't attached to the DOM, so force click 
+        cy.get(this.pages.addHTMLButton).click({force: true})
+        cy.get(this.saveButton).click()
+    }
+}
+
+Object.assign(Vex.prototype, vexLandingPageMixin)
