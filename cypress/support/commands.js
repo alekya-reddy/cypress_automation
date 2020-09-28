@@ -211,7 +211,7 @@ Cypress.Commands.add("scrollIntoViewWithin", (config)=>{
         } 
         cy.get('body', {log: false}).then(()=>{
             if (matchFound == false){
-                cy.get(scroller, {log: false}).scrollTo(`${x[loop.count]}%`, `${y[loop.count]}%`, {log: false})
+                cy.get(scroller, {log: false, timeout: 2000}).scrollTo(`${x[loop.count]}%`, `${y[loop.count]}%`, {log: false})
                 cy.wait(100, {log: false})
                 if (element && text){
                     let matches = Cypress.$(element).filter(function(){

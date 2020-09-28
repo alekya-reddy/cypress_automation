@@ -260,7 +260,7 @@ export class Vex extends Common {
     addTrackProtection(list){
         let groups = [list].flat() 
 
-        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
             cy.get("span[class='ant-select-selection-search']").click()
         })
         groups.forEach((group)=>{
@@ -275,7 +275,7 @@ export class Vex extends Common {
     removeTrackProtection(list){
         let groups = [list].flat()
 
-        cy.contains(this.trackProtectionArea, "Track Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
             groups.forEach((group)=>{
                 cy.contains('.ant-select-selection-item', group).within(()=>{
                     cy.get(".ant-select-selection-item-remove").click()
@@ -817,7 +817,7 @@ export class Vex extends Common {
                 })
             })
             if(verify){
-                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
+                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist', {timeout: 20000})    
             }
         })
     }
@@ -857,7 +857,7 @@ const vexLandingPageMixin = {
     goToLandingPage(){
         cy.url().then((url)=>{
             if(!url.includes("/pages")){
-                cy.containsExact("a", "Landing Pages").click()
+                cy.containsExact("a", "Landing Pages", {timeout: 20000}).click()
             }
         })
     },

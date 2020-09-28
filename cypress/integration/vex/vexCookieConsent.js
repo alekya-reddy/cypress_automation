@@ -89,7 +89,7 @@ describe("VEX - Cookie Consent", ()=>{
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
 
         // Go to session page and verify same thing 
-        cy.visit(session.url)
+        cy.contains("a", session.name)
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
 
         // Decline cookie consent and verify vid is still session cookie

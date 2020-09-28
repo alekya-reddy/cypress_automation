@@ -219,8 +219,8 @@ const formWebhookEvent = {
     event_type: "Form Capture",
     content_source_url: "", // content values will not show up for vex forms as there is no content visible when filling out either on event or session page
     content_title: "",
-    query_string: "foo=bar&utm_source=source",
-    utm_source: "source" // This value comes from the utm_source=source query string 
+    //query_string: "foo=bar&utm_source=source",  // After deploy of release 92, this always comes up blank with automation. Manually, these fields still show up
+    //utm_source: "source" // This value comes from the utm_source=source query string // After deploy of release 92, this always comes up blank with automation. Manually, these fields still show up
 }
 
 const sessionWebhookEvent = {

@@ -151,19 +151,23 @@ const nav1 = [
 const nav2 = [
     {
         label: "Single Tiered",
-        type: "Text"
+        type: "Text",
+        verify: true
     },
     {
         label: "Level 3",
-        type: "Text"
+        type: "Text",
+        verify: true
     },
     {
         label: "Level 2",
-        type: "Text"
+        type: "Text",
+        verify: true
     },
     {
         label: "Level 1",
-        type: "Text"
+        type: "Text",
+        verify: true
     }
 ]
 
@@ -250,6 +254,9 @@ describe("VEX - Navigation Builder", ()=>{
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(deleteLandingPage.name)
         authoring.vex.goToNavigation()
+        cy.ifElementWithExactTextExists(authoring.vex.navigation.navTitle, deleteLandingPage.name, 1000, ()=>{
+            cy.reload()
+        }) 
         cy.containsExact(authoring.vex.navigation.navTitle, deleteSession.name).should("not.exist")
         cy.containsExact(authoring.vex.navigation.navTitle, deleteLandingPage.name).should("not.exist")
         
