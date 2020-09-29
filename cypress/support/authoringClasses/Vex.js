@@ -123,6 +123,10 @@ export class Vex extends Common {
             navContent: ".rst__rowContents",
             navRemoveBox: ".rst__rowToolbar"
         };
+        this.blacklist = {
+            emailInput: "input[name='email']",
+            emailRow: ".ant-list-item"
+        };
     }
 
     visit(){
@@ -196,7 +200,11 @@ export class Vex extends Common {
             cy.get(this.externalIDInput).clear().type(externalID)
         }
 
-        form ? this.configureForm(form) : null;
+        if(form){
+            let formConfig = Object.assign({}, form)
+            formConfig.save = false
+            this.configureForm(form)
+        }
 
         if(start){
             cy.get(this.startTimeInput).click().clear().type(start + '\n')
@@ -247,14 +255,17 @@ export class Vex extends Common {
     }
 
     configureForm(form){
-        const name = form.name; 
+        const name = form.name
+        const save = form.save == false ? false : true 
 
         cy.get(this.eventFormPicker).parent().parent().click()
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.antDropdownOption(name)).click()
         })
-        cy.get(this.saveButton).click()
-        cy.get('body').should('contain', this.recordSavedMessage)
+        if(save){
+            cy.get(this.saveButton).click()
+            cy.get('body').should('contain', this.recordSavedMessage)
+        }
     }
 
     addTrackProtection(list){
@@ -849,6 +860,79 @@ export class Vex extends Common {
 
         cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
         cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
+    }
+
+    goToBlacklist(){
+        cy.url().then((url)=>{
+            if(!url.includes("/event-blacklist")){
+                cy.containsExact("a", "Event Blacklist", {timeout: 10000}).click()
+            }
+        })
+    }
+
+    addToBlacklist(list, verify){
+        const emails = [list].flat()
+
+        this.goToBlacklist()
+        emails.forEach((email)=>{
+            cy.contains("button", "Add Email", {timeout: 10000}).click()
+            cy.contains(this.antModal, "Add Email").within(()=>{
+                cy.get(this.blacklist.emailInput).clear().type(email)
+                cy.contains("button", "Submit").click()
+            })
+            if(verify){
+                cy.contains(this.antModal, "Add Email").should('not.be.visible', {timeout: 10000})
+                cy.containsExact('span', email.toLowerCase(), {timeout: 10000}).should('exist')
+            }
+        })
+    }
+
+    removeFromBlacklist(list){
+        const emails = [list].flat()
+
+        this.goToBlacklist()
+        emails.forEach((email)=>{
+            cy.containsExact("span", email.toLowerCase(), {timeout: 10000}).parent().within(()=>{
+                cy.contains("button", "Remove").click()
+            })
+            cy.contains("button", "Yes").click()
+            cy.get(this.antModal).should("not.be.visible")
+            cy.containsExact("span", email).should("not.exist")
+            cy.containsExact("span", email.toLowerCase()).should("not.exist")
+        })
+    }
+
+    clearBlacklist(){
+        this.goToBlacklist()
+        cy.ifElementExists(this.blacklist.emailRow, 2000, ()=>{
+            cy.get(this.blacklist.emailRow).then((rows)=>{
+                for(let i = rows.length - 1; i >= 0; i--){
+                    cy.get(this.blacklist.emailRow).eq(i).within(()=>{
+                        cy.contains('button', 'Remove').click()
+                    })
+                    cy.contains("button", "Yes").click()
+                }
+            })
+        })
+    }
+
+    editBlacklistEmail(config){
+        const email = config.email 
+        const newEmail = config.newEmail 
+        const verify = config.verify
+
+        this.goToBlacklist()
+        cy.containsExact("span", email.toLowerCase(), {timeout: 10000}).parent().within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(this.antModal + ":visible", "Edit Moderator").within(()=>{  // Each email opens up its own modal!!!! Cypress does automatically only pick the visible ones!!!
+            cy.get(this.blacklist.emailInput).clear().type(newEmail)
+            cy.contains("button", "Submit").click()
+        })
+        if(verify){
+            cy.containsExact("span", email.toLowerCase()).should('not.exist')
+            cy.containsExact("span", newEmail.toLowerCase()).should("exist")
+        }
     }
 
 }

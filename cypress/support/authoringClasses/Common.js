@@ -42,7 +42,8 @@ export class Common {
             duplicateEntry: "is already taken",
             duplicateEntry2: "has already been taken",
             blankInput: "can't be blank",
-            invalidEmail: "invalid email"
+            invalidEmail: "invalid email",
+            invalidEmail2: "does not appear to be a valid e-mail address"
         };
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
         this.selectList = "div[data-qa-hook='select-list']";

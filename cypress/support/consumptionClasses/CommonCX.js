@@ -5,6 +5,7 @@ export class CommonCX {
         this.tld = tld;
         this.env = env;
         this.baseUrl = baseUrl; 
+        this.jukeBoxApp = "#jukebox-app";
         this.trackProtectionEmailInput = "#email";
         this.standardForm = {
             firstNameInput: "#firstName",

@@ -82,7 +82,8 @@ export class VexCX extends CommonCX {
             moderatorViewButton: "button:contains('Open Moderator View')"
         };
         this.messages = {
-            maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached."
+            maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached.",
+            blacklisted: "You are no longer eligible to access this event. Please contact your event administrator for more information"
         }
     }
 
