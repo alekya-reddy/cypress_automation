@@ -69,7 +69,8 @@ export class Vex extends Common {
             contentTitle: "div[data-qa-hook^='content-title']",
             contentTitleInput: "input[name='contentTitle']",
             contentDescription: "div[data-qa-hook^='content-description']",
-            contentDescriptionInput: "input[name='contentDescription']"
+            contentDescriptionInput: "input[name='contentDescription']",
+            input: "input[class='ant-select-selection-search-input']"
         };
         this.resetButton = "button:contains('Reset')";
         this.selectImageButton = "button:contains('Change Image')";
@@ -135,7 +136,7 @@ export class Vex extends Common {
         this.blacklist = {
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item"
-        };
+        };  
     }
 
     visit(){
