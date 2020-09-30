@@ -84,6 +84,7 @@ const formWebhook = {
     eventFields: {
         "Event Type": "event_type",
         "Event Time": "event_time",
+        "Event Date": "event_date",
         "Form Name": "form_name",
         "Visitor Email": "email",
         "First Name": "first_name",
@@ -112,6 +113,7 @@ const sessionWebhook = {
     on_off: 'on',
     eventFields: {
         "Event Time": "event_time",
+        "Event Date": "event_date",
         "Known Visitor Email": "email",
         "Experience Name": "experience_name",
         "Experience External ID": "experience_external_id",
@@ -169,6 +171,7 @@ const activityWebhook = {
     on_off: 'on',
     eventFields: {
         "Event Time": "event_time",
+        "Event Date": "event_date",
         "Known Visitor Email": "email",
         "Visitor Activity Name": "visitor_activity_name",
         "Experience Name": "experience_name",
@@ -309,7 +312,7 @@ const supplementalSpecificContentWebhookEvent = {
 describe("VEX - Form Webhook", ()=>{
     it("Set up the event if not already done, and clear all webhooks from pipedream database", ()=>{
         if(Cypress.env('TEST_ENV') !== "prod"){
-            cy.closeSession() // Closing sessions while all webhooks toggled off will purge all pent-up webhooks waiting to fire
+            cy.closeSession({failOnStatusCode: false, retryOnNetworkFailure: true}) // Closing sessions while all webhooks toggled off will purge all pent-up webhooks waiting to fire
             cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
                 if(response.status == 404){
                     authoring.common.login()

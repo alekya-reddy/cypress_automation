@@ -109,7 +109,16 @@ export class Vex extends Common {
             nameInput: "input[name='name']",
             slugInput: "input[name='slug']",
             addBlockButton: "button[class*='AddBlockButton']",
-            addHTMLButton: "button:contains('HTML')"
+            addHTMLButton: "button:contains('HTML')",
+            addSessionGroupButton: "button:contains('Session Group')",
+            tableRow: ".ant-table-row",
+            editorMenu: "div[class^='BlockMenu']",
+            menuBlock: "div[class^='BlockAction']",
+            colorPickerBar: ".swatch-inner",
+            colorPicker: ".sketch-picker",
+            classNameInput: "input[name*='className']",
+            blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
+            sessionGroupRow: ".pf-event-sessions"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -935,16 +944,14 @@ export class Vex extends Common {
         }
     }
 
-}
-
-const vexLandingPageMixin = {
     goToLandingPage(){
         cy.url().then((url)=>{
             if(!url.includes("/pages")){
                 cy.containsExact("a", "Landing Pages", {timeout: 20000}).click()
             }
         })
-    },
+    }
+
     addLandingPages(list, verify){
         const pages = [list].flat()
 
@@ -955,12 +962,13 @@ const vexLandingPageMixin = {
                 cy.get(this.pages.nameInput).clear().type(page)
                 cy.contains("button", "Submit").click()
             })
-            if(verify){
+            if(verify !== false){
                 cy.contains(this.antModal, "Add Page").should("not.be.visible")
                 cy.containsExact(this.antCell, page).should('exist')
             }
         })
-    },
+    }
+
     deleteLandingPages(list, verify){
         const pages = [list].flat()
 
@@ -972,23 +980,38 @@ const vexLandingPageMixin = {
                 })
                 cy.contains("button", "Yes").click()
             })
-            if(verify){
+            if(verify !== false){
                 cy.containsExact(this.antCell, page).should("not.exist")
             }
         })
-    },
+    }
+
+    clearLandingPages(){
+        this.goToLandingPage()
+        cy.ifElementExists(this.pages.tableRow, 2000, ()=>{
+            cy.get(this.pages.tableRow).then((rows)=>{
+                for(let i = rows.length - 1; i >= 0; i--){
+                    cy.get(this.pages.tableRow).eq(i).within(()=>{
+                        cy.contains('button', 'Remove').click()
+                    })
+                    cy.contains("button", "Yes").click()
+                }
+            })
+        })
+    }
+
     editLandingPage(config){
         const name = config.name
         const newName = config.newName
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const slug = config.slug
-        const verify = config.verify
+        const verify = config.verify // must specify false to skip verification 
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(()=>{
             cy.contains("button", "Edit").click()
         })
-        cy.contains(this.antModal, "Edit Landing Page").within(()=>{
+        cy.contains(this.antModal + ":visible", "Edit Landing Page").within(()=>{
             if(newName){
                 cy.get(this.pages.nameInput).clear().type(newName)
             }
@@ -1005,7 +1028,7 @@ const vexLandingPageMixin = {
             }
             cy.contains("button", "Submit").click()
         })
-        if(verify){
+        if(verify !== false){
             let checkName = newName ? newName : name 
             cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
             if(newName){ 
@@ -1021,20 +1044,234 @@ const vexLandingPageMixin = {
                 cy.containsExact(this.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')
             }
         }
-    },
+    }
+
     goToPageEditor(page){
         cy.containsExact(this.antCell, page).siblings(`td:contains('Modify Page')`).within(()=>{
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
                 cy.visit(`${this.baseUrl}${href}`)
             })
         })
-    },
+    }
+
     addBasicBlock(){
+        // Use to add the most basic block if it doesn't matter what the landing page contains - just that it exists
         // Assumes it's a fresh landing page with no existing blocks 
         cy.get(this.pages.addBlockButton).click({force: true}) // Cypress was complaining that this button wasn't attached to the DOM, so force click 
         cy.get(this.pages.addHTMLButton).click({force: true})
         cy.get(this.saveButton).click()
     }
-}
 
-Object.assign(Vex.prototype, vexLandingPageMixin)
+    addAdvancedBlock(config){
+        const type = config.type.toLowerCase()
+        const content = config.content 
+        const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
+        const typography = config.typography // this has sub options 
+        const className = config.className 
+        const sessionGroup = config.sessionGroup
+        const heading = config.heading // this has sub options color, textAlign
+        const background = config.background // this has several sub options 
+        const spacing = config.spacing // Padding in valid css units
+        const verify = config.verify // Do not verify if using HEX color for any color pickers
+
+        cy.get(this.pages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
+
+        if(type == "html"){
+            cy.get(this.pages.addHTMLButton + ":visible").click({force: true})
+        } else if (type == "session group"){
+            cy.get(this.pages.addSessionGroupButton + ":visible").eq(0).click({force: true})
+        }
+
+        // The menu of the most recently added one will be visible 
+        cy.get(this.pages.editorMenu).within(()=>{
+            cy.get(this.pages.menuBlock).eq(3).click() // This opens up the block editor modal 
+        })
+
+        if(content){
+            cy.containsExact("div", "HTML Content").click() // Slides open the html content area
+            cy.get("textarea").clear().type(content)
+            cy.containsExact("span", "HTML Content").click() // Slides shut the html content area
+        }
+
+        if(sessionGroup){
+            cy.get("select[id*='virtualEventGroupId']").select(sessionGroup)
+        }
+
+        if(background){
+            const color = background.color // object with keys hex, r, g, b
+            const image = background.image // image must be an object that can be passed into pickThumbnail method (Common classs)
+            const position = background.position // center, top, bottom -> these seem to only matter if size is 'cover'
+            const size = background.size // cover or contain
+
+            cy.containsExact("div", "Background").click()
+            if(color){
+                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
+                cy.get(this.pages.colorPicker).within(()=>{
+                    if(color.hex){
+                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
+                    }
+                    if(color.r){
+                        cy.get("input").eq(1).clear().type(color.r)
+                    }
+                    if(color.g){
+                        cy.get("input").eq(2).clear().type(color.g)
+                    }
+                    if(color.b){
+                        cy.get("input").eq(3).clear().type(color.b)
+                    }
+                })
+                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker 
+            }
+            if(image){
+                cy.contains("button", "Add Image").click()
+                this.pickThumbnail(image)
+            }
+            if(position){
+                cy.get("select[id*='backgroundPosition']").select(position)
+            }
+            if(size){
+                cy.get("select[id*='backgroundSize']").select(size)
+            }
+            cy.containsExact("span", "Background").click()
+        }
+
+        if(heading){
+            let color = heading.color // In HEX code or rgb (rgb preferred)
+            let textAlign = heading.textAlign // center, left, right
+
+            cy.containsExact("div", "Heading").click()
+            if(color){
+                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
+                cy.get(this.pages.colorPicker).within(()=>{
+                    if(color.hex){
+                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
+                    }
+                    if(color.r){
+                        cy.get("input").eq(1).clear().type(color.r)
+                    }
+                    if(color.g){
+                        cy.get("input").eq(2).clear().type(color.g)
+                    }
+                    if(color.b){
+                        cy.get("input").eq(3).clear().type(color.b)
+                    }
+                })
+                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker
+            }
+            if(textAlign){
+                cy.get("select[id*='heading.textAlign']").select(textAlign)
+            }
+            cy.containsExact("span", "Heading").click()
+        }
+
+        if(typography){
+            let color = typography.color // In HEX code or rgb (rgb preferred)
+            let textAlign = typography.textAlign // center, left, right
+
+            cy.containsExact("div", "Typography").click()
+            if(color){
+                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
+                cy.get(this.pages.colorPicker).within(()=>{
+                    if(color.hex){
+                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
+                    }
+                    if(color.r){
+                        cy.get("input").eq(1).clear().type(color.r)
+                    }
+                    if(color.g){
+                        cy.get("input").eq(2).clear().type(color.g)
+                    }
+                    if(color.b){
+                        cy.get("input").eq(3).clear().type(color.b)
+                    }
+                })
+                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker
+            }
+            if(textAlign){
+                cy.get("select[id*='typography.textAlign']").select(textAlign)
+            }
+            cy.containsExact("span", "Typography").click()
+        }
+
+        if(spacing){
+            cy.containsExact("div", "Spacing").click()
+            cy.get("input:visible").clear().type(spacing)
+            cy.containsExact("span", "Spacing").click()
+        }
+
+        if(className){
+            cy.get(this.pages.classNameInput).clear().type(className)
+        }
+
+        cy.contains("button", "Confirm").click()
+
+        if(verify !== false && className){ // Gonna be difficult to get the div if you don't give it a class name
+            let locator = `div[class='${className}']`
+            cy.get(locator).invoke("attr", "style").then((style)=>{
+                if(typography && typography.textAlign){
+                    expect(style).to.include(`text-align: ${typography.textAlign}`)
+                }
+                if(typography && typography.color && !typography.color.hex){
+                    expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+                }
+                if(background && background.color && !background.color.hex){
+                    expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+                }
+                if(background && background.image.url){
+                    expect(style).to.include(`background-image: url("${background.image.url}")`)
+                }
+                if(background && background.position){
+                    expect(style).to.include(`background-position: center ${background.position}`)
+                }
+                if(background && background.size){
+                    expect(style).to.include(`background-size: ${background.size}`)
+                }
+                if(spacing){
+                    expect(style).to.include(`padding: ${spacing}`)
+                }
+            })
+            if(checkContent && checkContent.text){
+                checkContent.text.forEach((text)=>{
+                    cy.contains(locator, text).should("exist")
+                })
+            }
+            if(checkContent && checkContent.locators){
+                checkContent.locators.forEach((checkLocator)=>{
+                    cy.get(locator).within(()=>{
+                        cy.get(checkLocator).should("exist")
+                    })
+                })
+            }
+        }
+        if(verify !== false && sessionGroup){ // session group blocks have to be checked entirely different way
+            let blockLocator = this.pages.sessionGroupRow
+            if(heading){
+                cy.contains(blockLocator, sessionGroup).within(()=>{
+                    if(heading.color && !heading.color.hex){
+                        cy.get("h4").should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
+                    }
+                    if(heading.textAlign){
+                        cy.get("h4").should("have.css", 'text-align', heading.textAlign)
+                    }
+                })
+            }
+            if(background && background.color && !background.color.hex){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+            }
+            if(background && background.image.url){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-image", `url("${background.image.url}")`)
+            }
+            if(background && background.position){
+                let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
+            }
+            if(background && background.size){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-size", background.size)
+            }
+            if(spacing){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
+            }
+        }
+    }
+
+}

@@ -298,13 +298,16 @@ Cypress.Commands.add("assertWebhook", (config)=>{
     })
 })
 
-Cypress.Commands.add("closeSession", ()=>{
+Cypress.Commands.add("closeSession", (config)=>{
+    const failOnStatusCode = config.failOnStatusCode == false ? false : true 
+    const retryOnNetworkFailure = config.retryOnNetworkFailure == true ? true : false // Set retry to false by default (otherwise can get broken sessions)
     cy.request({
         url: `https://api.${constants.domain.pathfactory[constants.TEST_ENV]}/api/debug/close_sessions`,
         method: "POST",
         headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIz"},
         timeout: 60000,
-        retryOnNetworkFailure: false // Set to false or cypress will spam up to 4 times
+        retryOnNetworkFailure: retryOnNetworkFailure, // Cypress will retry up to 4 times if true 
+        failOnStatusCode: failOnStatusCode // Fails test if status not ok  
     })
 })
 
@@ -379,12 +382,6 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
                 .trigger("mouseup", clickPosition, { force: true })
         })
     })
-
-
-    /*cy.log(subject) // Subject is a jquery selector
-    cy.get(subject).trigger('mousedown', { which: 1, force: true})
-        .trigger('mousemove', { pageX: 0, pageY: 0, force: true })
-        .trigger('mouseup', { force: true })*/
 })
 
 

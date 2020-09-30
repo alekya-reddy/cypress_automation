@@ -41,6 +41,7 @@ export class Common {
             saveFailed: "There was a problem saving this record",
             duplicateEntry: "is already taken",
             duplicateEntry2: "has already been taken",
+            duplicateEntry3: "already exists",
             blankInput: "can't be blank",
             invalidEmail: "invalid email",
             invalidEmail2: "does not appear to be a valid e-mail address"
