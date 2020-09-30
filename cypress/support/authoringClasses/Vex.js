@@ -1077,7 +1077,7 @@ export class Vex extends Common {
         cy.get(this.pages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
 
         if(type == "html"){
-            cy.get(this.pages.addHTMLButton + ":visible").click({force: true})
+            cy.get(this.pages.addHTMLButton + ":visible").eq(0).click({force: true})
         } else if (type == "session group"){
             cy.get(this.pages.addSessionGroupButton + ":visible").eq(0).click({force: true})
         }
@@ -1272,6 +1272,28 @@ export class Vex extends Common {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
             }
         }
+    }
+
+    removeBlock(locator){
+        // Must first navigate to the landing page editor 
+        // locator should be something specific to the block 
+        cy.get(locator).parents(this.pages.blockContainer).click() // this selects the block and makes the menu appear
+        cy.get(locator).parents(this.pages.blockContainer).within(()=>{
+            cy.get(this.pages.menuBlock).eq(4).click() // This opens up the block editor modal 
+        })
+        cy.get(locator).should("not.exist")
+    }
+
+    moveBlock(locator, up_down){
+        // locator must be something specific within the block
+        // up_down can be up or down
+        // assumes you already on landing page editor
+        let direction = {up: 0, down: 1}
+
+        cy.get(locator).parents(this.pages.blockContainer).click()
+        cy.get(locator).parents(this.pages.blockContainer).within(()=>{
+            cy.get(this.pages.menuBlock).eq(direction[up_down]).click() // This opens up the block editor modal 
+        })
     }
 
 }

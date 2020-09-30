@@ -40,16 +40,21 @@ const sessionGroupA = {
     sessions: [publicSession.name, privateSession.name]
 }
 
+const firstBlockText = "I should be first"
+
 const testLandingPage = {
     name: "Test Landing Page",
     slug: "test-landing-page",
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
     visibility: 'Public',
     blocks: [
         {
             type: "HTML",
-            content: "<h1>I should be second</h1>",
+            content: `<h1>${firstBlockText}</h1>`,
             checkContent: {
-                text: ["I should be second"],
+                text: [firstBlockText],
                 locators: ["h1"]
             },
             typography: {
@@ -85,6 +90,10 @@ const testLandingPage = {
                 size: "cover"
             },
             spacing: "91px"
+        },
+        {
+            type: "HTML",
+            content: "<p>Delete me</p>"
         }
     ]
 }
@@ -114,7 +123,7 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.goToEventConfig(event.name)
 
         // Clear out all landing pages 
-        /*authoring.vex.clearLandingPages()
+        authoring.vex.clearLandingPages()
 
         // Add, edit landing pages 
         authoring.vex.addLandingPages([testLandingPage.name, "Edit me"])
@@ -143,21 +152,28 @@ describe("VEX - Landing Page Editor", ()=>{
         cy.contains("button:visible", "Cancel").click()
 
         // Remove landing page
-        authoring.vex.deleteLandingPages("Delete me")*/
+        authoring.vex.deleteLandingPages("Delete me")
 
-        // Modify landing page (the editor) - Add various html and session blocks, remove some, edit some 
-        authoring.vex.goToLandingPage()
+        // Modify landing page (the editor) - Add various html and session blocks
+        //authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(testLandingPage.name)
         testLandingPage.blocks.forEach((block)=>{
             authoring.vex.addAdvancedBlock(block)
             cy.get(authoring.vex.pages.blockContainer).eq(0).click() // This makes the add block button reappear
         })
+
+        // Remove one of the blocks 
+        authoring.vex.removeBlock("p:contains('Delete me')") // method contains assertion
+
+        // Reorder the blocks and verify 
+        authoring.vex.moveBlock(`h1:contains('${firstBlockText}')`, "up")
+        cy.get(authoring.vex.pages.blockContainer).eq(0).should('contain', firstBlockText)
+        cy.get(authoring.vex.pages.blockContainer).eq(1).should('contain', sessionGroupA.name)
         cy.contains("button", "Save").click()
-        
 
-        // Add to navigation then visit it on consumption 
+        // Visit it on consumption 
 
-        // Set as home page and view it 
+        // Go back to authoring, set landing page as the home page and verify on consumption 
 
 
     })
