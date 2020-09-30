@@ -1046,6 +1046,18 @@ export class Vex extends Common {
         }
     }
 
+    setToHomePage(page){
+        cy.containsExact(this.antCell, page).siblings("td:contains('Set as Home Page')").within(()=>{
+            cy.contains("button", "Set as Home Page").click()
+        })
+    }
+
+    unsetHomePage(page){
+        cy.containsExact(this.antCell, page).siblings("td:contains('Unset')").within(()=>{
+            cy.contains("button", "Unset").click()
+        })
+    }
+
     goToPageEditor(page){
         cy.containsExact(this.antCell, page).siblings(`td:contains('Modify Page')`).within(()=>{
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{

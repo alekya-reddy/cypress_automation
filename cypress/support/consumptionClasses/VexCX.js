@@ -81,10 +81,13 @@ export class VexCX extends CommonCX {
             messageInput: "textarea[name='msg']",
             moderatorViewButton: "button:contains('Open Moderator View')"
         };
+        this.landingPage = {
+            block: ".pf-html-block"
+        };
         this.messages = {
             maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached.",
             blacklisted: "You are no longer eligible to access this event. Please contact your event administrator for more information"
-        }
+        };
     }
 
     expectZoom(){
@@ -141,5 +144,97 @@ export class VexCX extends CommonCX {
             cy.contains(message).should('exist')
             cy.contains(user).should("exist")
         })
+    }
+
+    verifyLandingPageBlock(config){
+        // This should be the same config object as the one passed into authoring method 'addAdvancedBlock'
+        const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
+        const typography = config.typography // this has sub options color, textAlign // color: {r, g, b} is the only format that will be checked - hex not checked 
+        const className = config.className // Required to locate html block
+        const sessionGroup = config.sessionGroup
+        const expectSessions = config.expectSessions
+        const expectNoSessions = config.expectNoSessions
+        const heading = config.heading // this has sub options color, textAlign
+        const background = config.background // this has several sub options 
+        const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+
+        if(className && !sessionGroup){
+            let locator = `.${className}`
+            cy.get(locator).invoke("attr", "style").then((style)=>{
+                if(typography && typography.textAlign){
+                    expect(style).to.include(`text-align: ${typography.textAlign}`)
+                }
+                if(typography && typography.color && !typography.color.hex){
+                    expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+                }
+                if(background && background.color && !background.color.hex){
+                    expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+                }
+                if(background && background.image.url){
+                    expect(style).to.include(`background-image: url("${background.image.url}")`)
+                }
+                if(background && background.position){
+                    expect(style).to.include(`background-position: center ${background.position}`)
+                }
+                if(background && background.size){
+                    expect(style).to.include(`background-size: ${background.size}`)
+                }
+                if(spacing){
+                    expect(style).to.include(`padding: ${spacing}`)
+                }
+            })
+            if(checkContent && checkContent.text){
+                checkContent.text.forEach((text)=>{
+                    cy.contains(locator, text).should("exist")
+                })
+            }
+            if(checkContent && checkContent.locators){
+                checkContent.locators.forEach((checkLocator)=>{
+                    cy.get(locator).within(()=>{
+                        cy.get(checkLocator).should("exist")
+                    })
+                })
+            }
+        }
+        
+        if(sessionGroup){ // session group blocks have to be checked entirely different way
+            let blockLocator = this.sessionGroup
+            if(heading){
+                cy.contains(blockLocator, sessionGroup).within(()=>{
+                    if(heading.color && !heading.color.hex){
+                        cy.get("h4").should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
+                    }
+                    if(heading.textAlign){
+                        cy.get("h4").should("have.css", 'text-align', heading.textAlign)
+                    }
+                })
+            }
+            if(expectSessions){
+                expectSessions.forEach((session)=>{
+                    cy.contains(this.sessionCardTitle, session).should('exist')
+                })
+            }
+            if(expectNoSessions){
+                expectNoSessions.forEach((session)=>{
+                    cy.contains(this.sessionCardTitle, session).should("not.exist")
+                })
+            }
+            if(background && background.color && !background.color.hex){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+            }
+            if(background && background.image.url){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-image", `url("${background.image.url}")`)
+            }
+            if(background && background.position){
+                let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
+            }
+            if(background && background.size){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "background-size", background.size)
+            }
+            if(spacing){
+                cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
+            }
+        }
     }
 }

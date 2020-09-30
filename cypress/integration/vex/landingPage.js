@@ -76,6 +76,8 @@ const testLandingPage = {
         {
             type: "Session Group",
             sessionGroup: sessionGroupA.name,
+            expectSessions: [publicSession.name],
+            expectNoSessions: [privateSession.name],
             heading: {
                 color: {r: "0", g: "255", b: "255"},
                 textAlign: 'center'
@@ -155,7 +157,6 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.deleteLandingPages("Delete me")
 
         // Modify landing page (the editor) - Add various html and session blocks
-        //authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(testLandingPage.name)
         testLandingPage.blocks.forEach((block)=>{
             authoring.vex.addAdvancedBlock(block)
@@ -172,9 +173,28 @@ describe("VEX - Landing Page Editor", ()=>{
         cy.contains("button", "Save").click()
 
         // Visit it on consumption 
+        cy.visit(testLandingPage.url)
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
+        cy.contains(consumption.vex.landingPage.block, "Delete me").should("not.exist")
 
-        // Go back to authoring, set landing page as the home page and verify on consumption 
+        // Go back to authoring, set landing page as the home page  
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.setToHomePage(testLandingPage.name)
+        cy.wait(1000)
 
+        // Verify landing page is home page on consumption
+        cy.visit(event.url)
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
 
+        // Unset the homepage and verify and consumption
+        cy.go("back")
+        authoring.vex.unsetHomePage(testLandingPage.name)
+        cy.wait(1000)
+        cy.visit(event.url)
+        cy.get(consumption.vex.landingPage.block).should("not.exist")
     })
 })

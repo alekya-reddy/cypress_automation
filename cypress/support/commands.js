@@ -298,7 +298,7 @@ Cypress.Commands.add("assertWebhook", (config)=>{
     })
 })
 
-Cypress.Commands.add("closeSession", (config)=>{
+Cypress.Commands.add("closeSession", (config ={})=>{
     const failOnStatusCode = config.failOnStatusCode == false ? false : true 
     const retryOnNetworkFailure = config.retryOnNetworkFailure == true ? true : false // Set retry to false by default (otherwise can get broken sessions)
     cy.request({
