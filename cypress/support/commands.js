@@ -384,5 +384,24 @@ Cypress.Commands.add("drag", { prevSubject: 'element'}, (subject, options)=>{
     })
 })
 
+Cypress.Commands.add("waitFor", (options)=>{
+    // Use this if you want to wait for element to exist or not exist WITHOUT failing if times out
+    const element = options.element
+    const to = options.to // 'exist' or 'not.exist' 
+    const wait = Number.isInteger(options.wait) ? options.wait : 2000 // time to wait in milliseconds
 
-  
+    cy.log(wait)
+
+    if(wait > 0 && to == 'exist' && Cypress.$(element).length == 0){
+        options.wait = wait - 500
+        cy.wait(500, {log: false})
+        cy.waitFor(options)
+    }
+
+    if(wait > 0 && to == 'not.exist' && Cypress.$(element).length > 0){
+        options.wait = wait - 500
+        cy.wait(500, {log: false})
+        cy.waitFor(options)
+    }
+
+})
