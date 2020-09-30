@@ -112,7 +112,7 @@ export class ContentLibrary extends Common{
             element: this.urlCell,
             text: url.replace(/^https?\:\/\//i, "")
         })
-        cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, "")).should('exist', {timeout: 5000})
+        cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
     }
 
     sideBarEdit(config){

@@ -43,10 +43,7 @@ export class Widgets extends Common {
         let newName = config.newName 
         let newCode = config.newCode
 
-        this.visit()
-        cy.containsExact(this.table.cellName, name).click()
-        cy.contains(this.previewSideBar, name).should('exist')
-
+        this.openWidgetPreview(name)
         if(newName){
             cy.get(this.widgetPreviewName).click().within(()=>{
                 cy.get(this.widgetNameInput).clear().type(newName)
@@ -70,19 +67,24 @@ export class Widgets extends Common {
     deleteWidgets(list){
         let widgets = [list].flat() 
 
-        this.visit()
         widgets.forEach((widget)=>{
             cy.ifElementWithExactTextExists(this.table.cellName, widget, 1500, ()=>{
-                cy.containsExact(this.table.cellName, widget).click()
-            cy.contains(this.previewSideBar, widget).should('exist').within(()=>{
-                cy.get(this.deleteWidgetIcon).click()
+                this.openWidgetPreview(widget)
+                cy.contains(this.previewSideBar, widget).should('exist').within(()=>{
+                    cy.get(this.deleteWidgetIcon).click()
+                })
+                cy.contains(this.modal, "Delete Widget?").within(()=>{
+                    cy.contains("button", "Delete Widget").click()
+                })
             })
-            cy.contains(this.modal, "Delete Widget?").within(()=>{
-                cy.contains("button", "Delete Widget").click()
-            })
-        })
+            cy.ifNoElementWithExactTextExists(this.modal, "Delete Widget?", 10000, ()=>{}) // This just smart-waits for modal to disappear
+            cy.ifNoElementWithExactTextExists(this.table.cellName, widget, 10000, ()=>{}) // This just smart-waits for widget to disappear
             cy.containsExact(this.table.cellName, widget).should("not.exist")
         })
+    }
+
+    openWidgetPreview(widget){
+        cy.angryClick({clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgetPreviewName}:contains('${widget}')`})
     }
 
 }

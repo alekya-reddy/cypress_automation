@@ -321,8 +321,8 @@ export class Vex extends Common {
         cy.get(this.antModalContent).within(()=>{ // must use arrow function notation or will lose 'this' context 
             cy.get(this.addSessionButton).click();
         })
-        cy.get(this.antModalContent).should("not.be.visible", {timeout: 20000})
-        cy.get(this.antCardBody).contains(this.sessionCardTitle, sessionName).should('exist');
+        cy.get(this.antModalContent).should("not.be.visible")
+        cy.get(this.antCardBody).contains(this.sessionCardTitle, sessionName, {timeout: 10000}).should('exist');
     }
 
     removeSession(sessionName){
@@ -838,7 +838,8 @@ export class Vex extends Common {
                 })
             })
             if(verify){
-                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist', {timeout: 20000})    
+                cy.ifNoElementWithExactTextExists(this.navigation.navTitle, navItem, 10000, ()=>{}) // This just waits for element to not exist
+                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
             }
         })
     }
