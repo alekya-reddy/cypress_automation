@@ -935,7 +935,7 @@ export class Vex extends Common {
         cy.containsExact("span", email.toLowerCase(), {timeout: 10000}).parent().within(()=>{
             cy.contains("button", "Edit").click()
         })
-        cy.contains(this.antModal + ":visible", "Edit Moderator").within(()=>{  // Each email opens up its own modal!!!! Cypress does automatically only pick the visible ones!!!
+        cy.contains(this.antModal + ":visible", "Edit Email").within(()=>{  // Each email opens up its own modal!!!! Cypress does automatically only pick the visible ones!!!
             cy.get(this.blacklist.emailInput).clear().type(newEmail)
             cy.contains("button", "Submit").click()
         })
