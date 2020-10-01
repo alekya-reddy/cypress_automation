@@ -838,7 +838,7 @@ export class Vex extends Common {
                 })
             })
             if(verify){
-                cy.ifNoElementWithExactTextExists(this.navigation.navTitle, navItem, 10000, ()=>{}) // This just waits for element to not exist
+                cy.waitFor({element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000})
                 cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
             }
         })

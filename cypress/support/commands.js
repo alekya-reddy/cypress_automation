@@ -390,8 +390,6 @@ Cypress.Commands.add("waitFor", (options)=>{
     const to = options.to // 'exist' or 'not.exist' 
     const wait = Number.isInteger(options.wait) ? options.wait : 2000 // time to wait in milliseconds
 
-    cy.log(wait)
-
     if(wait > 0 && to == 'exist' && Cypress.$(element).length == 0){
         options.wait = wait - 500
         cy.wait(500, {log: false})

@@ -16,6 +16,22 @@ const event = {
     }
 }
 
+const session = {
+    name: 'Youtube',
+    slug: 'youtube',
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'On Demand',
+    video: 'Youtube - Used in Cypress automation for VEX testing',
+    contents: [
+        'Image - Used by Cypress automation for VEX testing',
+        'PDF - Used by Cypress automation for VEX testing',
+        'Website - Used by Cypress automation for VEX testing'
+    ]
+}
+
 // Test the appearance set up area. For now, this test is deliberately sparse because this area will likely change a lot soon 
 describe('VEX - Virtual Event', function() {
     it('Test appearance configuration UI on authoring side', function() {

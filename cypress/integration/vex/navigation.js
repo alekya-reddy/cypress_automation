@@ -268,9 +268,9 @@ describe("VEX - Navigation Builder", ()=>{
         cy.go("back")
 
         // Remove all remaining nav items
-        nav1.forEach((navItem)=>{
-            authoring.vex.deleteNavItems(navItem.label, true)
-        })
+        cy.waitFor({element: `${authoring.vex.navigation.navTitle}:contains('${nav1[0].label}')`, to: "exist", wait: 10000})
+        authoring.vex.deleteNavItems(nav1[0].label, true) // Just want to do 1 nav item deletion that verifies it is deleted - the rest can be cleared en-masse without checking
+        authoring.vex.deleteAllNavItems()
 
         // Add bunch of text links
         nav2.forEach((navItem)=>{
