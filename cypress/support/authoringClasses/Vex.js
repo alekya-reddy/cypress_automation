@@ -681,7 +681,7 @@ export class Vex extends Common {
         cy.url().then((url)=>{
             // If not already in the session groups page, go there
             if(!url.includes("/session-groups")){
-                cy.containsExact("a", "Session Groups").click()
+                cy.containsExact("a", "Session Groups", {timeout: 20000}).click()
             }
         })
     }
@@ -716,7 +716,7 @@ export class Vex extends Common {
         let sessions = [config.sessions].flat() // You can enter either 1 session or an array of sessions 
 
         // Select the correct group
-        cy.contains(this.groupRow, group).within(()=>{
+        cy.contains(this.groupRow, group, {timeout: 10000}).within(()=>{
             cy.contains("button", "Manage Sessions").click()
         })
 
@@ -765,6 +765,7 @@ export class Vex extends Common {
                 cy.contains("button", "Yes").click()
             })
         })
+        cy.waitFor({element: `span:contains('${name}')`, to: "not.exist", wait: 10000})
         cy.containsExact("span", name).should("not.exist")
     }
 
@@ -1259,6 +1260,7 @@ export class Vex extends Common {
         }
         if(verify !== false && sessionGroup){ // session group blocks have to be checked entirely different way
             let blockLocator = this.pages.sessionGroupRow
+            cy.contains(blockLocator, sessionGroup).should("exist")
             if(heading){
                 cy.contains(blockLocator, sessionGroup).within(()=>{
                     if(heading.color && !heading.color.hex){
@@ -1291,6 +1293,13 @@ export class Vex extends Common {
     removeBlock(locator){
         // Must first navigate to the landing page editor 
         // locator should be something specific to the block 
+        // The blocks are shifty, getting attached, detached, then reattached to dom
+        // There is case where Cypress finds the block, but when it tries to interact with it, block has been detached and reattached
+        // Cypress not smart enough to requery for the same block, and instead tries to click the previously found block that has been detached 
+        // Hence, need to wait for DOM to settle before interacting with it
+        cy.get(locator).should("exist")
+        cy.waitFor({element: locator, to: "not.exist", wait: 1000})
+        cy.get(locator).should('exist')
         cy.get(locator).parents(this.pages.blockContainer).click() // this selects the block and makes the menu appear
         cy.get(locator).parents(this.pages.blockContainer).within(()=>{
             cy.get(this.pages.menuBlock).eq(4).click() // This opens up the block editor modal 

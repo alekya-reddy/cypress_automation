@@ -34,12 +34,4 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         expect(text_regex.test(name)).to.be.true
     })
 
-    /*it("test", ()=>{
-        //cy.visit("https://automation-vex.lookbookhq.com/vexwebhooks-js/?foo=bar&utm_source=source")
-        cy.visit("https://content-upload-test2-.glitch.me/")
-        cy.waitFor({element: "#test", to: "exist", wait: 10000})
-        cy.log("now wait for it to not exist")
-        cy.waitFor({element: "#test", to: "not.exist", wait: 10000})
-    })*/
-
 })
