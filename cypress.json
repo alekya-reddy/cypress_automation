@@ -1,6 +1,6 @@
  {
     "env": {
-        "TEST_ENV": "qa"
+        "TEST_ENV": "prod"
     },
     "video": false,
     "chromeWebSecurity": false
