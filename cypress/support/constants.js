@@ -3,12 +3,14 @@ export const constants = {
     TEST_ENV: Cypress.env('TEST_ENV'),
     envList: {
         qa: "qa",
+        qa2: 'qa2',
         staging: "staging",
         prod: "prod"
     },
     domain: {
         lookbookhq: {
             qa: "qa.lookbookhq.com",
+            qa2: "qa-pathfactory.com",
             staging: "staging2.lookbookhq.com",
             prod: "lookbookhq.com"
         },
