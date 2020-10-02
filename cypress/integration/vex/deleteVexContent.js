@@ -31,17 +31,22 @@ const session = {
 describe('VEX - Virtual Event', function() {
 
     it('Verify that deleting content associated with VEX does not result in internal server error', function() {
-        // Clean up - delete previously added event and contents 
-        authoring.common.login();
-        authoring.vex.deleteVirtualEvent(event);
-        authoring.contentLibrary.deleteContentByUrl({urls: [contents[0].url, contents[1].url]})
+        authoring.common.login()
 
-        // Add content 
+        // Clean up - delete previously contents as they might have been left in altered state, leading to inconsistency + flakiness 
+        contents.forEach((content)=>{
+            authoring.contentLibrary.delete({url: content.url, wait: 2000})
+        })
+
+        // Add content back in correct state 
         contents.forEach((content)=>{
             authoring.contentLibrary.addContentByUrl(content)
         })
+
+        // Delete the event to clear out any bad state
+        authoring.vex.deleteVirtualEvent(event)
         
-        // Add event, add sessions to it
+        // Add event back and add sessions to it
         authoring.vex.visit();
         authoring.vex.addVirtualEvent(event);
         authoring.vex.goToEventConfig(event);
@@ -52,7 +57,7 @@ describe('VEX - Virtual Event', function() {
 
         // Return to content library and should be able to delete the supplemental content used in VEX
         authoring.contentLibrary.visit()
-        authoring.contentLibrary.deleteContent(contents[0].internalTitle) 
+        authoring.contentLibrary.delete({internalTitle: contents[0].internalTitle})
 
         // Verify content used as a VEX video can be edited (specifically public title, internal title, description, slug, thumbnail - there was a bug where could not edit) 
         authoring.contentLibrary.sideBarEdit({
@@ -68,7 +73,7 @@ describe('VEX - Virtual Event', function() {
         })
         
         // Verify content currently used as a VEX video cannot be deleted 
-        authoring.contentLibrary.deleteContentByUrl({urls: [contents[1].url], verifyDeleted: false})
+        authoring.contentLibrary.delete({url: contents[1].url, verify: false})
         cy.contains(authoring.contentLibrary.antNotification, `Different internal title cannot be deleted as it is used in the following Virtual Event Session: ${session.name}`).should('exist')
         cy.containsExact(authoring.contentLibrary.internalTitleCell, 'Different internal title').should('exist')
 
@@ -81,7 +86,7 @@ describe('VEX - Virtual Event', function() {
         // Now remove the session and verify that video can now be deleted from content library
         cy.contains('a', event).click()
         authoring.vex.removeSession(session.name)
-        authoring.contentLibrary.deleteContentByUrl({urls:[contents[1].url]})
+        authoring.contentLibrary.delete({url: contents[1].url})
 
         // Now add the video back as well as the session, then delete the event, and make sure video can be deleted 
         cy.reload()
@@ -95,8 +100,8 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event)
         authoring.contentLibrary.visit()
-        authoring.contentLibrary.deleteContent(contents[0].internalTitle) 
-        authoring.contentLibrary.deleteContent(contents[1].internalTitle)
+        authoring.contentLibrary.delete({internalTitle: contents[0].internalTitle}) 
+        authoring.contentLibrary.delete({internalTitle: contents[1].internalTitle})
 
     })
 })

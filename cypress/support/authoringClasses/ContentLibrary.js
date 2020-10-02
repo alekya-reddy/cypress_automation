@@ -36,62 +36,57 @@ export class ContentLibrary extends Common{
         cy.visit(this.pageUrl);
     }
 
-    searchAndClickContent(content){
-        cy.get(this.contentSearchInput).clear().type(content)
-        cy.get(this.internalTitleCell, {timeout: 20000}) // This forces a smart-wait for the contents to load 
-        cy.ifElementWithExactTextExists(this.internalTitleCell, content, 500, () => {
-            cy.containsExact(this.internalTitleCell, content).click()
-        })
-        cy.get(this.clearSearchIcon).click()
+    openPreview(config){
+        const internalTitle = config.internalTitle
+        const url = config.url 
+        const wait = config.wait ? config.wait : 20000
+
+        cy.get(this.pageTitleLocator).click() // In case preview of the content already open, this will close it
+        if(internalTitle){
+            cy.get(this.contentSearchInput, {timeout: 20000}).clear().type(internalTitle)
+            cy.ifElementWithExactTextExists(this.internalTitleCell, internalTitle, wait, ()=>{
+                cy.containsExact(this.internalTitleCell, internalTitle, {timeout: 20000}).click()
+                cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
+                config.contentExists = true // This allows you to check the config object if element exists or not 
+            })
+            cy.get(this.clearSearchIcon).click()
+        } else if(url){
+            let url_no_protocol = url.replace(/^https?:\/\//,'')
+            cy.get(this.urlCell, {timeout: 20000}).should('exist') // Wait for cells to load before scrolling 
+            cy.scrollWithin({
+                scroller: this.scrollableTable,
+                find: `a[href='${url}']`,
+                increment: 5 // This needs to be calibrated correctly. Too small, and it'll crawl too slowly. Too fast, and it'll skip over contents
+            })
+            cy.ifElementWithExactTextExists(this.urlCell, url_no_protocol, wait, ()=>{
+                cy.containsExact(this.urlCell, url_no_protocol).siblings(this.internalTitleCell).click()
+                cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
+                config.contentExists = true
+            })
+        }
     }
 
-    deleteContent(title, callback = false){
-        // If you expect content deletion to fail, pass in callback to handle what to do in that event 
+    delete(config){
+        const internalTitle = config.internalTitle
+        const url = config.url 
+        const verify = config.verify
 
         this.goToPage(this.pageTitle, this.pageUrl)
-        cy.get(this.contentSearchInput).clear().type(title)
-        cy.get(this.internalTitleCell, {timeout: 20000}) // This forces a smart-wait for the contents to load 
-        cy.ifElementWithExactTextExists(this.internalTitleCell, title, 500, () => {
-            cy.ifNoElementWithExactTextExists(this.sideBarElements.internalTitle, title, 500, ()=>{
-                cy.containsExact(this.internalTitleCell, title).click()
-            })
-            cy.get(this.previewSideBar).within(()=>{
-                cy.get(this.deleteIcon).click()
-            })
-            cy.get(this.deleteContentButton).click()
-            if(callback){
-                callback();
-                return;
+        this.openPreview(config) // the openPreview method will add property contentExists 
+        cy.get("body").then(()=>{
+            if(config.contentExists){
+                cy.get(this.deleteIcon, {timeout: 5000}).click()
+                cy.get(this.deleteContentButton, {timeout: 5000}).click()
             }
         })
-        cy.ifNoElementWithExactTextExists(this.internalTitleCell, title, 10000, ()=>{}) // This just does a smart wait for content to disappear 
-        cy.containsExact(this.internalTitleCell, title).should('not.exist')
-        cy.get(this.clearSearchIcon).click()
-    }
-
-    deleteContentByUrl(config){
-        let urls = [config.urls].flat() 
-        let verifyDeleted = config.verifyDeleted == false ? false : true
-
-        this.goToPage(this.pageTitle, this.pageUrl)
-        cy.reload()
-        cy.scrollIntoViewWithin({
-            scroller: this.scrollableTable,
-            increment: 10
-        })
-        urls.forEach((url)=>{
+        if(verify !== false && url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
-            cy.ifElementWithExactTextExists(this.urlCell, url_no_protocol, 500, () => {
-                cy.containsExact(this.urlCell, url_no_protocol).siblings(this.internalTitleCell).click()
-                cy.get(this.previewSideBar).within(()=>{
-                    cy.get(this.deleteIcon).click()
-                })
-                cy.get(this.deleteContentButton).click()
-                if(verifyDeleted) {
-                    cy.containsExact(this.urlCell, url_no_protocol).should('not.exist')
-                }
-            })
-        })
+            cy.waitFor({element: `a[href="${url}"]`, to: "not.exist", wait: 20000})
+            cy.containsExact(this.urlCell, url_no_protocol).should("not.exist")
+        } else if (verify !== false && internalTitle){
+            cy.ifNoElementWithExactTextExists(this.internalTitleCell, internalTitle, 10000, ()=>{}) // waits for content to disappear... could use waitFor, but that doesn't check exact text
+            cy.containsExact(this.internalTitleCell, internalTitle).should("not.exist")
+        }
     }
 
     addContentByUrl(config){
@@ -131,7 +126,7 @@ export class ContentLibrary extends Common{
         const engagementTime = config.engagementTime
         const engagementScore = config.engagementScore
 
-        this.searchAndClickContent(search)
+        this.openPreview({internalTitle: search})
         cy.contains(this.previewSideBar, search).should('exist') 
         if(thumbnail){
             cy.get(this.sideBarElements.thumbnail).click()

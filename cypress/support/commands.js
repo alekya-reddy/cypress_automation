@@ -228,6 +228,27 @@ Cypress.Commands.add("scrollIntoViewWithin", (config)=>{
     }
 })
 
+Cypress.Commands.add("scrollWithin", (config)=>{
+    const direction = config.direction || 'y' // y for vertical scroll top to bottom, x for horizontal scroll left to right
+    const scroller = config.scroller // The scrollable element 
+    const find = config.find // The element you are looking for within the scrollable element
+    const increment = config.increment || 10 // The % of the total scroll you want to scroll by with each loop 
+
+    // Do not put anything in here - internal use by function only
+    const position = isNaN(config.position) ? 0 : config.position
+    const positionX = direction == 'x' ? position : 0
+    const positionY = direction == 'y' ? position : 0
+
+    if(position <= 100){
+        cy.wait(100, {log: false})
+        cy.get(scroller, {log: false, timeout: 20000}).scrollTo(`${positionX}%`, `${positionY}%`, {log: false})
+        config.position = position + increment
+        if(find && Cypress.$(find).length > 0) { cy.log("FOUND IT!!!"); return } // Break out of loop if find what you're look for 
+        cy.scrollWithin(config)
+    }
+
+})
+
 Cypress.Commands.add("angryClick", (config)=>{
     // Sometimes, our application requires multiple clicks to get something to work, but not when doing this manually 
     const clickElement = config.clickElement // The element you want clicked
@@ -403,3 +424,5 @@ Cypress.Commands.add("waitFor", (options)=>{
     }
 
 })
+
+

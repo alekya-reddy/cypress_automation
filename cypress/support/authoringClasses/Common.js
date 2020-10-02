@@ -33,8 +33,9 @@ export class Common {
         this.table = {
             // Table cell div data-qa-hooks are reused to often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name']",
-            cellCode: "div[data-qa-hook='table-cell-code']"
-        }
+            cellCode: "div[data-qa-hook='table-cell-code']",
+            urlCell: "div[data-qa-hook='table-cell-url']"
+        };
         this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.messages = {
             recordSaved: "The record was saved successfully",
