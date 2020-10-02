@@ -16,6 +16,7 @@ export const constants = {
         },
         pathfactory: {
             qa: "pathfactory-qa.com",
+            qa2: "qa-pathfactory.com",
             staging: "pathfactory-staging.com",
             prod: "pathfactory.com"
         }
