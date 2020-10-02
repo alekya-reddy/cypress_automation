@@ -17,7 +17,25 @@ export class ContentLibrary extends Common{
             internalTitleInput: "textarea[name='internalTitle']",
             slug: "div[data-qa-hook='preview-section-custom-url-slug']",
             slugInput: "#slug",
-            thumbnail: "#content-sidebar-thumbnail"
+            thumbnail: "#content-sidebar-thumbnail",
+            contentType: "div[data-qa-hook='preview-section-content-type']",
+            topics: "div[data-qa-hook='preview-section-topics']",
+            sourceUrl: "div[data-qa-hook='preview-section-source-url']",
+            funnelStage: "div[data-qa-hook='preview-section-funnel-stages']",
+            funnelStageCheckbox: "div[data-qa-hook='checkbox']",
+            estimatedCost: "div[data-qa-hook='preview-section-estimated-cost']",
+            estimatedCostInput: "#estimatedCost",
+            language: "div[data-qa-hook='preview-section-language']",
+            businessUnit: "div[data-qa-hook='preview-section-business-units']",
+            businessUnitCheckbox: "div[data-qa-hook='checkbox']",
+            expiry: "div[data-qa-hook='preview-section-expiry-date']",
+            expiryInput: "#expiryDate",
+            externalID: "div[data-qa-hook='preview-section-external-id']",
+            externalIDInput: "#externalId",
+            scoreThreshold: "div[data-qa-hook='preview-section-engagement-score']",
+            thresholdInput: "input[name='engagementThreshold']",
+            seoTitle: "#content-sidebar-seo-title",
+            seoTitleInput: "textarea[name='seoTitle']"
         };
         this.deleteContentButton = "button:contains('Delete Asset from Content Library')";
         this.addContentButton = "button:contains('Add Content')";
@@ -40,6 +58,7 @@ export class ContentLibrary extends Common{
         const internalTitle = config.internalTitle
         const url = config.url 
         const wait = config.wait ? config.wait : 20000
+        const noScroll = config.noScroll
 
         cy.get(this.pageTitleLocator).click() // In case preview of the content already open, this will close it
         if(internalTitle){
@@ -53,11 +72,13 @@ export class ContentLibrary extends Common{
         } else if(url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
             cy.get(this.urlCell, {timeout: 20000}).should('exist') // Wait for cells to load before scrolling 
-            cy.scrollWithin({
-                scroller: this.scrollableTable,
-                find: `a[href='${url}']`,
-                increment: 5 // This needs to be calibrated correctly. Too small, and it'll crawl too slowly. Too fast, and it'll skip over contents
-            })
+            if(!noScroll){
+                cy.scrollWithin({
+                    scroller: this.scrollableTable,
+                    find: `a[href='${url}']`,
+                    increment: 5 // This needs to be calibrated correctly. Too small, and it'll crawl too slowly. Too fast, and it'll skip over contents
+                })
+            }
             cy.ifElementWithExactTextExists(this.urlCell, url_no_protocol, wait, ()=>{
                 cy.containsExact(this.urlCell, url_no_protocol).siblings(this.internalTitleCell).click()
                 cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
@@ -98,7 +119,7 @@ export class ContentLibrary extends Common{
         cy.get(this.urlInput).type(url)
         cy.get(this.modal).contains('button', 'Add').click()
         cy.get(this.modal).within(()=>{
-            cy.get(this.internalTitleInput, {timeout: 10000}).clear().type(internalTitle)
+            cy.get(this.internalTitleInput, {timeout: 90000}).clear().type(internalTitle)
         })
         cy.contains('button', 'Done').click()
         cy.get(this.modal).should('not.exist', {timeout: 10000})
@@ -111,46 +132,47 @@ export class ContentLibrary extends Common{
     }
 
     sideBarEdit(config){
-        const search = config.search 
         const publicTitle = config.publicTitle
-        const internalTitle = config.internalTitle 
+        const internalTitle = config.internalTitle // Search key
+        const newInternalTitle = config.newInternalTitle 
         const description = config.description 
         const slug = config.slug 
         const thumbnail = config.thumbnail // requires fields "category" and "url" or "name", see function pickThumbnail in common class  
         const contentType = config.contentType
-        const topics = config.topics
-        const funnelStages = config.funnelStages
-        const businessUnits = config.businessUnits 
+        const topics = config.topics ? [config.topics].flat() : false
+        const funnelStages = config.funnelStages ? [config.funnelStages].flat() : false 
+        const businessUnits = config.businessUnits ? [config.businessUnits].flat() : false
         const externalID = config.externalID 
-        const url = config.url 
-        const engagementTime = config.engagementTime
-        const engagementScore = config.engagementScore
+        const url = config.url // Search key 
+        const newUrl = config.newUrl
+        const threshold = config.threshold
+        const score = config.score
+        const estimatedCost = config.estimatedCost
+        const language = config.language
+        const expiry = config.expiry  // requires object expiry: { m, d, y} - format text MM, DD, YYYY // format YYYY-MM-DD
+        const seoTitle = config.seoTitle
+        const verify = config.verify
 
-        this.openPreview({internalTitle: search})
-        cy.contains(this.previewSideBar, search).should('exist') 
+        if(internalTitle){
+            this.openPreview({internalTitle: internalTitle})
+        } else if(url){
+            this.openPreview({url: url})
+        }   
+
         if(thumbnail){
             cy.get(this.sideBarElements.thumbnail).click()
             this.pickThumbnail(thumbnail)
         }
+
         if(publicTitle){
             cy.get(this.sideBarElements.publicTitle).click()
             cy.get(this.sideBarElements.publicTitle).within(()=>{
                 cy.get(this.sideBarElements.publicTitleInput).clear().type(publicTitle)
                 cy.contains("button", "Save").click()
             })
-            cy.contains(this.sideBarElements.publicTitle, publicTitle).should('exist')
+            if(verify !== false) { cy.contains(this.sideBarElements.publicTitle, publicTitle).should('exist') }
         }
-        if(internalTitle){
-            cy.angryClick({
-                clickElement: this.sideBarElements.internalTitle,
-                checkElement: this.sideBarElements.internalTitleInput
-            })
-            cy.get(this.sideBarElements.internalTitle).within(()=>{
-                cy.get(this.sideBarElements.internalTitleInput).clear().type(internalTitle)
-                cy.contains("button", "Save").click()
-            })
-            cy.contains(this.sideBarElements.internalTitle, internalTitle).should('exist')
-        }
+
         if(description){
             cy.angryClick({
                 clickElement: this.sideBarElements.description,
@@ -160,8 +182,65 @@ export class ContentLibrary extends Common{
                 cy.get(this.sideBarElements.descriptionInput).clear().type(description)
                 cy.contains("button", "Save").click()
             })
-            cy.contains(this.sideBarElements.description, description).should('exist')
+            if(verify !== false) { cy.contains(this.sideBarElements.description, description).should('exist') }
         }
+
+        if(seoTitle){
+            cy.angryClick({
+                clickElement: this.sideBarElements.seoTitle,
+                checkElement: this.sideBarElements.seoTitleInput
+            })
+            cy.get(this.sideBarElements.seoTitle).within(()=>{
+                cy.get(this.sideBarElements.seoTitleInput).clear().type(seoTitle)
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains(seoTitle).should("exist") }
+            })
+        }
+
+        if(contentType){
+            cy.angryClick({
+                clickElement: this.sideBarElements.contentType,
+                checkElement: this.selectList
+            })
+            cy.get(this.sideBarElements.contentType).within(()=>{
+                cy.get(this.selectList).click()
+                cy.get(this.dropDownOption(contentType)).click()
+                cy.contains("button", "Save").click()
+                if(verify !== false) { cy.contains(contentType).should("exist") }
+            })
+        }
+
+        if(topics){
+            cy.angryClick({
+                clickElement: this.sideBarElements.topics,
+                checkElement: this.selectList
+            })
+            cy.get(this.sideBarElements.topics).within(()=>{
+                // First clear away the existing topics 
+                cy.get(".Select-value-icon").each((removeTopic)=>{
+                    cy.get(".Select-value-icon").eq(0).click()
+                })
+                // Now add the ones you want
+                topics.forEach((topic)=>{
+                    cy.get(this.selectList).click()
+                    cy.get(this.dropDownOption(topic)).click()
+                })
+                cy.contains("button", "Save").click()
+                if(verify !== false) { 
+                    topics.forEach((topic)=>{
+                        cy.contains(topic, {timeout: 10000}).should("exist") 
+                    })
+                }
+            })
+        }
+
+        if(newUrl){
+            cy.get(this.sideBarElements.sourceUrl).click()
+            cy.get(this.urlInput).clear().type(newUrl)
+            cy.get(this.modal).contains("button", "Add").click()
+            if(verify !== false) { cy.get(this.sideBarElements.sourceUrl, {timeout: 20000}).should("contain", newUrl) }
+        }
+
         if(slug){
             cy.angryClick({
                 clickElement: this.sideBarElements.slug,
@@ -174,7 +253,140 @@ export class ContentLibrary extends Common{
             cy.get(this.modal).within(()=>{
                 cy.contains("button", "Change").click()
             })
-            cy.contains(this.sideBarElements.slug, slug).should('exist')
+            if(verify !== false){
+                cy.contains(this.sideBarElements.slug, slug).should('exist')
+            }
+        }
+
+        if(newInternalTitle){
+            cy.angryClick({
+                clickElement: this.sideBarElements.internalTitle,
+                checkElement: this.sideBarElements.internalTitleInput
+            })
+            cy.get(this.sideBarElements.internalTitle).within(()=>{
+                cy.get(this.sideBarElements.internalTitleInput).clear().type(newInternalTitle)
+                cy.contains("button", "Save").click()
+            })
+            if(verify !== false){
+                cy.contains(this.sideBarElements.internalTitle, newInternalTitle).should('exist')
+            }
+        }
+
+        if(funnelStages){
+            cy.angryClick({
+                clickElement: this.sideBarElements.funnelStage,
+                checkElement: this.sideBarElements.funnelStageCheckbox
+            })
+            cy.get(this.sideBarElements.funnelStage).within(()=>{
+                // Need to uncheck any checked funnel stages first 
+                cy.get(this.sideBarElements.funnelStageCheckbox).each((checkbox)=>{
+                    cy.get(checkbox).invoke("attr", "class").then((checkboxClass)=>{
+                        if(!checkboxClass.includes("unchecked")){
+                            cy.get(checkbox).click()
+                        }
+                    })
+                })
+                // Then check the funnel stages you want 
+                funnelStages.forEach((funnelStage)=>{
+                    cy.contains(this.sideBarElements.funnelStageCheckbox, funnelStage).click()
+                })
+                cy.contains("button", "Save").click()
+                if(verify !== false){
+                    funnelStages.forEach((funnelStage)=>{
+                        cy.contains(funnelStage).should("exist")
+                    })
+                }
+            })
+        }
+
+        if(estimatedCost){
+            cy.angryClick({
+                clickElement: this.sideBarElements.estimatedCost,
+                checkElement: this.sideBarElements.estimatedCostInput
+            })
+            cy.get(this.sideBarElements.estimatedCost).within(()=>{
+                cy.get(this.sideBarElements.estimatedCostInput).clear().type(estimatedCost)
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains("div", estimatedCost).should("exist") }
+            })
+        }
+
+        if(language){
+            cy.angryClick({
+                clickElement: this.sideBarElements.language,
+                checkElement: this.selectList
+            })
+            cy.get(this.sideBarElements.language).within(()=>{
+                cy.get(this.selectList).click()
+                cy.get(this.dropDownOption(language)).click()
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains("div", language).should("exist") }
+            })
+        }
+
+        if(businessUnits){
+            cy.angryClick({
+                clickElement: this.sideBarElements.businessUnit,
+                checkElement: this.sideBarElements.businessUnitCheckbox
+            })
+            cy.get(this.sideBarElements.businessUnit).within(()=>{
+                // Need to uncheck any checked business units first 
+                cy.get(this.sideBarElements.businessUnitCheckbox).each((checkbox)=>{
+                    cy.get(checkbox).invoke("attr", "class").then((checkboxClass)=>{
+                        if(!checkboxClass.includes("unchecked")){
+                            cy.get(checkbox).click()
+                        }
+                    })
+                })
+                // Then check the business units you want 
+                businessUnits.forEach((businessUnit)=>{
+                    cy.contains(this.sideBarElements.businessUnitCheckbox, businessUnit).click()
+                })
+                cy.contains("button", "Save").click()
+                if(verify !== false){
+                    businessUnits.forEach((businessUnit)=>{
+                        cy.contains(businessUnit).should("exist")
+                    })
+                }
+            })
+        }
+
+        if(expiry){
+            cy.angryClick({
+                clickElement: this.sideBarElements.expiry,
+                checkElement: this.sideBarElements.expiryInput
+            })
+            cy.get(this.sideBarElements.expiry).within(()=>{
+                cy.get(this.sideBarElements.expiryInput).clear().type(expiry)
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains(expiry).should('exist') }
+            })
+        }
+
+        if(externalID){
+            cy.angryClick({
+                clickElement: this.sideBarElements.externalID,
+                checkElement: this.sideBarElements.externalIDInput
+            })
+            cy.get(this.sideBarElements.externalID).within(()=>{
+                cy.get(this.sideBarElements.externalIDInput).clear().type(externalID)
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains(externalID).should('exist') }
+            })
+        }
+
+        if(score && threshold){
+            cy.angryClick({
+                clickElement: this.sideBarElements.scoreThreshold,
+                checkElement: this.sideBarElements.thresholdInput
+            })
+            cy.get(this.sideBarElements.scoreThreshold).within(()=>{
+                cy.get(this.selectList).click()
+                cy.get(this.dropDownOption(score)).click()
+                cy.get(this.sideBarElements.thresholdInput).clear().type(threshold)
+                cy.contains("button", "Save").click()
+                if(verify !== false){ cy.contains(`Visitors given a score of ${score} when content viewed for ${threshold}s`).should("exist") }
+            })
         }
     }
 
