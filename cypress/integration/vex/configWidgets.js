@@ -11,7 +11,8 @@ const widget = {
 
 describe("Widget Configuration", ()=>{
     it("Test widget CRUD operations - Create, update, destroy", ()=>{
-        authoring.common.login()
+        cy.log("Widgets has been removed from authoring as it currently is being used anywhere")
+        /*authoring.common.login()
         authoring.widgets.visit()
         cy.contains(authoring.widgets.pageTitleLocator, authoring.widgets.pageTitle).should('exist')
         authoring.widgets.deleteWidgets([widget.name, widget.newName])
@@ -38,6 +39,6 @@ describe("Widget Configuration", ()=>{
         cy.contains("button", "Save").click()
         cy.contains("can't be blank").should('exist')
         cy.contains("button", "Cancel").click()
-        cy.get(authoring.widgets.widgetNameInput).should('not.exist')
+        cy.get(authoring.widgets.widgetNameInput).should('not.exist')*/
     })
 })
