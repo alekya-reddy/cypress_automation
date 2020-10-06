@@ -386,5 +386,7 @@ to pause for debugging, use cy.pause()
 Annoying Cypress Bugs
 -----------------------
 Any click event in the after block fails if one of the tests in an it block fails.
+There are others, of course... 
+
 
 
