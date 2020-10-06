@@ -5,6 +5,10 @@ import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
 import {Vex} from './authoringClasses/Vex.js';
 import {Configurations} from './authoringClasses/Configurations.js';
 import {Settings} from './authoringClasses/Settings.js';
+import {Target} from './authoringClasses/Target.js';
+import {Recommend} from './authoringClasses/Recommend.js';
+import {Explore} from './authoringClasses/Explore.js';
+import {Website} from './authoringClasses/Website.js';
 import {constants} from './constants.js';
 
 import { CommonCX } from './consumptionClasses/CommonCX.js';
@@ -35,7 +39,11 @@ export const createAuthoringInstance = function(config = {}){
             websiteTools: new WebsiteTools(env, org, tld, username, password, baseUrl),
             vex: new Vex(env, org, tld, username, password, baseUrl),
             configurations: new Configurations(env, org, tld, username, password, baseUrl),
-            settings: new Settings(env, org, tld, username, password, baseUrl)
+            settings: new Settings(env, org, tld, username, password, baseUrl),
+            target: new Target(env, org, tld, username, password, baseUrl),
+            recommend: new Recommend(env, org, tld, username, password, baseUrl),
+            explore: new Explore(env, org, tld, username, password, baseUrl),
+            website: new Website(env, org, tld, username, password, baseUrl)
         }
     );
 }
