@@ -87,13 +87,27 @@ With every commit to this repo, circleci will automatically detect that and re-r
 How the cypress repo is organized
 ---------------------------------
 
-Classes represent the different sections of our app (A 'section' is defined as any page or group of pages that is accessible via the same url path):
+Classes represent the different sections of our app (A 'section' is defined as any page or group of pages that is accessible via the same url route):
 -These classes will contain the links to various parts of the app (content library, settings, target etc)
 -These classes will contain the locators to various elements in the app
 -These classes will contain any text that we need to check against (like the page titles)
 -These classes will contain helper functions
 
 In essence, a class will contain locators, text, links and helper functions all in one file. 
+
+Here is a list of existing and planned classes and the part of the app that they represent (pretty self explanatory):
+- Common -> for any common elements/components present in 2 or more areas of our app (USE SPARINGLY - AVOID PUTTING THINGS HERE IF IN DOUBT)
+- Settings -> for organization settings (this includes settings, cookie consent, access protection... all of the tabs here)
+- ClientHQ -> for client hq 
+- UserManagement -> for user management 
+- ContentLibrary -> for content library
+- Vex -> for VEX
+- Target -> for target
+- Recommend -> for recommend
+- Explore -> for explore 
+- Website -> for website campaigns
+- WebsiteTools -> for website tools 
+- Configurations -> for any part of our app that is accessible via the gear icon (the configuration settings), including webhooks, access protection, image library etc
 
 To use these classes in a test file, build a new page object instance using these classes at beginning of each test file. You can leave blank parameters 
 if going with default values for username, login and org, or specific which org, username, password 

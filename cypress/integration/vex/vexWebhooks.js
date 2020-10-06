@@ -325,18 +325,18 @@ describe("VEX - Form Webhook", ()=>{
                     authoring.vex.configureSession(videoSession)
                     authoring.vex.backToEvent(event.name)
                     authoring.vex.configureSession(webexSession)
-                    authoring.webhooks.addWebhook(formWebhook)
-                    authoring.webhooks.configureWebhook(formWebhook)
-                    authoring.webhooks.addWebhook(sessionWebhook)
-                    authoring.webhooks.configureWebhook(sessionWebhook)
-                    authoring.webhooks.addWebhook(activityWebhook)
-                    authoring.webhooks.configureWebhook(activityWebhook)
+                    authoring.configurations.addWebhook(formWebhook)
+                    authoring.configurations.configureWebhook(formWebhook)
+                    authoring.configurations.addWebhook(sessionWebhook)
+                    authoring.configurations.configureWebhook(sessionWebhook)
+                    authoring.configurations.addWebhook(activityWebhook)
+                    authoring.configurations.configureWebhook(activityWebhook)
                 } else {
                     // Need to turn on before each test
                     authoring.common.login()
-                    authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "on"})
-                    authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "on"})
-                    authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "on"})
+                    authoring.configurations.configureWebhook({name: formWebhook.name, on_off: "on"})
+                    authoring.configurations.configureWebhook({name: sessionWebhook.name, on_off: "on"})
+                    authoring.configurations.configureWebhook({name: activityWebhook.name, on_off: "on"})
                 }
             })
             cy.clearWebhooks()
@@ -389,9 +389,9 @@ describe("VEX - Form Webhook", ()=>{
     it("Turn off webhook after each test to prevent other sessions from firing, which would clog up pipeline and cause test to fail from timing out", ()=>{
         if(Cypress.env('TEST_ENV') !== "prod"){
             authoring.common.login()
-            authoring.webhooks.configureWebhook({name: formWebhook.name, on_off: "off"})
-            authoring.webhooks.configureWebhook({name: sessionWebhook.name, on_off: "off"})
-            authoring.webhooks.configureWebhook({name: activityWebhook.name, on_off: "off"})
+            authoring.configurations.configureWebhook({name: formWebhook.name, on_off: "off"})
+            authoring.configurations.configureWebhook({name: sessionWebhook.name, on_off: "off"})
+            authoring.configurations.configureWebhook({name: activityWebhook.name, on_off: "off"})
         }
     })
 

@@ -1,10 +1,18 @@
 import { Common } from "./Common";
 
-export class Webhooks extends Common { 
+export class Configurations extends Common { 
     constructor(env, org, tld, userName, password, baseUrl){
         super(env, org, tld, userName, password, baseUrl);
-        this.pageUrl = `${this.baseUrl}/authoring/content-library/config/webhooks`;
-        this.pageTitle = "Webhooks Configuration";
+        this.configRoute = `${this.baseUrl}/authoring/content-library/config`;
+        this.pageUrls = {
+            webhooks: `${this.configRoute}/webhooks`
+        };
+        this.pageTitles = {
+            webhooks: "Webhooks Configuration"
+        };
+        this.visit = {
+            webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) }
+        };
         this.addWebhookModal = {
             name: "#name",
             url: "#url",
@@ -15,10 +23,16 @@ export class Webhooks extends Common {
             delete: "i[title='Delete Webhook']",
             eventFields: "div[data-qa-hook='preview-section-event-fields']"
         };
-    }
-
-    visit(){
-        cy.visit(this.pageUrl);
+        // The following are empty, but gives you an idea of how I want locators organized in this class 
+        this.appearances = {};
+        this.languages = {};
+        this.forms = {};
+        this.ctas = {};
+        this.imageLibrary = {};
+        this.contentTags = {};
+        this.accessProtection = {};
+        this.segments = {};
+        this.routes = {};
     }
 
     addWebhook(config){
@@ -27,7 +41,7 @@ export class Webhooks extends Common {
         const type = config.type // Get this from the dropdown options 
         let alreadyExists = false
 
-        this.goToPage(this.pageTitle, this.pageUrl)
+        this.goToPage(this.pageTitles.webhooks, this.pageUrls.webhooks)
         cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, ()=>{
             alreadyExists = true
         })
@@ -50,7 +64,7 @@ export class Webhooks extends Common {
     deleteWebhook(list){
         const webhooks = [list].flat() 
 
-        this.goToPage(this.pageTitle, this.pageUrl)
+        this.goToPage(this.pageTitles.webhooks, this.pageUrls.webhooks)
         webhooks.forEach((webhook)=>{
             cy.ifElementWithExactTextExists(this.table.cellName, webhook, 3000, ()=>{
                 cy.angryClick({
@@ -69,7 +83,7 @@ export class Webhooks extends Common {
         const on_off = config.on_off // should be 'on' or 'off'
         const eventFields = config.eventFields // object: key must be the exact text of the event field 
 
-        this.goToPage(this.pageTitle, this.pageUrl)
+        this.goToPage(this.pageTitles.webhooks, this.pageUrls.webhooks)
         cy.angryClick({
             clickElement: this.table.cellName + `:contains('${name}')`,
             checkElement: this.webhookPreview.name + `:contains('${name}')`

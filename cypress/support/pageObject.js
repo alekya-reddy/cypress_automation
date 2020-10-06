@@ -1,11 +1,10 @@
 import { Common } from './authoringClasses/Common.js'; 
 import {ContentLibrary} from './authoringClasses/ContentLibrary.js';
 import {ClientHQ} from './authoringClasses/ClientHQ.js';
-import {WebdomainSettings} from './authoringClasses/WebdomainSettings.js';
 import {WebsiteTools} from './authoringClasses/WebsiteTools.js';
 import {Vex} from './authoringClasses/Vex.js';
+import {Configurations} from './authoringClasses/Configurations.js';
 import {Widgets} from './authoringClasses/Widgets.js';
-import {Webhooks} from './authoringClasses/Webhooks.js';
 import {Settings} from './authoringClasses/Settings.js';
 import {constants} from './constants.js';
 
@@ -34,11 +33,10 @@ export const createAuthoringInstance = function(config = {}){
             common: new Common(env, org, tld, username, password, baseUrl),
             contentLibrary: new ContentLibrary(env, org, tld, username, password, baseUrl),
             clientHQ: new ClientHQ(env, org, tld, username, password, baseUrl),
-            webdomainSettings: new WebdomainSettings(env, org, tld, username, password, baseUrl),
             websiteTools: new WebsiteTools(env, org, tld, username, password, baseUrl),
             vex: new Vex(env, org, tld, username, password, baseUrl),
+            configurations: new Configurations(env, org, tld, username, password, baseUrl),
             widgets: new Widgets(env, org, tld, username, password, baseUrl),
-            webhooks: new Webhooks(env, org, tld, username, password, baseUrl),
             settings: new Settings(env, org, tld, username, password, baseUrl)
         }
     );
