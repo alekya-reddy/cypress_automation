@@ -95,7 +95,7 @@ Classes represent the different sections of our app (A 'section' is defined as a
 
 In essence, a class will contain locators, text, links and helper functions all in one file. 
 
-Here is a list of existing and planned classes and the part of the app that they represent (pretty self explanatory):
+Here is a list of existing and planned authoring classes and the part of the app that they represent (pretty self explanatory):
 - Common -> for any common elements/components present in 2 or more areas of our app (USE SPARINGLY - AVOID PUTTING THINGS HERE IF IN DOUBT)
 - Settings -> for organization settings (this includes settings, cookie consent, access protection... all of the tabs here)
 - ClientHQ -> for client hq 

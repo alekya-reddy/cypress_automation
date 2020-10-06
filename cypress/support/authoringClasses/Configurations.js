@@ -5,13 +5,16 @@ export class Configurations extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.configRoute = `${this.baseUrl}/authoring/content-library/config`;
         this.pageUrls = {
-            webhooks: `${this.configRoute}/webhooks`
+            webhooks: `${this.configRoute}/webhooks`,
+            widgets: `${this.configRoute}/widgets`
         };
         this.pageTitles = {
-            webhooks: "Webhooks Configuration"
+            webhooks: "Webhooks Configuration",
+            widgets: "Widgets Configuration"
         };
         this.visit = {
-            webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) }
+            webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
+            widgets: ()=>{ cy.visit(this.pageUrls.widgets) }
         };
         this.addWebhookModal = {
             name: "#name",
@@ -23,6 +26,12 @@ export class Configurations extends Common {
             delete: "i[title='Delete Webhook']",
             eventFields: "div[data-qa-hook='preview-section-event-fields']"
         };
+        this.widgets = {
+            nameInput: "#name",
+            codeEditor: "#code > textarea",
+            previewName: "div[data-qa-hook='preview-section-widget-name']",
+            deleteIcon: "i[title='Delete Widget']"
+        }
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {};
         this.languages = {};
@@ -35,6 +44,9 @@ export class Configurations extends Common {
         this.routes = {};
     }
 
+    /*********************************************************************************/
+    /********************************* WEBHOOKS **************************************/
+    /*********************************************************************************/
     addWebhook(config){
         const name = config.name
         const url = config.url // The endpoint api to send webhook events to
@@ -123,6 +135,81 @@ export class Configurations extends Common {
             })
             cy.contains("button", "Save").click()
         })
+    }
+
+    /*********************************************************************************/
+    /********************************* WIDGETS ***************************************/
+    /*********************************************************************************/
+    addWidget(config){
+        let name = config.name
+        let code = config.code
+        let checkSuccess = config.checkSuccess == false ? false : true 
+
+        cy.contains("button", "Add Widget").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.widgets.nameInput).clear().type(name)
+
+            if (code){
+                cy.get(this.widgets.codeEditor).type(code, {force: true})
+            }
+            cy.contains("button", "Add Widget").click() 
+        })
+        if(checkSuccess){
+            cy.get(this.modal).should("not.exist")
+            cy.containsExact(this.table.cellName, name).should('exist')
+            if(code){
+                cy.contains(this.table.cellCode, code).should('exist')
+            }
+        }
+    }
+
+    editWidget(config){
+        let name = config.name 
+        let newName = config.newName 
+        let newCode = config.newCode
+
+        this.openWidgetPreview(name)
+        if(newName){
+            cy.get(this.widgets.previewName).click().within(()=>{
+                cy.get(this.widgets.nameInput).clear().type(newName)
+                cy.contains("button", "Save").click()
+                cy.contains(newName).should("exist")
+            })
+            cy.containsExact(this.table.cellName, newName).should('exist')
+        }
+
+        if(newCode){
+            cy.get("code").click()
+            cy.contains(this.modal, "Update Widget").within(()=>{
+                cy.get(this.widgets.codeEditor).clear({force: true}).type(newCode, {force: true})
+                cy.contains("button", "Save Widget").click()
+            })
+            cy.get(this.modal).should('not.exist')
+            cy.contains(this.table.cellCode, newCode).should('exist')
+        }
+    }
+
+    deleteWidgets(list){
+        let widgets = [list].flat() 
+
+        widgets.forEach((widget)=>{
+            cy.ifElementWithExactTextExists(this.table.cellName, widget, 1500, ()=>{
+                this.openWidgetPreview(widget)
+                cy.contains(this.previewSideBar, widget).should('exist').within(()=>{
+                    cy.get(this.widgets.deleteIcon).click()
+                })
+                cy.contains(this.modal, "Delete Widget?").within(()=>{
+                    cy.contains("button", "Delete Widget").click()
+                })
+            })
+            cy.ifNoElementWithExactTextExists(this.modal, "Delete Widget?", 10000, ()=>{}) // This just smart-waits for modal to disappear
+            cy.ifNoElementWithExactTextExists(this.table.cellName, widget, 10000, ()=>{}) // This just smart-waits for widget to disappear
+            cy.containsExact(this.table.cellName, widget).should("not.exist")
+        })
+    }
+
+    openWidgetPreview(widget){
+        cy.angryClick({clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgets.previewName}:contains('${widget}')`})
     }
 
 }
