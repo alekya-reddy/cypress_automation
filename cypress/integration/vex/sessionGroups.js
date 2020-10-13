@@ -137,7 +137,7 @@ describe('VEX - Sessions Groups', function() {
 
         // Go to consumption and verify that, without any session groups, the default groups are "Agenda" and "On demand"
         cy.visit(event.url)
-        cy.contains("h4", "Agenda").should('exist')
+        cy.contains("h4", "Agenda", {timeout: 50000}).should('exist')
         cy.contains("h4", "On Demand Sessions").should('exist')
 
         // Add the groups back 
@@ -184,7 +184,7 @@ describe('VEX - Sessions Groups', function() {
 
         // Go to consumption and verify that the sessions are grouped correctly 
         cy.visit(event.url)
-        cy.contains(consumption.vex.sessionGroup, groupA.name).should('exist').within(()=>{
+        cy.contains(consumption.vex.sessionGroup, groupA.name, {timeout: 50000}).should('exist').within(()=>{
             let noOfSessions = groupA.sessions.length - groupA.notExpected.length
             cy.get(consumption.vex.sessionCardTitle).should("have.length", noOfSessions)
             groupA.sessions.forEach((session)=>{
@@ -210,6 +210,7 @@ describe('VEX - Sessions Groups', function() {
     })
 
     it("Test all the cancel buttons within the session group page, and test the input field error validations", ()=>{
+        cy.clearCookies() // 1 in 3 runs, Cypress doesn't clear cookies between it functions, so make sure it gets done here
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)

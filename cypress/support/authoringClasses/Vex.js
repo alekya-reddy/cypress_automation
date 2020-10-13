@@ -708,7 +708,7 @@ export class Vex extends Common {
             cy.get(this.groupNameInput).clear().type(newName) 
             cy.contains("button", "Submit").click()
         })  
-        cy.containsExact("span", newName).should("exist")     
+        cy.containsExact("span", newName, {timeout: 20000}).should("exist")     
     }
 
     addToGroup(config){
