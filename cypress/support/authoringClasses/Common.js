@@ -79,7 +79,7 @@ export class Common {
     }
 
     toggle(toggleLocator, on_off){
-        cy.get(toggleLocator).invoke("text").then((toggleText)=>{
+        cy.get(toggleLocator, {timeout: 20000}).invoke("text").then((toggleText)=>{
             cy.log(toggleText.toUpperCase() == "ONOFF")
             if( ["ON", "OFF"].includes(toggleText.toUpperCase()) && toggleText.toUpperCase() !== on_off.toUpperCase()){
                 cy.get(toggleLocator).click()

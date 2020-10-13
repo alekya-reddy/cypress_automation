@@ -103,7 +103,7 @@ describe("Vex - Rocket Chat", ()=>{
         })
     })
 
-    /*it("With form set, visit event, fill form on event, which should add you to chat on all sessions with chat enabled", ()=>{
+    it("With form set, visit event, fill form on event, which should add you to chat on all sessions with chat enabled", ()=>{
         // Add the form
         authoring.common.login()
         authoring.vex.visit()
@@ -182,7 +182,7 @@ describe("Vex - Rocket Chat", ()=>{
         cy.visit(sessions[2].url)
         consumption.vex.expectYoutube()
         cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
-    })*/
+    })
 
     it("Rocket chat configurations - turn on/off, moderators", ()=>{
         const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
