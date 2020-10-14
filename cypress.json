@@ -3,5 +3,8 @@
         "TEST_ENV": "qa"
     },
     "video": false,
-    "chromeWebSecurity": false
+    "chromeWebSecurity": false,
+    "retries": {
+        "runMode": 2
+    }
 }

@@ -326,6 +326,7 @@ export class Vex extends Common {
     }
 
     removeSession(sessionName){
+        cy.waitFor({element: this.sessionCardTitle, to: "exist", wait: 10000})
         cy.ifElementWithExactTextExists(this.sessionCardTitle, sessionName, 1500, () => {
             cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
                 cy.get(this.moreActionsButton).click(); 
@@ -441,7 +442,7 @@ export class Vex extends Common {
         }
 
         cy.get(this.saveButton).click()
-        cy.get('body').should('contain', this.recordSavedMessage, {timeout: 2000})
+        cy.contains(this.recordSavedMessage, {timeout: 20000}).should("exist")
 
         // Configure widgets after saving or else will reset all the changes you made 
         if(rocketChat){

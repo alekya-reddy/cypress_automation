@@ -232,16 +232,16 @@ describe("Vex - Rocket Chat", ()=>{
         cy.contains(authoring.vex.antModal, "Add Moderator").should("exist").within(()=>{
             cy.get(authoring.vex.chat.emailInput).clear()
             cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.blankInput).should('exist')
+            cy.contains(authoring.vex.messages.blankInput, {timeout: 20000}).should('exist')
             cy.get(authoring.vex.chat.emailInput).clear().type(visitor.email)
             cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.duplicateEntry2).should('exist')
+            cy.contains(authoring.vex.messages.duplicateEntry2, {timeout: 20000}).should('exist')
             cy.get(authoring.vex.chat.emailInput).clear().type("invalid    email")
             cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.invalidEmail).should('exist')
+            cy.contains(authoring.vex.messages.invalidEmail, {timeout: 20000}).should('exist')
             cy.contains("button", "Cancel").click()
         })
-        cy.contains(authoring.vex.antModal, "Add Moderator").should("not.be.visible")
+        cy.contains(authoring.vex.antModal, "Add Moderator", {timeout: 20000}).should("not.be.visible")
 
         // Input validation check for editing moderator, and cancel button check 
         authoring.vex.addModerators("test@gmail.com")

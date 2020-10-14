@@ -138,6 +138,7 @@ export class CommonCX {
         cy.contains("button", "Submit").click() 
 
         if(checkSuccess){
+            cy.waitFor({element: "form", to: "not.exist", wait: 20000})
             cy.get("form").should("not.exist")
         }
     }

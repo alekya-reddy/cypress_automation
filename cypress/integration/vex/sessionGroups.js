@@ -214,9 +214,7 @@ describe('VEX - Sessions Groups', function() {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        cy.ifElementWithExactTextExists(authoring.vex.sessionCardTitle, "Delete me", 3000, ()=>{ 
-            authoring.vex.removeSession("Delete me")
-        })
+        authoring.vex.removeSession("Delete me")
         authoring.vex.addSession("Delete me")
         authoring.vex.goToSessionGroup() 
 
