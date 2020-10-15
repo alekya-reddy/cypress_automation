@@ -11,4 +11,6 @@ workflows:
       - cypress/run:
           executor: latest-chrome
           browser: chrome
-          spec: cypress/integration/test_lab.js
+          spec: 
+            "cypress/integration/test_lab.js,\
+            cypress/integration/vex/configWidgets.js"
