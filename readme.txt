@@ -2,6 +2,8 @@ How to setup cypress on your computer
 --------------------------------------
 Refer to https://docs.cypress.io/guides/getting-started/installing-cypress.html#System-requirements
 
+Then download the repo. There's hardly any setup required. 
+
 Cypress has excellent documentation for how to setup, cypress api's, and general principles for testing with cypress. 
 
 This readme is just a running log of useful tidbits of information to help you get started. 
@@ -11,7 +13,7 @@ This readme is just a running log of useful tidbits of information to help you g
 How to run tests on cypress
 ----------------------------
 
-To open test-runner, navigate to the Cypress folder (or just open termina in Visual Code), then type into command line: 
+To open the test-runner, which is used for debugging, navigate to the Cypress folder (or just open terminal in Visual Code), then type into command line: 
 
 npx cypress open 
 
@@ -19,46 +21,47 @@ or
 
 node_modules/.bin/cypress open
 
-Then, from the window that opens, click the file you want to run
+Then, from the window that opens, click the file you want to run.
 
-To set the server you are running on (qa, staging, prod), set the TEST_ENV variable in cypress.json (for example, TEST_ENV=staging)
+The TEST_ENV variable in cypress.json controls which test environment you are running on (for example, TEST_ENV=staging). 
 
-Using the UI, you can run all spec files (they MUST be inside the integration folder).
-You can also run just 1 specific file by clicking on it. 
+Using the UI, you can run all spec files (they MUST be inside the integration folder). You can also run just 1 specific file by clicking on it. 
 
-You can also run files from the command line: 
+If you're not debugging and just want to run a file, you can run from the command line: 
 
 npx cypress run --env TEST_ENV=qa --browser chrome --spec cypress/integration/new_website_test.js
 
-Note: you do not need to include the --env parameter if you already have it in the cypress.json file. Values passed through the command line will override
-values you set in cypress.json
+Note: you do not need to include the --env parameter if you already have it in the cypress.json file. Include this in the command line only if 
+you want to override the values you set in cypress.json
 
-If you want to run a selection of files, one method is to copy the files you want to run into a separate folder (I have set up the runSelectFiles folder for this).
-Then, in commpand line, specify that folder: 
+If you want to run a selection of files, specify them in cypress.json. Simply add the the key "testFiles" and value as an array of strings.
+Each string is a glob pattern of the files or folder of files you want to run. Note that Cypress matches anything you provide in this array WITHIN 
+the cypress/integration folder... so don't include cypress/integration in the glob patterns. To start the runner, type into the command line: 
+npx cypress run --browser chrome 
 
-npx cypress run --browser chrome --spec cypress/integration/runSelectFiles/*  
+For example,
 
-Alternatively, type out the command you want, including all the spec files you want to run, into a text document and then copy+paste onto the terminal. 
-I have created the file runSelectFiles.txt for this purpose. It's much easier to edit the specs in this .txt document than to do it on the command line. 
+{
+	"testFiles": ["test_lab.js", "vex/configWidgets.js"] 
+}
 
-If you want to run files in a specific order, one way is to number the files (Cypress sorts them alphanumerically).
-Alternatively, use the runSelectFile.txt. Type out the 'npx cypress run' command for each spec file in the order that you want in the .txt file,
-making sure the format comforms the bash syntax. Then, in the terminal, type the command -sh <path to your .txt file>
-Eg) sh runSelectFiles.txt 
-Note that doing it this way has drawbacks. You will not get a summary of passed/failed tests files, so you need to readh them individually in the terminal. 
-More importantly, each test file needs to open and close the cypress app, which takes extra time. If you have many specs, this will add significantly to run time. 
+{
+	"testFiles": ["vex/*] // This runs all spec files within the vex folder 
+}
 
-There is NOT a built-in way to run spec files in a specific order without using these workarounds. 
+Alternatively, you can specifiy the specs directly in command line: 
+
+npx cypress run --browser chrome --spec cypress/integration/vex/*  
+npx cypress run --browser chrome --spec cypress/integration/test_lab.js,cypress/integration/vex/configWidgets.js // separate each glob pattern by comma, no spaces in the command line 
+
+If you need to run your files in a specific order, one way is to number the files (Cypress sorts them alphanumerically). Other than this, there is no way to force 
+Cypress to run them in any particular order. Avoid having to do this in the first place. 
 
 
-When running on command line, --env allows you To declare whatever env variables you want (env variables must be separated by a comma). 
-This is equivalent to declaring env variables in cypress.json, and the way you call it in the test file is the same, eg Cypress.env('TEST_ENV')
-Declaring env variables in the command line will overrite whatever is in cypress.json, so you don't have to worry about deleting it from cypress.json when using command line 
-You can set whatever browser you want using --browser
-You can run whichever file you want using --spec 
-
+Some notes about the cypress.json configuration file
+-----------------------------------------------------
 To turn off video recording, you can pass in argument --config video=false 
-You can also set this in cypress.json (which I have already)
+You can also set this in cypress.json (which I have done already)
 
 eg) npx cypress run --env TEST_ENV=qa --config video=false  --browser chrome --spec cypress/integration/visit_other_domain_test.js
 
@@ -67,21 +70,72 @@ Note: You cannot set --browser in the cypress.json file. You have to do it in th
 
 How to run cypress on CircleCI
 ------------------------------
-To do this, the cypress repo needs a config.yml file, which I have already added 
+To do this, the cypress repo needs a config.yml file, which I have already added.
 
-This file is the 'orb' that circleci needs to be able to run the tests on circleci
+This file makes use of Cypress's 'orb' that handles most the configuration that circleci needs to be able to run the tests.
 
-The 'orb' is basically just a configuration file telling circleci what to do 
-
-Refer to these links for how to construction the 'orb':
+Refer to these links for how to configure the config.yml file (how to change the browser version etc):
 
 https://github.com/cypress-io/cypress-realworld-app/blob/develop/.circleci/config.yml
 https://github.com/cypress-io/cypress-docker-images/tree/master/browsers#cypressbrowsers
 https://circleci.com/orbs/registry/orb/cypress-io/cypress
 
-You can sign up for a personal circleci account. Create a clone of the cypress repo in your own github, and connect it to circleci 
+You can sign up for a free personal circleci account. Create a clone of the cypress repo in your own github, and connect it to circleci. This is useful to have
+if you want to run tests without eating up Pathfactory's circleci credits. Free accounts get 2.5 hours each week (resets at end of Sunday). This might not be 
+necessary if Pathfactory has tons of credits that we can't possibly use up... but just in case, set up a free account for yourself.
 
-With every commit to this repo, circleci will automatically detect that and re-run the entire test suite 
+I have also set up our cypress repo on our Pathfactory's circleci account. Let's only use this for our biweekly regression runs. 
+
+With every commit to this repo, circleci will automatically detect that and re-run the entire test suite. To avoid this, you must manually stop the build.
+There is no way to prevent an automatic run with each commit. 
+Every minute that is used in a run consumes circleci "credits" - so let's not waste these on builds we don't intend to run. 
+
+We can specify what files to run on circleci either on the cypress.json or on the config.yml. Here's an example of how to specify files to run in the config.yml:
+
+version: 2.1
+orbs:
+  cypress: cypress-io/cypress@1
+executors:
+  latest-chrome:
+    docker:
+      - image: "cypress/browsers:node14.7.0-chrome84"
+workflows:
+  build:
+    jobs:
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: 
+            "cypress/integration/test_lab.js,\
+            cypress/integration/vex/configWidgets.js"
+
+Note that the spec key contains a string value. Each glob pattern is separated by a comma (no spaces). For readability, I suggest listing out the glob patterns 
+like I have done in the example above. The back slash \ simply means the string continues starting with the next line.
+
+However you choose to list the specific files to run on circleci, you would need to push a PR up to the repo. This will trigger a run using your modified config.yml
+OR cypress.json file. However, since you don't actually want to merge this PR into the master branch, after you are finished running, simply close the PR. You can keep 
+the branch for future runs where you only want to run a select set of files. This is the only way to tell circleci what files to run. There is no way to utilize their
+web app to pick and choose which files to run. 
+
+I DID find a potential workaround on the internet about how to run specific files on circleci without having to push a commit. 
+See https://discuss.circleci.com/t/efficiently-testing-configuration-file-migrating-to-2-0/11620
+But I couldn't get this to work. I'll explain it here regardless....
+In summary, the following is typed into the command line, or for convenience, type it into a .txt file and run it as a script in the command line. 
+
+curl --user {circle_ci_api_token}: \
+		--request POST \
+		--form revision={git_SHA} \
+		--form config=@.circleci/config.yml \
+		--form notify=false \
+		https://circleci.com/api/v1.1/project/github/{github_organization_name}/{repo_name}/tree/{branch_to_run_on}
+
+circle_ci_api_token can be created using the circleci web app. Go to project settings and you should see the option to create api tokens. For type of token, choose 'all'. 
+git_SHA is just the SHA # of any commit to the repo - doesn't have to be the latest commit. 
+
+What the above does is it takes the most recent commit on the branch to run on and modifies the config.yml with the new one that you provide in your LOCAL config.yml.
+I couldn't get this to work as it was translating my local config.yml incorrectly - it was missing keys, and added curly braces for some reason. 
+So for now, just push a PR to the repo with the files you want to run listed in either the config.yml OR the cypress.json file, then close the PR when done. 
+It's honestly not that inconvenient, although I wished circleci had some way to control the config.yml directly through their web app.  
 
 
 How the cypress repo is organized
@@ -383,10 +437,9 @@ to pause for debugging, use cy.pause()
 
 
 
-Annoying Cypress Bugs
------------------------
+Annoying Cypress Bugs to be aware of
+------------------------------------
 Any click event in the after block fails if one of the tests in an it block fails.
-There are others, of course... 
 
 
 

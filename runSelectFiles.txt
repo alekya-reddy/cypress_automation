@@ -1,2 +1,0 @@
-npx cypress run --browser chrome --spec cypress/integration/vex/vexAppearance.js
-npx cypress run --browser chrome --spec cypress/integration/vex/vexConsumption.js

@@ -1,6 +1,0 @@
-curl --user fa3473ccbecac69a7b8c6f77aab70ba09d3527f8: \
-		--request POST \
-		--form revision=ac874f07bccbcb3948db9e22998f9bf4fb7d9709 \
-		--form config=@.circleci/custom_config.yml \
-		--form notify=false \
-		https://circleci.com/api/v1.1/project/github/LiChoi/cypress_demo/tree/master
