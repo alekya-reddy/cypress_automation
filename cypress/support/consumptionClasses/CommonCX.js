@@ -21,7 +21,7 @@ export class CommonCX {
             checkbox: "input[name='checkbox']",
             optIn: "input[name='optIn'][value='true']",
             optOut: "input[name='optIn'][value='false']",
-            cookieConsentCheckbox: 'input[name="visitorCookieAccepted"]',
+            cookieConsentCheckbox: 'input[name="visitorCookieAccepted"]'
         };
         this.cookieConsent = {
             messageBox: "#qa-cookie-consent",

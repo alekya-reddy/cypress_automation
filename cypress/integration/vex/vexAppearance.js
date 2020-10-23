@@ -6,6 +6,7 @@ const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'look
 const event = {
     name: 'vexAppearance.js',
     slug: 'vexappearance-js',
+    form: 'Standard Form Short', // The form button color is set to blue rgb(0,0,255)
     appearance: "vexAppearance.js",
     headerTitle: 'Vex Appearance Title',
     headerSubtitle: 'Vex Appearance Subtitle',
@@ -102,8 +103,16 @@ describe('VEX - Virtual Event', function() {
             .should("have.css", "background-image", `url("https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg")`)
         cy.get(consumption.vex.vexEventContainer).eq(1).parent().should("have.css", "background-color", "rgb(0, 0, 255)")
 
+        // Check the form submit button color (controlled on the form configuration itself)
+        cy.contains("button", "Submit").should("have.css", "background-color", "rgb(0, 0, 255)")
+
+        // Check the general appearance settings (controls the form appearance)
+        cy.get(consumption.vex.vexFormTitle).should("have.css", "color", "rgb(255, 0, 255)").should("have.css", "font-family", "Overpass")
+        cy.get(consumption.vex.vexFormDescription).should("have.css", "color", "rgb(0, 255, 255)").should("have.css", "font-family", "Overpass")
+
         // Go to session and check the flow appearance settings (event session sidebar)
         cy.contains("a", "Youtube").click()
+        consumption.vex.fillStandardForm({email: "getOutOfMyWay@gmail.com"}) // Settings (other than the blue button) not applied to form on session page... not sure if this is intended?
         cy.get(consumption.vex.sessionSidebar, {timeout: 20000}).should("have.css", "background-color", "rgb(255, 255, 0)")
         cy.get(consumption.vex.supplementalContent).children("li").eq(0).invoke("attr", "style").then((style)=>{
             expect(style).to.include("color: rgb(255, 0, 0); font-family: Roboto; font-size: 15px; font-weight: normal;")

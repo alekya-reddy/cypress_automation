@@ -26,6 +26,8 @@ export class VexCX extends CommonCX {
         this.vexHeaderMenuNoPopup = ".rc-menu-submenu";
         this.vexHeaderMenuItem = ".pf-menu-item";
         this.supplementalContent = ".pf-event-session-supplemental-content-list";
+        this.vexFormTitle = ".pf-event-hero-form-title";
+        this.vexFormDescription = ".pf-event-hero-form-description";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
