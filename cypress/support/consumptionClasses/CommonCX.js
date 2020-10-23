@@ -14,6 +14,11 @@ export class CommonCX {
             company: "#company",
             title: "#title",
             phone: "#phone",
+            employeeCount: "#employeeCount",
+            country: "#country",
+            state: "#state",
+            zipcode: "#zipcode",
+            checkbox: "input[name='checkbox']",
             optIn: "input[name='optIn'][value='true']",
             optOut: "input[name='optIn'][value='false']",
             cookieConsentCheckbox: 'input[name="visitorCookieAccepted"]',
@@ -97,6 +102,11 @@ export class CommonCX {
         const company = config.company
         const job_title = config.job_title
         const phone = config.phone
+        const employee_count = config.employee_count
+        const country = config.country
+        const state = config.state
+        const zipcode = config.zipcode
+        const checkbox = config.checkbox 
         const opt_in = config.opt_in 
         const consent = config.consent 
         const checkSuccess = config.checkSuccess == false ? false : true
@@ -123,6 +133,26 @@ export class CommonCX {
 
         if(phone){
             cy.get(this.standardForm.phone).clear().type(phone)
+        }
+
+        if(employee_count){
+            cy.get(this.standardForm.employeeCount).clear().type(employee_count)
+        }
+
+        if(country){
+            cy.get(this.standardForm.country).clear().type(country)
+        }
+
+        if(state){
+            cy.get(this.standardForm.state).clear().type(state)
+        }
+
+        if(zipcode){
+            cy.get(this.standardForm.zipcode).clear().type(zipcode)
+        }
+
+        if(checkbox){
+            cy.get(this.standardForm.checkbox).click()
         }
         
         if(opt_in == 'true'){
