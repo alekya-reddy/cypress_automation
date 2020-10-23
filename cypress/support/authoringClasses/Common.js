@@ -17,6 +17,7 @@ export class Common {
         this.editIcon = 'i[title="Edit"]';
         this.editPencil = 'i[class*="fa-pencil"]';
         this.modal = 'div[data-qa-hook="modal"]';
+        this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal"; 
         this.vexNavigation = '#virtual-events';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';

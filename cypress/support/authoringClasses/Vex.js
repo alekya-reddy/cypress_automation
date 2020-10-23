@@ -7,6 +7,7 @@ export class Vex extends Common {
         this.vexUrl = `${this.baseUrl}/authoring/content-library/virtual-events`;
         this.virtualEventHomeTitle = 'Virtual Events';
         this.recordSavedMessage = 'The record was saved successfully';
+        this.shareIcon = 'i[title="Share URL"]';
         this.addEventButton = "button:contains('Add Virtual Event')";
         this.eventCardLocator = '[class*="card-list-item"]';
         this.eventCardTitle = '[class*="ant-card-head-title"]';
