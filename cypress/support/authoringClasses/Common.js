@@ -10,7 +10,7 @@ export class Common {
         this.loginUrl = `${this.baseUrl}/users/sign_in`; 
         this.userNameInputLocator = '[id="login"]';
         this.passwordInputLocator = '[id="password"]';
-        this.submitButtonLocator = 'input[value="Log in"]'; 
+        this.submitButtonLocator = '#input-button'; 
         this.pageTitleBar = '[data-qa-hook="title-bar"]';
         this.pageTitleLocator = '[data-qa-hook="title-bar"] > h1'; 
         this.pageBody = '[data-qa-hook="page-body"]';
