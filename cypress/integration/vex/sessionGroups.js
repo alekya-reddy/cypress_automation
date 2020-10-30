@@ -105,30 +105,26 @@ const groupC = {
 
 // Session groups allow you to group sessions under the headings you want, instead of the default "Agenda" and "On demand" groups 
 describe('VEX - Sessions Groups', function() {
+    it("Set up if not already done", ()=>{
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.configureEvent(event)
+                sessions.forEach((session)=>{
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.containsExact("a", event.name).click()
+                })
+            }
+        })
+    })
+
     it('Test the CRUD (Create, Update, Destroy) operations for session groups', function() {
         authoring.common.login()
         authoring.vex.visit()
-
-        let check = {eventAlreadyExists: false}
-        cy.ifElementWithExactTextExists(authoring.vex.eventCardTitle, event.name, 3000, ()=>{ 
-            check.eventAlreadyExists = true  
-            authoring.vex.goToEventConfig(event.name)
-        })
-
-        // In case the event/sessions get deleted on purpose or by mistake, this block of code will automatically add everything back
-        cy.get("body").then(()=>{
-            if(check.eventAlreadyExists == false){
-                cy.ifNoElementWithExactTextExists(authoring.vex.eventCardTitle, event.name, 1000, ()=>{
-                    authoring.vex.addVirtualEvent(event.name)
-                    authoring.vex.configureEvent(event)
-                    sessions.forEach((session)=>{
-                        authoring.vex.addSession(session.name)
-                        authoring.vex.configureSession(session)
-                        cy.containsExact("a", event.name).click()
-                    })
-                }) 
-            }
-        })
+        authoring.vex.goToEventConfig(event.name) 
           
         // Delete previously added session groups because 1) Rule out bugs where previously added stuff works but not new stuff, 2) Want to test adding and deleting 
         authoring.vex.deleteSessionGroup(groupA.name)

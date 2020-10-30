@@ -1058,7 +1058,7 @@ export class Vex extends Common {
     }
 
     unsetHomePage(page){
-        cy.containsExact(this.antCell, page).siblings("td:contains('Unset')").within(()=>{
+        cy.containsExact(this.antCell, page, {timeout: 20000}).siblings("td:contains('Unset')").within(()=>{
             cy.contains("button", "Unset").click()
         })
     }
