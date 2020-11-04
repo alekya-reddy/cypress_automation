@@ -27,7 +27,7 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        rocketChat: "Rocket Chat"
+        rocketChat: {on_off: "ON"}
     },
     {
         name: "Live ended with on-demand",
@@ -45,7 +45,7 @@ const sessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        rocketChat: "Rocket Chat"
+        rocketChat: {on_off: "ON"}
     },
     {
         name: "no-chat",
@@ -56,7 +56,7 @@ const sessions = [
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'
-    },
+    }
 ]
 
 const rocketChatSession = {
@@ -97,7 +97,7 @@ describe("Vex - Rocket Chat", ()=>{
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
-                    cy.containsExact("a", event.name).click()
+                    authoring.vex.backToEvent(event.name)
                 })
             }
         })

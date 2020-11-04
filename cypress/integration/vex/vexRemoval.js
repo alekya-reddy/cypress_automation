@@ -42,21 +42,22 @@ describe('VEX - Virtual Event', function() {
 
         // Add session and configure sessions
         sessions.forEach((session)=>{
-            authoring.vex.visit()
-            authoring.vex.goToEventConfig(event.name)
             authoring.vex.addSession(session.name)
             authoring.vex.configureSession(session)
+            authoring.vex.backToEvent(event.name)
         })
 
         // Now remove one of the sessions
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
         authoring.vex.removeSession(sessions[1].name)
 
         // Visit the consumption page and verify that the removed session isn't accessible 
         cy.visit(event.url)
-        cy.containsExact(consumption.vex.sessionCardTitle, sessions[0].name).should('exist')
-        cy.containsExact(consumption.vex.sessionCardTitle, sessions[1].name).should('not.exist')
+        cy.get(consumption.vex.sessionCardTitle, {timeout: 10000}).within(()=>{
+            cy.containsExact("div", sessions[0].name, {timeout: 10000}).should("exist")
+        })
+        cy.get(consumption.vex.sessionCardTitle).within(()=>{
+            cy.containsExact("div", sessions[1].name).should("not.exist")
+        })
 
         cy.request({url: sessions[1].url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)

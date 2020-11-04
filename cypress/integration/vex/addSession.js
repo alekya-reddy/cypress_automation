@@ -17,6 +17,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.goToEventConfig(event)
 
         // Add live session using the modal 
+        authoring.vex.goToSessionList()
         cy.get(authoring.vex.addSessionButton).click()
         cy.get(authoring.vex.antModalContent).within(()=>{
             cy.get(authoring.vex.sessionNameInput).clear().type(liveSession)
@@ -34,7 +35,7 @@ describe('VEX - Virtual Event', function() {
             cy.get(authoring.vex.addSessionButton).click()
         })
         cy.get(authoring.vex.antModalContent).should('not.be.visible')
-        cy.containsExact(authoring.vex.sessionCardTitle, liveSession).should('exist')
+        cy.get(authoring.vex.sessionName(liveSession), {timeout: 10000}).should('exist')
 
         // Go to live session config to verify it has the correct session type and selected times 
         authoring.vex.goToSessionConfig(liveSession)
@@ -46,13 +47,14 @@ describe('VEX - Virtual Event', function() {
         // Go back and add on-demand session using the modal (on-demand session is the default value selected)
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event)
+        authoring.vex.goToSessionList()
         cy.get(authoring.vex.addSessionButton).click()
         cy.get(authoring.vex.antModalContent).within(()=>{
             cy.get(authoring.vex.sessionNameInput).clear().type(onDemandSession)
             cy.get(authoring.vex.addSessionButton).click()
         })
         cy.get(authoring.vex.antModalContent).should('not.be.visible')
-        cy.containsExact(authoring.vex.sessionCardTitle, onDemandSession).should('exist')
+        cy.get(authoring.vex.sessionName(onDemandSession), {timeout: 10000}).should('exist')
 
         // Go to on demand session config to verify it has the correct session type 
         authoring.vex.goToSessionConfig(onDemandSession)

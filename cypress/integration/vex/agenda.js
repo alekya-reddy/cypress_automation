@@ -103,22 +103,16 @@ const sessions = [
 
 describe("VEX - Agenda", ()=>{
     it("Automatically set up for the test if not already done", ()=>{
-        authoring.common.login()
-        authoring.vex.visit()
-
-        let check = {eventAlreadyExists: false}
-        cy.ifElementWithExactTextExists(authoring.vex.eventCardTitle, event.name, 2000, ()=>{ 
-            check.eventAlreadyExists = true  
-        })
-
-        cy.get("body").then(()=>{
-            if(check.eventAlreadyExists == false){
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.vex.visit()
                 authoring.vex.addVirtualEvent(event.name)
                 authoring.vex.configureEvent(event)
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
-                    cy.containsExact("a", event.name).click()
+                    authoring.vex.backToEvent(event.name)
                 })
             }
         })

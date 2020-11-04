@@ -115,7 +115,7 @@ describe('VEX - Sessions Groups', function() {
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
-                    cy.containsExact("a", event.name).click()
+                    authoring.vex.backToEvent(event.name)
                 })
             }
         })

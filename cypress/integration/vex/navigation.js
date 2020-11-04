@@ -185,7 +185,7 @@ describe("VEX - Navigation Builder", ()=>{
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
-                    cy.containsExact("a", event.name).click()
+                    authoring.vex.backToEvent(event.name)
                 })
                 landingPages.forEach((page)=>{
                     authoring.vex.addLandingPages(page.name)
@@ -207,7 +207,7 @@ describe("VEX - Navigation Builder", ()=>{
         authoring.vex.removeSession(deleteSession.name)
         authoring.vex.addSession(deleteSession.name)
         authoring.vex.configureSession(deleteSession)
-        cy.contains("a", event.name).click()
+        authoring.vex.backToEvent(event.name)
         authoring.vex.deleteLandingPages(deleteLandingPage.name)
         authoring.vex.addLandingPages(deleteLandingPage.name)
         authoring.vex.editLandingPage(deleteLandingPage)
@@ -249,7 +249,6 @@ describe("VEX - Navigation Builder", ()=>{
         cy.go("back")
 
         // Delete session and landing page, then verify removed from navigation and consumption 
-        authoring.vex.goToEventSetup()
         authoring.vex.removeSession(deleteSession.name)
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(deleteLandingPage.name)
