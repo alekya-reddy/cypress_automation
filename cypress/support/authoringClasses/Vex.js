@@ -32,7 +32,12 @@ export class Vex extends Common {
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
         this.addSessionButton = "button:contains('Add Session')";
-        this.sessionCardTitle = '[class="ant-card-head-title"]';
+        this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
+        this.sessionName = function(sessionName){ 
+            let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
+            return `td[title="${escapedName}"]`
+        };
+        this.sessionShareCell = ".share-cell";
         this.antCardBody = '[class="ant-card-body"]';
         this.antModalContent = '[class="ant-modal-content"]';
         this.antCardHeadWrapper = '[class="ant-card-head-wrapper"]';
@@ -306,8 +311,13 @@ export class Vex extends Common {
             })
         })
     }
+    
+    goToSessionList(){
+        cy.containsExact("a", "Sessions", {timeout: 20000}).click()
+    }
 
     addSession(sessionName, type = 'On Demand'){
+        this.goToSessionList()
         cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
             cy.get(this.addSessionButton).click();
         })
@@ -323,26 +333,27 @@ export class Vex extends Common {
             cy.get(this.addSessionButton).click();
         })
         cy.get(this.antModalContent).should("not.be.visible")
-        cy.get(this.antCardBody).contains(this.sessionCardTitle, sessionName, {timeout: 10000}).should('exist');
+        cy.get(this.sessionName(sessionName), {timeout: 10000}).should('exist');
     }
 
     removeSession(sessionName){
-        cy.waitFor({element: this.sessionCardTitle, to: "exist", wait: 10000})
-        cy.ifElementWithExactTextExists(this.sessionCardTitle, sessionName, 1500, () => {
-            cy.containsExact(this.sessionCardTitle, sessionName).parent().parent().parent().within(()=>{
-                cy.get(this.moreActionsButton).click(); 
+        this.goToSessionList()
+        cy.waitFor({element: this.sessionTableTitle, to: "exist", wait: 10000})
+        cy.ifElementExists(this.sessionName(sessionName), 1500, () => {
+            cy.get(this.sessionName(sessionName)).parent().within(()=>{
+                cy.contains("a", "Delete").click(); 
             })
-            cy.get(this.removeDropdownButton).click()
-            cy.get(this.antModalContent).within(()=>{
-                cy.contains('Yes').click()
+            cy.get(".ant-popover-buttons").within(()=>{
+                cy.contains('button', "Delete").click()
             })
         })
-        cy.containsExact(this.sessionCardTitle, sessionName).should('not.exist')
+        cy.get(this.sessionName(sessionName)).should('not.exist')
     }
 
     goToSessionConfig(sessionName){
-        cy.containsExact(this.sessionCardTitle, sessionName, {timeout: 10000}).parent().parent().parent().within(()=>{
-            cy.get(this.configureButton).click(); 
+        this.goToSessionList()
+        cy.get(this.sessionName(sessionName), {timeout: 20000}).parent().within(()=>{
+            cy.contains("a", "Configure").click()
         })
         cy.get(this.pageTitleLocator).should('contain', sessionName, {timeout: 20000});
     }
@@ -629,7 +640,16 @@ export class Vex extends Common {
         this.goToChat()
         
         if(on_off){
-            this.toggle(this.chat.toggle, on_off)
+            const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
+            cy.get(enableChatToggle).then((toggle)=>{
+                if(toggle.length == 1){
+                    this.toggle(enableChatToggle, on_off)
+                } else if (toggle.length == 2){
+                    // Can't use enableChatToggle because in this case, read-only toggle data-qa-hook also starts with chat-widget, leading to ambiguous match
+                    // Once it has been toggled already, toggle's data-qa-hook permanently changes to this.chat.toggle's value 
+                    this.toggle(this.chat.toggle, on_off)
+                }
+            })
         }
 
         if(moderators){
@@ -772,11 +792,13 @@ export class Vex extends Common {
     }
 
     backToEvent(event){
+        // If you are on session configuration page and want to go back to the event configuration page
         cy.containsExact("a", event).click()
         cy.contains(this.pageTitleLocator, event).should('exist')
     }
 
     goToEventSetup(){
+        // If you are on Event configuration and are currently viewing one of its tabs (such as agenda or appearance), and you want to go back to the main set up tab
         cy.containsExact("a", "Event Setup", {timeout: 20000}).click()
     }
 
@@ -1058,7 +1080,7 @@ export class Vex extends Common {
     }
 
     unsetHomePage(page){
-        cy.containsExact(this.antCell, page).siblings("td:contains('Unset')").within(()=>{
+        cy.containsExact(this.antCell, page, {timeout: 20000}).siblings("td:contains('Unset')").within(()=>{
             cy.contains("button", "Unset").click()
         })
     }

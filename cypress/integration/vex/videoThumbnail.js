@@ -59,7 +59,7 @@ describe('VEX - Virtual Event', function() {
             })
             cy.get(authoring.vex.saveButton).click()
             cy.get('body').should('contain', 'The record was saved successfully')
-            cy.contains('a', event.name).click()
+            authoring.vex.backToEvent(event.name)
         })
 
         // Now visit the event page on consumption and verify the correct thumbnails are applied

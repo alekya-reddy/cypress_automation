@@ -256,18 +256,13 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
-        let check = {sessionAlreadyExists: false}
         sessions.forEach((session)=>{
             // Only add session if doesn't already exist. This way, can save time on the set up
-            cy.get("body").then(()=>{ check.sessionAlreadyExists = false })
-            cy.ifElementWithExactTextExists(authoring.vex.sessionCardTitle, session.name, 2000, ()=>{
-                check.sessionAlreadyExists = true
-            })
-            cy.get("body").then(()=>{
-                if(check.sessionAlreadyExists == false){
+            cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
+                if(response.status == 404){ 
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
-                    cy.containsExact('a', event.name).click()
+                    authoring.vex.backToEvent(event.name)
                 }
             })
         })
@@ -342,7 +337,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
         // Sometimes bugs are found if we save a change on authoring and verify on consumption side
         // Whereas if we only verify on consumption side for a configuration on authoring that was saved long ago, the bug would not be revealed
         // So, for 1 of the sessions, delete it and re-add it so that it will be added using the latest code. 
-        cy.containsExact('a', event.name).click()
+        authoring.vex.backToEvent(event.name)
         authoring.vex.removeSession(sessions[2].name)
         authoring.vex.addSession(sessions[2].name)
         authoring.vex.configureSession(sessions[2])
@@ -406,6 +401,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
                         cy.containsExact('div', 'Live').should('not.exist')
+                        cy.containsExact("div", "On Demand").should("exist")
                     })
                 })
                 cy.containsExact("h4", "Agenda").parent().within(()=>{

@@ -67,7 +67,8 @@ describe("VEX - Sharing links", ()=>{
         cy.contains(authoring.vex.modal).should("not.exist")
 
         // Check for sharing link on the first session card
-        cy.containsExact("span", session1.url).parent().within(()=>{
+        authoring.vex.goToSessionList()
+        cy.get(authoring.vex.sessionName(session1.name)).siblings(authoring.vex.sessionShareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
@@ -77,7 +78,7 @@ describe("VEX - Sharing links", ()=>{
         cy.contains(authoring.vex.modal).should("not.exist")
 
         // Check for sharing link on the second session card
-        cy.containsExact("span", session2.url).parent().within(()=>{
+        cy.get(authoring.vex.sessionName(session2.name)).siblings(authoring.vex.sessionShareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{

@@ -59,8 +59,6 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event);
         authoring.vex.goToEventConfig(event);
         authoring.vex.addSession(session1.name);
-        authoring.vex.visit();
-        authoring.vex.goToEventConfig(event);
         authoring.vex.addSession(session2.name);
 
         // Now attempt to save various values for slug for session2 to check error messages 

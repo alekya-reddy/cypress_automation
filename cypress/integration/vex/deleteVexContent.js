@@ -104,7 +104,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event)
         authoring.vex.goToSessionConfig(session.name)
-        cy.containsExact(authoring.vex.sessionCardTitle, session.name).should('not.exist')
+        cy.containsExact("span", supplementalContent.internalTitle).should('not.exist')
 
         // Now remove the session and verify that video can now be deleted from content library
         cy.contains('a', event).click()

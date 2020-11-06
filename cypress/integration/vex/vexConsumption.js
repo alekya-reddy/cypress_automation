@@ -127,7 +127,9 @@ describe('VEX - Consumption', function(){
 
         sessions.forEach((session)=>{
             if(session.name == 'Private') { return } // Skip this case, will test in another it function
-            cy.containsExact(consumption.vex.sessionCardTitle, session.name).should('exist').click()
+            cy.containsExact("div", session.name).should('exist').parent().within(()=>{
+                cy.containsExact("div", "On Demand").should("exist") // The session card title should also contain the "On Demand" label
+            }).click()
             cy.url().should('eq', session.url)
             cy.contains('a', event.name).click()
         })
