@@ -36,7 +36,7 @@ export class Vex extends Common {
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.sessionName = function(sessionName){ 
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
-            return `td[id="${escapedName}"]`
+            return `td[title="${escapedName}"]`
         };
         this.sessionShareCell = ".share-cell";
         this.antCardBody = '[class="ant-card-body"]';
