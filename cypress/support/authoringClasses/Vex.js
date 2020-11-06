@@ -32,7 +32,6 @@ export class Vex extends Common {
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
         this.addSessionButton = "button:contains('Add Session')";
-        this.sessionCardTitle = '[class="ant-card-head-title"]';
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.sessionName = function(sessionName){ 
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
