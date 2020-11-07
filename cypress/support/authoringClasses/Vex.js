@@ -76,7 +76,8 @@ export class Vex extends Common {
             contentTitleInput: "input[name='contentTitle']",
             contentDescription: "div[data-qa-hook^='content-description']",
             contentDescriptionInput: "input[name='contentDescription']",
-            input: "input[class='ant-select-selection-search-input']"
+            input: "input[class='ant-select-selection-search-input']",
+            heroHeightInput: "input[name='landingExperience.landingExperienceConfig.headerHeight']"
         };
         this.resetButton = "button:contains('Reset')";
         this.selectImageButton = "button:contains('Change Image')";
@@ -219,7 +220,7 @@ export class Vex extends Common {
         if(form){
             let formConfig = Object.assign({}, form)
             formConfig.save = false
-            this.configureForm(form)
+            this.configureForm(formConfig)
         }
 
         if(start){
@@ -274,7 +275,9 @@ export class Vex extends Common {
         const name = form.name
         const save = form.save == false ? false : true 
 
-        cy.get(this.eventFormPicker).parent().parent().click()
+        cy.contains(this.antRow, "Attendee Registration Form").within(()=>{
+            cy.get(this.antSelector).click()
+        })
         cy.get(this.antDropdownContainer).within(()=>{
             cy.get(this.antDropdownOption(name)).click()
         })
@@ -487,8 +490,9 @@ export class Vex extends Common {
     selectThumbnail(config){
         const category = config.category // Values can be "Stock Images", "Thumbnail Images" or "Uncategorized"
         const url = config.url
+        const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
 
-        cy.get(this.selectImageButton).click()
+        cy.get(`button:contains('${selectImageText}')`).click()
         cy.get(this.thumbnailSelector).should('exist').within(()=>{
             cy.contains('li', category).click()
             cy.get(`img[src="${url}"]`).click()
@@ -987,7 +991,7 @@ export class Vex extends Common {
             cy.contains("button", "Add Page").click()
             cy.contains(this.antModal, "Add Page").within(()=>{
                 cy.get(this.pages.nameInput).clear().type(page)
-                cy.contains("button", "Submit").click()
+                cy.contains("button", "Add Page").click()
             })
             if(verify !== false){
                 cy.contains(this.antModal, "Add Page").should("not.be.visible")
@@ -1341,6 +1345,101 @@ export class Vex extends Common {
         cy.get(locator).parents(this.pages.blockContainer).within(()=>{
             cy.get(this.pages.menuBlock).eq(direction[up_down]).click() // This opens up the block editor modal 
         })
+    }
+
+    configureLandingPage(config){
+        const name = config.name
+        const setHome = config.setHome 
+        const unsetHome = config.unsetHome
+        const blocks = config.blocks
+
+        this.editLandingPage(config)
+
+        if(setHome){
+            this.setToHomePage(name)
+        }
+
+        if(unsetHome){
+            this.unsetHomePage(name)
+        }
+
+        if(blocks){
+            this.goToPageEditor(name)
+            blocks.forEach((block)=>{
+                this.addAdvancedBlock(block)
+                cy.get(this.pages.blockContainer).eq(0).click() // This makes the add block button reappear
+            })
+            cy.contains("button", "Save").click()
+            cy.go("back")
+        }
+    }
+
+    goToAppearance(){
+        cy.url().then((url)=>{
+            if(!url.includes("/appearance")){
+                cy.containsExact("a", "Appearance Setup", {timeout: 20000}).click()
+            }
+        })
+    }
+
+    configureAppearance(config){
+        const appearance = config.appearance
+        const heroImage = config.heroImage
+        const heroHeight = config.heroHeight
+        const headerTitle = config.headerTitle
+        const headerSubtitle = config.headerSubtitle
+        const contentTitle = config.contentTitle
+        const contentDescription= config.contentDescription
+
+        this.goToAppearance()
+
+        if(appearance){
+            cy.get(this.appearance.input).clear({force: true}).type(appearance, {force: true})
+            cy.get(this.antDropdownOption(appearance)).click()
+            cy.get(`span[title='${appearance}']`).should("exist")
+            cy.contains('button:visible', "Save").click()
+            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
+        }
+
+        if(heroImage){
+            this.selectThumbnail(heroImage)
+            cy.contains('button:visible', "Save").click()
+            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
+        }
+
+        if(heroHeight){
+            cy.get(this.appearance.heroHeightInput).clear().type(heroHeight)
+            cy.contains('button:visible', "Save").click()
+            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
+        }
+
+        if(headerTitle){
+            cy.get(this.appearance.headerTitle).click()
+            cy.get(this.appearance.headerTitleInput).clear().type(headerTitle)
+            cy.get(this.appearance.headerTitleInput).parent().contains('Save').click()
+            cy.get(this.appearance.headerTitle, {timeout: 5000}).should('contain', headerTitle)
+        }
+        
+        if(headerSubtitle){
+            cy.get(this.appearance.headerSubtitle).click()
+            cy.get(this.appearance.headerSubtitleInput).clear().type(headerSubtitle)
+            cy.get(this.appearance.headerSubtitleInput).parent().contains('Save').click()
+            cy.get(this.appearance.headerSubtitle, {timeout: 5000}).should('contain', headerSubtitle)
+        }
+
+        if(contentTitle){
+            cy.get(this.appearance.contentTitle).click()
+            cy.get(this.appearance.contentTitleInput).clear().type(contentTitle)
+            cy.get(this.appearance.contentTitleInput).parent().contains("Save").click()
+            cy.get(this.appearance.contentTitle, {timeout: 5000}).should('contain', contentTitle)
+        }
+
+        if(contentDescription){
+            cy.get(this.appearance.contentDescription).click()
+            cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription)
+            cy.get(this.appearance.contentDescriptionInput).parent().contains("Save").click()
+            cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
+        }
     }
 
 }

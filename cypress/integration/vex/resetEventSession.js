@@ -17,7 +17,8 @@ const newEvent = {
     slug: 'differentslug',
     description: 'Different description',
     form: {
-        name: authoring.vex.noRegistrationNeededOption
+        name: authoring.vex.noRegistrationNeededOption,
+        save: false
     }
 }
 
@@ -67,12 +68,7 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.eventNameInput).clear().type(newEvent.newEventName)
         cy.get(authoring.vex.eventSlugInput).clear().type(newEvent.slug)
         cy.get(authoring.vex.eventDescription).clear().type(newEvent.description)
-
-        cy.get(authoring.vex.eventFormPicker).parent().parent().click()
-        cy.get(authoring.vex.antDropdownContainer).within(()=>{
-            cy.get(authoring.vex.antDropdownOption(newEvent.form.name)).click()
-        })
-
+        authoring.vex.configureForm(newEvent.form)
         cy.get(authoring.vex.resetButton).should('not.be.disabled').click() 
 
         // Now verify all details back to original 
