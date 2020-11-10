@@ -249,6 +249,26 @@ Cypress.Commands.add("scrollWithin", (config)=>{
 
 })
 
+Cypress.Commands.add("mouseWheel", (config)=>{
+    // Use this instead of scrollWithin when dealing with react virtual scrollers. These are usually found in VEX or website tools.  
+    // These elements don't actually scroll - they create and destroy the list as you "scroll", and update the viewable area
+    // Calling scrollTo will do nothing. Must trigger a mousewheel event. 
+    const scroller = config.scroller
+    const find = config.find
+    const increment = config.increment || 20
+    const maxScroll = config.maxScroll || 1000
+    const position = isNaN(config.position) ? 0 : config.position // Internal function use only 
+
+    if( (find && Cypress.$(find).length > 0) || position > maxScroll ) { cy.log("Scroll ended"); return }
+    cy.get(scroller).trigger('wheel', {
+        deltaX: 0,
+        deltaY: position
+    })
+    cy.wait(100) // Need to slow it down or else will miss finding the "find" element
+    config.position = position + increment
+    cy.mouseWheel(config)
+})
+
 Cypress.Commands.add("angryClick", (config)=>{
     // Sometimes, our application requires multiple clicks to get something to work, but not when doing this manually 
     const clickElement = config.clickElement // The element you want clicked
@@ -424,5 +444,6 @@ Cypress.Commands.add("waitFor", (options)=>{
     }
 
 })
+
 
 

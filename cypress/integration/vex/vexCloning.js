@@ -7,6 +7,7 @@ const event = {
     slug: 'vexcloning-js',
     start: 'Jun 24, 2020 8:00pm',
     end: 'Jun 24, 2040 8:00pm',
+    timeZone: "(GMT-10:00) Hawaii",
     description: "description",
     externalID: "vexcloningid",
     form: {name: "Standard Form Short"},
@@ -16,6 +17,10 @@ const event = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
+}
+
+const clonedEvent = {
+    name: "Clone of vexCloning.js",
 }
 
 const sessions = {
@@ -116,11 +121,11 @@ const appearance = {
 const sessionGroups = {
     publicGroup: {
         name: "Has Public Session",
-        sessions: sessions.onDemand.name
+        sessions: [sessions.onDemand.name]
     }, 
     privateGroup: {
         name: "Has Private Session",
-        sessions: sessions.private.name
+        sessions: [sessions.private.name]
     },
     emptyGroup: {
         name: "Empty"
@@ -205,6 +210,134 @@ const navigation = [
     }
 ]
 
+const verifyEventSetup = (event) => {
+    cy.get(authoring.vex.eventNameInput).should("have.value", clonedEvent.name)
+    cy.get(authoring.vex.eventSlugInput).should("not.have.value", event.slug) // the slug should not be cloned
+    cy.get(authoring.vex.startTimeInput).should("have.value", event.start)
+    cy.get(authoring.vex.endTimeInput).should("have.value", event.end)
+    cy.contains("span", event.timeZone).should("exist")
+    cy.get(authoring.vex.eventDescription).should("contain", event.description)
+    cy.get(authoring.vex.externalIDInput).should("have.value", event.externalID)
+    cy.get(`span[title="${event.form.name}"]`).should("exist")
+    cy.get(`span[title="${event.language}"]`).should("exist")
+    cy.contains(authoring.vex.antRow, "Access Protection").should("contain", event.trackProtection)
+    cy.get(authoring.vex.cookieConsentCheckbox).parent().should("have.class", "ant-checkbox-checked")
+}
+
+const verifySession = (session, howCloned) => {
+    cy.get(authoring.vex.sessionNameInput).should("have.value", session.name)
+
+    if(howCloned == "cloned event"){
+        cy.get(authoring.vex.sessionSlugInput).should("have.value", session.slug)
+    } else if (howCloned == "cloned session"){
+        cy.get(authoring.vex.sessionSlugInput).should("not.have.value", session.slug) // Cannot clone the slug if cloning session within an event
+    }
+
+    if(session.visibility == "Public"){
+        cy.get(authoring.vex.publicRadio).should("have.attr", "checked")
+    } else if (session.visibility == "Private"){
+        cy.get(authoring.vex.privateRadio).should("have.attr", "checked")
+    }
+
+    if(session.type == "Live"){
+        cy.get(authoring.vex.liveRadio).should("have.attr", "checked")
+    } else if(session.type == "On Demand"){
+        cy.get(authoring.vex.onDemandRadio).should("have.attr", "checked")
+    }
+
+    if(session.video){
+        cy.contains(authoring.vex.antRow, "On Demand Video").should("contain", session.video)
+    }
+
+    if(session.contents){
+        session.contents.forEach((content)=>{
+            cy.contains("span", content).should("exist")
+        })
+    }
+
+    if(session.live){
+        cy.get(authoring.vex.startTimeInput).should("have.value", session.live.start)
+        cy.get(authoring.vex.endTimeInput).should("have.value", session.live.end)
+        cy.contains("span", session.live.timeZone).should("exist")
+        cy.contains(authoring.vex.antRow, "Live Content Type").within(()=>{
+            cy.contains("span", session.live.type).should("exist")
+        })
+
+        if(session.live.webexLink){
+            cy.get(authoring.vex.webexLinkInput).should("have.value", session.live.webexLink)
+        }
+
+        if(session.live.zoomNum){
+            cy.get(authoring.vex.zoomNumInput).should("have.value", session.live.zoomNum)
+        }
+
+        if(session.live.zoomAuth == "No Password"){
+            cy.get(authoring.vex.noPasswordRadio).parent().should("have.class", "ant-radio-checked")
+        } else if(session.live.zoomAuth == "Require Password From Attendee"){
+            cy.get(authoring.vex.requirePasswordRadio).parent().should("have.class", "ant-radio-checked")
+        } else if(session.live.zoomAuth == "Apply Password Automatically For Attendee"){
+            cy.get(authoring.vex.applyPasswordRadio).parent().should("have.class", "ant-radio-checked")
+        }
+
+        if(session.live.video){
+            cy.contains(authoring.vex.antRow, "Live Content Video").should("contain", session.live.video)
+        }
+    }
+}
+
+const verifyAppearance = (appearance) => {
+    cy.containsExact("span", appearance.appearance).should("exist")
+    cy.get(`img[src="${appearance.heroImage.url}"]`).should("exist")
+    cy.get(authoring.vex.appearance.heroHeightInput).should("have.value", appearance.heroHeight)
+    cy.get(authoring.vex.appearance.headerTitle).should('contain', appearance.headerTitle)
+    cy.get(authoring.vex.appearance.headerSubtitle).should('contain', appearance.headerSubtitle)
+    cy.get(authoring.vex.appearance.contentTitle).should('contain', appearance.contentTitle)
+    cy.get(authoring.vex.appearance.contentDescription).should("contain", appearance.contentDescription)
+}
+
+const verifySessionGroup = (group) => {
+    cy.contains(authoring.vex.groupRow, group.name).should("exist").within(()=>{
+        cy.contains("button", "Manage Sessions").click()
+    })
+    if(group.sessions){
+        group.sessions.forEach( session => {
+            cy.containsExact("span", session).should("exist")
+        })
+    }
+}
+
+const verifyLandingPage = (page) => {
+    cy.containsExact(authoring.vex.antCell, page.name).should('exist')
+
+    if(page.setHome){
+        cy.containsExact(authoring.vex.antCell, page.name).siblings("td:contains('Unset')").should("exist")
+    } else {
+        cy.containsExact(authoring.vex.antCell, page).siblings("td:contains('Set as Home Page')").should("exist")
+    }
+
+    authoring.vex.goToPageEditor(page.name)
+    page.blocks.forEach((block)=>{
+        if(block.sessionGroup !== sessionGroups.emptyGroup.name){
+            // Since empty session groups aren't cloned over, they won't appear in landing page if added to the original landing page
+            authoring.vex.verifyBlock(block)
+        }
+    })
+
+    cy.go("back") // Goes back to landing page set up tab
+}
+
+const verifyNavItem = (nav) => {
+    cy.containsExact(authoring.vex.navigation.navTitle, nav.label).should('exist').parent().within(()=>{
+        if(nav.source && !nav.newTab){
+            cy.containsExact(authoring.vex.navigation.navSubtitle, `${nav.type}: ${nav.source}`).should('exist')
+        } else if(nav.source && nav.newTab){
+            cy.containsExact(authoring.vex.navigation.navSubtitle, `${nav.type}: ${nav.source} (new tab)`).should('exist')
+        }else if (nav.type == "Text"){
+            cy.containsExact(authoring.vex.navigation.navSubtitle, nav.type).should('exist')
+        }
+    })
+}
+
 // Note that event's black list is not cloned since this list is only for a specific event as a last resort to kick someone out 
 // Note that a session's rocket chat settings are also not cloned since doing so would result in 2 separate sessions sharing the same chat 
 // Note that empty session groups don't get cloned 
@@ -229,7 +362,6 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
                         authoring.vex.addToGroup(group)
                     }
                 })
-                authoring.vex.goToEventConfig(event.name) // remove later
                 authoring.vex.addLandingPages(landingPage.name)
                 authoring.vex.configureLandingPage(landingPage)
                 navigation.forEach((navItem)=>{
@@ -239,11 +371,45 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         })
     })
 
-    /*it("Clone everything within the event, then within the clone, clone a session and a landing page", ()=>{
-       
+    it("Clone everything within the event, then within the clone, clone a session and a landing page", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.deleteVirtualEvent(clonedEvent.name)
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.cloneEvent({
+            name: clonedEvent.name,
+            eventSetup: true,
+            sessions: true,
+            sessionGroups: true,
+            appearance: true,
+            landingPages: true,
+            navigation: true
+        })
+
+        verifyEventSetup(event)
+
+        Object.values(sessions).forEach(session => {
+            authoring.vex.goToSessionConfig(session.name)
+            verifySession(session, "cloned event")
+            authoring.vex.backToEvent(clonedEvent.name)
+        })
+
+        authoring.vex.goToAppearance()
+        verifyAppearance(appearance)
+
+        authoring.vex.goToSessionGroup()
+        verifySessionGroup(sessionGroups.publicGroup)
+        verifySessionGroup(sessionGroups.privateGroup)
+        cy.contains(authoring.vex.groupRow, sessionGroups.emptyGroup.name).should("not.exist") // empty session groups don't get cloned 
+        
+        authoring.vex.goToLandingPage()
+        verifyLandingPage(landingPage)
+
+        authoring.vex.goToNavigation()
+        navigation.forEach((nav) => {
+            verifyNavItem(nav)
+        })
+
     })
 
-    it("Clone select portions of the event", ()=>{
-
-    })*/
 })

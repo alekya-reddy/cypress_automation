@@ -25,10 +25,9 @@ export class Vex extends Common {
         this.eventFormPicker = '#rc_select_1';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
-        this.antDropDownScroller = `${this.antDropdownContainer} > div > div:nth-child(2)`;
+        this.antDropDownScroller = '.rc-virtual-list-holder-inner'; //`${this.antDropdownContainer} > div > div:nth-child(2)`;
         this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
-        this.sessionNameInput = 'input[name="name"]';
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
         this.addSessionButton = "button:contains('Add Session')";
@@ -143,7 +142,16 @@ export class Vex extends Common {
         this.blacklist = {
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item"
-        };  
+        };
+        this.cloneButton = "i[class*='Icon__fa-clone']";  
+        this.cloneOptions = {
+            eventSetup: "input[value='Event setup']",
+            sessions: "input[value='Sessions']",
+            sessionGroups: "input[value='Session groups']",
+            appearance: "input[value='Appearance settings']",
+            landingPages: "input[value='Landing pages']",
+            navigation: "input[value='Navigation']"
+        };
     }
 
     visit(){
@@ -165,7 +173,7 @@ export class Vex extends Common {
                 cy.contains('button', 'Cancel').click()
             }
         })
-        cy.get(this.antModalBody).should('not.be.visible', {timeout: 10000})
+        cy.get(this.antModalBody).should('not.be.visible')
         if (checkSuccess){
             cy.containsExact(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
         }
@@ -199,6 +207,7 @@ export class Vex extends Common {
         const form = config.form
         const start = config.start
         const end = config.end
+        const timeZone = config.timeZone
         const trackProtection = config.trackProtection 
         const externalID = config.externalID 
         const cookieConsent = config.cookieConsent 
@@ -229,6 +238,13 @@ export class Vex extends Common {
 
         if(end){
             cy.get(this.endTimeInput).click().clear().type(end + '\n')
+        }
+
+        if(timeZone){
+            cy.get(this.timeZonePicker).click().within(()=>{
+                cy.get("input").clear().type(timeZone)
+            })
+            cy.get(this.antDropdownOption(timeZone)).click({force: true})
         }
 
         if(language){
@@ -540,12 +556,8 @@ export class Vex extends Common {
         }
         if (timeZone){
             cy.ifNoElementWithExactTextExists("span", timeZone, 500, ()=>{
-                cy.get(this.timeZonePicker).click()
-                cy.scrollIntoViewWithin({
-                    scroller: this.antDropDownScroller,
-                    element: this.antDropdownOption(timeZone),
-                    text: timeZone,
-                    increment: 2
+                cy.get(this.timeZonePicker).click().within(()=>{
+                    cy.get("input").clear().type(timeZone)
                 })
                 cy.get(this.antDropdownOption(timeZone)).click({force: true})
             })
@@ -1248,7 +1260,22 @@ export class Vex extends Common {
 
         cy.contains("button", "Confirm").click()
 
-        if(verify !== false && className){ // Gonna be difficult to get the div if you don't give it a class name
+        if(verify !== false){
+            this.verifyBlock(config)
+        }
+    }
+
+    verifyBlock(config){
+        const type = config.type.toLowerCase()
+        const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
+        const typography = config.typography // this has sub options 
+        const className = config.className 
+        const sessionGroup = config.sessionGroup
+        const heading = config.heading // this has sub options color, textAlign
+        const background = config.background // this has several sub options 
+        const spacing = config.spacing // Padding in valid css units
+
+        if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class='${className}']`
             cy.get(locator).invoke("attr", "style").then((style)=>{
                 if(typography && typography.textAlign){
@@ -1286,7 +1313,8 @@ export class Vex extends Common {
                 })
             }
         }
-        if(verify !== false && sessionGroup){ // session group blocks have to be checked entirely different way
+
+        if(type == "session group" && sessionGroup){ // If you add a session group block with no session group, cannot find the correct block
             let blockLocator = this.pages.sessionGroupRow
             cy.contains(blockLocator, sessionGroup).should("exist")
             if(heading){
@@ -1439,6 +1467,61 @@ export class Vex extends Common {
             cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription)
             cy.get(this.appearance.contentDescriptionInput).parent().contains("Save").click()
             cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
+        }
+    }
+
+    selectCloneOptions(config){
+        // To specify which event 'tabs' you want to clone, pass them in as a key and set to true. 
+        // The key must be the same as their corresponding locator keys in the this.cloneOptions object.
+        Object.keys(config).forEach(option => {
+            if(this.cloneOptions[option]){
+                cy.get(this.cloneOptions[option]).click()
+                cy.get(this.cloneOptions[option]).parent().should("have.class", "ant-checkbox-checked")
+            }
+        })
+    }
+
+    cloneEvent(config){
+        // If you specify the event to clone (template), then it is assumed you are already on the page listing all the events, and will clone from there by adding a new event 
+        // If you don't specify what to clone, then it is assumed you are already on the event configuration page of the event you want to clone, and will clone from within here
+        // Both ways of cloning will bring you to the newly created event configuration page
+        const template = config.template
+        const name = config.name
+        const verify = config.verify
+
+        if(template){
+            cy.get(this.pageTitleBar).within(()=>{
+                cy.get(this.addEventButton).click()
+            })
+            cy.contains(this.antModal, "Add Virtual Event").within(()=>{
+                cy.get(this.eventNameInput).clear().type(name)
+                cy.get(this.antSelector).click()
+            })
+            cy.mouseWheel({
+                scroller: this.antDropDownScroller,
+                find: this.antDropdownOption(template)
+            })
+            cy.get(this.antDropdownOption(template)).click()
+            cy.contains(this.antModal, "Add Virtual Event").within(()=>{
+                this.selectCloneOptions(config)
+                cy.contains("button", "Add Virtual Event").click()
+            })
+            if(verify !== false){
+                cy.contains(this.antModalBody, "Add Virtual Event").should('not.be.visible')
+                cy.containsExact(this.eventCardTitle, name, {timeout: 10000}).should('exist')
+                this.goToEventConfig(name)
+            }
+        } else {
+            cy.get(this.cloneButton).click()
+            cy.contains(this.antModal, "Clone this Virtual Event").within(()=>{
+                cy.get(this.eventNameInput).clear().type(name)
+            })
+            this.selectCloneOptions(config)
+            cy.contains("button", "Clone this Virtual Event").click()
+            if(verify !== false){
+                cy.contains(this.antModal, "Clone this Virtual Event").should("not.be.visible")
+                cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+            }
         }
     }
 
