@@ -260,7 +260,7 @@ Cypress.Commands.add("mouseWheel", (config)=>{
     const position = isNaN(config.position) ? 0 : config.position // Internal function use only 
 
     if( (find && Cypress.$(find).length > 0) || position > maxScroll ) { cy.log("Scroll ended"); return }
-    cy.get(scroller).trigger('wheel', {
+    cy.get(scroller, {log: false, timeout: 10000}).trigger('wheel', {
         deltaX: 0,
         deltaY: position
     })

@@ -903,7 +903,7 @@ export class Vex extends Common {
     attachSubNav(config){
         // Tip: This function drags the subject by the draggable menu, and drops onto the target's "remove" button 
         // To simply reorder nav items at the top level, you don't need this function. Just drag subject's menu over the target's menu 
-        // To make subject a second-level submenu of target, use this function
+        // To make subject a sublink of target, use this function. Subject must be above the target for this to work
         // To make subject a third-level submenu of target, which itself is a submenu of a first level nav-item, first drag subject to target
         // This make make subject a second-level submenu alongside target, then drag subject to itself 
         // This effectively drags the subject back, and then it will link up to the target as a third-level submenu 
@@ -1024,6 +1024,7 @@ export class Vex extends Common {
                 cy.contains("button", "Yes").click()
             })
             if(verify !== false){
+                cy.waitFor({element: `${this.antCell}:contains('${page}')`, to: "not.exist", wait: 20000})
                 cy.containsExact(this.antCell, page).should("not.exist")
             }
         })
@@ -1474,7 +1475,7 @@ export class Vex extends Common {
         // To specify which event 'tabs' you want to clone, pass them in as a key and set to true. 
         // The key must be the same as their corresponding locator keys in the this.cloneOptions object.
         Object.keys(config).forEach(option => {
-            if(this.cloneOptions[option]){
+            if(this.cloneOptions[option] && config[option]){
                 cy.get(this.cloneOptions[option]).click()
                 cy.get(this.cloneOptions[option]).parent().should("have.class", "ant-checkbox-checked")
             }
@@ -1522,6 +1523,85 @@ export class Vex extends Common {
                 cy.contains(this.antModal, "Clone this Virtual Event").should("not.be.visible")
                 cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
             }
+        }
+    }
+
+    cloneSession(config){
+        const template = config.template
+        const name = config.name
+        const verify = config.verify
+
+        if(template){
+            this.goToSessionList()
+            cy.contains("button", "Add Session").click()
+            cy.contains(this.antModal, "Add Session").within(()=>{
+                cy.get(this.sessionNameInput).clear().type(name)
+                cy.get(this.antSelector).click()
+            })
+            cy.mouseWheel({
+                scroller: this.antDropDownScroller,
+                find: this.antDropdownOption(template)
+            })
+            cy.get(this.antDropdownOption(template)).click()
+            cy.contains(this.antModal, "Add Session").within(()=>{
+                cy.get(this.onDemandRadio).should("not.exist") // The on demand and live radio buttons disappear once a template is chosen
+                cy.contains("button", "Add Session").click()
+            })
+            if(verify !== false){
+                cy.contains(this.antModal, "Add Session").should("not.be.visible")
+                cy.get(this.sessionName(name), {timeout: 10000}).should('exist')
+                this.goToSessionConfig(name)
+            }
+        } else {
+            cy.angryClick({
+                clickElement: this.cloneButton,
+                checkElement: `${this.antModal}:contains('Clone this Session')`
+            })
+            cy.contains(this.antModal, "Clone this Session", {timeout: 20000}).should("exist").within(()=>{
+                cy.get(this.sessionNameInput).should("exist").clear().type(name)
+                cy.contains("button", "Clone this Session").click()
+            })
+            if(verify !== false){
+                cy.contains(this.antModal, "Clone this Session").should("not.be.visible")
+                cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+            }
+        }
+    }
+
+    cloneLandingPage(config){
+        const method = config.method
+        const template = config.template
+        const name = config.name
+        const verify = config.verify
+
+        if(method == "add page button"){
+            cy.contains("button", "Add Page").click()
+            cy.contains(this.antModal, "Add Page").within(()=>{
+                cy.get(this.pages.nameInput).clear().type(name)
+                cy.get(this.antSelector).click()
+            })
+            cy.mouseWheel({
+                scroller: this.antDropDownScroller,
+                find: this.antDropdownOption(template)
+            })
+            cy.get(this.antDropdownOption(template)).click()
+            cy.contains(this.antModal, "Add Page").within(()=>{
+                cy.contains('button', "Add Page").click()
+            })
+        } else if (method == "clone button"){
+            cy.containsExact(this.antCell, template).parent().within(()=>{
+                cy.contains("button", "Clone").click()
+            })
+            cy.contains(this.antModal, "Clone this Page").within(()=>{
+                cy.get(this.pages.nameInput).clear().type(name)
+                cy.contains("button", "Clone this Page").click()
+            })
+        }
+
+        if(verify !== false){
+            cy.contains(this.antModal, "Add Page").should("not.be.visible")
+            cy.contains(this.antModal, "Clone this Page").should("not.be.visible")
+            cy.containsExact(this.antCell, name, {timeout: 20000}).should("exist")
         }
     }
 
