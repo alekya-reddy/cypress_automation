@@ -498,6 +498,8 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         // Clone landing page (via add page button)
         // There is currently a bug associated with this scenario: https://lookbookhq.atlassian.net/browse/DEV-11883
         // The clone from options contain landing pages that don't exist on that event, or even on the organization. There are also duplicate options. 
+        // Update: issue is due to old events that were deleted. This did not also delete the landing pages, and the dropdown list pulls from all landing pages in the organization.
+        // A migration would be needed to remove landing pages of deleted events. 
         /*authoring.vex.cloneLandingPage({
             method: "add page button",
             template: landingPage.name,

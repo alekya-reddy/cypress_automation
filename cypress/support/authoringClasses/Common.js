@@ -19,6 +19,8 @@ export class Common {
         this.modal = 'div[data-qa-hook="modal"]';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal"; 
+        this.antModalRoot = ".ant-modal-root";
+        this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
         this.vexNavigation = '#virtual-events';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
@@ -118,6 +120,25 @@ export class Common {
         if(url){
             cy.get(`img[src="${url}"]`).should('exist')
         }
+    }
+
+    waitForAntModal(config){
+        // This function waits until those annoying modals disappear
+        // Cannot simply wait for them to not exist because modal remains present on the DOM, just hidden
+        // You can use should("not.be.visible") as alternative but there is no way to control how long the wait should be  
+        const title = config.title
+        const wait = config.wait || 10
+        let count = isNaN(config.count) ? 0 : config.count
+
+        cy.contains(this.antModal, title, {log: false}).parents(this.antModalRoot).within(()=>{
+            cy.get(this.antModalMask, {log: false}).invoke("attr", 'class').then(modalClass => {
+                if(!modalClass.includes("ant-modal-mask-hidden") && count < wait){
+                    cy.wait(1000, {log: false})
+                    config.count = count + 1
+                    this.waitForAntModal(config)
+                }
+            })
+        })
     }
 
 }
