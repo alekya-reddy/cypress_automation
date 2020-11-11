@@ -28,6 +28,7 @@ const sessions = {
         get url(){
             return `${event.url}/${this.slug}`
         },
+        description: "on demand description",
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing',
@@ -42,6 +43,7 @@ const sessions = {
         get url(){
             return `${event.url}/${this.slug}`
         },
+        description: "webex description",
         visibility: 'Public',
         type: 'Live',
         live: {
@@ -241,6 +243,10 @@ const verifySession = (session, howCloned) => {
         cy.get(authoring.vex.sessionSlugInput).should("not.have.value", session.slug) // Cannot clone the slug if cloning session within an event
     }
 
+    if(session.description){
+        cy.get(authoring.vex.sessionDescription.editor).should('contain', session.description)
+    }
+
     if(session.visibility == "Public"){
         cy.get(authoring.vex.publicRadio).should("have.attr", "checked")
     } else if (session.visibility == "Private"){
@@ -356,6 +362,8 @@ const verifyLandingPage = (page, exceptBlocks = [], howCloned) => {
     } else if(howCloned == "cloned landing page"){
         authoring.vex.goToPageEditor(page.cloneName)
     }
+
+    cy.waitFor({element: "#react-beautiful-dnd-announcement-0", to: "exist", wait: 10000}) // Waits for page to load 
     
     page.blocks.forEach((block)=>{
         if(!exceptBlocks.includes(block.id)){
@@ -468,7 +476,7 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             verifyNavItem(nav)
         })
 
-        // Clone session via add session
+        // Clone session via add session. Note: Not checking that all the template options are pulling from correct source
         authoring.vex.cloneSession({
             name: sessions.webex.cloneName,
             template: sessions.webex.name
@@ -496,17 +504,20 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         authoring.vex.deleteLandingPages(landingPage.cloneName)
 
         // Clone landing page (via add page button)
-        // There is currently a bug associated with this scenario: https://lookbookhq.atlassian.net/browse/DEV-11883
-        // The clone from options contain landing pages that don't exist on that event, or even on the organization. There are also duplicate options. 
-        // Update: issue is due to old events that were deleted. This did not also delete the landing pages, and the dropdown list pulls from all landing pages in the organization.
-        // A migration would be needed to remove landing pages of deleted events. 
-        // Also, if you clone a landing page from another event, the session group blocks remain but no longer contain the sessions 
-        /*authoring.vex.cloneLandingPage({
+        // The dropdown list pulls from all landing pages in the organization. 
+        // As such, we will have 2 landing pages of the same name - 1 from original event, 1 from cloned event. 
+        // To distinguish between them, need to rename the one in the cloned event
+        // FYI: A migration would be needed to remove landing pages of events that were deleted prior to the implementation of the cloning feature 
+        authoring.vex.editLandingPage({name: landingPage.name, newName: "page2"})
+        cy.reload()
+        authoring.vex.cloneLandingPage({
             method: "add page button",
-            template: landingPage.name,
+            template: landingPage.name, // We are cloning the landing page of the original event 
             name: landingPage.cloneName
         })
-        verifyLandingPage(landingPage, exceptBlocks, "cloned landing page")*/
+        // If you clone landing page from another event, the session group blocks will no longer contain the session groups
+        let exceptBlocks2 = ["Public Group Block", "Private Group Block", "Empty Group Block"] 
+        verifyLandingPage(landingPage, exceptBlocks2, "cloned landing page")
     })
 
     it("Clone only select parts of the event by adding new event and choosing clone-from option", ()=>{

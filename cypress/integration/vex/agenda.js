@@ -54,6 +54,7 @@ const sessions = [
         get url(){
             return `${event.url}/${this.slug}`
         },
+        description: "within range description",
         visibility: 'Public',
         type: 'Live',
         live: {
@@ -71,6 +72,7 @@ const sessions = [
         get url(){
             return `${event.url}/${this.slug}`
         },
+        description: "overlaps end description",
         visibility: 'Public',
         type: 'Live',
         live: {
@@ -121,10 +123,11 @@ describe("VEX - Agenda", ()=>{
     it("Go to consumption and verify that sessions that start within range show up as tabs", ()=>{
         sessions.forEach((session)=>{
             cy.visit(event.url)
-            cy.containsExact("div", "All Sessions").should('exist').siblings("div").should("have.length", 2)
+            cy.containsExact("div", "All Sessions", {timeout: 10000}).should('exist').siblings("div").should("have.length", 2)
             if (session.expect){
                 cy.containsExact("div", session.expect).should('exist').click()
                 cy.contains(consumption.vex.sessionListItem, session.name).should('exist')
+                cy.contains(session.description).should("exist")
             }
         })
     })
