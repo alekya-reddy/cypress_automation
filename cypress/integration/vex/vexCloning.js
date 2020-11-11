@@ -229,7 +229,6 @@ const verifyEventSetup = (event) => {
 }
 
 const verifySession = (session, howCloned) => {
-    cy.log(howCloned)
     if(howCloned == "cloned event"){
         cy.get(authoring.vex.sessionNameInput).should("have.value", session.name)
     } else if (howCloned == "cloned session"){
@@ -260,7 +259,7 @@ const verifySession = (session, howCloned) => {
 
     if(session.contents){
         session.contents.forEach((content)=>{
-            cy.contains("span", content).should("exist")
+            cy.contains("span", content, {timeout: 20000}).should("exist")
         })
     }
 
@@ -397,10 +396,7 @@ const verifyNavItem = (nav, exceptions = []) => {
 // Note that empty session groups don't get cloned 
 
 describe("VEX - Clone Event, Session, Landing Page", ()=>{
-    it("always passes", ()=>{
-        cy.log("pass")
-    })
-    /*it("Set up if not already done", ()=>{
+    it("Set up if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
@@ -500,12 +496,14 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         authoring.vex.deleteLandingPages(landingPage.cloneName)
 
         // Clone landing page (via add page button)
-        authoring.vex.cloneLandingPage({
+        // There is currently a bug associated with this scenario: https://lookbookhq.atlassian.net/browse/DEV-11883
+        // The clone from options contain landing pages that don't exist on that event, or even on the organization. There are also duplicate options. 
+        /*authoring.vex.cloneLandingPage({
             method: "add page button",
             template: landingPage.name,
             name: landingPage.cloneName
         })
-        verifyLandingPage(landingPage, exceptBlocks, "cloned landing page") 
+        verifyLandingPage(landingPage, exceptBlocks, "cloned landing page")*/
     })
 
     it("Clone only select parts of the event by adding new event and choosing clone-from option", ()=>{
@@ -550,6 +548,6 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             const exceptions = ["Public Session", "Private Session", "Text"] 
             verifyNavItem(nav, exceptions)
         })
-    })*/
+    })
 
 })

@@ -1023,6 +1023,7 @@ export class Vex extends Common {
         const pages = [list].flat()
 
         this.goToLandingPage()
+        cy.contains("button", "Add Page", {timeout: 20000}).should("exist") // waits as long as needed for landing page setup to load
         pages.forEach((page)=>{
             cy.ifElementWithExactTextExists(this.antCell, page, 1000, ()=>{
                 cy.containsExact(this.antCell, page).siblings("td:contains('Remove')").within(()=>{
@@ -1595,6 +1596,9 @@ export class Vex extends Common {
             cy.contains(this.antModal, "Add Page").within(()=>{
                 cy.contains('button', "Add Page").click()
             })
+            if(verify !== false){
+                this.waitAntModal({title: "Add Page"})
+            }
         } else if (method == "clone button"){
             cy.containsExact(this.antCell, template).parent().within(()=>{
                 cy.contains("button", "Clone").click()
@@ -1603,13 +1607,33 @@ export class Vex extends Common {
                 cy.get(this.pages.nameInput).clear().type(name)
                 cy.contains("button", "Clone this Page").click()
             })
+            if(verify !== false){
+                this.waitAntModal({title: "Clone this Page"})
+            }
         }
 
         if(verify !== false){
-            cy.contains(this.antModal, "Add Page").should("not.be.visible")
-            cy.contains(this.antModal, "Clone this Page").should("not.be.visible")
             cy.containsExact(this.antCell, name, {timeout: 20000}).should("exist")
         }
+    }
+
+    waitAntModal(config){
+        // This function waits until those annoying modals disappear
+        // Cannot simply wait for them to not exist because modal remains present on the DOM, just hidden
+        // You can use should("not.be.visible") as alternative but there is no way to control how long the wait should be  
+        const title = config.title
+        const wait = config.wait || 10
+        let count = isNaN(config.count) ? 0 : config.count
+
+        cy.contains(this.antModal, title, {log: false}).parents(".ant-modal-root").within(()=>{
+            cy.get(".ant-modal-mask", {log: false}).invoke("attr", 'class').then(modalClass => {
+                if(!modalClass.includes("ant-modal-mask-hidden") && count < wait){
+                    cy.wait(1000, {log: false})
+                    config.count = count + 1
+                    this.waitAntModal(config)
+                }
+            })
+        })
     }
 
 }
