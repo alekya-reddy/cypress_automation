@@ -376,12 +376,45 @@ export class Vex extends Common {
         cy.get(this.searchSessionInput).clear().type(search + "\n")
     }
 
+    clearSessionSearch(){
+        cy.get(this.searchSessionIcon).eq(1).click()
+        cy.get(this.searchSessionInput).clear().type("\n")
+    }
+
     goToSessionConfig(sessionName){
         this.goToSessionList()
         cy.get(this.sessionName(sessionName), {timeout: 20000}).parent().within(()=>{
             cy.contains("a", "Configure").click()
         })
         cy.get(this.pageTitleLocator).should('contain', sessionName, {timeout: 20000});
+    }
+
+    filterSessionType(options){
+        const onDemand = options.onDemand // Required. Must be true or false
+        const live = options.live // Required. Must be true or false
+
+        cy.contains("th", "Type").within(()=>{
+            cy.get(".ant-table-filter-trigger-container").click()
+        })
+        this.clickAntCheckbox({label: "On Demand", check: onDemand})
+        this.clickAntCheckbox({label: "Live", check: live})
+        cy.contains(this.antDropdown, "On Demand").within(()=>{
+            cy.contains("button", "OK").click()
+        })
+    }
+
+    filterSessionVisibility(options){
+        const _public = options.public
+        const _private = options.private
+
+        cy.contains("th", "Visibility").within(()=>{
+            cy.get(".ant-table-filter-trigger-container").click()
+        })
+        this.clickAntCheckbox({label: "public", check: _public})
+        this.clickAntCheckbox({label: "private", check: _private})
+        cy.contains(this.antDropdown, "public").within(()=>{
+            cy.contains("button", "OK").click()
+        })
     }
 
     pickOnDemandVideo(content){

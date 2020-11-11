@@ -53,6 +53,9 @@ export class Common {
         this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
         this.selectList = "div[data-qa-hook='select-list']";
         this.selectValue = ".Select-value";
+        this.antCheckboxContainer = ".ant-dropdown-menu-item";
+        this.antCheckbox = ".ant-checkbox";
+        this.antDropdown = ".ant-dropdown";
     }
 
     visitHomeUrl(){
@@ -136,6 +139,19 @@ export class Common {
                     cy.wait(1000, {log: false})
                     config.count = count + 1
                     this.waitForAntModal(config)
+                }
+            })
+        })
+    }
+
+    clickAntCheckbox(config){
+        const label = config.label 
+        const check = config.check 
+
+        cy.contains(this.antCheckboxContainer, label).within(()=>{
+            cy.get(this.antCheckbox).invoke("attr", "class").then((checkboxClass)=>{
+                if( (check == true && !checkboxClass.includes("ant-checkbox-checked")) || (check == false && checkboxClass.includes("ant-checkbox-checked")) ){
+                    cy.get(this.antCheckbox).click()
                 }
             })
         })

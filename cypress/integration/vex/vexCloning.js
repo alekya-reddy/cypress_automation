@@ -500,6 +500,7 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         // The clone from options contain landing pages that don't exist on that event, or even on the organization. There are also duplicate options. 
         // Update: issue is due to old events that were deleted. This did not also delete the landing pages, and the dropdown list pulls from all landing pages in the organization.
         // A migration would be needed to remove landing pages of deleted events. 
+        // Also, if you clone a landing page from another event, the session group blocks remain but no longer contain the sessions 
         /*authoring.vex.cloneLandingPage({
             method: "add page button",
             template: landingPage.name,
