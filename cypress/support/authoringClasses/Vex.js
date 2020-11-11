@@ -30,6 +30,8 @@ export class Vex extends Common {
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
+        this.searchSessionIcon = 'svg[data-icon="search"]';
+        this.searchSessionInput = "#search-session-name";
         this.addSessionButton = "button:contains('Add Session')";
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.sessionName = function(sessionName){ 
@@ -367,6 +369,11 @@ export class Vex extends Common {
             })
         })
         cy.get(this.sessionName(sessionName)).should('not.exist')
+    }
+
+    searchSession(search){
+        cy.get(this.searchSessionIcon).eq(1).click()
+        cy.get(this.searchSessionInput).clear().type(search + "\n")
     }
 
     goToSessionConfig(sessionName){
