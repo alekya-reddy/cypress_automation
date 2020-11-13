@@ -452,7 +452,7 @@ export class Vex extends Common {
         const engagementThreshold = config.engagementThreshold
         const engagementScore = config.engagementScore
         const maxAttendees = config.maxAttendees 
-        const stayOnPage = config.stayOnPage // Set to true if you know you want to stay on current session config page 
+        const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
 
         if(!stayOnPage){
             cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{

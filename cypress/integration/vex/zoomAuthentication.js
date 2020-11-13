@@ -29,6 +29,43 @@ const session = {
     }
 }
 
+// For the next to 2 sessions, the set up is that session2 (a zoom session requiring password) is switched to a content library live session 
+const session2 = {
+    name: 'Zoom to CL',
+    slug: 'zoomtocl-js',
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Zoom',
+        zoomNum: '1234',
+        zoomAuth: "Require Password From Attendee",
+        zoomPW: "12345"
+    }
+}
+
+const session3 = {
+    name: 'Zoom to CL',
+    slug: 'zoomtocl-js',
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Content Library',
+        video: 'Youtube - Used in Cypress automation for VEX testing'
+    }
+}
+
 const email = `bobman${Math.random()}@gmail.com` // Need to generate new email each time because it will remember you from last time, and not ask for meeting PW again
 const emailQueryString = email.replace("@", "%40") // @ won't work in a query string, so using %40 encoding
 
@@ -46,14 +83,16 @@ const emailQueryString = email.replace("@", "%40") // @ won't work in a query st
     if revisiting on a fresh incognito browser.
 */
 describe('VEX - Virtual Event, zoom authentication', function() {
-    beforeEach(()=>{
+
+    const visitSessionConfig = () => {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.goToSessionConfig(session.name)
-    })
+    }
 
     it('Zoom authentication set to no password needed', function() {
+        visitSessionConfig()
         authoring.vex.configureLive({
             zoomAuth: "No Password"
         })
@@ -67,6 +106,7 @@ describe('VEX - Virtual Event, zoom authentication', function() {
     })
 
     it('Zoom authentication set to Apply Password Automatically For Attendee', function() {
+        visitSessionConfig()
         authoring.vex.configureLive({
             zoomAuth: "Apply Password Automatically For Attendee",
             zoomPW: "12345"
@@ -81,6 +121,7 @@ describe('VEX - Virtual Event, zoom authentication', function() {
     })
 
     it('Zoom authentication set to Require Password From Attendee', function() {
+        visitSessionConfig()
         authoring.vex.configureLive({
             zoomAuth: "Require Password From Attendee",
             zoomPW: "12345"
@@ -119,4 +160,12 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.get(consumption.vex.emailInput).should('not.exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
+
+    it("If require zoom password option is still active but live type has been switched to content library, you should not be asked for zoom password", ()=>{
+        // There was a bug where if the 'require password' option is still active, it would still ask for zoom PW despite no longer being a zoom session 
+        cy.visit(session3.url)
+        cy.get(consumption.vex.emailInput, {timeout: 20000}).should('exist')
+        cy.get(consumption.vex.meetingPWInput).should('not.exist')
+    })
+
 })
