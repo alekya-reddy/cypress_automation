@@ -205,6 +205,7 @@ export class VexCX extends CommonCX {
         
         if(sessionGroup){ // session group blocks have to be checked entirely different way
             let blockLocator = this.sessionGroup
+            cy.contains(blockLocator, sessionGroup).should("exist")
             if(heading){
                 cy.contains(blockLocator, sessionGroup).within(()=>{
                     if(heading.color && !heading.color.hex){

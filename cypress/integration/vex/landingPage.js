@@ -40,6 +40,11 @@ const sessionGroupA = {
     sessions: [publicSession.name, privateSession.name]
 }
 
+const privateSessionGroup = {
+    name: "Private Group",
+    sessions: [privateSession.name]
+}
+
 const deleteSessionGroup = {
     name: "Delete Session Group",
     sessions: [publicSession.name]
@@ -58,6 +63,11 @@ const testLandingPage = {
         {
             type: "Session Group",
             sessionGroup: deleteSessionGroup.name,
+        },
+        {
+            type: "Session Group",
+            sessionGroup: privateSessionGroup.name,
+            expectNoSessions: [privateSession.name]
         },
         {
             type: "HTML",
@@ -126,6 +136,8 @@ describe("VEX - Landing Page Editor", ()=>{
                 })
                 authoring.vex.addSessionGroup(sessionGroupA.name)
                 authoring.vex.addToGroup(sessionGroupA)
+                authoring.vex.addSessionGroup(privateSessionGroup.name)
+                authoring.vex.addToGroup(privateSessionGroup)
             }
         })
     })
@@ -196,15 +208,18 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(testLandingPage.name)
         cy.contains(authoring.vex.pages.sessionGroupRow, deleteSessionGroup.name).should("not.exist")
-        authoring.vex.removeBlock(emptySessionBlockLocator) // There's a bug where empty session group block causes blank page, so have to delete it here. Once fixed, remove this line
-        cy.contains("button", "Save").click() // Also can remove this line once bug fixed
+        //authoring.vex.removeBlock(emptySessionBlockLocator) // There's a bug where empty session group block causes blank page, so have to delete it here. Once fixed, remove this line
+        //cy.contains("button", "Save").click() // Also can remove this line once bug fixed
 
         // Visit it on consumption 
         cy.visit(testLandingPage.url)
-        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
         cy.contains(consumption.vex.landingPage.block, "Delete me").should("not.exist")
         cy.contains(consumption.vex.landingPage.block, deleteSessionGroup.name).should("not.exist")
+        cy.contains("Please select a session group").should("not.exist") // empty session block should not exist 
+        cy.get(consumption.vex.sessionGroup).should("have.length", 2) // This checks that there are only 2 session group blocks (blocks 2 and 4)
 
         // Go back to authoring, set landing page as the home page  
         authoring.vex.visit()
@@ -215,8 +230,9 @@ describe("VEX - Landing Page Editor", ()=>{
 
         // Verify landing page is home page on consumption
         cy.visit(event.url)
-        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
 
         // Unset the homepage and verify and consumption
         cy.go("back")
