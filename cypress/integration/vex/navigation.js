@@ -168,6 +168,11 @@ const nav2 = [
         label: "Level 1",
         type: "Text",
         verify: true
+    },
+    {
+        label: "Private",
+        type: "Session",
+        source: privateSession.name
     }
 ]
 
@@ -280,14 +285,16 @@ describe("VEX - Navigation Builder", ()=>{
         authoring.vex.attachSubNav({subject: nav2[2].label, target: nav2[3].label}) // makes level 2 a sublink of level 1
         authoring.vex.attachSubNav({subject: nav2[1].label, target: nav2[2].label}) // makes level 3 a sublink of level 1, below 2 
         authoring.vex.attachSubNav({subject: nav2[1].label, target: nav2[1].label}) // makes level 3 a sublink of level 2 
+        authoring.vex.attachSubNav({subject: nav2[0].label, target: nav2[4].label}) // makes "Single Tiered" a sublink of "Private"
         cy.wait(1000)
 
         // Verify on consumption that all removed items are gone, and text links have proper menu structure
         cy.visit(event.url)
-        cy.contains("div", nav2[0].label).should('exist')
         cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[3].label).should('exist').trigger("mouseover")
         cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[2].label).should('exist').trigger("mouseover")
         cy.contains(consumption.vex.vexHeaderMenuNoPopup, nav2[1].label).should('exist')
+        cy.contains("div", nav2[0].label).should('not.exist')
+        cy.contains("a", nav2[4].label).should("not.exist")
 
         nav1.forEach((navItem)=>{
             cy.get(consumption.vex.vexHeader).within(()=>{
