@@ -161,6 +161,7 @@ Here is a list of existing and planned authoring classes and the part of the app
 - Explore -> for explore 
 - Website -> for website campaigns
 - WebsiteTools -> for website tools 
+- Microsites -> for microsite builder 
 - Configurations -> for any part of our app that is accessible via the gear icon (the configuration settings), including webhooks, access protection, image library etc
 
 To use these classes in a test file, build a new page object instance using these classes at beginning of each test file. You can leave blank parameters 
@@ -203,64 +204,95 @@ The constants.js file contains all the details for each org and their users, and
 The pageObject.js file contains the functions that build the authoring and consumption page objects using the classes.  
 
 
-Automation Testing Using Multiple Orgs
+A New Way To Do Automation Testing
 ---------------------------------------
-Now that we are switching over to Cypress, this is the perfect opportunity to change the way we do automation testing. We will no longer do automation testing only 
-one 1 organzation. This creates many problems where previous test files contaiminate the environment, causing test failues for subsequent tests. By splitting our 
-tests up into different orgs, we reduce the chances of this happening. Furthermore, by having different orgs, this eliminates the need to go into client hq to toggle
-features on and off. For new features such as website tools or vex, this will save a lot of time and reduce test flakiness - simply by having fewer steps. 
+If/when we switch over to Cypress, this is the perfect opportunity to change the way we do automation testing. I propose that we no longer do automation testing only
+within one organization. This creates many problems where previous test files contaminate the environment, causing test failures for subsequent tests. By splitting our
+tests into different orgs, we reduce the chances of this happening. Furthermore, by having different orgs, this eliminates the need to go into client hq to toggle
+features on and off. For new features such as website tools or vex, this will save a lot of time and reduce test flakiness - simply by having fewer steps.
 
-Another benefit of separating out testing into different orgs is that it avoids multiple people running automation tests on the same organization. If you are testing 
-vex, and I am testing target, we will be running automation tests on 2 different orgs. This will avoid much of the flakiness that we see with our old Capybara repo. 
+Another benefit of separating into different orgs is that it avoids multiple people running automation tests on the same organization. This is another source of flakiness.
+If you haven't noticed, 2 people making changes to the organization at the same time causes everything to slow down. With the new way, we can run parallel modules (such as target and VEX)
+at the same time without having to worry about increased test flakiness.
 
-Each of our products should have its own organization. For example, 1 org for VEX, 1 for target, 1 for recommend etc.  
+Each of our products should have its own organization. For example, 1 org for VEX, 1 for target, 1 for recommend etc.
+Our repo should follow the same organization, i.e. Recommend has its own folder, VEX has its own folder, website tools has its own folder.
+Within, say, the VEX folder, ALL vex-related test files go in here regardless of whether or not these are 'consumption' or 'authoring' tests.
+It doesn't make sense to test 'authoring' and 'consumption' in isolation because authoring affects consumption.
+Same thing with settings related tests. If a setting affects target, recommend, and vex, then we should write separate tests for this setting in the
+target, recommend and vex folders respectively rather than separate out this test file into a 'settings' folder.
 
-To build the page_object for different orgs, you need to specificy only the organization's subdomain, and the tld that you want to use. 
+With respect to the sharing of resources by multiple test files, this is fine, and could save a lot of set up time, as long as these 
+resources are clearly marked as "common resources". Common resources could be a content asset, a content type, a language, an appearance, etc. 
+For example, a content asset could have in its description "For general use by any automation tests". A language could be named "For general use". 
+A form that could be used across multiple test files could have in its description "For general use by any automation tests". 
+To standardize how resources are marked as 'common', let's use the phrases "General use" or "Common resource" in either the name or description.  
+Any such resource marked as a "common resource" should NOT be deleted, edited, modified in any way whatsoever. 
+If a test file requires a content asset that needs to be modified, then this test file should have its own dedicated content asset for use by this test file only 
+- and clearly marked as such by naming the asset after the test file.
+
+Test files should ideally include a setup block at the beginning which checks whether or not setup was already done. 
+If not done, then do the set up. If already done, then skip the setup. This will save a ton of time by not having to do the setup with each and every test run. 
+Furthermore, it makes it easier to setup on environments that aren't already set up. This avoids you having to manually setup on QA, then staging, then prod each time. 
+This might not be possible with every test file, so judgement is required.
+
+How the Page Object Works 
+-------------------------
+To build the page_object for an organization, you need to specify the organization's subdomain and the tld that you want to use.
+Do this at the top of the test file. 
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
 const authoring2 = createAuthoringInstance({org: 'automation', tld: 'pathfactory'})
 
-The page_object builders will automatically construct the correct baseUrl based on these inputs and the TEST_ENV 
-Assuming you have set up the org in the constants.js file, the page_object builder will automatically know which user to use for your automation testing 
+"authoring" is now a page object loaded with all the locators and helper functions that you will need. 
+see pageObject.js to see how the page object is organized.
 
-You can also specify the baseUrl directly, as well as the user info 
+The page_object builder will automatically construct the correct baseUrl based on the org, tld and TEST_ENV as long as you have already set up the org 
+in the constants.js file. The page_object builder will also automatically know which user to use for your automation testing if you have specified a 
+default user in the constants.js file. 
+
+You can also specify the baseUrl directly, as well as the user login credentials:
 
 const authoring3 = createAuthoringInstance({ customBaseUrl: "default.pathfactory-staging.com", username: 'billybob', password: "billy123" })
 
 
 Cypress Limitations
---------------
+-------------------
 
 Cypress documents all their limitations here:
 https://docs.cypress.io/guides/references/trade-offs.html#Permanent-trade-offs-1
 
-You cannot hover using cypress. You must use a workaround. If an element is only visible by hovering over another element, then use force click.
-If you need to see the hover state of an element, use jquery to force it into hover state, as long as this is how the hover state is triggered. 
-Cypress has documentation on this. 
+I'll just list the most relevant ones:
  
-You cannot open multiple tabs - they will never support this (according to their doc). 
+1) You cannot open multiple tabs - they will never support this (according to their doc). There are workarounds. 
 
-You cannot visit 2 urls with different domains in the same it block. You can visit 2 urls with different domains on a separate it block each. 
+2) You cannot visit 2 urls with different domains in the same it block. You can visit 2 urls with different domains on separate it blocks. 
 However, if you use a beforeEach hook, and you visit a url in the beforeEach, then all it blocks can visit only that same url. 
 You can get around this by using an it block as a before hook, and for beforeEach, you'll just have to copy and paste the beforeEach code to each it block. 
 
-Cypress runs each cy.get command asynchronously. That means you can't save the returned element into a variable to be used later.
-You have to work within the callback function. 
-You can do a synchronous version of get by using Cypress.$('selector')
+It is rare that limitations 1) and 2) will actually prevent you from doing the testing that you need. 
+So far, I have encountered only 1 situation where I cannot find a workaround. In VEX rocket chat, as a moderator, I can open up rocket chat on a separate tab. 
+This can be circumvented simply by visiting the rocket chat url in a separate it block, however, I would lose the visitor id cookie, preventing me from 
+remaining logged into rocket chat. However, rocket chat is a 3rd party application, and there is no point testing a 3rd party app - they should be testing their 
+own apps. 
 
-Cypress doesn't have built-in functions to handle iframes. I have workarounds for that in the commands.js file - basically, go into the javascript directly. 
+Another situation where limitations 1) and 2) might be a problem are clicking links that open a new tab to a different domain. In this case, simply check for 
+the href value in the anchor tag. It is unnecessary to test that clicking such a link does what it's supposed to because you'd be testing whether or not 
+html itself is bugged. If so, then it's not just our app that has problems, but the entire internet. 
 
-Since Cypress runs tests inside an iframe, it has to modify iframe-busting code to make it work. The only case where this will fail is if a script is coming from
+3) Since Cypress runs tests inside an iframe, it has to modify iframe-busting code to make it work. The only case where this will fail is if a script is coming from
 a different domain than the current page. In this case, whatever UI elements the script is supposed to drop onto the webpage will get blocked by the iframe busting
 code. FOR THIS REASON:
 
-1) WHEN TESTING ON CONSUMPTION, YOU MUST ALWAYS VISIT on HTTPS PROTOCOL AND YOU MUST ALWAYS VISIT ON LOOKBOOKHQ DOMAIN. 
+i. WHEN TESTING ON CONSUMPTION, YOU MUST ALWAYS VISIT on HTTPS PROTOCOL AND YOU MUST ALWAYS VISIT ON LOOKBOOKHQ DOMAIN. 
 
-2) WE CANNOT TEST OLD WEBSITE CAMPAIGN PROMOTERS AND WEBSITE TOOLS ON CONSUMPTION BECAUSE THE WEBPAGE WILL BE A DIFFERENT DOMAIN FROM THE LOOKBOOKHQ SCRIPT
+ii. WE CANNOT TEST OLD WEBSITE CAMPAIGN PROMOTERS AND WEBSITE TOOLS ON CONSUMPTION BECAUSE THE WEBPAGE WILL BE A DIFFERENT DOMAIN FROM THE LOOKBOOKHQ SCRIPT
 
-The only solution to the above is if we get the developers to change
+The only permanent solution to the above is if we get the developers to change
 
-if(window.self===window.top||"overlay"===e||"preview"===e) to if(window.Cypress||window.self===window.top||"overlay"===e||"preview"===e) 
+if(window.self===window.top||"overlay"===e||"preview"===e) 
+to 
+if(window.Cypress||window.self===window.top||"overlay"===e||"preview"===e) 
 
 This should apply to the following scripts: 
 https://app.cdn.lookbookhq.com/staging2/jukebox/current/tracks.js?x=2
@@ -277,6 +309,10 @@ queued up cy commands will run in the order in which they were generated by your
 A useful strategy to take advantage of this is to use cy.get('body'). As long as you are on an html page, this will always immediately return the body 
 without taking any time. You can then chain a 'then' off this cy.get('body') and do anything you want inside the 'then', and be
 guaranteed that it will all execute before the next cy command. 
+
+Since Cypress runs each cy.get command asynchronously, that means you can't save the returned element into a variable to be used later.
+You have to work within the callback function. 
+You can do a synchronous version of get by using Cypress.$('selector')
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Cypress will fail your test if it detects an uncaught exception error in the browser console. To turn this off, insert

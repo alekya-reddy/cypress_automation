@@ -9,6 +9,7 @@ import {Target} from './authoringClasses/Target.js';
 import {Recommend} from './authoringClasses/Recommend.js';
 import {Explore} from './authoringClasses/Explore.js';
 import {Website} from './authoringClasses/Website.js';
+import {Microsites} from './authoringClasses/Microsites.js';
 import {constants} from './constants.js';
 
 import { CommonCX } from './consumptionClasses/CommonCX.js';
@@ -43,7 +44,8 @@ export const createAuthoringInstance = function(config = {}){
             target: new Target(env, org, tld, username, password, baseUrl),
             recommend: new Recommend(env, org, tld, username, password, baseUrl),
             explore: new Explore(env, org, tld, username, password, baseUrl),
-            website: new Website(env, org, tld, username, password, baseUrl)
+            website: new Website(env, org, tld, username, password, baseUrl),
+            microsites: new Microsites(env, org, tld, username, password, baseUrl)
         }
     );
 }
