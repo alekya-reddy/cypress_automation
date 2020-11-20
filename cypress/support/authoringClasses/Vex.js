@@ -80,7 +80,7 @@ export class Vex extends Common {
             contentTitle: "div[data-qa-hook^='content-title']",
             contentTitleInput: "input[name='contentTitle']",
             contentDescription: "div[data-qa-hook^='content-description']",
-            contentDescriptionInput: "input[name='contentDescription']",
+            contentDescriptionInput: ".ql-editor",
             input: "input[class='ant-select-selection-search-input']",
             heroHeightInput: "input[name='landingExperience.landingExperienceConfig.headerHeight']"
         };
@@ -1530,7 +1530,7 @@ export class Vex extends Common {
         if(contentDescription){
             cy.get(this.appearance.contentDescription).click()
             cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription)
-            cy.get(this.appearance.contentDescriptionInput).parent().contains("Save").click()
+            cy.get(this.appearance.contentDescriptionInput).parents("form").contains("Save").click()
             cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
         }
     }
