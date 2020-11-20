@@ -39,6 +39,10 @@ export class Vex extends Common {
             return `td[title="${escapedName}"]`
         };
         this.sessionShareCell = ".share-cell";
+        this.sessionUrlCell = ".url-cell";
+        this.sessionSortCell = ".ant-table-column-sorters";
+        this.caretUp = "span[aria-label='caret-up']";
+        this.caretDown = "span[aria-label='caret-down']";
         this.antCardBody = '[class="ant-card-body"]';
         this.antModalContent = '[class="ant-modal-content"]';
         this.antCardHeadWrapper = '[class="ant-card-head-wrapper"]';
@@ -414,6 +418,25 @@ export class Vex extends Common {
         this.clickAntCheckbox({label: "private", check: _private})
         cy.contains(this.antDropdown, "public").within(()=>{
             cy.contains("button", "OK").click()
+        })
+    }
+
+    toggleSortByDate(order){
+        cy.contains(this.sessionSortCell, "Start Time").within(()=>{
+            cy.get(this.caretUp).invoke("attr", "class").then((caretUpClass)=>{
+                cy.get(this.caretDown).invoke("attr", "class").then((caretDownClass)=>{
+                    if(order == 'ascend' && !caretUpClass.includes("active")){
+                        cy.get(".ant-table-column-sorter-inner").click()
+                        this.toggleSortByDate(order)
+                    } else if(order == 'descend' && !caretDownClass.includes("active")){
+                        cy.get(".ant-table-column-sorter-inner").click()
+                        this.toggleSortByDate(order)
+                    } else if (order == "none" && (caretDownClass.includes("active") || caretUpClass.includes("active"))){
+                        cy.get(".ant-table-column-sorter-inner").click()
+                        this.toggleSortByDate(order)
+                    }
+                })
+            })
         })
     }
 
