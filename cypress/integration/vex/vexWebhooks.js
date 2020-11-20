@@ -376,7 +376,12 @@ describe("VEX - Form Webhook", ()=>{
         }
     })
 
-    it("Close sessions and check all the webhooks", ()=>{
+    it("Close sessions and check all the webhooks", {
+        retries: {
+          runMode: 0,
+          openMode: 0
+        }
+      }, ()=>{
         if(Cypress.env('TEST_ENV') !== "prod"){
             // Closing sessions in separate it block so can go to different url and clear all cookeis 
             // If you close sessions while browser still open on the experience, it immediately starts a new session that will appear in webhooks if close session again
