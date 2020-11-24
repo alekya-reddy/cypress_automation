@@ -25,7 +25,7 @@ export class Vex extends Common {
         this.eventFormPicker = '#rc_select_1';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
-        this.antDropDownScroller = '.rc-virtual-list-holder-inner'; //`${this.antDropdownContainer} > div > div:nth-child(2)`;
+        this.antDropDownScroller = '.rc-virtual-list-holder-inner';
         this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';

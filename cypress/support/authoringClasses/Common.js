@@ -34,10 +34,21 @@ export class Common {
         this.thumbnailSelector = "#thumbnail-selector";
         this.scrollableTable = 'div[class*="table-body-container"]';
         this.table = {
-            // Table cell div data-qa-hooks are reused to often that we should just place them all into common
+            // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name']",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']"
+        };
+        this.antTable = {
+            cell: ".ant-table-cell"
+        };
+        this.antCard = {
+            container: ".ant-card",
+            title: ".ant-card-head-title"
+        };
+        this.antDropSelect = {
+            selector: ".ant-select-selector",
+            options: function(option){ return `div[label="${option}"]`; }
         };
         this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.messages = {

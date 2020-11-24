@@ -208,8 +208,6 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(testLandingPage.name)
         cy.contains(authoring.vex.pages.sessionGroupRow, deleteSessionGroup.name).should("not.exist")
-        //authoring.vex.removeBlock(emptySessionBlockLocator) // There's a bug where empty session group block causes blank page, so have to delete it here. Once fixed, remove this line
-        //cy.contains("button", "Save").click() // Also can remove this line once bug fixed
 
         // Visit it on consumption 
         cy.visit(testLandingPage.url)
