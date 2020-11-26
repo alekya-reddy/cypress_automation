@@ -138,6 +138,32 @@ So for now, just push a PR to the repo with the files you want to run listed in 
 It's honestly not that inconvenient, although I wished circleci had some way to control the config.yml directly through their web app.  
 
 
+How to run modules in parallel on circleci
+------------------------------------------
+Here's an example config.yml file: 
+
+version: 2.1
+orbs:
+  cypress: cypress-io/cypress@1
+executors:
+  latest-chrome:
+    docker:
+      - image: "cypress/browsers:node14.7.0-chrome84"
+workflows:
+  build:
+    jobs:
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/vex/blackList.js"
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/test_lab.js"
+
+Each "cypress/run" is run in parallel. Simply specify in "spec" what folders to run for that module 
+
+
 How the cypress repo is organized
 ---------------------------------
 

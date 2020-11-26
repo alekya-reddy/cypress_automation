@@ -11,3 +11,8 @@ workflows:
       - cypress/run:
           executor: latest-chrome
           browser: chrome
+          spec: "cypress/integration/vex/*"
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/microsites/*"
