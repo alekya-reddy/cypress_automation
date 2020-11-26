@@ -1,4 +1,4 @@
-import { createAuthoringInstance, createConsumptionInstance } from '../support/pageObject.js';
+import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
 
