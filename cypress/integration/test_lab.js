@@ -56,14 +56,34 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
         
         authoring.common.login()
         authoring.microsites.removeMicrosite("Testing")
+        authoring.microsites.removeMicrosite("Delete me")
         authoring.microsites.addMicrosite("Testing")
-        authoring.microsites.goToMicrositeConfig("Testing")
+        //authoring.microsites.goToMicrositeConfig("Testing")
+        authoring.microsites.setup({
+            name: "Testing",
+            newName: "Delete me",
+            slug: "sluggggg",
+            cookieConsent: true
+        })
+        authoring.microsites.setup({
+            name: "Delete me",
+            newName: "Testing",
+            slug: "hahah",
+            cookieConsent: false
+        })
+        authoring.microsites.addTracks({target: "test track"})
+        authoring.microsites.removeTracks("test track")
         authoring.microsites.addTracks({target: "test track"})
         authoring.microsites.addLandingPages("Test")
         //authoring.microsites.removeLandingPages("Test")
         authoring.microsites.goToPageEditor("Test")
         authoring.microsites.addAdvancedBlock(block)
-        authoring.microsites.addAdvancedBlock(trackBlock)*/
+        authoring.microsites.addAdvancedBlock(trackBlock)
+        cy.go("back")
+        authoring.microsites.addNavItem({label: "Track", type: "Track", source: "test track"})
+        authoring.microsites.addNavItem({label: "Landing page", type: "Landing Page", source: "Test"})
+        authoring.microsites.addNavItem({label: "Link", type: "Link", source: "https://wwww.wikipedia.org"})
+        authoring.microsites.removeNavItems("Link")*/
     })
 
 })

@@ -10,8 +10,10 @@ export class Microsites extends Common {
             cardTitle: this.antCard.title,
             nameInput: "input[name='name']"
         };
-        this.setupLocators = {
-
+        this.setupPage = {
+            nameInput: "input[name='name']",
+            slugInput: "input[name='customUrl']",
+            cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']"
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
@@ -29,8 +31,17 @@ export class Microsites extends Common {
             classNameInput: "input[name*='className']",
             trackRow: ".pf-event-sessions"
         };
-        this.navigationLocators = {
-
+        this.navigation = {
+            addButton: "button:contains('Add Navigation Item')",
+            labelInput: "input[name='title']",
+            linkInput: "input[name='link']",
+            newTabCheckBox: "input[name='newTab']",
+            navRow: ".rst__row",
+            navTitle: ".rst__rowTitle",
+            navSubtitle: ".rst__rowSubtitle",
+            navHandle: ".rst__moveHandle",
+            navContent: ".rst__rowContents",
+            navRemoveBox: ".rst__rowToolbar"
         };
     }
 
@@ -69,18 +80,46 @@ export class Microsites extends Common {
     }
 
     goToMicrositeConfig(microsite){
-        cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 20000}).parents(this.micrositesPage.card).within(() => {
-            cy.contains("button", "Configure").click()
+        cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
+            if(text !== microsite){
+                cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 20000}).parents(this.micrositesPage.card).within(() => {
+                    cy.contains("button", "Configure").click()
+                })
+            }
         })
         cy.contains(this.pageTitleLocator, microsite, {timeout: 20000}).should("exist")
     }
 
     tabToSetup(){
-
+        cy.containsExact("a", "Microsite Setup", {timeout: 20000}).click()
     }
 
     setup(options){
+        const name = options.name
+        const slug = options.slug 
+        const newName = options.newName 
+        const cookieConsent = options.cookieConsent
 
+        this.goToMicrositeConfig(name)
+
+        if(newName){
+            cy.get(this.setupPage.nameInput).clear().type(newName)
+        }
+
+        if(slug){
+            cy.get(this.setupPage.slugInput).clear().type(slug)
+        }
+
+        if(cookieConsent == false || cookieConsent == true){
+            cy.get(this.setupPage.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                if( (cookieConsent == false && attr.includes("ant-checkbox-checked")) || (cookieConsent == true && !attr.includes("ant-checkbox-checked")) ){
+                    cy.get(this.setupPage.cookieConsentCheckbox).click()
+                }
+            }) 
+        }
+
+        cy.contains('button', 'Save').click()
+        cy.contains(this.messages.recordSaved).should("exist")
     }
 
     tabToTracks(){
@@ -125,12 +164,22 @@ export class Microsites extends Common {
         }
     }
 
-    removeTracks(){
+    removeTracks(list, verify){
+        const tracks = [list].flat()
 
-    }
-
-    removeAllTracks(){
-
+        this.tabToTracks()
+        tracks.forEach((track)=>{
+            cy.ifElementWithExactTextExists(this.antTable.cell, track, 1000, ()=>{
+                cy.containsExact(this.antTable.cell, track).siblings("td:contains('Remove')").within(()=>{
+                    cy.contains('button', 'Remove').click()
+                })
+                cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
+            })
+            if(verify !== false){
+                cy.waitFor({element: `${this.antTable.cell}:contains('${track}')`, to: "not.exist", wait: 20000})
+                cy.containsExact(this.antTable.cell, track).should("not.exist")
+            }
+        })
     }
 
     tabToLandingPages(){
@@ -414,7 +463,64 @@ export class Microsites extends Common {
     }
 
     tabToNavigation(){
+        cy.url().then((url)=>{
+            if(!url.includes("/navigation")){
+                cy.containsExact("a", "Navigation", {timeout: 10000}).click()
+            }
+        })
+    }
 
+    addNavItem(config){
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+
+        this.tabToNavigation()
+        cy.get(this.navigation.addButton).click()
+        cy.contains(this.antModal, "Add Navigation Item").should('exist')
+        cy.get(this.navigation.labelInput).clear().type(label)
+        cy.get(this.antDropSelect.selector).eq(0).click()
+        cy.get(this.antDropSelect.options(type)).click()
+        if(source && type !== "Link"){
+            cy.get(this.antDropSelect.selector).eq(1).click()
+            cy.get(this.antDropSelect.options(source)).click()
+        } else if (source && type == "Link"){
+            cy.get(this.navigation.linkInput).clear().type(source)
+        }
+        if(newTab){
+            cy.get(this.navigation.newTabCheckBox).click()
+        }
+        cy.contains('button', "Submit").click()
+
+        if(verify){
+            cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
+            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
+                if(source && !newTab){
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
+                } else if(source && newTab){
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
+                }
+            })
+        }
+    }
+
+    removeNavItems(list, verify){
+        const navItems = [list].flat()
+
+        this.tabToNavigation()
+        navItems.forEach((navItem)=>{
+            cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, ()=>{
+                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(()=>{
+                    cy.contains("button", "Remove").click()
+                })
+            })
+            if(verify){
+                cy.waitFor({element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000})
+                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
+            }
+        })
     }
 
 }
