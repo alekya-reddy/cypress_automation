@@ -29,7 +29,7 @@ const recommend = {
 }
 
 describe("Microsites - tracks setup", () => {
-    it("Set up tracks if not already done", () => {
+    /*it("Set up tracks if not already done", () => {
         cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
             cy.log(response.status)
             cy.log(target.url)
@@ -51,9 +51,9 @@ describe("Microsites - tracks setup", () => {
                 authoring.recommend.configure(recommend)
             }
         })
-    })
+    })*/
 
-    /*it("Add tracks, remove tracks, track input fields validation", ()=>{
+    it("Add tracks, remove tracks, track input fields validation", ()=>{
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(microsite.name)
@@ -61,6 +61,5 @@ describe("Microsites - tracks setup", () => {
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
         authoring.microsites.removeTracks(target.name)
-        
-    })*/
+    })
 })
