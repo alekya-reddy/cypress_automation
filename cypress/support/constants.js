@@ -5,6 +5,7 @@ export const constants = {
         qa: "qa",
         qa2: 'qa2',
         staging: "staging",
+        staging2: "staging2",
         prod: "prod"
     },
     domain: {
@@ -12,12 +13,14 @@ export const constants = {
             qa: "qa.lookbookhq.com",
             qa2: "qa-pathfactory.com",
             staging: "staging2.lookbookhq.com",
+            staging2: "buzzdata.pathfactory-development.com",
             prod: "lookbookhq.com"
         },
         pathfactory: {
             qa: "pathfactory-qa.com",
             qa2: "qa-pathfactory.com",
             staging: "pathfactory-staging.com",
+            staging2: "pathfactory-development.com",
             prod: "pathfactory.com"
         }
     },

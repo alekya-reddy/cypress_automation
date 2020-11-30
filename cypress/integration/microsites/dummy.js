@@ -50,11 +50,11 @@ describe("Dummy file delete later", ()=>{
         }
         
         authoring.common.login()
-        /*authoring.microsites.removeMicrosite("Testing")
+        authoring.microsites.removeMicrosite("Testing")
         authoring.microsites.removeMicrosite("Delete me")
         authoring.microsites.addMicrosite("Testing")
-        //authoring.microsites.goToMicrositeConfig("Testing")
-        authoring.microsites.setup({
+        authoring.microsites.goToMicrositeConfig("Testing")
+        /*authoring.microsites.setup({
             name: "Testing",
             newName: "Delete me",
             slug: "sluggggg",
@@ -65,9 +65,10 @@ describe("Dummy file delete later", ()=>{
             newName: "Testing",
             slug: "hahah",
             cookieConsent: false
-        })
+        })*/
         authoring.microsites.addTracks({target: "test track"})
-        authoring.microsites.removeTracks("test track")
+        authoring.microsites.removeAllTracks()
+        /*authoring.microsites.removeTracks("test track")
         authoring.microsites.addTracks({target: "test track"})
         authoring.microsites.addLandingPages("Test")
         //authoring.microsites.removeLandingPages("Test")

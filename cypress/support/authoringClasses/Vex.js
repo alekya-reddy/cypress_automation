@@ -21,7 +21,6 @@ export class Vex extends Common {
         this.addEventModalFooter = '[class="ant-modal-footer"]';
         this.antModalBody = '[class="ant-modal-body"]';
         this.eventSlugInput = 'input[name="customUrl"]';
-        this.eventDescription = 'textarea[name="description"]';
         this.eventFormPicker = '#rc_select_1';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
@@ -209,7 +208,6 @@ export class Vex extends Common {
         const event = config.name
         const newEventName = config.newName
         const slug = config.slug
-        const description = config.description
         const form = config.form
         const start = config.start
         const end = config.end
@@ -225,8 +223,6 @@ export class Vex extends Common {
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
 
         slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
-
-        description ? cy.get(this.eventDescription).clear().type(description) : null;
 
         if(externalID){
             cy.get(this.externalIDInput).clear().type(externalID)

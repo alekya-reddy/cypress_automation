@@ -9,7 +9,6 @@ const event = {
     start: 'Jun 24, 2020 8:00pm',
     end: 'Jun 24, 2040 8:00pm',
     timeZone: "(GMT-10:00) Hawaii",
-    description: "description",
     externalID: "vexcloningid",
     form: {name: "Standard Form Short"},
     language: "vexCloning.js",
@@ -222,7 +221,6 @@ const verifyEventSetup = (event) => {
     cy.get(authoring.vex.startTimeInput).should("have.value", event.start)
     cy.get(authoring.vex.endTimeInput).should("have.value", event.end)
     cy.contains("span", event.timeZone).should("exist")
-    cy.get(authoring.vex.eventDescription).should("contain", event.description)
     cy.get(authoring.vex.externalIDInput).should("have.value", event.externalID)
     cy.get(`span[title="${event.form.name}"]`).should("exist")
     cy.get(`span[title="${event.language}"]`).should("exist")

@@ -156,7 +156,7 @@ export class Microsites extends Common {
             cy.contains("button", "Submit").click()
         })
 
-        if(verify){
+        if(verify !== false){
             const allTracks = target.concat(recommend)
             allTracks.forEach((track)=>{
                 cy.containsExact(this.antTable.cell, track, {timeout: 20000}).should("exist")
@@ -178,6 +178,16 @@ export class Microsites extends Common {
             if(verify !== false){
                 cy.waitFor({element: `${this.antTable.cell}:contains('${track}')`, to: "not.exist", wait: 20000})
                 cy.containsExact(this.antTable.cell, track).should("not.exist")
+            }
+        })
+    }
+
+    removeAllTracks(){
+        this.tabToTracks()
+        cy.get(this.antTable.row).then((rows) => {
+            for(let i = rows.length - 1; i >= 0; i--){
+                cy.get(this.antTable.row).eq(i).contains('button', 'Remove').click()
+                cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
             }
         })
     }

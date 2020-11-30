@@ -5,7 +5,6 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const originalEvent = {
     name: 'Reset test',
     slug: 'reset',
-    description: 'Reset event',
     form: {
         name: 'resetEventSession.js'
     }
@@ -15,7 +14,6 @@ const newEvent = {
     name: 'Reset test',
     newEventName: 'Different name',
     slug: 'differentslug',
-    description: 'Different description',
     form: {
         name: authoring.vex.noRegistrationNeededOption,
         save: false
@@ -67,14 +65,12 @@ describe('VEX - Virtual Event', function() {
         // Now change all event details (name, slug, description, form details), do not save, and then reset 
         cy.get(authoring.vex.eventNameInput).clear().type(newEvent.newEventName)
         cy.get(authoring.vex.eventSlugInput).clear().type(newEvent.slug)
-        cy.get(authoring.vex.eventDescription).clear().type(newEvent.description)
         authoring.vex.configureForm(newEvent.form)
         cy.get(authoring.vex.resetButton).should('not.be.disabled').click() 
 
         // Now verify all details back to original 
         cy.get(authoring.vex.eventNameInput).should('have.value', originalEvent.name)
         cy.get(authoring.vex.eventSlugInput).should('have.value', originalEvent.slug)
-        cy.get(authoring.vex.eventDescription).should('contain', originalEvent.description)
         cy.containsExact(authoring.vex.antSelectItem, originalEvent.form.name).should('exist')
 
         // Now add a session and set it up 

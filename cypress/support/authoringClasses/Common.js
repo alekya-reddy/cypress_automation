@@ -14,8 +14,10 @@ export class Common {
         this.pageTitleBar = '[data-qa-hook="title-bar"]';
         this.pageTitleLocator = '[data-qa-hook="title-bar"] > h1'; 
         this.pageBody = '[data-qa-hook="page-body"]';
+        this.pageSearch = "input[name='page-search']";
         this.editIcon = 'i[title="Edit"]';
         this.editPencil = 'i[class*="fa-pencil"]';
+        this.popover = "div[data-qa-hook='popover']";
         this.modal = 'div[data-qa-hook="modal"]';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal"; 
@@ -37,10 +39,12 @@ export class Common {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name']",
             cellCode: "div[data-qa-hook='table-cell-code']",
-            urlCell: "div[data-qa-hook='table-cell-url']"
+            urlCell: "div[data-qa-hook='table-cell-url']",
+            internalTitleCell: "div[data-qa-hook='table-cell-internal-title']"
         };
         this.antTable = {
-            cell: ".ant-table-cell"
+            cell: ".ant-table-cell",
+            row: ".ant-table-row"
         };
         this.antCard = {
             container: ".ant-card",
