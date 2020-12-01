@@ -69,13 +69,13 @@ describe('VEX - Virtual Event', function() {
 
         // Check the header appearance settings 
         cy.get(consumption.vex.vexHeader).should("have.css", "background-color", "rgb(255, 0, 0)").within(()=>{
-            cy.get("img[src='https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg']").should('exist')
+            cy.get("img[src*='/stock/sm/animal-dog-pet-cute.jpg']").should('exist')
             cy.contains('a', event.name).should("have.css", "font-family", "Tahoma")
         })
 
         // Check the explore appearance settings (the hero and event container)
         cy.get(consumption.vex.vexHeroContainer).should("have.css", "background-color", "rgb(0, 255, 0)")
-            .should("have.css", "background-image", `url("https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg")`)
+            .invoke("css", "background-image").should("have.contain", "/stock/sm/animal-dog-pet-cute.jpg")
         cy.get(consumption.vex.vexEventContainer).eq(1).parent().should("have.css", "background-color", "rgb(0, 0, 255)")
 
         // Check the form submit button color (controlled on the form configuration itself)

@@ -108,7 +108,7 @@ const appearance = {
     appearance: "vexCloning.js",
     heroImage: {
         category: 'Stock Images',
-        url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg',
+        url: '/stock/sm/animal-dog-pet-cute.jpg',
         selectImageText: "Add Image"
     },
     heroHeight: "200px",
@@ -177,7 +177,7 @@ const landingPage = {
                 color: {r: "0", g: "200", b: "200"},
                 image: {
                     category: "Stock Images",
-                    url: "https://img.cdn.lookbookhq.com/stock/sm/bench-forest-trees-path.jpg"
+                    url: "/stock/sm/bench-forest-trees-path.jpg"
                 },
                 position: "top",
                 size: "contain"
@@ -299,7 +299,7 @@ const verifySession = (session, howCloned) => {
 
 const verifyAppearance = (appearance) => {
     cy.containsExact("span", appearance.appearance, {timeout: 20000}).should("exist")
-    cy.get(`img[src="${appearance.heroImage.url}"]`).should("exist")
+    cy.get(`img[src*="${appearance.heroImage.url}"]`).should("exist")
     cy.get(authoring.vex.appearance.heroHeightInput).should("have.value", appearance.heroHeight)
     cy.get(authoring.vex.appearance.headerTitle).should('contain', appearance.headerTitle)
     cy.get(authoring.vex.appearance.headerSubtitle).should('contain', appearance.headerSubtitle)

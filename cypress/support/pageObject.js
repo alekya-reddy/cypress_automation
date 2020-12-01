@@ -17,7 +17,7 @@ import { VexCX } from './consumptionClasses/VexCX.js';
 
 export const createAuthoringInstance = function(config = {}){
     // Set up default values for your convenience 
-    const env = constants //config.env ? config.env : constants.testENV;
+    const env = constants
     const org = config.org ? config.org : "automation" 
     const tld = config.tld ? config.tld : "pathfactory";
     const username = config.username ? config.username : constants.orgs[org].defaultUser; 

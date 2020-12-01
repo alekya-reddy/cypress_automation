@@ -210,6 +210,7 @@ describe("VEX - Session searching, sorting and filters", ()=>{
 
         // Test sort by start date
         authoring.vex.toggleSortByDate("ascend")
+        cy.viewport(2000, 1000) // Need to expland viewport or else the urls will get truncated in the DOM
         cy.get(authoring.vex.sessionUrlCell).eq(0).should("contain", sessions.publicOnDemand.url)
         cy.get(authoring.vex.sessionUrlCell).eq(1).should("contain", sessions.publicLive.url)
         cy.get(authoring.vex.sessionUrlCell).eq(2).should("contain", sessions.privateLive.url)

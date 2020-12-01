@@ -29,11 +29,11 @@ const sessions = [
 
 const thumbnail1 = {
     category: 'Stock Images',
-    url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg'
+    url: '/stock/sm/animal-dog-pet-cute.jpg'
 }
 const thumbnail2 = {
     category: 'Stock Images',
-    url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-labrador.jpg' 
+    url: '/stock/sm/animal-dog-pet-labrador.jpg' 
 }
 
 
@@ -47,7 +47,7 @@ describe('VEX - Virtual Event', function() {
         // Each test run, we are alternating the thumbnail. This way, no need to have before hooks to reset thumbnail each time, thus saving time 
         sessions.forEach((session)=>{
             authoring.vex.goToSessionConfig(session.name)
-            cy.ifElementExists(`img[src="${thumbnail1.url}"]`, 1000, ()=>{
+            cy.ifElementExists(`img[src*="${thumbnail1.url}"]`, 1000, ()=>{
                 authoring.vex.selectThumbnail(thumbnail2)
                 session.thumbnail = thumbnail2
             })
@@ -66,7 +66,7 @@ describe('VEX - Virtual Event', function() {
         cy.visit(event.url)
         sessions.forEach((session)=>{
             cy.get(`a[href="/${event.slug}/${session.slug}"]`).within(()=>{
-                cy.get(`img[src="${session.thumbnail.url}"]`).should('exist')
+                cy.get(`img[src*="${session.thumbnail.url}"]`).should('exist')
             })
         })
 

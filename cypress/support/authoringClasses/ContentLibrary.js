@@ -5,9 +5,6 @@ export class ContentLibrary extends Common{
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/content`;
         this.pageTitle = 'Content Library';
-        this.contentSearchInput = "input[name='page-search']";
-        this.internalTitleCell = "div[data-qa-hook='table-cell-internal-title']";
-        this.urlCell = "div[data-qa-hook='table-cell-url']";
         this.sideBarElements = {
             publicTitle: "#content-sidebar-title",
             publicTitleInput: "textarea[name='title']",
@@ -62,16 +59,16 @@ export class ContentLibrary extends Common{
 
         cy.get(this.pageTitleLocator).click() // In case preview of the content already open, this will close it
         if(internalTitle){
-            cy.get(this.contentSearchInput, {timeout: 20000}).clear().type(internalTitle)
-            cy.ifElementWithExactTextExists(this.internalTitleCell, internalTitle, wait, ()=>{
-                cy.containsExact(this.internalTitleCell, internalTitle, {timeout: 20000}).click()
+            cy.get(this.pageSearch, {timeout: 20000}).clear().type(internalTitle)
+            cy.ifElementWithExactTextExists(this.table.internalTitleCell, internalTitle, wait, ()=>{
+                cy.containsExact(this.table.internalTitleCell, internalTitle, {timeout: 20000}).click()
                 cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
                 config.contentExists = true // This allows you to check the config object if element exists or not 
             })
             cy.get(this.clearSearchIcon).click()
         } else if(url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
-            cy.get(this.urlCell, {timeout: 20000}).should('exist') // Wait for cells to load before scrolling 
+            cy.get(this.table.urlCell, {timeout: 20000}).should('exist') // Wait for cells to load before scrolling 
             if(!noScroll){
                 cy.scrollWithin({
                     scroller: this.scrollableTable,
@@ -79,8 +76,8 @@ export class ContentLibrary extends Common{
                     increment: 5 // This needs to be calibrated correctly. Too small, and it'll crawl too slowly. Too fast, and it'll skip over contents
                 })
             }
-            cy.ifElementWithExactTextExists(this.urlCell, url_no_protocol, wait, ()=>{
-                cy.containsExact(this.urlCell, url_no_protocol).siblings(this.internalTitleCell).click()
+            cy.ifElementWithExactTextExists(this.table.urlCell, url_no_protocol, wait, ()=>{
+                cy.containsExact(this.table.urlCell, url_no_protocol).siblings(this.table.internalTitleCell).click()
                 cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
                 config.contentExists = true
             })
@@ -103,10 +100,10 @@ export class ContentLibrary extends Common{
         if(verify !== false && url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
             cy.waitFor({element: `a[href="${url}"]`, to: "not.exist", wait: 20000})
-            cy.containsExact(this.urlCell, url_no_protocol).should("not.exist")
+            cy.containsExact(this.table.urlCell, url_no_protocol).should("not.exist")
         } else if (verify !== false && internalTitle){
-            cy.ifNoElementWithExactTextExists(this.internalTitleCell, internalTitle, 10000, ()=>{}) // waits for content to disappear... could use waitFor, but that doesn't check exact text
-            cy.containsExact(this.internalTitleCell, internalTitle).should("not.exist")
+            cy.ifNoElementWithExactTextExists(this.table.internalTitleCell, internalTitle, 10000, ()=>{}) // waits for content to disappear... could use waitFor, but that doesn't check exact text
+            cy.containsExact(this.table.internalTitleCell, internalTitle).should("not.exist")
         }
     }
 
@@ -128,7 +125,7 @@ export class ContentLibrary extends Common{
             element: this.urlCell,
             text: url.replace(/^https?\:\/\//i, "")
         })
-        cy.containsExact(this.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
+        cy.containsExact(this.table.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
     }
 
     sideBarEdit(config){

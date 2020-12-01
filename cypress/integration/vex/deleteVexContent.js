@@ -57,7 +57,7 @@ describe('VEX - Virtual Event', function() {
 
         // Clean up - delete previously contents as they might have been left in altered state, leading to inconsistency + flakiness 
         authoring.contentLibrary.visit()
-        cy.get(authoring.contentLibrary.urlCell, {timeout: 20000}).should('exist') // waits for table cells to load
+        cy.get(authoring.contentLibrary.table.urlCell, {timeout: 20000}).should('exist') // waits for table cells to load
         cy.scrollWithin({ scroller: authoring.contentLibrary.scrollableTable }) // Scrolls whole table to load all content
         contents.forEach((content)=>{
             authoring.contentLibrary.delete({url: content.url, wait: 500, noScroll: true})
@@ -91,14 +91,14 @@ describe('VEX - Virtual Event', function() {
             slug: "different-slug",
             thumbnail: {
                 category: "Stock Images",
-                url: "https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg"
+                url: "/stock/sm/animal-dog-pet-cute.jpg"
             } 
         })
         
         // Verify content currently used as a VEX video cannot be deleted 
         authoring.contentLibrary.delete({url: videoContent.url, verify: false})
         cy.contains(authoring.contentLibrary.antNotification, `Different internal title cannot be deleted as it is used in the following Virtual Event Session: ${session.name}`).should('exist')
-        cy.containsExact(authoring.contentLibrary.internalTitleCell, 'Different internal title').should('exist')
+        cy.containsExact(authoring.contentLibrary.table.internalTitleCell, 'Different internal title').should('exist')
 
         // Go into the session and verify that supplemental content is gone since it was deleted 
         authoring.vex.visit()

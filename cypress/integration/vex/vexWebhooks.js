@@ -96,6 +96,7 @@ const formWebhook = {
         "Country": "country",
         "State/ Province": "state",
         "Zip code/ Postal code": "zipcode",
+        "Employee Count": "employee_count",
         "Content Title": "content_title",
         "Content Source URL": "content_source_url",
         "Experience Name": "experience_name",

@@ -29,7 +29,7 @@ const originalSession = {
     video: 'Youtube - Used in Cypress automation for VEX testing',
     thumbnail: {
         category: 'Stock Images',
-        url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-cute.jpg'
+        url: '/stock/sm/animal-dog-pet-cute.jpg'
     }
 }
 
@@ -43,7 +43,7 @@ const newSession = {
     video: 'Vimeo - Used in Cypress automation for VEX testing',
     thumbnail: {
         category: 'Stock Images',
-        url: 'https://img.cdn.lookbookhq.com/stock/sm/animal-dog-pet-labrador.jpg' 
+        url: '/stock/sm/animal-dog-pet-labrador.jpg' 
     }
 }
 
@@ -97,6 +97,6 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.onDemandRadio).parent().should('have.class', 'ant-radio ant-radio-checked')
         cy.get(authoring.vex.liveRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
         cy.get(authoring.vex.onDemandTitleLocator).should('contain', originalSession.video)
-        cy.get(`img[src="${originalSession.thumbnail.url}"]`).should('exist')
+        cy.get(`img[src*="${originalSession.thumbnail.url}"]`).should('exist')
     })
 })

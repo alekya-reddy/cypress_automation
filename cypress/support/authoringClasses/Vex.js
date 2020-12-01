@@ -570,10 +570,10 @@ export class Vex extends Common {
         cy.get(`button:contains('${selectImageText}')`).click()
         cy.get(this.thumbnailSelector).should('exist').within(()=>{
             cy.contains('li', category).click()
-            cy.get(`img[src="${url}"]`).click()
+            cy.get(`img[src*="${url}"]`).click()
             cy.get(this.saveButton).click()
         })
-        cy.get(`img[src="${url}"]`).should('exist')
+        cy.get(`img[src*="${url}"]`).should('exist')
     }
 
     resetThumbnail(){
@@ -869,7 +869,7 @@ export class Vex extends Common {
     backToEvent(event){
         // If you are on session configuration page and want to go back to the event configuration page
         cy.containsExact("a", event).click()
-        cy.contains(this.pageTitleLocator, event).should('exist')
+        cy.contains(this.pageTitleLocator, event, {timeout: 20000}).should('exist')
     }
 
     goToEventSetup(){
@@ -1349,7 +1349,7 @@ export class Vex extends Common {
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
                 }
                 if(background && background.image.url){
-                    expect(style).to.include(`background-image: url("${background.image.url}")`)
+                    expect(style).to.include(background.image.url)
                 }
                 if(background && background.position){
                     expect(style).to.include(`background-position: center ${background.position}`)
@@ -1392,7 +1392,7 @@ export class Vex extends Common {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
             if(background && background.image.url){
-                cy.contains(blockLocator, sessionGroup).should("have.css", "background-image", `url("${background.image.url}")`)
+                cy.contains(blockLocator, sessionGroup).invoke("css", "background-image").should("have.contain", background.image.url)
             }
             if(background && background.position){
                 let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}

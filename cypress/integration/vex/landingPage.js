@@ -85,7 +85,7 @@ const testLandingPage = {
                 color: {r: "0", g: "200", b: "200"},
                 image: {
                     category: "Stock Images",
-                    url: "https://img.cdn.lookbookhq.com/stock/sm/bench-forest-trees-path.jpg"
+                    url: "/stock/sm/bench-forest-trees-path.jpg"
                 },
                 position: "top",
                 size: "contain"
@@ -105,7 +105,7 @@ const testLandingPage = {
                 color: {r: "0", g: "200", b: "100"},
                 image: {
                     category: "Stock Images",
-                    url: "https://img.cdn.lookbookhq.com/stock/sm/bench-forest-trees-path.jpg"
+                    url: "/stock/sm/bench-forest-trees-path.jpg"
                 },
                 position: "bottom",
                 size: "cover"

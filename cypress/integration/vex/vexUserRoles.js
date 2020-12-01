@@ -73,7 +73,7 @@ describe('VEX - User roles', function() {
 
             authoring.vex.goToEventConfig(event)
             if(user.eventsPageAccess){
-                cy.containsExact(authoring.vex.pageTitleLocator, event).should('exist')
+                cy.containsExact(authoring.vex.pageTitleLocator, event, {timeout: 20000}).should('exist')
             } else {
                 cy.get('body').should('contain', "You don't have permission to view this page.")
                 cy.containsExact(authoring.vex.pageTitleLocator, event).should('not.exist')

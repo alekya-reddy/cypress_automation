@@ -177,7 +177,7 @@ export class VexCX extends CommonCX {
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
                 }
                 if(background && background.image.url){
-                    expect(style).to.include(`background-image: url("${background.image.url}")`)
+                    expect(style).to.include(background.image.url)
                 }
                 if(background && background.position){
                     expect(style).to.include(`background-position: center ${background.position}`)
@@ -230,7 +230,7 @@ export class VexCX extends CommonCX {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
             if(background && background.image.url){
-                cy.contains(blockLocator, sessionGroup).should("have.css", "background-image", `url("${background.image.url}")`)
+                cy.contains(blockLocator, sessionGroup).invoke("css", "background-image").should("have.contain", background.image.url)
             }
             if(background && background.position){
                 let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}

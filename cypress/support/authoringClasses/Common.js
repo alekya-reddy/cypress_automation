@@ -129,14 +129,14 @@ export class Common {
         cy.get(this.thumbnailSelector).within(()=>{
             cy.contains("li", category).click()
             if(url){
-                cy.get(`img[src="${url}"]`).click() 
+                cy.get(`img[src*="${url}"]`).click() 
             } else if (name) {
                 cy.contains('div', name).parent().get("img").click()
             }
             cy.contains("button", "Save").click()
         })
         if(url){
-            cy.get(`img[src="${url}"]`).should('exist')
+            cy.get(`img[src*="${url}"]`).should('exist')
         }
     }
 
