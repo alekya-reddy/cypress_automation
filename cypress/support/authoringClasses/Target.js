@@ -5,6 +5,7 @@ export class Target extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/target`;
         this.pageTitle = "Target Tracks";
+        this.deleteTrackIcon = "i[title='Delete Track']";
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -36,6 +37,26 @@ export class Target extends Common {
         cy.get(this.pageSearch).clear().type(name)
         cy.containsExact(this.table.cellName, name).should("exist").get("a").click()
         cy.get(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+    }
+
+    deleteTrack(name, verify){
+        this.goToPage(this.pageTitle, this.pageUrl)
+        cy.get(this.pageSearch, {timeout: 20000}).clear().type(name)
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, () => {
+            cy.containsExact(this.table.cellName, name).should("exist").within(() => { 
+                cy.get("a").click()
+            })
+            cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+            cy.get(this.deleteTrackIcon, {timeout: 20000}).click()
+            cy.contains(this.modal, "Do you want to delete this Track?").contains("button", "Yes").click()
+        })
+
+        if(verify !== false){
+            cy.contains(this.pageTitleLocator, this.pageTitle, {timeout: 20000}).should("exist")
+            cy.get(this.pageSearch).clear().type(name)
+            cy.containsExact(this.table.cellName, name).should("not.exist")
+            cy.get(this.clearSearchIcon).click()
+        }
     }
 
     configure(options){

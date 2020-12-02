@@ -17,7 +17,9 @@ export class Microsites extends Common {
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
-            targetRadio: "input[value='target']"
+            targetRadio: "input[value='target']",
+            selectionItem: ".ant-select-selection-item",
+            removeSelectionItem: ".ant-select-selection-item-remove"
         };
         this.landingPages = {
             nameInput: "input[name='name']",
@@ -82,7 +84,7 @@ export class Microsites extends Common {
     goToMicrositeConfig(microsite){
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== microsite){
-                cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 20000}).parents(this.micrositesPage.card).within(() => {
+                cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 20000}).should('exist').parents(this.micrositesPage.card).within(() => {
                     cy.contains("button", "Configure").click()
                 })
             }
@@ -180,6 +182,46 @@ export class Microsites extends Common {
                 cy.containsExact(this.antTable.cell, track).should("not.exist")
             }
         })
+    }
+
+    removeTracks2(options){
+        // This is the second way to remove tracks - using the assign tracks modal 
+        const target = [options.target].flat()
+        const recommend = [options.recommend].flat() 
+        const verify = options.verify 
+
+        this.tabToTracks()
+        cy.contains("button", "Assign Tracks").click()
+        cy.get(this.tracks.targetRadio).click()
+        cy.contains(this.antModal, "Assign Tracks").within(()=>{
+            target.forEach((track)=>{
+                if(track){
+                    cy.containsExact(this.tracks.selectionItem, track).should("exist").within(() => {
+                        cy.get(this.tracks.removeSelectionItem).click()
+                    })
+                }
+            })
+        })
+        cy.get(this.tracks.recommendRadio).click()
+        cy.contains(this.antModal, "Assign Tracks").within(()=>{
+            recommend.forEach((track)=>{
+                if(track){
+                    cy.containsExact(this.tracks.selectionItem, track).should("exist").within(() => {
+                        cy.get(this.tracks.removeSelectionItem).click()
+                    })
+                }
+            })
+        })
+        cy.contains(this.antModal, "Assign Tracks").within(()=>{
+            cy.contains("button", "Submit").click()
+        })
+
+        if(verify !== false){
+            const allTracks = target.concat(recommend)
+            allTracks.forEach((track)=>{
+                cy.containsExact(this.antTable.cell, track).should("not.exist")
+            })
+        }
     }
 
     removeAllTracks(){

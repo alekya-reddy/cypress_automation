@@ -10,7 +10,7 @@ const microsite = {
     }
 }
 
-const target = {
+const target1 = {
     name: "Target Common Resource",
     slug: "target-common-resource",
     get url(){
@@ -19,7 +19,15 @@ const target = {
     contents: ["Website Common Resource"]
 }
 
-const recommend = {
+const target2 = {
+    name: "tracksSetup.js target",
+    slug: "trackssetup-js-target",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
+const recommend1 = {
     name: "Recommend Common Resource",
     slug: "recommend-common-resource",
     get url(){
@@ -28,38 +36,61 @@ const recommend = {
     contents: ["Website Common Resource"]
 }
 
+const recommend2 = {
+    name: "tracksSetup.js recommend",
+    slug: "trackssetup-js-rec",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 describe("Microsites - tracks setup", () => {
-    /*it("Set up tracks if not already done", () => {
-        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
-            cy.log(response.status)
-            cy.log(target.url)
-            if(response.status == 404){ 
-                authoring.common.login()
-                authoring.target.addTrack(target)
-                authoring.target.configure(target)
-            }
-        })
-
-        cy.request({url: recommend.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
-                cy.url().then((url)=>{
-                    if(!url.includes("/content-library")){
-                        authoring.common.login()
-                    }
-                })
-                authoring.recommend.addTrack(recommend)
-                authoring.recommend.configure(recommend)
-            }
-        })
-    })*/
-
     it("Add tracks, remove tracks, track input fields validation", ()=>{
         authoring.common.login()
+
+        // Delete tracks and microsite to reset test environment, then set them up again 
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(microsite.name)
         authoring.microsites.addMicrosite(microsite.name)
+        authoring.target.deleteTrack(target2.name)
+        authoring.target.addTrack(target2)
+        authoring.target.configure(target2)
+        authoring.recommend.deleteTrack(recommend2.name)
+        authoring.recommend.addTrack(recommend2)
+        authoring.recommend.configure(recommend2)
+
+        // Go to microsites and test adding tracks
+        authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
-        authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
-        authoring.microsites.removeTracks(target.name)
+        authoring.microsites.addTracks({target: [target1.name, target2.name], recommend: [recommend1.name, recommend2.name]})
+        
+        // Go to target and attempt to delete a target track used in a microsite 
+        authoring.target.deleteTrack(target2.name, false)
+        cy.contains(authoring.target.modal, "Track cannot be deleted").should("exist")
+        cy.contains(authoring.target.modal, "Before you delete this Track, you need to remove it from the following Microsite(s):").should("exist")
+        cy.contains(authoring.target.modal, microsite.name).should("exist")
+
+        // Go to recommend and attempt to delete a recommend track used in a microsite 
+        authoring.recommend.deleteTrack(recommend2.name, false)
+        cy.contains(authoring.recommend.modal, "Track cannot be deleted").should("exist")
+        cy.contains(authoring.recommend.modal, "Before you delete this Track, you need to remove it from the following Microsite(s):").should("exist")
+        cy.contains(authoring.recommend.modal, microsite.name).should("exist")
+
+        // Remove a target and a recommend track from the microsite 
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.removeTracks([target2.name, recommend2.name])
+
+        // Now you can delete the 2 tracks that have been removed from the microsite 
+        authoring.target.deleteTrack(target2.name)
+        authoring.recommend.deleteTrack(recommend2.name)
+
+        // Go back to the microsite and remove the remaining tracks via the 'add track' modal (this is another way to remove tracks from a microsite)
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.removeTracks2({
+            target: target1.name,
+            recommend: recommend1.name
+        })
     })
 })
