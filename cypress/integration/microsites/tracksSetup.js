@@ -45,7 +45,7 @@ const recommend2 = {
 }
 
 describe("Microsites - tracks setup", () => {
-    it("Add tracks, remove tracks, track input fields validation", ()=>{
+    it("Add tracks, remove tracks", ()=>{
         authoring.common.login()
 
         // Delete tracks and microsite to reset test environment, then set them up again 

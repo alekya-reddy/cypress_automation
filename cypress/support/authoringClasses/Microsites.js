@@ -60,8 +60,8 @@ export class Microsites extends Common {
             cy.get(this.micrositesPage.nameInput).clear().type(microsite)
             cy.contains('button', 'Add Microsite').click()
         })
-        this.waitForAntModal({title: "Add Microsite"})
         if (verify !== false){
+            this.waitForAntModal({title: "Add Microsite"})
             cy.contains(this.antModal, "Add Microsite").should('not.be.visible')
             cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 10000}).should('exist')
         }
@@ -69,7 +69,8 @@ export class Microsites extends Common {
 
     removeMicrosite(microsite){
         this.goToPage(this.pageTitle, this.pageUrl) 
-        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 5000, () => {
+        cy.waitFor({element: this.micrositesPage.cardTitle, to: "exist"})
+        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 2000, () => {
             cy.containsExact(this.micrositesPage.cardTitle, microsite).parents(this.micrositesPage.card).within(() => {
                 cy.contains("button", "More Actions").click()
             })
@@ -101,6 +102,7 @@ export class Microsites extends Common {
         const slug = options.slug 
         const newName = options.newName 
         const cookieConsent = options.cookieConsent
+        const verify = options.verify
 
         this.goToMicrositeConfig(name)
 
@@ -121,7 +123,35 @@ export class Microsites extends Common {
         }
 
         cy.contains('button', 'Save').click()
-        cy.contains(this.messages.recordSaved).should("exist")
+        
+        if(verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
+            this.verifySetup(options)
+        }
+    }
+
+    verifySetup(options){
+        const slug = options.slug 
+        const newName = options.newName 
+        const cookieConsent = options.cookieConsent
+
+        if(newName){
+            cy.get(this.setupPage.nameInput).should("have.value", newName)
+            cy.containsExact(this.pageTitleLocator, newName, {timeout: 10000}).should("exist")
+        }
+        if(slug){
+            cy.get(this.setupPage.slugInput).should("have.value", slug)
+        }
+        if(cookieConsent == false){
+            cy.get(this.setupPage.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                expect(attr).not.to.include("ant-checkbox-checked")
+            }) 
+        }
+        if(cookieConsent == true){
+            cy.get(this.setupPage.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                expect(attr).to.include("ant-checkbox-checked")
+            }) 
+        }
     }
 
     tabToTracks(){
