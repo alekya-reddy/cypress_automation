@@ -47,6 +47,7 @@ const session = {
     visibility: 'Public',
     slug: 'test-session',
     description: 'Testing 123',
+    topics: "General Use",
     type: 'On Demand',
     video: videos[2].internalTitle,
     newVideo: videos[3].internalTitle
@@ -83,6 +84,10 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.privateRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked'); 
         cy.get(authoring.vex.onDemandRadio).parent().should('have.class', 'ant-radio ant-radio-checked'); 
         cy.contains(authoring.vex.onDemandTitleLocator, session.video).should('exist');
+        cy.containsExact(authoring.vex.topicsTag, session.topics).should("exist")
+
+        // Verify can remove topics
+        authoring.vex.removeTopics(session.topics)
 
         // Test the video picker
         cy.get(authoring.vex.selectVideoButton).click();

@@ -70,6 +70,8 @@ export class Vex extends Common {
         this.onDemandTitleLocator = 'div[class="ant-space-item"]';
         this.addContentButton = "button:contains('Add Content')";
         this.supplementalContentCardTitle = 'span[class^="ant-typography"]';
+        this.topicsTag = ".ant-select-selection-item";
+        this.removeTopicTagButton = ".ant-select-selection-item-remove";
         this.removeButton = "button:contains('Remove')";
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
@@ -456,12 +458,24 @@ export class Vex extends Common {
         cy.get(this.modal).should('not.exist');
     }
 
+    removeTopics(list){
+        const topics = [list].flat()
+
+        topics.forEach((topic) => {
+            cy.containsExact(this.topicsTag, topic).should("exist").within(() => {
+                cy.get(this.removeTopicTagButton).click()
+            })
+            cy.containsExact(this.topicsTag, topic).should("not.exist")
+        })
+    }
+
     configureSession(config){
         const name = config.name
         const newName = config.newName
         const visibility = config.visibility
         const slug = config.slug
         const description = config.description
+        const topics = config.topics ? [config.topics].flat() : false 
         const type = config.type
         const video = config.video
         const contents = config.contents
@@ -495,6 +509,16 @@ export class Vex extends Common {
 
         if(description){
             cy.get(this.sessionDescription.editor).clear().type(description)
+        }
+
+        if(topics){
+            cy.contains(this.antRow, "Topics").within(() => {
+                cy.get(this.antDropSelect.selector).click()
+                topics.forEach((topic) => {
+                    cy.get("input").type(topic + "\n")
+                })
+                cy.get(this.antDropSelect.selector).click()
+            })
         }
 
         if(type == 'On Demand'){
