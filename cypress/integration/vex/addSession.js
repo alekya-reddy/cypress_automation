@@ -19,7 +19,7 @@ describe('VEX - Virtual Event', function() {
         // Add live session using the modal 
         authoring.vex.goToSessionList()
         cy.get(authoring.vex.addSessionButton).click()
-        cy.get(authoring.vex.antModalContent).within(()=>{
+        cy.contains(authoring.vex.antModal, "Add Session").within(()=>{
             cy.get(authoring.vex.sessionNameInput).clear().type(liveSession)
             cy.get(authoring.vex.liveRadio).click()
 
@@ -34,7 +34,7 @@ describe('VEX - Virtual Event', function() {
             cy.get(authoring.vex.endTimeInput).click().clear().type(end + "\n")
             cy.get(authoring.vex.addSessionButton).click()
         })
-        cy.get(authoring.vex.antModalContent).should('not.be.visible')
+        cy.get(authoring.vex.antModal).should('not.be.visible')
         cy.get(authoring.vex.sessionName(liveSession), {timeout: 10000}).should('exist')
 
         // Go to live session config to verify it has the correct session type and selected times 
@@ -49,11 +49,11 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.goToEventConfig(event)
         authoring.vex.goToSessionList()
         cy.get(authoring.vex.addSessionButton).click()
-        cy.get(authoring.vex.antModalContent).within(()=>{
+        cy.contains(authoring.vex.antModal, "Add Session").within(()=>{
             cy.get(authoring.vex.sessionNameInput).clear().type(onDemandSession)
             cy.get(authoring.vex.addSessionButton).click()
         })
-        cy.get(authoring.vex.antModalContent).should('not.be.visible')
+        cy.get(authoring.vex.antModal).should('not.be.visible')
         cy.get(authoring.vex.sessionName(onDemandSession), {timeout: 10000}).should('exist')
 
         // Go to on demand session config to verify it has the correct session type 

@@ -18,7 +18,6 @@ export class Vex extends Common {
         this.eventNameInput = 'input[name="name"]';
         this.externalIDInput = "input[name='externalId']";
         this.cookieConsentCheckbox = "input[name='gdprCookieConsentEnabled']";
-        this.addEventModalFooter = '[class="ant-modal-footer"]';
         this.eventSlugInput = 'input[name="customUrl"]';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
@@ -41,7 +40,6 @@ export class Vex extends Common {
         this.caretUp = "span[aria-label='caret-up']";
         this.caretDown = "span[aria-label='caret-down']";
         this.antCardBody = '[class="ant-card-body"]';
-        this.antModalContent = '[class="ant-modal-content"]';
         this.antCardHeadWrapper = '[class="ant-card-head-wrapper"]';
         this.antDescriptionsContent = '[class="ant-descriptions-item-content"]';
         this.sessionNameInput = 'input[name="name"]';
@@ -164,23 +162,18 @@ export class Vex extends Common {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(eventName, callBackIfDuplicate = false, checkSuccess = true){
+    addVirtualEvent(eventName, verify){
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(()=>{
             cy.get(this.addEventButton).click()
         })
-        cy.get(this.eventNameInput).clear().type(eventName)
-        cy.get(this.addEventModalFooter).contains('button', 'Add Virtual Event').click()
-        cy.ifElementHasText(this.antModalBody, 'has already been taken', 1500, () => {
-            if(callBackIfDuplicate){
-                callBackIfDuplicate();
-                return;
-            } else {
-                cy.contains('button', 'Cancel').click()
-            }
+        cy.contains(this.antModal, "Add Virtual Event").within(() => {
+            cy.get(this.eventNameInput).clear().type(eventName)
+            cy.contains('button', 'Add Virtual Event').click()
         })
-        cy.get(this.antModalBody).should('not.be.visible')
-        if (checkSuccess){
+
+        if (verify !== false){
+            cy.get(this.antModal).should('not.be.visible')
             cy.containsExact(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
         }
     }
@@ -192,7 +185,7 @@ export class Vex extends Common {
                 cy.get(this.moreActionsButton).click()
             })
             cy.get(this.removeDropdownButton).click()
-            cy.get(this.antModalContent).within(()=>{
+            cy.get(this.antModal).within(()=>{
                 cy.contains('Yes').click()
             })
         })
@@ -343,7 +336,7 @@ export class Vex extends Common {
         cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
             cy.get(this.addSessionButton).click();
         })
-        cy.get(this.antModalContent).within(()=>{
+        cy.contains(this.antModal, "Add Session").within(()=>{
             cy.get(this.sessionNameInput).type(sessionName)
         })
         if (type == 'On Demand') {
@@ -351,10 +344,10 @@ export class Vex extends Common {
         } else if (type == 'Live') {
             cy.get(this.liveRadio).click(); 
         }
-        cy.get(this.antModalContent).within(()=>{ // must use arrow function notation or will lose 'this' context 
+        cy.contains(this.antModal, "Add Session").within(()=>{ // must use arrow function notation or will lose 'this' context 
             cy.get(this.addSessionButton).click();
         })
-        cy.get(this.antModalContent).should("not.be.visible")
+        cy.get(this.antModal).should("not.be.visible")
         cy.get(this.sessionName(sessionName), {timeout: 10000}).should('exist');
     }
 
@@ -579,7 +572,7 @@ export class Vex extends Common {
         cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().within(()=>{
             cy.get(this.removeButton).click();
         })
-        cy.get(this.antModalContent).within(()=>{
+        cy.contains(this.antModal, "Are you sure want to remove this record?").within(()=>{
             cy.contains('Yes').click()
         })
         cy.containsExact(this.supplementalContentCardTitle, content).should('not.exist');
@@ -766,7 +759,7 @@ export class Vex extends Common {
                 cy.get(this.chat.emailInput).clear().type(moderator)
                 cy.contains("button", "Submit").click()
             })
-            cy.contains(this.antModalBody, "Add Moderator").should("not.be.visible")
+            cy.contains(this.antModal, "Add Moderator").should("not.be.visible")
             cy.containsExact("span", moderator.toLowerCase(), {timeout: 20000}).should("exist")
         })
     }
@@ -866,7 +859,7 @@ export class Vex extends Common {
         // Remove sessions from the group
         sessions.forEach((session)=>{
             cy.contains(this.sessionRow, session).contains("button", "Remove").click()
-            cy.get(this.antModalBody).contains("button", "Yes").click()
+            cy.get(this.antModal).contains("button", "Yes").click()
         })
        
         // Verify they got removed
@@ -881,7 +874,7 @@ export class Vex extends Common {
             cy.contains(this.groupRow, name).within(()=>{
                 cy.get(this.removeGroupButton).click()
             })
-            cy.get(this.antModalBody).within(()=>{
+            cy.get(this.antModal).within(()=>{
                 cy.contains("button", "Yes").click()
             })
         })
@@ -1605,7 +1598,7 @@ export class Vex extends Common {
                 cy.contains("button", "Add Virtual Event").click()
             })
             if(verify !== false){
-                cy.contains(this.antModalBody, "Add Virtual Event").should('not.be.visible')
+                cy.contains(this.antModal, "Add Virtual Event").should('not.be.visible')
                 cy.containsExact(this.eventCardTitle, name, {timeout: 10000}).should('exist')
                 this.goToEventConfig(name)
             }

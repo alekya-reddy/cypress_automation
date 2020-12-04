@@ -46,13 +46,11 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event.name) // Function already contains assertion that event was successfully created 
 
         // Verify that you cannot add an event with same name as existing one 
-        authoring.vex.addVirtualEvent(event.name, ()=>{
-            // If event has duplicate name, then this callback will be invoked 
-            cy.contains(authoring.vex.antModalBody, "has already been taken").should('exist')
-            cy.contains('button', 'Cancel').click()
-            cy.get(authoring.vex.antModalBody).should('not.be.visible')
-            cy.containsExact(authoring.vex.eventCardTitle, event.name).should('have.length', 1)
-        })
+        authoring.vex.addVirtualEvent(event.name, false)
+        cy.contains(authoring.vex.antModal, "has already been taken").should('exist')
+        cy.contains('button', 'Cancel').click()
+        cy.get(authoring.vex.antModal).should('not.be.visible')
+        cy.containsExact(authoring.vex.eventCardTitle, event.name).should('have.length', 1)
 
         // Verify can delete an event 
         authoring.vex.deleteVirtualEvent(event.name) // Already contains assertion that event successfully deleted 
@@ -85,7 +83,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.deleteVirtualEvent(event2.name)
         authoring.vex.addVirtualEvent(event2.name)
         authoring.vex.goToEventConfig(event2.name)
-        cy.get(authoring.vex.eventSlugInput).clear().type(event.slug)
+        cy.get(authoring.vex.eventSlugInput, {timeout: 10000}).clear().type(event.slug)
         cy.contains("button", "Save").click()
         cy.contains(authoring.vex.messages.saveFailed).should('exist')
         cy.contains(authoring.vex.messages.duplicateEntry).should('exist')
