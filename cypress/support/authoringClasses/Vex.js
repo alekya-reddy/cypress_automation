@@ -19,9 +19,7 @@ export class Vex extends Common {
         this.externalIDInput = "input[name='externalId']";
         this.cookieConsentCheckbox = "input[name='gdprCookieConsentEnabled']";
         this.addEventModalFooter = '[class="ant-modal-footer"]';
-        this.antModalBody = '[class="ant-modal-body"]';
         this.eventSlugInput = 'input[name="customUrl"]';
-        this.eventFormPicker = '#rc_select_1';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
         this.antDropDownScroller = '.rc-virtual-list-holder-inner';
@@ -132,7 +130,8 @@ export class Vex extends Common {
             colorPicker: ".sketch-picker",
             classNameInput: "input[name*='className']",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
-            sessionGroupRow: ".pf-event-sessions"
+            sessionGroupRow: ".pf-event-sessions",
+            searchToggle: "input[name*='virtualEventEnableSearch']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1205,10 +1204,10 @@ export class Vex extends Common {
     addAdvancedBlock(config){
         const type = config.type.toLowerCase()
         const content = config.content 
-        const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
         const typography = config.typography // this has sub options 
         const className = config.className 
         const sessionGroup = config.sessionGroup
+        const enableSearch = config.enableSearch
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
@@ -1339,6 +1338,10 @@ export class Vex extends Common {
             cy.containsExact("span", "Spacing").click()
         }
 
+        if(enableSearch){
+            cy.get(this.pages.searchToggle).click()
+        }
+
         if(className){
             cy.get(this.pages.classNameInput).clear().type(className)
         }
@@ -1359,6 +1362,7 @@ export class Vex extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const enableSearch = config.enableSearch
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class='${className}']`
@@ -1427,6 +1431,15 @@ export class Vex extends Common {
             }
             if(spacing){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
+            }
+            if(enableSearch){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("button", "Search").should("exist")
+                })
+            } else {
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("button", "Search").should("not.exist")
+                })
             }
         }
     }

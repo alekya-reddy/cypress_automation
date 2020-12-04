@@ -21,6 +21,7 @@ export class Common {
         this.modal = 'div[data-qa-hook="modal"]';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal"; 
+        this.antModalBody = '[class="ant-modal-body"]';
         this.antModalRoot = ".ant-modal-root";
         this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
         this.vexNavigation = '#virtual-events';

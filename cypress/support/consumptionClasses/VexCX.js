@@ -163,6 +163,7 @@ export class VexCX extends CommonCX {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+        const enableSearch = config.enableSearch
 
         if(className && !sessionGroup){
             let locator = `.${className}`
@@ -242,6 +243,21 @@ export class VexCX extends CommonCX {
             if(spacing){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
             }
+            if(enableSearch){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("button", "Search").should("exist")
+                })
+            } else {
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("button", "Search").should("not.exist")
+                })
+            }
         }
+    }
+
+    searchSessionGroup(searchTerm){
+        // Must be within session group block before using this function
+        cy.get("input").clear().type(searchTerm)
+        cy.contains("button", "Search").click()
     }
 }
