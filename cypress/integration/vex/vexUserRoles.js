@@ -47,6 +47,7 @@ if (Cypress.env('TEST_ENV') == 'prod') {
 }
 
 const event = 'User Roles'
+const userAddedEvent = "User Added Event"
 
 // Bare bones test for now. Will update as user roles become more defined. 
 describe('VEX - User roles', function() {
@@ -57,6 +58,7 @@ describe('VEX - User roles', function() {
         }
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event)
+        authoring.vex.deleteVirtualEvent(userAddedEvent)
         authoring.vex.addVirtualEvent(event)
     })
 
@@ -80,10 +82,10 @@ describe('VEX - User roles', function() {
             }
 
             authoring.vex.visit()
-            authoring.vex.addVirtualEvent("User Added Event", undefined, false)
+            authoring.vex.addVirtualEvent(userAddedEvent, false)
             if(user.editPermission){
-                cy.containsExact(authoring.vex.eventCardTitle, "User Added Event").should('exist')
-                authoring.vex.deleteVirtualEvent("User Added Event")
+                cy.containsExact(authoring.vex.eventCardTitle, userAddedEvent, {timeout: 20000}).should('exist')
+                authoring.vex.deleteVirtualEvent(userAddedEvent)
             } else {
                 cy.get('body').should('contain', "You don't have permission to view this page.")
             }

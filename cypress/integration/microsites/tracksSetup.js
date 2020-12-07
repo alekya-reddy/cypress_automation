@@ -24,7 +24,8 @@ const target2 = {
     slug: "trackssetup-js-target",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
-    }
+    },
+    contents: ["Website Common Resource"]
 }
 
 const recommend1 = {
@@ -41,7 +42,8 @@ const recommend2 = {
     slug: "trackssetup-js-rec",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
-    }
+    },
+    contents: ["Website Common Resource"]
 }
 
 describe("Microsites - tracks setup", () => {

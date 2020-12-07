@@ -19,7 +19,7 @@ export class ClientHQ extends Common {
         cy.get(this.pageTitleLocator).invoke('text').then((title)=>{
             if(title !== `Configure ${this.org}`){
                 this.visit()
-                cy.containsExact('a', this.org).click()
+                cy.containsExact('a', this.org, {timeout: 20000}).should("exist").click()
             }
         })
     }
