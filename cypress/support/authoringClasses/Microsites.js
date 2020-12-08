@@ -23,6 +23,7 @@ export class Microsites extends Common {
         };
         this.landingPages = {
             nameInput: "input[name='name']",
+            slugInput: "input[name='slug']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addTracksButton: "button:contains('Tracks')",
@@ -31,7 +32,8 @@ export class Microsites extends Common {
             colorPickerBar: ".swatch-inner",
             colorPicker: ".sketch-picker",
             classNameInput: "input[name*='className']",
-            trackRow: ".pf-event-sessions"
+            trackRow: ".pf-event-sessions",
+            blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -308,6 +310,43 @@ export class Microsites extends Common {
         })
     }
 
+    editLandingPage(config){
+        const name = config.name
+        const newName = config.newName
+        const slug = config.slug
+        const verify = config.verify 
+
+        this.tabToLandingPages()
+        cy.containsExact(this.table.antCell, name).siblings("td:contains('Edit')").within(()=>{
+            cy.contains("button", "Edit").click()
+        })
+        cy.contains(this.antModal + ":visible", "Edit Landing Page").within(()=>{
+            if(newName){
+                cy.get(this.landingPages.nameInput).clear().type(newName)
+            }
+            if(slug){
+                cy.get(this.landingPages.slugInput).clear().type(slug)
+            }
+            cy.contains("button", "Submit").click()
+        })
+        if(verify !== false){
+            const checkName = newName ? newName : name 
+            cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
+            if(newName){ 
+                cy.containsExact(this.table.antCell, checkName).should('exist') 
+            }
+            if(slug){
+                cy.containsExact(this.table.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')
+            }
+        }
+    }
+
+    setToHomePage(page){
+        cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(()=>{
+            cy.contains("button", "Set as Home Page").click()
+        })
+    }
+
     goToPageEditor(page){
         cy.containsExact(this.antTable.cell, page).siblings(`td:contains('Modify Page')`).within(()=>{
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
@@ -486,7 +525,7 @@ export class Microsites extends Common {
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
                 }
                 if(background && background.image.url){
-                    expect(style).to.include(`background-image: url("${background.image.url}")`)
+                    expect(style).to.include(background.image.url)
                 }
                 if(background && background.position){
                     expect(style).to.include(`background-position: center ${background.position}`)
@@ -529,7 +568,7 @@ export class Microsites extends Common {
                 cy.contains(blockLocator, track).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
             if(background && background.image.url){
-                cy.contains(blockLocator, track).should("have.css", "background-image", `url("${background.image.url}")`)
+                cy.contains(blockLocator, track).invoke("css", "background-image").should("have.contain", background.image.url)
             }
             if(background && background.position){
                 let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
@@ -541,6 +580,28 @@ export class Microsites extends Common {
             if(spacing){
                 cy.contains(blockLocator, track).should("have.css", "padding", spacing)
             }
+        }
+    }
+
+    configureLandingPage(config){
+        const name = config.name
+        const setHome = config.setHome 
+        const blocks = config.blocks
+
+        this.editLandingPage(config)
+
+        if(setHome){
+            this.setToHomePage(name)
+        }
+
+        if(blocks){
+            this.goToPageEditor(name)
+            blocks.forEach((block)=>{
+                this.addAdvancedBlock(block)
+                cy.get(this.landingPages.blockContainer).eq(0).click() // This makes the add block button reappear
+            })
+            cy.contains("button", "Save").click()
+            cy.go("back")
         }
     }
 
