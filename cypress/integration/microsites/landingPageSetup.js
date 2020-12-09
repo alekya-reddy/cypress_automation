@@ -144,7 +144,19 @@ describe("Microsites - Landing page setup", () => {
             consumption.microsites.verifyLandingPageBlock(block)
         })
 
-        // Set the default landing page back to home and verify that visiting the home url will take you to the default landing page 
+        // Return to authoring and test various input validations
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: landingPage.slug, verify: false})
+        cy.contains(authoring.microsites.messages.duplicateEntry3).should("exist")
+        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: landingPage.name, verify: false})
+        cy.contains(authoring.microsites.messages.duplicateEntry2).should("exist")
+        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        // Currently, there is no input validation for slug special characters, or name that contians only special characters
 
+        // Verify that a landing page not set as home page can be removed 
+        authoring.microsites.setToHomePage(defaultLandingPage.name)
+        authoring.microsites.removeLandingPages(landingPage.name)
     })
 })
