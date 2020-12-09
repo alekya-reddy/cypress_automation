@@ -171,13 +171,7 @@ export class Microsites extends Common {
 
         this.tabToTracks()
         cy.contains("button", "Assign Tracks").click()
-        cy.get(this.tracks.targetRadio).click()
-        cy.contains(this.antModal, "Assign Tracks").within(()=>{
-            cy.get(this.antDropSelect.selector).click()
-        })
-        target.forEach((track)=>{
-            track ? cy.get(this.antDropSelect.options(track)).click() : null
-        })
+
         cy.get(this.tracks.recommendRadio).click()
         cy.contains(this.antModal, "Assign Tracks").within(()=>{
             cy.get(this.antDropSelect.selector).click()
@@ -185,6 +179,15 @@ export class Microsites extends Common {
         recommend.forEach((track)=>{
             track ? cy.get(this.antDropSelect.options(track)).click() : null
         })
+
+        cy.get(this.tracks.targetRadio).click()
+        cy.contains(this.antModal, "Assign Tracks").within(()=>{
+            cy.get(this.antDropSelect.selector).click()
+        })
+        target.forEach((track)=>{
+            track ? cy.get(this.antDropSelect.options(track), {timeout: 5000}).click() : null
+        })
+        
         cy.contains(this.antModal, "Assign Tracks").within(()=>{
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
             cy.contains("button", "Submit").click()
