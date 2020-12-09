@@ -5,6 +5,10 @@ export class MicrositesCX extends CommonCX {
         super(env, org, tld, baseUrl);
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
+        this.navigation = {
+            menuItem: ".rc-menu-item",
+            menuWithSubmenu: ".rc-menu-submenu-title"
+        };
     }
 
     verifyLandingPageBlock(config){

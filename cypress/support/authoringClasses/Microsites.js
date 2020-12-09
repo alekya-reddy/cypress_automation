@@ -640,13 +640,15 @@ export class Microsites extends Common {
         }
         cy.contains('button', "Submit").click()
 
-        if(verify){
-            cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
+        if(verify !== false){
+            this.waitForAntModal({title: "Add Navigation Item"})
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
-                if(source && !newTab){
-                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
-                } else if(source && newTab){
+                if(type == "Track"){
+                    cy.contains(this.navigation.navSubtitle, `Experience:`).should('exist')
+                } else if(type == "Link" && newTab){
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
+                } else {
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
                 }
             })
         }
@@ -667,6 +669,20 @@ export class Microsites extends Common {
                 cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
             }
         })
+    }
+
+    attachSubNav(config){
+        // Tip: This function drags the subject by the draggable menu, and drops onto the target's "remove" button 
+        // To simply reorder nav items at the top level, you don't need this function. Just drag subject's menu over the target's menu 
+        // To make subject a sublink of target, use this function. Subject must be above the target for this to work
+        // To make subject a third-level submenu of target, which itself is a submenu of a first level nav-item, first drag subject to target
+        // This make make subject a second-level submenu alongside target, then drag subject to itself 
+        // This effectively drags the subject back, and then it will link up to the target as a third-level submenu 
+        const subject = config.subject // name of the nav item to be moved
+        const target = config.target // name of the nav item that subject will connect to 
+
+        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
+        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
     }
 
 }
