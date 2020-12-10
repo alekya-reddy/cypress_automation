@@ -6,9 +6,18 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.navigation = {
+            header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
             menuWithSubmenu: ".rc-menu-submenu-title"
         };
+    }
+
+    clickContent(options){
+        const { track, content } = options
+
+        cy.contains("h4", track).siblings(this.grid).within(() => {
+            cy.contains(this.gridCard, content).click()
+        })
     }
 
     verifyLandingPageBlock(config){

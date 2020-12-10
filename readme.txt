@@ -249,11 +249,11 @@ Same thing with settings related tests. If a setting affects target, recommend, 
 target, recommend and vex folders respectively rather than separate out this test file into a 'settings' folder.
 
 With respect to the sharing of resources by multiple test files, this is fine, and could save a lot of set up time, as long as these 
-resources are clearly marked as "common resources". Common resources could be a content asset, a content type, a language, an appearance, etc. 
+resources are clearly marked as "shared resources". shared resources could be a content asset, a content type, a language, an appearance, etc. 
 For example, a content asset could have in its description "For general use by any automation tests". A language could be named "For general use". 
 A form that could be used across multiple test files could have in its description "For general use by any automation tests". 
-To standardize how resources are marked as 'common', let's use the phrases "General use" or "Common resource" in either the name or description.  
-Any such resource marked as a "common resource" should NOT be deleted, edited, modified in any way whatsoever. 
+To standardize how resources are marked as 'common', let's use the phrases "General use" or "shared resource" in either the name or description.  
+Any such resource marked as a "shared resource" should NOT be deleted, edited, modified in any way whatsoever. 
 If a test file requires a content asset that needs to be modified, then this test file should have its own dedicated content asset for use by this test file only 
 - and clearly marked as such by naming the asset after the test file.
 

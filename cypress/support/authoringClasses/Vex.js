@@ -1167,14 +1167,18 @@ export class Vex extends Common {
     }
 
     setToHomePage(page){
-        cy.containsExact(this.antCell, page).siblings("td:contains('Set as Home Page')").within(()=>{
-            cy.contains("button", "Set as Home Page").click()
+        cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
+            cy.ifElementWithExactTextExists("button", "Set as Home Page", 1500, () => {
+                cy.contains("button", "Set as Home Page").click()
+            })
         })
     }
 
     unsetHomePage(page){
-        cy.containsExact(this.antCell, page, {timeout: 20000}).siblings("td:contains('Unset')").within(()=>{
-            cy.contains("button", "Unset").click()
+        cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
+            cy.ifElementWithExactTextExists("button", "Unset", 1500, () => {
+                cy.contains("button", "Unset").click()
+            })
         })
     }
 

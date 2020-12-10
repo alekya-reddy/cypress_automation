@@ -165,28 +165,32 @@ export class Microsites extends Common {
     }
 
     addTracks(options){
-        const target = [options.target].flat()
-        const recommend = [options.recommend].flat() 
+        const target = options.target ? [options.target].flat() : false
+        const recommend = options.recommend ? [options.recommend].flat() : false
         const verify = options.verify 
 
         this.tabToTracks()
         cy.contains("button", "Assign Tracks").click()
 
-        cy.get(this.tracks.recommendRadio).click()
-        cy.contains(this.antModal, "Assign Tracks").within(()=>{
-            cy.get(this.antDropSelect.selector).click()
-        })
-        recommend.forEach((track)=>{
-            track ? cy.get(this.antDropSelect.options(track)).click() : null
-        })
+        if(recommend){
+            cy.get(this.tracks.recommendRadio).click()
+            cy.contains(this.antModal, "Assign Tracks").within(()=>{
+                cy.get(this.antDropSelect.selector).click()
+            })
+            recommend.forEach((track)=>{
+                cy.get(this.antDropSelect.options(track)).click()
+            })
+        }        
 
-        cy.get(this.tracks.targetRadio).click()
-        cy.contains(this.antModal, "Assign Tracks").within(()=>{
-            cy.get(this.antDropSelect.selector).click()
-        })
-        target.forEach((track)=>{
-            track ? cy.get(this.antDropSelect.options(track), {timeout: 5000}).click() : null
-        })
+        if(target){
+            cy.get(this.tracks.targetRadio).click()
+            cy.contains(this.antModal, "Assign Tracks").within(()=>{
+                cy.get(this.antDropSelect.selector).click()
+            })
+            target.forEach((track)=>{
+                cy.get(this.antDropSelect.options(track), {timeout: 5000}).click()
+            })
+        }
         
         cy.contains(this.antModal, "Assign Tracks").within(()=>{
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
@@ -194,7 +198,9 @@ export class Microsites extends Common {
         })
 
         if(verify !== false){
-            const allTracks = target.concat(recommend)
+            let allTracks = []
+            allTracks = target ? allTracks.concat(target) : allTracks
+            allTracks = recommend ? allTracks.concat(recommend) : allTracks
             allTracks.forEach((track)=>{
                 cy.containsExact(this.antTable.cell, track, {timeout: 20000}).should("exist")
             })

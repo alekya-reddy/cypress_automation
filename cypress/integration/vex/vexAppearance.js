@@ -41,6 +41,10 @@ const session = {
     ]
 }
 
+const sessionGroup = "Group A"
+
+const landingPage = "page"
+
 // Test the appearance set up area. For now, this test is deliberately sparse because this area will likely change a lot soon 
 describe('VEX - Virtual Event', function() {
     it('Configure appearance on authoring side then verify on consumption', function() {
@@ -56,6 +60,8 @@ describe('VEX - Virtual Event', function() {
 
         // Delete any navigation items that might have been left from previous run
         authoring.vex.deleteAllNavItems()
+        authoring.vex.goToLandingPage()
+        authoring.vex.unsetHomePage(landingPage)
         cy.wait(1500)
 
         // Go to consumption side and verify settings got applied 
@@ -73,7 +79,7 @@ describe('VEX - Virtual Event', function() {
             cy.contains('a', event.name).should("have.css", "font-family", "Tahoma")
         })
 
-        // Check the explore appearance settings (the hero and event container)
+        // Check the explore appearance settings (controls the hero and event container)
         cy.get(consumption.vex.vexHeroContainer).should("have.css", "background-color", "rgb(0, 255, 0)")
             .invoke("css", "background-image").should("have.contain", "/stock/sm/animal-dog-pet-cute.jpg")
         cy.get(consumption.vex.vexEventContainer).eq(1).parent().should("have.css", "background-color", "rgb(0, 0, 255)")
@@ -97,12 +103,20 @@ describe('VEX - Virtual Event', function() {
         cy.go("back")
         cy.go("back")
         authoring.vex.addNavItem(navItem)
+        authoring.vex.goToLandingPage()
+        authoring.vex.setToHomePage(landingPage)
         cy.wait(1500)
 
         // Go back to consumption and verify the appearance settings of the navigation header 
         cy.visit(event.url)
         cy.get(consumption.vex.vexHeader).should("have.css", "background-color", "rgb(255, 0, 0)").within(()=>{
             cy.get(consumption.vex.vexHeaderMenuItem).should("have.css", "font-family", "Tahoma")
+        })
+
+        // Verify the session group search input appearance (controlled in explore appearance settings)
+        cy.contains(consumption.vex.sessionGroup, sessionGroup).within(() => {
+            cy.get("input").should("have.css", "color", "rgb(0, 0, 100)").should("have.css", "background-color", "rgb(0, 100, 0)")
+            cy.contains("button", "Search").should("have.css", "color", "rgb(0, 100, 0)").should("have.css", "background-color", "rgb(100, 0, 0)")
         })
     })
 })

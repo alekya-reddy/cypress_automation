@@ -31,6 +31,7 @@ export class Common {
         this.deleteIcon = 'i[title="delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
+        this.clearValueIcon = ".Select-clear";
         this.antNotification = "div[class^='ant-notification-notice']";
         this.antSelectItem = "span[class='ant-select-selection-item']";
         this.thumbnailSelector = "#thumbnail-selector";
@@ -100,8 +101,8 @@ export class Common {
     }
 
     toggle(toggleLocator, on_off){
+        // We have at least 3 different kinds of toggles in our app
         cy.get(toggleLocator, {timeout: 20000}).invoke("text").then((toggleText)=>{
-            cy.log(toggleText.toUpperCase() == "ONOFF")
             if( ["ON", "OFF"].includes(toggleText.toUpperCase()) && toggleText.toUpperCase() !== on_off.toUpperCase()){
                 cy.get(toggleLocator).click()
             } else if (toggleText.toUpperCase() == "ONOFF"){

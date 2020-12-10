@@ -7,6 +7,8 @@ export class CommonCX {
         this.baseUrl = baseUrl; 
         this.jukeBoxApp = "#jukebox-app";
         this.trackProtectionEmailInput = "#email";
+        this.modal = "#qa-modal";
+        this.closeModalButton = "#qa-modal-close";
         this.standardForm = {
             firstNameInput: "#firstName",
             lastNameInput: "#lastName",

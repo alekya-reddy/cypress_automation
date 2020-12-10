@@ -12,7 +12,29 @@ export class Target extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
-            customUrlInput: "#customUrl" 
+            flowToggle: '[data-qa-hook="flow"]',
+            signpostsToggle: '[data-qa-hook="signpost"]',
+            bottombarToggle: '[data-qa-hook="bottomBar"]',
+            endPromoterToggle: '[data-qa-hook="end"]',
+            exitToggle: '[data-qa-hook="exit"]',
+            inactivityToggle: '[data-qa-hook="inactivity"]',
+            formsStrategyToggle: '[data-qa-hook="formsStrategy"]',
+            cookieConsentToggle: '[data-qa-hook="gdprCookieConsent"]',
+            cookieMessageToggle: '[data-qa-hook="cookieConsent"]',
+            headerToggle: '[data-qa-hook="header"]'
+        };
+        this.popoverElements = {
+            customUrlInput: "#customUrl",
+            endPromoterLinkInput: "#link"
+        };
+        this.formsStrategy = {
+            trackRule: "div[data-qa-hook='experience-rules']",
+            trackRuleCard: "div[data-qa-hook='engagement-rule-card']",
+            unknownToggle: "[data-qa-hook='unknown']",
+            knownToggle: '[data-qa-hook="known"]',
+            dismissableToggle: '[data-qa-hook="isDismissable"]',
+            formLabel: "label[for='formId']",
+            timeOnTrackInput: "input[name='showAfterTime']"
         };
     }
 
@@ -35,8 +57,8 @@ export class Target extends Common {
 
     goToTrack(name){
         cy.get(this.pageSearch).clear().type(name)
-        cy.containsExact(this.table.cellName, name).should("exist").get("a").click()
-        cy.get(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+        cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+        cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
 
     deleteTrack(name, verify){
@@ -63,6 +85,23 @@ export class Target extends Common {
         const name = options.name
         const slug = options.slug
         const contents = options.contents
+        /** All toggles should have value of 'on' or 'off' **/
+        const flow = options.flow
+        const signposts = options.signposts 
+        const bottombar = options.bottombar
+        const endPromoter = options.endPromoter
+        const exit = options.exit
+        const inactivity = options.inactivity
+        const formsStrategy = options.formsStrategy
+        const cookieConsent = options.cookieConsent
+        const cookieMessage = options.cookieMessage
+        const header = options.header
+        /***************************************************/
+        /** The following will require certain toggles to be 'on' **/
+        const flowCTA = options.flowCTA
+        const endPromoterOptions = options.endPromoterOptions
+        const formsStrategyOptions = options.formsStrategyOptions
+        /***********************************************************/
         const verify = options.verify
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
@@ -72,30 +111,185 @@ export class Target extends Common {
         })
 
         if(slug){
-            cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()
-            cy.get(this.popover).get(this.pageSidebar.customUrlInput).clear().type(slug + "\n")
-
-            if(verify !== false){
-                cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
-            }
+            this.setCustomUrl(slug, verify)
         }
 
         if(contents){
-            cy.contains("button", "Add Content").click()
-            contents.forEach((content) => {
-                cy.get(this.modal).within(()=>{
-                    cy.get(this.contentPickerSearchBar).clear().type(content)
-                    cy.contains(this.contentPickerItem, content).click()
-                })
+            this.addContent(contents, verify)
+        }
+
+        if(flow){
+            this.toggle(this.pageSidebar.flowToggle, flow)
+        }
+
+        if(signposts){
+            this.toggle(this.pageSidebar.signpostsToggle, signposts)
+        }
+
+        if(bottombar){
+            this.toggle(this.pageSidebar.bottombarToggle, bottombar)
+        }
+
+        if(endPromoter){
+            this.toggle(this.pageSidebar.endPromoterToggle, endPromoter)
+        }
+
+        if(exit){
+            this.toggle(this.pageSidebar.exitToggle, exit)
+        }
+
+        if(inactivity){
+            this.toggle(this.pageSidebar.inactivityToggle, inactivity)
+        }
+
+        if(formsStrategy){
+            this.toggle(this.pageSidebar.formsStrategyToggle, formsStrategy)
+        }
+
+        if(cookieConsent){
+            this.toggle(this.pageSidebar.cookieConsentToggle, cookieConsent)
+        }
+
+        if(cookieMessage){
+            this.toggle(this.pageSidebar.cookieMessageToggle, cookieMessage)
+        }
+
+        if(header){
+            this.toggle(this.pageSidebar.headerToggle, header)
+        }
+
+        if(flowCTA){
+            this.configureFlowCTA(flowCTA, verify)
+        }
+
+        if(endPromoterOptions){
+            this.configureEndPromoter(endPromoterOptions, verify)
+        }
+
+        if(formsStrategyOptions){
+            const { trackRule } = formsStrategyOptions
+
+            cy.contains("button", "View Form Strategy").click()
+            cy.contains(this.modal, "Forms Strategy").should("exist")
+
+            if(trackRule){
+                this.configureFormTrackRule(trackRule, verify)
+            }
+
+            cy.get(this.closeModal).click()
+        }
+    }
+
+    setCustomUrl(slug, verify){
+        cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.customUrlInput).clear().type(slug + "\n")
+        cy.ifElementWithExactTextExists("button", "Change", 1000, () => {
+            cy.contains("button", "Change").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
+        }
+    }
+
+    addContent(contents, verify){
+        cy.contains("button", "Add Content").click()
+        contents.forEach((content) => {
+            cy.get(this.modal).within(()=>{
+                cy.get(this.contentPickerSearchBar).clear().type(content)
+                cy.contains(this.contentPickerItem, content).click()
             })
-            cy.get(this.modal).contains("button", "Add Content").click()
+        })
+        cy.get(this.modal).contains("button", "Add Content").click()
+
+        if(verify !== false){
+            cy.get(this.modal).should('not.exist')
+            contents.forEach((content) => {
+                cy.containsExact("strong", content).should("exist")
+            })
+        }
+    }
+
+    configureFlowCTA(flowCTA, verify){
+        cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
+            cy.contains("label", "CTA").siblings("span").click()
+        })
+        cy.get(this.popover).within(() => {
+            if(Cypress.$(this.clearValueIcon).length > 0){
+                cy.get(this.clearValueIcon).click()
+            }
+            cy.get("input").type(flowCTA + "\n", {force: true})
+            cy.contains("button", "Update").click()
+        })
+        if(verify !== false){
+            cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
+                cy.containsExact("span", flowCTA, {timeout: 10000}).should("exist")
+            })
+        }
+    }
+
+    configureEndPromoter(endPromoterOptions, verify){
+        const { link } = endPromoterOptions
+
+        if(link){
+            cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
+                cy.contains("label", "Link").siblings("span").click()
+            })
+            cy.get(this.popover).within(() => {
+                cy.get(this.popoverElements.endPromoterLinkInput).clear().type(link + "\n")
+            })
 
             if(verify !== false){
-                cy.get(this.modal).should('not.exist')
-                contents.forEach((content) => {
-                    cy.containsExact("strong", content).should("exist")
+                cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
+                    cy.contains("label", "Link").siblings("span").should("contain", link)
                 })
             }
+        }
+    }
+
+    configureFormTrackRule(trackRule, verify){
+        const { form, timeOnTrack, showToUnknown, showToKnown, dismissable } = trackRule
+
+        cy.get(this.formsStrategy.trackRule).within(() => {
+            if(Cypress.$(this.formsStrategy.trackRuleCard).length > 0){
+                cy.get(this.formsStrategy.trackRuleCard).click()
+            } else {
+                cy.contains("button", "Add Rule").click()
+            }
+        })
+
+        if(form){
+            cy.get(this.formsStrategy.formLabel).parent().within(() => {
+                if(Cypress.$(this.clearValueIcon).length > 0){
+                    cy.get(this.clearValueIcon).click()
+                }
+                cy.get("input").type(form + "\n", {force: true})
+            })
+        }
+
+        if(timeOnTrack){
+            cy.contains("label", "Total time on Track").click()
+            cy.get(this.formsStrategy.timeOnTrackInput).clear().type(timeOnTrack)
+        }
+
+        if(showToUnknown){
+            this.toggle(this.formsStrategy.unknownToggle, showToUnknown)
+        }
+
+        if(showToKnown){
+            this.toggle(this.formsStrategy.knownToggle, showToKnown)
+        }
+
+        if(dismissable){
+            this.toggle(this.formsStrategy.dismissableToggle, dismissable)
+        }
+
+        cy.contains(this.modal, "Track Rule").within(()=>{
+            cy.contains("button", "Save").click()
+        })
+
+        if(verify !== false){
+            cy.contains(this.modal, "Add Track Rule").should("not.be.visible")
         }
     }
 }

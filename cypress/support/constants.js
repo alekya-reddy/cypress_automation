@@ -92,6 +92,18 @@ export const constants = {
             },
             get defaultUserPassword(){
                 return this.adminUserPassword;
+            },
+            resources: {
+                "Website Common Resource": {
+                    title: "Website Common Resource",
+                    source: "https://en.wikipedia.org/wiki/OpenAI",
+                    slug: "openai"
+                },
+                "Youtube Shared Resource": {
+                    title: "Youtube Shared Resource",
+                    source: "https://www.youtube.com/watch?v=ap-BkkrRg-o",
+                    slug: "youtube"
+                }
             }
         }
     }
