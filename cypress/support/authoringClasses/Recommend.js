@@ -11,8 +11,10 @@ export class Recommend extends Common {
         };
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
-            customUrlLabel: "label:contains('Custom URL')",
-            customUrlInput: "#customUrl" 
+            customUrlLabel: "label:contains('Custom URL')"
+        };
+        this.popoverElements = {
+            customUrlInput: "#customUrl"
         };
     }
 
@@ -60,10 +62,7 @@ export class Recommend extends Common {
     }
 
     configure(options){
-        const name = options.name
-        const slug = options.slug
-        const contents = options.contents
-        const verify = options.verify
+        const { name, slug, contents, verify } = options
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -72,30 +71,38 @@ export class Recommend extends Common {
         })
 
         if(slug){
-            cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()
-            cy.get(this.popover).get(this.pageSidebar.customUrlInput).clear().type(slug + "\n")
-
-            if(verify !== false){
-                cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
-            }
+            this.setCustomUrl(slug, verify)
         }
 
         if(contents){
-            cy.contains("button", "Add Content").click()
-            contents.forEach((content) => {
-                cy.get(this.modal).within(()=>{
-                    cy.get(this.contentPickerSearchBar).clear().type(content)
-                    cy.contains(this.contentPickerItem, content).click()
-                })
-            })
-            cy.get(this.modal).contains("button", "Add Content").click()
+            this.addContent(contents, verify)
+        }
+    }
 
-            if(verify !== false){
-                cy.get(this.modal).should('not.exist')
-                contents.forEach((content) => {
-                    cy.containsExact(this.table.internalTitleCell, content).should("exist")
-                })
-            }
+    setCustomUrl(slug, verify){
+        cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.customUrlInput).clear().type(slug + "\n")
+
+        if(verify !== false){
+            cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
+        }
+    }
+
+    addContent(contents, verify){
+        cy.contains("button", "Add Content").click()
+        contents.forEach((content) => {
+            cy.get(this.modal).within(()=>{
+                cy.get(this.contentPickerSearchBar).clear().type(content)
+                cy.contains(this.contentPickerItem, content).click()
+            })
+        })
+        cy.get(this.modal).contains("button", "Add Content").click()
+
+        if(verify !== false){
+            cy.get(this.modal).should('not.exist')
+            contents.forEach((content) => {
+                cy.containsExact(this.table.internalTitleCell, content).should("exist")
+            })
         }
     }
 }

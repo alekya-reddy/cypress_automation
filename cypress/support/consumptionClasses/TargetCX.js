@@ -9,7 +9,5 @@ export class TargetCX extends CommonCX {
         this.signpostContainer = "#signposts-container";
         this.endPromoterTitle = "#qa-modal-header-title";
         this.bottombarTitle = "#qa-bottom-bar-title";
-    }
-
-    
+    } 
 }

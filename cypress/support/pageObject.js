@@ -16,6 +16,7 @@ import { CommonCX } from './consumptionClasses/CommonCX.js';
 import { VexCX } from './consumptionClasses/VexCX.js';
 import { MicrositesCX } from './consumptionClasses/MicrositesCX.js';
 import { TargetCX } from './consumptionClasses/TargetCX.js';
+import { RecommendCX } from './consumptionClasses/RecommendCX.js';
 
 export const createAuthoringInstance = function(config = {}){
     // Set up default values for your convenience 
@@ -69,7 +70,8 @@ export const createConsumptionInstance = function(config = {}){
             common: new CommonCX(env, org, tld, baseUrl),
             vex: new VexCX(env, org, tld, baseUrl),
             microsites: new MicrositesCX(env, org, tld, baseUrl),
-            target: new TargetCX(env, org, tld, baseUrl)
+            target: new TargetCX(env, org, tld, baseUrl),
+            recommend: new RecommendCX(env, org, tld, baseUrl)
         }
     );
 }

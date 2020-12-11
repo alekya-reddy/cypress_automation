@@ -346,6 +346,62 @@ Cypress.Commands.add("assertWebhook", (config)=>{
     })
 })
 
+Cypress.Commands.add("assertWebhooks", (config)=>{
+    const webhooks = [config.webhooks].flat() // A list of webhook events (must be an object or an array of objects)
+    const wait = Number.isInteger(config.wait) ? config.wait : 120 // Maximum wait in seconds for all the expected webhooks to be found 
+
+    cy.request({
+        url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
+        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"},
+        log: false
+    }).then((response)=>{
+        // Extract just the webhooks events returned from pipedream api
+        const events = response.body.data.map((data)=>{
+            return data.e.body
+        })
+
+        // Determine if any of the expected webhooks match any of the returned events
+        let matchedIndexes = []
+        webhooks.forEach( (webhook , i) => {
+            events.forEach( event => {
+                let match = true
+                Object.getOwnPropertyNames(webhook).forEach( prop => {
+                    if(event[prop] !== webhook[prop]){
+                        match = false
+                    }
+                })
+                if(match){
+                    matchedIndexes.push(i)
+                }
+            })
+        })
+
+        // Compile a list of the remaining expected webhooks that still have no matches
+        let remainingWebhooks = []
+        webhooks.forEach((webhook, i) => {
+            if(matchedIndexes.indexOf(i) == -1){
+                remainingWebhooks.push(webhook)
+            } else {
+                expect(webhook).to.exist
+            }
+        })
+
+        // If there are webhooks left to match, and we are within the maximum wait time, call this function again to check if
+        // pipedream has received any new webhook events that might be a potential match for the remaining expected webhooks.
+        // Once time runs out, all the expected webhooks should have matched, otherwise test will fail 
+        if(remainingWebhooks.length > 0 && wait > 0){
+            const remainingWait = wait - 1
+            cy.wait(1000, {log: false})
+            cy.assertWebhooks({
+                webhooks: remainingWebhooks,
+                wait: remainingWait
+            })
+        } else {
+            expect(remainingWebhooks.length).to.eq(0)
+        }
+    })
+})
+
 Cypress.Commands.add("closeSession", (config ={})=>{
     const failOnStatusCode = config.failOnStatusCode == false ? false : true 
     const retryOnNetworkFailure = config.retryOnNetworkFailure == true ? true : false // Set retry to false by default (otherwise can get broken sessions)

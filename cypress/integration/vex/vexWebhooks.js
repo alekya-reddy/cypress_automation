@@ -392,10 +392,10 @@ describe("VEX - Form Webhook", ()=>{
             // Now check for all the webhooks 
             // Note: not all fields will be verified. If field changes between runs, it is omitted from check.
             // For example, time fields, city, country, device etc
-            cy.assertWebhook({find: formWebhookEvent, retries: 420})
-            cy.assertWebhook({find: engagementScoreWebhookEvent, retries: 300})
-            cy.assertWebhook({find: supplementalSpecificContentWebhookEvent, retries: 300})
-            cy.assertWebhook({find: sessionWebhookEvent, retries: 300})
+            cy.assertWebhooks({
+                webhooks: [formWebhookEvent, engagementScoreWebhookEvent, supplementalSpecificContentWebhookEvent, sessionWebhookEvent],
+                wait: 360
+            })
             // Multiple asset engagement webhook not firing
             // Specific content webhook for video not firing
         } 
