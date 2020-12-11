@@ -31,13 +31,16 @@ export class CommonCX {
             decline: "#qa-gdpr-cookie-consent-decline-button"
         };
         this.header = {
-            cookieSettings: "#pf-event-cookie-consent-button"
+            locator: "#qa-header",
+            cookieSettings: "#pf-event-cookie-consent-button",
+            facebookIcon: "#facebook-link"
         };
         this.cookieSettings = {
             modal: "#qa-modal",
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
         };
+        this.ctaButton = "#qa-cta-button";
     }
 
     checkSessionCookie(wait){

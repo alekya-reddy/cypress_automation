@@ -22,6 +22,10 @@ describe("Testing lab - Use this spec file to test out new techniques, or to hel
             endPromoterOptions: {
                 link: "https://www.google.com"
             },
+            exit: "on",
+            exitOptions: {
+                delay: "0"
+            },
             formsStrategy: "on",
             formsStrategyOptions: {
                 trackRule: {

@@ -21,7 +21,9 @@ export class Target extends Common {
             formsStrategyToggle: '[data-qa-hook="formsStrategy"]',
             cookieConsentToggle: '[data-qa-hook="gdprCookieConsent"]',
             cookieMessageToggle: '[data-qa-hook="cookieConsent"]',
-            headerToggle: '[data-qa-hook="header"]'
+            headerToggle: '[data-qa-hook="header"]',
+            exitNoOverride: "[data-qa-hook='Exit no overrides']",
+            exitOverride: "[data-qa-hook='Exit overrides']"
         };
         this.popoverElements = {
             customUrlInput: "#customUrl",
@@ -35,6 +37,11 @@ export class Target extends Common {
             dismissableToggle: '[data-qa-hook="isDismissable"]',
             formLabel: "label[for='formId']",
             timeOnTrackInput: "input[name='showAfterTime']"
+        };
+        this.exitOverride = {
+            delayLabel: "label[for='delay']",
+            delayInput: "input[name='delay']",
+            delayDecrement: "span[class*='NumberInput__decrementButton']"
         };
     }
 
@@ -100,6 +107,7 @@ export class Target extends Common {
         /** The following will require certain toggles to be 'on' **/
         const flowCTA = options.flowCTA
         const endPromoterOptions = options.endPromoterOptions
+        const exitOptions = options.exitOptions
         const formsStrategyOptions = options.formsStrategyOptions
         /***********************************************************/
         const verify = options.verify
@@ -164,6 +172,10 @@ export class Target extends Common {
 
         if(endPromoterOptions){
             this.configureEndPromoter(endPromoterOptions, verify)
+        }
+
+        if(exitOptions){
+            this.configureExit(exitOptions, verify)
         }
 
         if(formsStrategyOptions){
@@ -244,6 +256,45 @@ export class Target extends Common {
                     cy.contains("label", "Link").siblings("span").should("contain", link)
                 })
             }
+        }
+    }
+
+    configureExit(exitOptions, verify){
+        const { delay } = exitOptions
+
+        cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
+            if(Cypress.$(this.pageSidebar.exitNoOverride).length > 0){
+                cy.get(this.pageSidebar.exitNoOverride).click()
+            } else if (Cypress.$(this.pageSidebar.exitOverride).length > 0){
+                cy.get(this.pageSidebar.exitOverride).click()
+            }
+        })
+
+        cy.contains(this.modal, "Exit Overrides for this Track").should("exist").within(() => {
+            if(delay){
+                cy.get(this.exitOverride.delayLabel).parent().within(() => {
+                    // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
+                    // This makes it impossible to set it to zero without using the decrement button
+                    cy.angryClick({
+                        clickElement: this.exitOverride.delayDecrement,
+                        checkElement: "input[value='0']",
+                        repeat: 60,
+                        interval: 0
+                    })
+                })
+                cy.get(this.exitOverride.delayInput).type(delay)
+            }
+
+            cy.contains("button", "Save Exit Overrides").click()
+        })
+
+        if(verify !== false){
+            cy.contains(this.modal, "Exit Overrides for this Track").should("not.be.visible")
+            cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
+                if(delay){
+                    cy.contains(`${delay} seconds`).should("exist")
+                }
+            })
         }
     }
 

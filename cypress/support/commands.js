@@ -274,13 +274,20 @@ Cypress.Commands.add("angryClick", (config)=>{
     const clickElement = config.clickElement // The element you want clicked
     const repeat = config.repeat || 10 // How many times to try again before giving up 
     const checkElement = config.checkElement // The element that should appear when clickElement is clicked
+    const interval = config.interval || config.interval == 0 ? config.interval : 1000 // Interval between clicks
 
-    for(let i = 0; i < repeat; i++){
-        cy.get('body', {log: false}).then((body)=>{
-            let checkElementFound = body.find(checkElement).length
-            if(checkElementFound < 1){
-                cy.get(clickElement).click()
-                cy.wait(1000)
+    let checkElementFound = Cypress.$(checkElement).length
+    if(checkElementFound < 1){
+        let remainingRepeats = repeat - 1
+        cy.get(clickElement).click()
+        cy.do(() => {
+            if(remainingRepeats == 0){
+                return
+            } else {
+                if(interval){
+                    cy.wait(interval)
+                }
+                cy.angryClick({clickElement: clickElement, checkElement: checkElement, repeat: remainingRepeats, interval: interval})
             }
         })
     }
@@ -443,6 +450,12 @@ Cypress.Commands.add("waitFor", (options)=>{
         cy.waitFor(options)
     }
 
+})
+
+Cypress.Commands.add("do", (callback) => {
+    // Use this if you want to insert some logic or step into the cy command sequence which would otherwise be done out of sequence
+    // due to the fact that all code compiles before cy commands are executed 
+    callback()
 })
 
 
