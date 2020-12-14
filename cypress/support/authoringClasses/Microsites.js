@@ -649,9 +649,7 @@ export class Microsites extends Common {
         if(verify !== false){
             this.waitForAntModal({title: "Add Navigation Item"})
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
-                if(type == "Track"){
-                    cy.contains(this.navigation.navSubtitle, `Experience:`).should('exist')
-                } else if(type == "Link" && newTab){
+                if(type == "Link" && newTab){
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
                 } else {
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')

@@ -10,16 +10,17 @@ export class CommonCX {
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
         this.standardForm = {
-            firstNameInput: "#firstName",
-            lastNameInput: "#lastName",
-            emailInput: "#email",
-            company: "#company",
-            title: "#title",
-            phone: "#phone",
-            employeeCount: "#employeeCount",
-            country: "#country",
-            state: "#state",
-            zipcode: "#zipcode",
+            locator: "form[id='qa-standard-form']",
+            firstNameInput: "input[id^='firstName']",
+            lastNameInput: "input[id^='lastName']",
+            emailInput: "input[id^='email']",
+            company: "input[id^='company']",
+            title: "input[id^='title']",
+            phone: "input[id^='phone']",
+            employeeCount: "input[id^='employeeCount']",
+            country: "input[id^='country']",
+            state: "input[id^='state']",
+            zipcode: "input[id^='zipcode']",
             checkbox: "input[name='checkbox']",
             optIn: "input[name='optIn'][value='true']",
             optOut: "input[name='optIn'][value='false']",
@@ -173,9 +174,8 @@ export class CommonCX {
         cy.contains("button", "Submit").click() 
 
         if(checkSuccess){
-            cy.waitFor({element: "form", to: "not.exist", wait: 20000})
+            cy.waitFor({element: "form:visible", to: "not.exist", wait: 20000})
             cy.get("form").should("not.exist")
         }
     }
-
 }

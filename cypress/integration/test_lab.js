@@ -1,6 +1,7 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../support/pageObject.js';
 
 //const authoring = createAuthoringInstance({baseUrl: "https://default.pathfactory-development.com", username: "liming", password: "Lookbook123"});
+//const consumption = createConsumptionInstance({org: "automation-microsites", tld: "lookbookhq"})
 //const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
 //const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
 //const consumption = createConsumptionInstance({org: "automation-vex", tld: "lookbookhq"})

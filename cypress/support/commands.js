@@ -505,7 +505,6 @@ Cypress.Commands.add("waitFor", (options)=>{
         cy.wait(500, {log: false})
         cy.waitFor(options)
     }
-
 })
 
 Cypress.Commands.add("do", (callback) => {
