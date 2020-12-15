@@ -190,44 +190,6 @@ Cypress.Commands.add("invokeJS", (elementLocator, method, state={})=>{
     })
 })
 
-Cypress.Commands.add("scrollIntoViewWithin", (config)=>{
-    const direction = config.direction || 'y' // y for vertical scroll top to bottom, x for horizontal scroll left to right
-    const scroller = config.scroller // The scrollable element 
-    const element = config.element // The element you are looking for within the scrollable element
-    const text = config.text // The exact text of the element you are looking for 
-    const increment = config.increment || 10 // The % of the total scroll you want to scroll by with each loop 
-    let x = [] // The for loop is done running by the time the first cy.get('body') is executed, so need to keep track of the increment in an array
-    let y = []
-    let loop = {count: 0} // Cannot rely on the i index because loop runs before the first cy command, save the loop count in object which gets updated with each cy.get('body') command
-    let matchFound = false
-
-    for(let i = 0; i <= 100; i += increment){
-        if(direction == 'x'){
-            x.push(i)
-            y.push(0)
-        } else {
-            y.push(i)
-            x.push(0)
-        } 
-        cy.get('body', {log: false}).then(()=>{
-            if (matchFound == false){
-                cy.get(scroller, {log: false, timeout: 2000}).scrollTo(`${x[loop.count]}%`, `${y[loop.count]}%`, {log: false})
-                cy.wait(100, {log: false})
-                if (element && text){
-                    let matches = Cypress.$(element).filter(function(){
-                        return Cypress.$(this).text() == text;
-                    })
-                    if(matches.length > 0){
-                        matchFound = true
-                    }
-                }
-            }
-            loop.count += 1
-        })
-        
-    }
-})
-
 Cypress.Commands.add("scrollWithin", (config)=>{
     const direction = config.direction || 'y' // y for vertical scroll top to bottom, x for horizontal scroll left to right
     const scroller = config.scroller // The scrollable element 
@@ -299,50 +261,6 @@ Cypress.Commands.add("clearWebhooks", ()=>{
         url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
         method: "DELETE",
         headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"}
-    })
-})
-
-Cypress.Commands.add("assertWebhook", (config)=>{
-    // The following sends request to pipedream using our pipedream account's api key 
-    // Uncomment any of the cy.log lines to help with debugging 
-    let find = config.find ? config.find : config // Function will return the first event that matches the fields provided in find (needs to be an object)
-    let assert = config.assert // This optional callback will take in the matching event and you can do whatever custom assertion test you want on it
-    let retries = Number.isInteger(config.retries) ? config.retries : 120 // By default, will retry every second for 120 seconds. You can set to any number of retries you want.
-
-    cy.request({
-        url: "https://api.pipedream.com/v1/sources/dc_lVu6y2/events",
-        headers: {"Authorization": "Bearer 391dbfbac8627689b173cabc4506b667"},
-        log: false
-    }).then((response)=>{
-        let events = response.body.data.map((data)=>{
-            return data.e.body
-        })
-        let matchedEvent = events.find((event) => {
-            //cy.log(event)
-            function checkMatch(){
-                let match = true
-                Object.getOwnPropertyNames(find).forEach((prop)=>{
-                    //cy.log(`${prop}: ${event[prop]} == ${find[prop]}`)
-                    if(event[prop] !== find[prop]){
-                        match = false
-                    }
-                })
-                //cy.log(`Match is: ${match}`)
-                return match;
-            }
-            return checkMatch()
-        })
-        //cy.log(`Webhook Event found: ${matchedEvent}`)
-        if(!matchedEvent && retries > 0){
-            cy.wait(1000, {log: false})
-            //cy.log(retries)
-            cy.assertWebhook({find: find, assert: assert, retries: retries - 1})
-        } else {
-            expect(matchedEvent).to.exist 
-            if(assert){
-                assert(matchedEvent)  
-            }
-        }
     })
 })
 

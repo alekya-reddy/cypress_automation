@@ -48,7 +48,6 @@ const sessions = [session, session2]
 // Also check that you can still edit video used in VEX
 
 describe('VEX - Virtual Event', function() {
-
     it('Verify that deleting content associated with VEX does not result in internal server error', function() {
         authoring.common.login()
 
@@ -58,9 +57,8 @@ describe('VEX - Virtual Event', function() {
         // Clean up - delete previously contents as they might have been left in altered state, leading to inconsistency + flakiness 
         authoring.contentLibrary.visit()
         cy.get(authoring.contentLibrary.table.urlCell, {timeout: 20000}).should('exist') // waits for table cells to load
-        cy.scrollWithin({ scroller: authoring.contentLibrary.scrollableTable }) // Scrolls whole table to load all content
         contents.forEach((content)=>{
-            authoring.contentLibrary.delete({url: content.url, wait: 500, noScroll: true})
+            authoring.contentLibrary.delete({url: content.url, wait: 500})
         })
 
         // Add content back in correct state 
@@ -116,6 +114,5 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.deleteVirtualEvent(event)
         authoring.contentLibrary.delete(videoContent2) 
         authoring.contentLibrary.delete(supplementalContent2)
-
     })
 })

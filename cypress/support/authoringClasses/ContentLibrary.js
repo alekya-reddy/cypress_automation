@@ -55,7 +55,6 @@ export class ContentLibrary extends Common{
         const internalTitle = config.internalTitle
         const url = config.url 
         const wait = config.wait ? config.wait : 20000
-        const noScroll = config.noScroll
 
         cy.get(this.pageTitleLocator).click() // In case preview of the content already open, this will close it
         if(internalTitle){
@@ -68,19 +67,13 @@ export class ContentLibrary extends Common{
             cy.get(this.clearSearchIcon).click()
         } else if(url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
-            cy.get(this.table.urlCell, {timeout: 20000}).should('exist') // Wait for cells to load before scrolling 
-            if(!noScroll){
-                cy.scrollWithin({
-                    scroller: this.scrollableTable,
-                    find: `a[href='${url}']`,
-                    increment: 5 // This needs to be calibrated correctly. Too small, and it'll crawl too slowly. Too fast, and it'll skip over contents
-                })
-            }
+            cy.get(this.pageSearch, {timeout: 20000}).clear().type(url_no_protocol)
             cy.ifElementWithExactTextExists(this.table.urlCell, url_no_protocol, wait, ()=>{
                 cy.containsExact(this.table.urlCell, url_no_protocol).siblings(this.table.internalTitleCell).click()
                 cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
                 config.contentExists = true
             })
+            cy.get(this.clearSearchIcon).click()
         }
     }
 
@@ -120,11 +113,6 @@ export class ContentLibrary extends Common{
         })
         cy.contains('button', 'Done').click()
         cy.get(this.modal).should('not.exist', {timeout: 10000})
-        cy.scrollIntoViewWithin({
-            scroller: this.scrollableTable,
-            element: this.urlCell,
-            text: url.replace(/^https?\:\/\//i, "")
-        })
         cy.containsExact(this.table.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
     }
 
