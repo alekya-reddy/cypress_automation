@@ -9,6 +9,7 @@ export class ClientHQ extends Common {
         this.domainInput = '#defaultTld';
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
         this.virtualEventToggle = '[data-qa-hook="enableVirtualEvents"]';
+        this.micrositesToggle = "[data-qa-hook='enableMicrosites']";
     }
 
     visit(){

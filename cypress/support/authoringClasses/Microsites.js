@@ -62,7 +62,7 @@ export class Microsites extends Common {
             cy.get(this.micrositesPage.nameInput).clear().type(microsite)
             cy.contains('button', 'Add Microsite').click()
         })
-        if (verify !== false){
+        if(verify !== false){
             this.waitForAntModal({title: "Add Microsite"})
             cy.contains(this.antModal, "Add Microsite").should('not.be.visible')
             cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 10000}).should('exist')
@@ -84,7 +84,7 @@ export class Microsites extends Common {
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
     }
 
-    goToMicrositeConfig(microsite){
+    goToMicrositeConfig(microsite, verify){
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== microsite){
                 cy.containsExact(this.micrositesPage.cardTitle, microsite, {timeout: 20000}).should('exist').parents(this.micrositesPage.card).within(() => {
@@ -92,7 +92,9 @@ export class Microsites extends Common {
                 })
             }
         })
-        cy.contains(this.pageTitleLocator, microsite, {timeout: 20000}).should("exist")
+        if(verify !== false){
+            cy.contains(this.pageTitleLocator, microsite, {timeout: 20000}).should("exist")
+        }
     }
 
     tabToSetup(){
