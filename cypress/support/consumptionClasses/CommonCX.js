@@ -29,7 +29,8 @@ export class CommonCX {
         this.cookieConsent = {
             messageBox: "#qa-cookie-consent",
             accept: "#qa-gdpr-cookie-consent-accept-button",
-            decline: "#qa-gdpr-cookie-consent-decline-button"
+            decline: "#qa-gdpr-cookie-consent-decline-button",
+            ok: "#qa-cookie-consent-ok-button" // If cookie message toggled on instead of cookie consent, will get the "ok" button instead of "accept" or "decline"
         };
         this.header = {
             locator: "#qa-header",
@@ -37,7 +38,7 @@ export class CommonCX {
             facebookIcon: "#facebook-link"
         };
         this.cookieSettings = {
-            modal: "#qa-modal",
+            modal: "div[id='qa-modal']:visible",
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
         };
@@ -88,16 +89,21 @@ export class CommonCX {
 
     toggleCookieConsent(_on_off){
         let on_off = _on_off.toUpperCase()
-        cy.get(this.header.cookieSettings).click()
-        cy.get(this.cookieSettings.modal).should('exist')
-        cy.get(this.cookieSettings.toggle).invoke("text").then((current_state)=>{
-            if( on_off !== current_state ){
-                cy.get(this.cookieSettings.toggle).click()
-            }
+        if(Cypress.$(this.header.cookieSettings).length > 0){
+            cy.get(this.header.cookieSettings).click()
+        } else {
+            // Miscrosites have a different id for the cookie settings button  
+            cy.get(this.navigation.cookieSettings).click()
+        }
+        cy.get(this.cookieSettings.modal).should('exist').within(() => {
+            cy.get(this.cookieSettings.toggle).invoke("text").then((current_state)=>{
+                if( on_off !== current_state ){
+                    cy.get(this.cookieSettings.toggle).click()
+                }
+            })
+            cy.get(this.cookieSettings.toggle).should("contain", on_off)
+            cy.get(this.cookieSettings.closeModal).click()
         })
-
-        cy.get(this.cookieSettings.toggle).should("contain", on_off)
-        cy.get(this.cookieSettings.closeModal).click()
         cy.get(this.cookieSettings.modal).should('not.exist')
     }
 
@@ -175,7 +181,7 @@ export class CommonCX {
 
         if(checkSuccess){
             cy.waitFor({element: "form:visible", to: "not.exist", wait: 20000})
-            cy.get("form").should("not.exist")
+            cy.get("form").should("not.be.visible")
         }
     }
 }

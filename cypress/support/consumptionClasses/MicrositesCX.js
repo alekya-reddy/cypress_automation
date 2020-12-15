@@ -8,7 +8,8 @@ export class MicrositesCX extends CommonCX {
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
-            menuWithSubmenu: ".rc-menu-submenu-title"
+            menuWithSubmenu: ".rc-menu-submenu-title",
+            cookieSettings: "#pf-microsite-cookie-consent-button"
         };
     }
 
