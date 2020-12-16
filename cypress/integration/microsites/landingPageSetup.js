@@ -150,10 +150,15 @@ describe("Microsites - Landing page setup", () => {
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: landingPage.slug, verify: false})
         cy.contains(authoring.microsites.messages.duplicateEntry3).should("exist")
         cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: "haha&^%&^", verify: false})
+        cy.contains("Only alphanumeric characters, hyphens and underscores are allowed").should("exist")
+        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: landingPage.name, verify: false})
         cy.contains(authoring.microsites.messages.duplicateEntry2).should("exist")
         cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
-        // Currently, there is no input validation for slug special characters, or name that contians only special characters
+        authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: "%^&*(&^", verify: false})
+        cy.contains("Name must contain letters or numbers").should("exist")
+        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
 
         // Verify that a landing page not set as home page can be removed 
         authoring.microsites.setToHomePage(defaultLandingPage.name)
