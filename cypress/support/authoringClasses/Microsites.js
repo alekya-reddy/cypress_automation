@@ -34,6 +34,7 @@ export class Microsites extends Common {
             classNameInput: "input[name*='className']",
             trackRow: ".pf-event-sessions",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
+            titleOverrideInput: "input[name*='trackTitleOverride']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -368,8 +369,9 @@ export class Microsites extends Common {
 
     addAdvancedBlock(config){
         const type = config.type.toLowerCase()
-        const content = config.content 
+        const content = config.content // HTML content that goes into the html block 
         const track = config.track
+        const titleOverride = config.titleOverride
         const typography = config.typography // this has sub options 
         const className = config.className 
         const heading = config.heading // this has sub options color, textAlign
@@ -398,6 +400,10 @@ export class Microsites extends Common {
 
         if(track){
             cy.get("select[id*='experienceId']").select(track)
+        }
+
+        if(titleOverride){
+            cy.get(this.landingPages.titleOverrideInput).clear().type(titleOverride)
         }
 
         if(background){
@@ -519,12 +525,13 @@ export class Microsites extends Common {
         const typography = config.typography // this has sub options 
         const className = config.className 
         const track = config.track
+        const titleOverride = config.titleOverride
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
 
         if(type == "html" && className){ // className is required to be able to find the correct block
-            let locator = `div[class='${className}']`
+            let locator = `div[class*='${className}']`
             cy.get(locator).invoke("attr", "style").then((style)=>{
                 if(typography && typography.textAlign){
                     expect(style).to.include(`text-align: ${typography.textAlign}`)
@@ -563,10 +570,11 @@ export class Microsites extends Common {
         }
 
         if(type == "track" && track){ 
-            let blockLocator = this.landingPages.trackRow 
-            cy.contains(blockLocator, track).should("exist")
+            const blockLocator = this.landingPages.trackRow 
+            const trackName = titleOverride ? titleOverride : track
+            cy.contains(blockLocator, trackName).should("exist")
             if(heading){
-                cy.contains(blockLocator, track).within(()=>{
+                cy.contains(blockLocator, trackName).within(()=>{
                     if(heading.color && !heading.color.hex){
                         cy.get("h4").should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
                     }
@@ -576,20 +584,20 @@ export class Microsites extends Common {
                 })
             }
             if(background && background.color && !background.color.hex){
-                cy.contains(blockLocator, track).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+                cy.contains(blockLocator, trackName).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
             if(background && background.image.url){
-                cy.contains(blockLocator, track).invoke("css", "background-image").should("have.contain", background.image.url)
+                cy.contains(blockLocator, trackName).invoke("css", "background-image").should("have.contain", background.image.url)
             }
             if(background && background.position){
                 let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
-                cy.contains(blockLocator, track).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
+                cy.contains(blockLocator, trackName).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
             }
             if(background && background.size){
-                cy.contains(blockLocator, track).should("have.css", "background-size", background.size)
+                cy.contains(blockLocator, trackName).should("have.css", "background-size", background.size)
             }
             if(spacing){
-                cy.contains(blockLocator, track).should("have.css", "padding", spacing)
+                cy.contains(blockLocator, trackName).should("have.css", "padding", spacing)
             }
         }
     }

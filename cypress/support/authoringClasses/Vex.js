@@ -1362,7 +1362,7 @@ export class Vex extends Common {
         const enableSearch = config.enableSearch
 
         if(type == "html" && className){ // className is required to be able to find the correct block
-            let locator = `div[class='${className}']`
+            let locator = `div[class*='${className}']`
             cy.get(locator).invoke("attr", "style").then((style)=>{
                 if(typography && typography.textAlign){
                     expect(style).to.include(`text-align: ${typography.textAlign}`)

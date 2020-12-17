@@ -47,6 +47,7 @@ const landingPage = {
             id: "Recommend Block",
             type: "track",
             track: recommend.name,
+            titleOverride: `Overrided title`,
             expectContents: recommend.contents,
             heading: {
                 color: {r: "0", g: "255", b: "255"},

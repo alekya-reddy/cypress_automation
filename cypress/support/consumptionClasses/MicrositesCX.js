@@ -27,6 +27,7 @@ export class MicrositesCX extends CommonCX {
         const typography = config.typography // this has sub options color, textAlign // color: {r, g, b} is the only format that will be checked - hex not checked 
         const className = config.className // Required to locate html block
         const track = config.track
+        const titleOverride = config.titleOverride
         const expectContents = config.expectContents
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
@@ -72,38 +73,39 @@ export class MicrositesCX extends CommonCX {
         }
         
         if(track){ 
-            cy.containsExact("h4", track, {timeout: 10000}).should("exist")
+            const trackName = titleOverride ? titleOverride : track
+            cy.containsExact("h4", trackName, {timeout: 10000}).should("exist")
 
             if(heading){
                 if(heading.color && !heading.color.hex){
-                    cy.containsExact("h4", track).should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
+                    cy.containsExact("h4", trackName).should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
                 }
                 if(heading.textAlign){
-                    cy.containsExact("h4", track).should("have.css", 'text-align', heading.textAlign)
+                    cy.containsExact("h4", trackName).should("have.css", 'text-align', heading.textAlign)
                 }
             }
             if(expectContents){
                 expectContents.forEach((content)=>{
-                    cy.containsExact("h4", track).siblings(this.grid).within(() => {
+                    cy.containsExact("h4", trackName).siblings(this.grid).within(() => {
                         cy.contains(this.gridCard, content).should('exist')
                     })
                 })
             }
             if(background && background.color && !background.color.hex){
-                cy.containsExact("h4", track).parent().should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
+                cy.containsExact("h4", trackName).parent().should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
             if(background && background.image.url){
-                cy.containsExact("h4", track).parent().invoke("css", "background-image").should("contain", background.image.url)
+                cy.containsExact("h4", trackName).parent().invoke("css", "background-image").should("contain", background.image.url)
             }
             if(background && background.position){
                 let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
-                cy.containsExact("h4", track).parent().should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
+                cy.containsExact("h4", trackName).parent().should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
             }
             if(background && background.size){
-                cy.containsExact("h4", track).parent().should("have.css", "background-size", background.size)
+                cy.containsExact("h4", trackName).parent().should("have.css", "background-size", background.size)
             }
             if(spacing){
-                cy.containsExact("h4", track).parent().should("have.css", "padding", spacing)
+                cy.containsExact("h4", trackName).parent().should("have.css", "padding", spacing)
             }
         }
     }

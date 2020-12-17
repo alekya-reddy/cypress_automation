@@ -128,7 +128,10 @@ export class Common {
         const name = config.name 
 
         cy.get(this.thumbnailSelector).within(()=>{
-            cy.contains("li", category).click()
+            cy.angryClick({
+                clickElement: `li:contains('${category}')`,
+                checkElement: `li[class*='ThumbnailSelector__active']:contains('${category}')`
+            })
             if(url){
                 cy.get(`img[src*="${url}"]`, {timeout: 6000}).click() 
             } else if (name) {
