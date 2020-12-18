@@ -1,6 +1,6 @@
  {
     "env": {
-        "TEST_ENV": "staging2"
+        "TEST_ENV": "qa2"
     },
     "video": false,
     "chromeWebSecurity": false,
