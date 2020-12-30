@@ -193,18 +193,17 @@ describe("Vex - Rocket Chat", ()=>{
         authoring.vex.removeSession(rocketChatSession.name)
         authoring.vex.addSession(rocketChatSession.name)
         authoring.vex.configureSession(rocketChatSession)
-
         // Live session should have option to turn on chat 
         authoring.vex.goToChat()
         cy.get(enableChatToggle).should('exist') //cy.get(authoring.vex.chat.toggle).should('exist')
         cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
         authoring.vex.backToSession()
         
-        // On demand session should not have option to turn on chat 
+        // On demand session should have option to turn on chat
         authoring.vex.configureSession({type: "On Demand", stayOnPage: true})
         authoring.vex.goToChat()
-        cy.get(enableChatToggle).should('not.exist') //cy.get(authoring.vex.chat.toggle).should('not.exist')
-        cy.contains(authoring.vex.chat.notAvailableText).should('exist')
+        cy.get(enableChatToggle).should('exist') //cy.get(authoring.vex.chat.toggle).should('not.exist')
+        cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
         authoring.vex.backToSession()
 
         // Verify that turning on chat will enable chat on consumption side 
@@ -216,17 +215,19 @@ describe("Vex - Rocket Chat", ()=>{
         consumption.vex.fillStandardForm({email: visitor.email})
         consumption.vex.expectRocketChat() 
         cy.go("back")
-
         // Verify that turning off rocket chat will turn it off on consumption side 
-        authoring.vex.toggle(authoring.vex.chat.toggle, "off")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "off")
         cy.wait(1500)
         cy.visit(rocketChatSession.url)
         consumption.vex.expectZoom() // This'll force most the page to load first, otherwise will immediately see that rocket chat doesn't exist and move on without waiting for page to load 
-        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
+        cy.get(consumption.vex.rocketChat.iframe).should("exist")
+        cy.contains("span", "This room is read only").should("not.exist")
         cy.go("back")
 
         // Input validation check for adding moderator, and cancel button check 
-        authoring.vex.toggle(authoring.vex.chat.toggle, "on")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "on")
         authoring.vex.addModerators(visitor.email)
         cy.get(authoring.vex.chat.addModeratorButton).click() 
         cy.contains(authoring.vex.antModal, "Add Moderator").should("exist").within(()=>{
@@ -269,18 +270,24 @@ describe("Vex - Rocket Chat", ()=>{
         cy.go("back")
 
         // Edit moderator and verify on consumption side 
+        cy.containsExact("span", "Chat").parent().parent().within(()=>{
+            cy.contains(authoring.vex.onDemandTitleLocator, 'Configure').click()
+        })
         authoring.vex.editModerator({moderator: visitor.email, newEmail: "random@gmail.com"})
         cy.wait(1500)
         cy.visit(rocketChatSession.url)
         consumption.vex.expectRocketChat()
         cy.get(consumption.vex.rocketChat.moderatorViewButton).should('not.exist')
         cy.go("back")
-
         // Delete moderator 
+        cy.containsExact("span", "Chat").parent().parent().within(()=>{
+            cy.contains(authoring.vex.onDemandTitleLocator, 'Configure').click()
+        })
         authoring.vex.deleteModerators("random@gmail.com")
 
         // Make chat read only - and verify on consumption as non-moderator 
-        authoring.vex.toggle(authoring.vex.chat.readOnly, "on")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "on")
         cy.wait(1500)
         cy.visit(rocketChatSession.url)
         consumption.vex.expectRocketChat()
@@ -290,7 +297,8 @@ describe("Vex - Rocket Chat", ()=>{
         cy.go("back")
 
         // Turn off read only mode 
-        authoring.vex.toggle(authoring.vex.chat.readOnly, "off")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "off")
         cy.wait(1500)
         cy.visit(rocketChatSession.url)
         consumption.vex.expectRocketChat()
@@ -301,7 +309,8 @@ describe("Vex - Rocket Chat", ()=>{
         cy.go("back")
 
         // Make the visitor a moderator then turn chat to read only mode - moderator should not be affected by read-only mode 
-        authoring.vex.toggle(authoring.vex.chat.readOnly, "on")
+        authoring.vex.goToChat()
+        authoring.vex.toggle(enableChatToggle, "on")
         authoring.vex.addModerators(visitor.email.toUpperCase()) // If adding uppercase, should save as lower case (method checks for that already)
         cy.wait(1500)
         cy.visit(rocketChatSession.url)

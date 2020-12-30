@@ -156,6 +156,10 @@ export class Vex extends Common {
             landingPages: "input[value='Landing pages']",
             navigation: "input[value='Navigation']"
         };
+        this.addWidgets="#show-add-widgets-modal-button",
+        this.addWidgetSearchBox="input[placeholder='Search Widgets here']"
+        this.widgetType="h3[class^='sc-gyPKer']"
+        this.addWidget="#add-content-widget-button"
     }
 
     visit(){
@@ -716,11 +720,26 @@ export class Vex extends Common {
         })
     }
 
-    goToChat(){
+    /*goToChat(){
         cy.url().then((url)=>{
             if(!url.includes("/widget")){
                 cy.containsExact("a", "Chat").click()
             }
+        })
+    }*/
+
+    goToChat(){
+        cy.url().then((url)=>{
+            if(!url.includes("/widget")){
+                cy.containsExact("a", "Widgets").click()
+            }
+        })
+        cy.get(this.addWidgets).click()
+        cy.get(this.addWidgetSearchBox).clear().type('Chat')
+        cy.contains(this.widgetType,'Chat').click()
+        cy.get(this.addWidget).click()
+        cy.containsExact("span", "Chat").parent().parent().within(()=>{
+            cy.contains(this.onDemandTitleLocator, 'Configure').click()
         })
     }
 

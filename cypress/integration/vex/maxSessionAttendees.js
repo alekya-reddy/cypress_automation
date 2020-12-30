@@ -173,7 +173,7 @@ describe("VEX - maximum session attendees configuration", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        authoring.vex.goToSessionConfig(sessions.zoom.name)
+        authoring.vex.configureSession({name: sessions.zoom.name, type: sessions.zoom.type})
         cy.get(authoring.vex.maxAttendeesInput).clear().type("2")
         cy.get(authoring.vex.saveButton).click()
         cy.contains(maxAttendeesMinumumMessage[0]).should('exist')
