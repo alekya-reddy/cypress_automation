@@ -156,10 +156,12 @@ export class Vex extends Common {
             landingPages: "input[value='Landing pages']",
             navigation: "input[value='Navigation']"
         };
-        this.addWidgets="#show-add-widgets-modal-button",
-        this.addWidgetSearchBox="input[placeholder='Search Widgets here']"
-        this.widgetType="h3[class^='sc-gyPKer']"
-        this.addWidget="#add-content-widget-button"
+        this.widgets={
+            addWidgets: "#show-add-widgets-modal-button",
+            addWidgetSearchBox: "input[placeholder='Search Widgets here']",
+            widgetType: "h3[class^='sc-gyPKer']",
+            add_Widget: "#add-content-widget-button"
+        }
     }
 
     visit(){
@@ -720,24 +722,19 @@ export class Vex extends Common {
         })
     }
 
-    /*goToChat(){
-        cy.url().then((url)=>{
-            if(!url.includes("/widget")){
-                cy.containsExact("a", "Chat").click()
-            }
-        })
-    }*/
-
-    goToChat(){
+    goToWidget(){
         cy.url().then((url)=>{
             if(!url.includes("/widget")){
                 cy.containsExact("a", "Widgets").click()
             }
         })
-        cy.get(this.addWidgets).click()
-        cy.get(this.addWidgetSearchBox).clear().type('Chat')
-        cy.contains(this.widgetType,'Chat').click()
-        cy.get(this.addWidget).click()
+    }
+
+    addWidget(widgetType){
+        cy.get(this.widgets.addWidgets).click()
+        cy.get(this.widgets.addWidgetSearchBox).clear().type(widgetType)
+        cy.contains(this.widgets.widgetType,widgetType).click()
+        cy.get(this.widgets.add_Widget).click()
         cy.containsExact("span", "Chat").parent().parent().within(()=>{
             cy.contains(this.onDemandTitleLocator, 'Configure').click()
         })
@@ -746,8 +743,6 @@ export class Vex extends Common {
     configureRocketChat(config){
         const on_off = config.on_off
         const moderators = config.moderators
-
-        this.goToChat()
         
         if(on_off){
             const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
