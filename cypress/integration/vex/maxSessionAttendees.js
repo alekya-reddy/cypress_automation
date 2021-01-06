@@ -105,8 +105,9 @@ describe("VEX - maximum session attendees configuration", ()=>{
         authoring.vex.configureSession(sessions.liveContentLibrary)
         cy.get(authoring.vex.maxAttendeesInput).should("not.have.attr", "disabled")
         authoring.vex.configureSession(sessions.zoom) // This will set max attendees to 1
+        authoring.vex.goToWidget()
+        authoring.vex.addWidget('Chat')
         authoring.vex.goToChat()
-        authoring.vex.toggle("button[data-qa-hook^='chat-widget-']", "on")
         authoring.vex.addModerators(moderator.email)
 
         // Visit the session and register - should allow the first visitor to attend 
@@ -173,7 +174,7 @@ describe("VEX - maximum session attendees configuration", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        authoring.vex.goToSessionConfig(sessions.zoom.name)
+        authoring.vex.configureSession({name: sessions.zoom.name, type: sessions.zoom.type})
         cy.get(authoring.vex.maxAttendeesInput).clear().type("2")
         cy.get(authoring.vex.saveButton).click()
         cy.contains(maxAttendeesMinumumMessage[0]).should('exist')

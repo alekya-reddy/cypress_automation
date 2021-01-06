@@ -28,7 +28,7 @@ export class ClientHQ extends Common {
     clientHQToggle(toggle, on_off){
         this.visitOrgConfig()
         this.toggle(toggle, on_off)
-        cy.contains('Save').click()
+        cy.contains('Save').click({force: true})
         cy.get('body').should('contain', 'Organization Updated Successfully!')
     }
 

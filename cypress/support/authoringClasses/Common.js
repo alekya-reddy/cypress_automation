@@ -70,6 +70,7 @@ export class Common {
         this.selectList = "div[data-qa-hook='select-list']";
         this.selectValue = ".Select-value";
         this.antCheckboxContainer = ".ant-dropdown-menu-item";
+        this.antCheckboxWrapper = ".ant-checkbox-wrapper";
         this.antCheckbox = ".ant-checkbox";
         this.antDropdown = ".ant-dropdown";
     }
@@ -166,8 +167,9 @@ export class Common {
     clickAntCheckbox(config){
         const label = config.label 
         const check = config.check 
+        const wrapper = config.wrapper || this.antCheckboxContainer
 
-        cy.contains(this.antCheckboxContainer, label).within(()=>{
+        cy.contains(wrapper, label).within(()=>{
             cy.get(this.antCheckbox).invoke("attr", "class").then((checkboxClass)=>{
                 if( (check == true && !checkboxClass.includes("ant-checkbox-checked")) || (check == false && checkboxClass.includes("ant-checkbox-checked")) ){
                     cy.get(this.antCheckbox).click()
