@@ -107,12 +107,14 @@ export class Vex extends Common {
         this.maxAttendeesInput = "input[name='maximumAttendees']";
         this.antCell = ".ant-table-cell";
         this.chat = {
-            toggle: "button[data-qa-hook^='chat-widget-enable']",
             readOnly: "button[data-qa-hook^='chat-widget-readonly']",
             addModeratorButton: "button:contains('Add Moderator')",
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item",
-            notAvailableText: "Live chat & session moderator settings are only available for live sessions."
+            notAvailableText: "Live chat & session moderator settings are only available for live sessions.",
+            liveCheckbox: "input[name='is_live_session']",
+            onDemandCheckbox: "input[name='is_ondemand_session'",
+            nameInput: "input[name='widget-name']"
         };
         this.draggableMenu = ".anticon-menu";
         this.pages = {
@@ -157,10 +159,11 @@ export class Vex extends Common {
             navigation: "input[value='Navigation']"
         };
         this.widgets={
-            addWidgets: "#show-add-widgets-modal-button",
-            addWidgetSearchBox: "input[placeholder='Search Widgets here']",
-            widgetType: "h3[class^='sc-gyPKer']",
-            add_Widget: "#add-content-widget-button"
+            addButton: "#show-add-widgets-modal-button",
+            search: "input[placeholder='Search Widgets here']",
+            widgetType: "h3",
+            confirmAddButton: "#add-content-widget-button",
+            listItem: ".ant-list-item"
         }
     }
 
@@ -725,43 +728,66 @@ export class Vex extends Common {
     goToWidget(){
         cy.url().then((url)=>{
             if(!url.includes("/widget")){
-                cy.containsExact("a", "Widgets").click()
+                cy.containsExact("a", "Widgets", {timeout: 20000}).click()
             }
         })
     }
 
-    addWidget(widgetType){
-        cy.get(this.widgets.addWidgets).click()
-        cy.get(this.widgets.addWidgetSearchBox).clear().type(widgetType)
-        cy.contains(this.widgets.widgetType,widgetType).click()
-        cy.get(this.widgets.add_Widget).click()
-        cy.containsExact("span", "Chat").parent().parent().within(()=>{
-            cy.contains(this.onDemandTitleLocator, 'Configure').click()
+    addWidget(widgetType, verify){
+        this.goToWidget()
+        cy.get(this.widgets.addButton).click()
+        cy.get(this.widgets.search).clear().type(widgetType)
+        cy.contains(this.widgets.widgetType, widgetType).click()
+        cy.get(this.widgets.confirmAddButton).click()
+        
+        if(verify !== false){
+            cy.contains(this.widgets.listItem, widgetType).should("exist")
+        }
+    }
+
+    goToChat(){
+        this.goToWidget()
+        cy.contains(this.widgets.listItem, "Chat").within(() => {
+            cy.contains("button", "Configure").click()
         })
+        cy.contains("Chat Settings").should("exist")
     }
 
     configureRocketChat(config){
-        const on_off = config.on_off
-        const moderators = config.moderators
-        
-        if(on_off){
-            const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
-            cy.get(enableChatToggle).then((toggle)=>{
-                if(toggle.length == 1){
-                    this.toggle(enableChatToggle, on_off)
-                } else if (toggle.length == 2){
-                    // Can't use enableChatToggle because in this case, read-only toggle data-qa-hook also starts with chat-widget, leading to ambiguous match
-                    // Once it has been toggled already, toggle's data-qa-hook permanently changes to this.chat.toggle's value 
-                    this.toggle(this.chat.toggle, on_off)
-                }
-            })
+        const { addNew, live, onDemand, moderators, readOnly, name, verify } = config
+
+        if(addNew){
+            this.addWidget("Chat", verify)
+        }
+
+        this.goToChat()
+
+        if(readOnly){
+            // readOnly should be 'on' or 'off
+            this.toggle(this.chat.readOnly, readOnly)
+        }
+
+        if(live == true || live == false){
+            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "Live Session", check: live})
+        }
+
+        if(onDemand == true || onDemand == false){
+            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand})
+        }
+
+        if(name){
+            cy.get(this.chat.nameInput).clear().type(name)
         }
 
         if(moderators){
             this.addModerators(moderators)
         }
 
-        this.backToSession()
+        cy.contains("button", "Save").click()
+
+        if(verify !== false){
+            cy.contains("The record updated successfully", {timeout: 10000}).should("exist")
+        }
     }
 
     addModerators(list){
@@ -898,7 +924,7 @@ export class Vex extends Common {
 
     backToEvent(event){
         // If you are on session configuration page and want to go back to the event configuration page
-        cy.containsExact("a", event).click()
+        cy.containsExact("a", event, {timeout: 20000}).click()
         cy.contains(this.pageTitleLocator, event, {timeout: 20000}).should('exist')
     }
 

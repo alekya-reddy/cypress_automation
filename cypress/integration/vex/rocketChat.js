@@ -59,25 +59,6 @@ const sessions = [
     }
 ]
 
-const rocketChatSession = {
-    name: `Rocket-Chat: Configurations, long (name) with. special! character$ as_"this" caused bug & stuff / yeah? 1234 #iamtheone++==*@`, // Unfortunately, can't test single quoation due to cypress bug 
-    slug: "rocket-chat-config",
-    get url(){
-        return `${event.url}/${this.slug}`
-    },
-    visibility: 'Public',
-    type: 'Live',
-    live: {
-        start: 'Jun 24, 2020 8:00pm',
-        end: 'Jun 24, 2041 8:00pm',
-        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-        type: 'Zoom',
-        zoomNum: '111 111 111',
-        zoomAuth: 'No Password',
-    },
-    video: 'Youtube - Used in Cypress automation for VEX testing'
-}
-
 const form = {name: "Standard Form Short"}
 const noForm = { name: "None (Registration Not Required)" }
 const visitor = {
@@ -85,7 +66,7 @@ const visitor = {
     name: 'penguin'
 }
 
-describe("Vex - Rocket Chat", ()=>{
+describe("Vex - Rocket Chat Registration", ()=>{
     it("Set up rocket chat on authoring side if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
@@ -175,154 +156,11 @@ describe("Vex - Rocket Chat", ()=>{
         // Visiting the live session that has ended (and has on-demand fallback) should still not show the rocket chat 
         cy.visit(sessions[1].url)
         consumption.vex.expectYoutube()
-        cy.get(consumption.vex.rocketChat.iframe).should("not.exist") // consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.iframe).should("not.exist") 
 
         // Confirm that the on-demand session has no rocket chat 
         cy.visit(sessions[2].url)
         consumption.vex.expectYoutube()
         cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
-    })
-
-    it("Rocket chat configurations - turn on/off, moderators", ()=>{
-        const enableChatToggle = "button[data-qa-hook^='chat-widget-']" // Use this for the chat toggle before it has been toggled on, it later switches data-qa-hook to chat-widget-neable, this will be fixed by devs later
-        // Add a new session for this scenario
-        authoring.common.login()
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name) 
-        authoring.vex.removeSession(rocketChatSession.name)
-        authoring.vex.addSession(rocketChatSession.name)
-        authoring.vex.configureSession(rocketChatSession)
-        // Live session should have option to turn on chat 
-        authoring.vex.goToWidget()
-        authoring.vex.addWidget('Chat')
-        cy.get(enableChatToggle).should('exist') //cy.get(authoring.vex.chat.toggle).should('exist')
-        cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
-        authoring.vex.backToSession()
-        
-        // On demand session should have option to turn on chat
-        authoring.vex.configureSession({type: "On Demand", stayOnPage: true})
-        authoring.vex.goToWidget()
-        authoring.vex.addWidget('Chat')
-        cy.get(enableChatToggle).should('exist') //cy.get(authoring.vex.chat.toggle).should('not.exist')
-        cy.contains(authoring.vex.chat.notAvailableText).should('not.exist')
-        authoring.vex.backToSession()
-
-        // Verify that turning on chat will enable chat on consumption side 
-        authoring.vex.configureSession({type: "Live", stayOnPage: true})
-        authoring.vex.goToWidget()
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "on") //authoring.vex.toggle(authoring.vex.chat.toggle, "on")
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.fillStandardForm({email: visitor.email})
-        consumption.vex.expectRocketChat() 
-        cy.go("back")
-        // Verify that turning off rocket chat will turn it off on consumption side 
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "off")
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectZoom() // This'll force most the page to load first, otherwise will immediately see that rocket chat doesn't exist and move on without waiting for page to load 
-        cy.get(consumption.vex.rocketChat.iframe).should("exist")
-        cy.contains("span", "This room is read only").should("not.exist")
-        cy.go("back")
-
-        // Input validation check for adding moderator, and cancel button check 
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "on")
-        authoring.vex.addModerators(visitor.email)
-        cy.get(authoring.vex.chat.addModeratorButton).click() 
-        cy.contains(authoring.vex.antModal, "Add Moderator").should("exist").within(()=>{
-            cy.get(authoring.vex.chat.emailInput).clear()
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.blankInput, {timeout: 20000}).should('exist')
-            cy.get(authoring.vex.chat.emailInput).clear().type(visitor.email)
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.duplicateEntry2, {timeout: 20000}).should('exist')
-            cy.get(authoring.vex.chat.emailInput).clear().type("invalid    email")
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.invalidEmail, {timeout: 20000}).should('exist')
-            cy.contains("button", "Cancel").click()
-        })
-        cy.contains(authoring.vex.antModal, "Add Moderator", {timeout: 20000}).should("not.be.visible")
-
-        // Input validation check for editing moderator, and cancel button check 
-        authoring.vex.addModerators("test@gmail.com")
-        cy.containsExact("span", "test@gmail.com", {timeout: 20000}).parents(authoring.vex.chat.emailRow).within(()=>{
-            cy.contains("button", "Edit").click()
-        })
-        cy.contains(authoring.vex.antModal, "Edit Moderator").should("exist").within(()=>{
-            cy.get(authoring.vex.chat.emailInput).clear()
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.blankInput).should('exist')
-            cy.get(authoring.vex.chat.emailInput).clear().type(visitor.email)
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.duplicateEntry2).should('exist')
-            cy.get(authoring.vex.chat.emailInput).clear().type("invalid    email")
-            cy.contains('button', "Submit").click()
-            cy.contains(authoring.vex.messages.invalidEmail).should('exist')
-            cy.contains("button", "Cancel").click()
-        })
-        cy.contains(authoring.vex.antModal, "Edit Moderator").should("not.be.visible")
-
-        // Verify on consumption side that the moderator was added  
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectRocketChat()
-        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('exist') // Unfortunately, clicking this will open a new tab to separate domain, which is not allowed within Cypress
-        cy.go("back")
-
-        // Edit moderator and verify on consumption side 
-        cy.containsExact("span", "Chat").parent().parent().within(()=>{
-            cy.contains(authoring.vex.onDemandTitleLocator, 'Configure').click()
-        })
-        authoring.vex.editModerator({moderator: visitor.email, newEmail: "random@gmail.com"})
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectRocketChat()
-        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('not.exist')
-        cy.go("back")
-        // Delete moderator 
-        cy.containsExact("span", "Chat").parent().parent().within(()=>{
-            cy.contains(authoring.vex.onDemandTitleLocator, 'Configure').click()
-        })
-        authoring.vex.deleteModerators("random@gmail.com")
-
-        // Make chat read only - and verify on consumption as non-moderator 
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "on")
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectRocketChat()
-        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-            cy.contains("This room is read only").should("exist")
-        })
-        cy.go("back")
-
-        // Turn off read only mode 
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "off")
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectRocketChat()
-        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-            cy.ifNoElementWithExactTextExists("span", "This room is read only", 20000, ()=>{}, "div") // Smart wait for that text to stop exisiting
-            cy.contains("This room is read only").should("not.exist")
-        })
-        cy.go("back")
-
-        // Make the visitor a moderator then turn chat to read only mode - moderator should not be affected by read-only mode 
-        authoring.vex.addWidget('Chat')
-        authoring.vex.toggle(enableChatToggle, "on")
-        authoring.vex.addModerators(visitor.email.toUpperCase()) // If adding uppercase, should save as lower case (method checks for that already)
-        cy.wait(1500)
-        cy.visit(rocketChatSession.url)
-        consumption.vex.expectRocketChat()
-        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('exist')
-        cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-            cy.ifNoElementWithExactTextExists("span", "This room is read only", 20000, ()=>{}, "div") // Smart wait for that text to stop exisiting
-            cy.contains("This room is read only").should("not.exist")
-        })
-
-        // Not going to test moderator functions of deleting/kicking out users as all of this occurs within the rocket chat browser - this is 3rd party software
     })
 })
