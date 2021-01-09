@@ -143,6 +143,7 @@ describe("VEX - Landing Page Editor", ()=>{
     })
 
     it("Test landing page", ()=>{
+        cy.viewport(1500, 1000)
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)

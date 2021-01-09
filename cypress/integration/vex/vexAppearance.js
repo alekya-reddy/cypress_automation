@@ -48,6 +48,7 @@ const landingPage = "page"
 // Test the appearance set up area. For now, this test is deliberately sparse because this area will likely change a lot soon 
 describe('VEX - Virtual Event', function() {
     it('Configure appearance on authoring side then verify on consumption', function() {
+        cy.viewport(1500, 1000)
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
