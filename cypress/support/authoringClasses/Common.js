@@ -73,6 +73,7 @@ export class Common {
         this.antCheckboxWrapper = ".ant-checkbox-wrapper";
         this.antCheckbox = ".ant-checkbox";
         this.antDropdown = ".ant-dropdown";
+        this.antPopover = ".ant-popover";
     }
 
     visitHomeUrl(){

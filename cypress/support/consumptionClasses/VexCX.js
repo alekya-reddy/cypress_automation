@@ -87,6 +87,9 @@ export class VexCX extends CommonCX {
             messageInput: "textarea[name='msg']",
             moderatorViewButton: "button:contains('Open Moderator View')"
         };
+        this.widget = {
+            iframe: "iframe[id^='vex_widget_iframe']"
+        };
         this.landingPage = {
             block: ".pf-html-block"
         };

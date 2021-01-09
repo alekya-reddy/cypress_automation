@@ -163,7 +163,8 @@ export class Vex extends Common {
             search: "input[placeholder='Search Widgets here']",
             widgetType: "h3",
             confirmAddButton: "#add-content-widget-button",
-            listItem: ".ant-list-item"
+            listItem: ".ant-list-item",
+            nameInput: "input[name='widget-name']"
         }
     }
 
@@ -742,6 +743,52 @@ export class Vex extends Common {
         
         if(verify !== false){
             cy.contains(this.widgets.listItem, widgetType).should("exist")
+        }
+    }
+
+    configureWidget(config){
+        const { name, live, onDemand, publicName, verify } = config
+
+        // Get to the configuration screen for the widget
+        this.goToWidget()
+        cy.contains(this.widgets.listItem, name).within(() => {
+            cy.contains("button", "Configure").click()
+        })
+        cy.contains(`Configure ${name}`).should("exist")
+
+        // Configure the widget
+        if(live == true || live == false){
+            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "Live Session", check: live})
+        }
+
+        if(onDemand == true || onDemand == false){
+            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand})
+        }
+
+        if(publicName){
+            cy.get(this.widgets.nameInput).clear().type(publicName)
+        }
+
+        cy.contains("button", "Save").click()
+
+        if(verify !== false){
+            cy.contains("The record updated successfully", {timeout: 10000}).should("exist")
+        }
+    }
+
+    removeWidget(name, verify){
+        this.goToWidget()
+        cy.waitFor({element: this.widgets.addButton, to: "exist"})
+        cy.ifElementWithExactTextExists("span", name, 1000, () => {
+            cy.contains(this.widgets.listItem, name).within(() => {
+                cy.contains("button", "Remove").click()
+            })
+            cy.get(this.antPopover).within(() => {
+                cy.contains("button", "Delete").click()
+            })
+        })
+        if(verify !== false){
+            cy.contains(this.widgets.listItem, name).should("not.exist")
         }
     }
 
