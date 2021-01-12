@@ -137,7 +137,7 @@ describe("Widget Configuration", ()=>{
 
         // Delete a widget from the configuration settings and verify it is removed from both the session on authoring side and on consumption side
         // This test will fail due to app bug
-        /*authoring.configurations.visit.widgets()
+        authoring.configurations.visit.widgets()
         authoring.configurations.deleteWidgets(widget.name)
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
@@ -146,6 +146,7 @@ describe("Widget Configuration", ()=>{
         cy.contains(authoring.vex.widgets.listItem, widget.name).should("not.exist")
         cy.get(".ant-list-item-action").should("have.length", 2) // Only 2 widgets should remain listed of the 4 that were added
         cy.visit(session.url)
-        cy.containsExact("div", widget.name, {timeout: 20000}).should("not.exist")*/
+        consumption.vex.expectYoutube() // Needed only to wait for page to load before checking widget doesn't exist
+        cy.containsExact("div", widget.name).should("not.exist")
     })
 })
