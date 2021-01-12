@@ -109,11 +109,10 @@ describe("Microsites - Target Settings", () => {
         cy.url().should("eq", `${microsite.url}/${tracks.config1.slug}/${webContent.slug}`)
 
         // Verify the form strategy and then dismiss the form
-        // Forms temporarily disabled until devs can implement a microsite-level form strategy 
-        /*cy.contains(consumption.target.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("exist").within(() => {
+        cy.contains(consumption.target.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("exist").within(() => {
             cy.get(consumption.microsites.closeModalButton).click({force: true})
         })
-        cy.contains(consumption.target.modal, "Fill This Out to Continue").should("not.be.visible")*/
+        cy.contains(consumption.target.modal, "Fill This Out to Continue").should("not.be.visible")
 
         // Click the cta and verify it pops up, then dismiss it 
         cy.get(consumption.target.flowHeader).within(() => {

@@ -88,10 +88,10 @@ describe("Microsites - Target Settings", () => {
         cy.url().should("eq", `${microsite.url}/${tracks.config1.slug}/${webContent.slug}`)
 
         // Verify the form strategy and then dismiss the form
-        /*cy.contains(consumption.recommend.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("exist").within(() => {
+        cy.contains(consumption.recommend.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("exist").within(() => {
             cy.get(consumption.recommend.closeModalButton).click({force: true})
         })
-        cy.contains(consumption.recommend.modal, "Fill This Out to Continue").should("not.be.visible")*/
+        cy.contains(consumption.recommend.modal, "Fill This Out to Continue").should("not.be.visible")
 
         // Verify the sidebar promoter then click the cta and verify it pops up, then dismiss it 
         cy.get(consumption.recommend.sidebar).should('exist').within(() => {
