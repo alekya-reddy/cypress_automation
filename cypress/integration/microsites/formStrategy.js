@@ -76,7 +76,7 @@ const visitor = {
     email: "jo@gmail.com"
 }
 
-describe("Microsites - Target Settings", () => {
+describe("Microsites - Form strategy", () => {
     it("Setup Microsite and target tracks if not already done", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 

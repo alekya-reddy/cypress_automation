@@ -12,6 +12,8 @@ export class Recommend extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
+            accessProtectionLabel: "label:contains('Access Protection')",
+            accessProtectionGroup: "#trackProtectionGroups",
             sidebarToggle: "[data-qa-hook='sidebar']",
             topicSidebarToggle: "[data-qa-hook='topicSidebar']",
             exitToggle: "[data-qa-hook='exit']",
@@ -23,7 +25,9 @@ export class Recommend extends Common {
             exitOverride: "[data-qa-hook='Exit overrides']"
         };
         this.popoverElements = {
-            customUrlInput: "#customUrl"
+            customUrlInput: "#customUrl",
+            APGroupLabel: "label[for='visitorGroupIds']",
+            protectionTypeLabel: "label[for='protectionType']"
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",
@@ -85,7 +89,7 @@ export class Recommend extends Common {
     }
 
     configure(options){
-        const { name, slug, contents, verify } = options
+        const { name, slug, accessProtection, contents, verify } = options
         // These toggle options should have values of "on" or "off"
         const { sidebar, topicSidebar, exit, formsStrategy, cookieConsent, cookieMessage, header } = options
         // These options will require certain toggles to be "on"
@@ -99,6 +103,10 @@ export class Recommend extends Common {
 
         if(slug){
             this.setCustomUrl(slug, verify)
+        }
+
+        if(accessProtection){
+            this.addAccessProtection(accessProtection, verify)
         }
 
         if(contents){
@@ -152,6 +160,29 @@ export class Recommend extends Common {
             }
 
             cy.get(this.closeModal).click()
+        }
+    }
+
+    addAccessProtection(accessProtection, verify){
+        const type = accessProtection.type
+        const groups = [accessProtection.groups].flat()
+
+        cy.get(this.pageSidebar.accessProtectionLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.selectList).click()
+            cy.get(this.dropDownOption(type)).click()
+            groups.forEach( group => {
+                cy.get(this.popoverElements.APGroupLabel).siblings(this.selectList).click()
+                cy.get(this.dropDownOption(group)).click()
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.be.visible")
+            groups.forEach( group => {
+                cy.contains(this.pageSidebar.accessProtectionGroup, group).should("exist")
+            })
         }
     }
 

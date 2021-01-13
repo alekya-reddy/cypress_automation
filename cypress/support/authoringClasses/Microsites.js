@@ -13,7 +13,9 @@ export class Microsites extends Common {
         this.setupPage = {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
-            cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']"
+            cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
+            accessProtectionGroup: ".ant-select-selection-item",
+            removeAccessProtectionGroup: ".ant-select-selection-item-remove"
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
@@ -103,11 +105,7 @@ export class Microsites extends Common {
     }
 
     setup(options){
-        const name = options.name
-        const slug = options.slug 
-        const newName = options.newName 
-        const cookieConsent = options.cookieConsent
-        const verify = options.verify
+        const { name, slug, newName, cookieConsent, accessProtection, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -117,6 +115,10 @@ export class Microsites extends Common {
 
         if(slug){
             cy.get(this.setupPage.slugInput).clear().type(slug)
+        }
+
+        if(accessProtection){
+            this.addAccessProtection(accessProtection, verify)
         }
 
         if(cookieConsent == false || cookieConsent == true){
@@ -157,6 +159,47 @@ export class Microsites extends Common {
                 expect(attr).to.include("ant-checkbox-checked")
             }) 
         }
+    }
+
+    addAccessProtection(options, verify){
+        const type = options.type
+        const groups = [options.groups].flat()
+
+        if(type){
+            cy.contains(this.antRow, "Protection Type").within(()=>{
+                cy.get(this.antDropSelect.selector).click()
+            })
+            cy.get(this.antDropSelect.options(type)).click()
+        }
+        
+        if(groups[0]){
+            cy.contains(this.antRow, "Access Protection").within(()=>{
+                groups.forEach(group => {
+                    cy.get(this.antDropSelect.selector).type(group + "\n")
+                })
+            })
+        }
+
+        if(verify !== false && groups[0]){
+            groups.forEach((group)=>{
+                cy.contains(this.setupPage.accessProtectionGroup, group).should('exist')
+            })
+        }
+    }
+
+    removeAccessProtection(list){
+        const groups = [list].flat()
+
+        groups.forEach((group)=>{
+            cy.ifElementExists(this.setupPage.accessProtectionGroup + `:contains('${group}')`, 2000, () => {
+                cy.contains(this.antRow, "Access Protection").within(()=>{
+                    cy.contains(this.setupPage.accessProtectionGroup, group).within(()=>{
+                        cy.get(this.setupPage.removeAccessProtectionGroup).click()
+                    })
+                    cy.contains(this.setupPage.accessProtectionGroup, group).should("not.exist")
+                })
+            })
+        })
     }
 
     tabToTracks(){

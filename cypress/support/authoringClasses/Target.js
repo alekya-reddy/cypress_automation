@@ -12,6 +12,8 @@ export class Target extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
+            accessProtectionLabel: "label:contains('Access Protection')",
+            accessProtectionGroup: "#trackProtectionGroups",
             flowToggle: '[data-qa-hook="flow"]',
             signpostsToggle: '[data-qa-hook="signpost"]',
             bottombarToggle: '[data-qa-hook="bottomBar"]',
@@ -27,7 +29,9 @@ export class Target extends Common {
         };
         this.popoverElements = {
             customUrlInput: "#customUrl",
-            endPromoterLinkInput: "#link"
+            endPromoterLinkInput: "#link",
+            APGroupLabel: "label[for='visitorGroupIds']",
+            protectionTypeLabel: "label[for='protectionType']"
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",
@@ -91,6 +95,7 @@ export class Target extends Common {
     configure(options){
         const name = options.name
         const slug = options.slug
+        const accessProtection = options.accessProtection
         const contents = options.contents
         /** All toggles should have value of 'on' or 'off' **/
         const flow = options.flow
@@ -120,6 +125,10 @@ export class Target extends Common {
 
         if(slug){
             this.setCustomUrl(slug, verify)
+        }
+
+        if(accessProtection){
+            this.addAccessProtection(accessProtection, verify)
         }
 
         if(contents){
@@ -189,6 +198,29 @@ export class Target extends Common {
             }
 
             cy.get(this.closeModal).click()
+        }
+    }
+
+    addAccessProtection(accessProtection, verify){
+        const type = accessProtection.type
+        const groups = [accessProtection.groups].flat()
+
+        cy.get(this.pageSidebar.accessProtectionLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.selectList).click()
+            cy.get(this.dropDownOption(type)).click()
+            groups.forEach( group => {
+                cy.get(this.popoverElements.APGroupLabel).siblings(this.selectList).click()
+                cy.get(this.dropDownOption(group)).click()
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.be.visible")
+            groups.forEach( group => {
+                cy.contains(this.pageSidebar.accessProtectionGroup, group).should("exist")
+            })
         }
     }
 

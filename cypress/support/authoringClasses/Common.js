@@ -74,6 +74,7 @@ export class Common {
         this.antCheckbox = ".ant-checkbox";
         this.antDropdown = ".ant-dropdown";
         this.antPopover = ".ant-popover";
+        this.antRow = ".ant-row";
     }
 
     visitHomeUrl(){

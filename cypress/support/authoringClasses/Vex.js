@@ -99,8 +99,7 @@ export class Vex extends Common {
         this.sessionRow = ".ant-list-item";
         this.removeGroupButton = "span:contains('Remove')";
         this.renameGroupButton = "button:contains('Rename')";
-        this.trackProtectionArea = '.visitorGroupMultiSelect';
-        this.antRow = ".ant-row"; 
+        this.trackProtectionArea = '.visitorGroupMultiSelect'; 
         this.antSelector = ".ant-select-selector";
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
@@ -309,14 +308,18 @@ export class Vex extends Common {
         }
     }
 
-    addTrackProtection(list){
+    addTrackProtection(list, type = "Email"){
         let groups = [list].flat() 
 
+        cy.contains(this.antRow, "Protection Type").within(()=>{
+            cy.get(this.antDropSelect.selector).click()
+        })
+        cy.get(this.antDropSelect.options(type)).click()
         cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
-            cy.get("span[class='ant-select-selection-search']").click()
+            cy.get(this.antDropSelect.selector).click()
         })
         groups.forEach((group)=>{
-            cy.get(this.antDropdownOption(group)).click()
+            cy.get(this.antDropSelect.options(group)).click()
         })
         cy.get('body').click() // need to click away to close the dropdown menu
         groups.forEach((group)=>{
