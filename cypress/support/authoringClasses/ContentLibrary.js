@@ -185,11 +185,11 @@ export class ContentLibrary extends Common{
         if(contentType){
             cy.angryClick({
                 clickElement: this.sidebarComponent.contentType,
-                checkElement: this.selectList
+                checkElement: this.dropdown.box
             })
             cy.get(this.sidebarComponent.contentType).within(()=>{
-                cy.get(this.selectList).click()
-                cy.get(this.dropDownOption(contentType)).click()
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(contentType)).click()
                 cy.contains("button", "Save").click()
                 if(verify !== false) { cy.contains(contentType).should("exist") }
             })
@@ -198,7 +198,7 @@ export class ContentLibrary extends Common{
         if(topics){
             cy.angryClick({
                 clickElement: this.sidebarComponent.topics,
-                checkElement: this.selectList
+                checkElement: this.dropdown.box
             })
             cy.get(this.sidebarComponent.topics).within(()=>{
                 // First clear away the existing topics 
@@ -207,8 +207,8 @@ export class ContentLibrary extends Common{
                 })
                 // Now add the ones you want
                 topics.forEach((topic)=>{
-                    cy.get(this.selectList).click()
-                    cy.get(this.dropDownOption(topic)).click()
+                    cy.get(this.dropdown.box).click()
+                    cy.get(this.dropdown.option(topic)).click()
                 })
                 cy.contains("button", "Save").click()
                 if(verify !== false) { 
@@ -299,11 +299,11 @@ export class ContentLibrary extends Common{
         if(language){
             cy.angryClick({
                 clickElement: this.sidebarComponent.language,
-                checkElement: this.selectList
+                checkElement: this.dropdown.box
             })
             cy.get(this.sidebarComponent.language).within(()=>{
-                cy.get(this.selectList).click()
-                cy.get(this.dropDownOption(language)).click()
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(language)).click()
                 cy.contains("button", "Save").click()
                 if(verify !== false){ cy.contains("div", language).should("exist") }
             })
@@ -366,8 +366,8 @@ export class ContentLibrary extends Common{
                 checkElement: this.sidebarComponent.thresholdInput
             })
             cy.get(this.sidebarComponent.scoreThreshold).within(()=>{
-                cy.get(this.selectList).click()
-                cy.get(this.dropDownOption(score)).click()
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(score)).click()
                 cy.get(this.sidebarComponent.thresholdInput).clear().type(threshold)
                 cy.contains("button", "Save").click()
                 if(verify !== false){ cy.contains(`Visitors given a score of ${score} when content viewed for ${threshold}s`).should("exist") }

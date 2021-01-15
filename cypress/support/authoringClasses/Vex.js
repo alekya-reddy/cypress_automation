@@ -22,7 +22,6 @@ export class Vex extends Common {
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
         this.antDropDownScroller = '.rc-virtual-list-holder-inner';
-        this.antDropdownOption = function(option){ return `div[label="${option}"]`; };
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
@@ -249,7 +248,7 @@ export class Vex extends Common {
             cy.get(this.timeZonePicker).click().within(()=>{
                 cy.get("input").clear().type(timeZone)
             })
-            cy.get(this.antDropdownOption(timeZone)).click({force: true})
+            cy.get(this.antDropSelect.options(timeZone)).click({force: true})
         }
 
         if(language){
@@ -288,7 +287,7 @@ export class Vex extends Common {
         cy.contains(this.antRow, "Language").within(()=>{
             cy.get(this.antSelector).click()
         })
-        cy.get(this.antDropdownOption(language)).click()
+        cy.get(this.antDropSelect.options(language)).click()
         cy.get(`span[title='${language}']`).should('exist')
     }
 
@@ -300,7 +299,7 @@ export class Vex extends Common {
             cy.get(this.antSelector).click()
         })
         cy.get(this.antDropdownContainer).within(()=>{
-            cy.get(this.antDropdownOption(name)).click()
+            cy.get(this.antDropSelect.options(name)).click()
         })
         if(save){
             cy.get(this.saveButton).click()
@@ -647,7 +646,7 @@ export class Vex extends Common {
                 cy.get(this.timeZonePicker).click().within(()=>{
                     cy.get("input").clear().type(timeZone)
                 })
-                cy.get(this.antDropdownOption(timeZone)).click({force: true})
+                cy.get(this.antDropSelect.options(timeZone)).click({force: true})
             })
         }
         if(type){
@@ -927,7 +926,7 @@ export class Vex extends Common {
         cy.contains("button", "Add Sessions to Group").click()
         cy.contains(this.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click() // this opens the dropdown list 
         sessions.forEach((session)=>{
-            cy.get(this.antDropdownOption(session)).click()
+            cy.get(this.antDropSelect.options(session)).click()
         })    
         cy.contains(this.antModal, "Add Sessions to Group").contains("button", "Submit").click({force: true}) // have to force click because dropdown is in the way
         
@@ -1007,10 +1006,10 @@ export class Vex extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antSelector).eq(0).click()
-        cy.get(this.antDropdownOption(type)).click()
+        cy.get(this.antDropSelect.options(type)).click()
         if(source && type !== "Link"){
             cy.get(this.antSelector).eq(1).click()
-            cy.get(this.antDropdownOption(source)).click()
+            cy.get(this.antDropSelect.options(source)).click()
         } else if (source && type == "Link"){
             cy.get(this.navigation.linkInput).clear().type(source)
         }
@@ -1608,7 +1607,7 @@ export class Vex extends Common {
 
         if(appearance){
             cy.get(this.appearance.input).clear({force: true}).type(appearance, {force: true})
-            cy.get(this.antDropdownOption(appearance)).click()
+            cy.get(this.antDropSelect.options(appearance)).click()
             cy.get(`span[title='${appearance}']`).should("exist")
             cy.contains('button:visible', "Save").click()
             cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
@@ -1684,9 +1683,9 @@ export class Vex extends Common {
             })
             cy.mouseWheel({
                 scroller: this.antDropDownScroller,
-                find: this.antDropdownOption(template)
+                find: this.antDropSelect.options(template)
             })
-            cy.get(this.antDropdownOption(template)).click()
+            cy.get(this.antDropSelect.options(template)).click()
             cy.contains(this.antModal, "Add Virtual Event").within(()=>{
                 this.selectCloneOptions(config)
                 cy.contains("button", "Add Virtual Event").click()
@@ -1724,9 +1723,9 @@ export class Vex extends Common {
             })
             cy.mouseWheel({
                 scroller: this.antDropDownScroller,
-                find: this.antDropdownOption(template)
+                find: this.antDropSelect.options(template)
             })
-            cy.get(this.antDropdownOption(template)).click()
+            cy.get(this.antDropSelect.options(template)).click()
             cy.contains(this.antModal, "Add Session").within(()=>{
                 cy.get(this.onDemandRadio).should("not.exist") // The on demand and live radio buttons disappear once a template is chosen
                 cy.contains("button", "Add Session").click()
@@ -1766,9 +1765,9 @@ export class Vex extends Common {
             })
             cy.mouseWheel({
                 scroller: this.antDropDownScroller,
-                find: this.antDropdownOption(template)
+                find: this.antDropSelect.options(template)
             })
-            cy.get(this.antDropdownOption(template)).click()
+            cy.get(this.antDropSelect.options(template)).click()
             cy.contains(this.antModal, "Add Page").within(()=>{
                 cy.contains('button', "Add Page").click()
             })

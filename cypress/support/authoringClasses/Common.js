@@ -55,6 +55,16 @@ export class Common {
             selector: ".ant-select-selector",
             options: function(option){ return `div[label="${option}"]`; }
         };
+        this.dropdown = {
+            box: "div[data-qa-hook='select-list']", // The element to click to open the dropdown menu
+            input: ".Select-input > input", // The text input of dropdown boxes
+            selectedValue: ".Select-value", // The parent container of the label of the selected value
+            option: function(option){ return `div[aria-label="${option}"]` }, // The options in the dropdown menu
+        };
+        this.rcColorPicker = {
+            container: ".rc-color-picker",
+            inputs: ".rc-color-picker-panel-params-input",
+        };
         this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.messages = {
             recordSaved: "The record was saved successfully",
@@ -66,9 +76,6 @@ export class Common {
             invalidEmail: "invalid email",
             invalidEmail2: "does not appear to be a valid e-mail address"
         };
-        this.dropDownOption = function(option){ return `div[aria-label="${option}"]` };
-        this.selectList = "div[data-qa-hook='select-list']";
-        this.selectValue = ".Select-value";
         this.antCheckboxContainer = ".ant-dropdown-menu-item";
         this.antCheckboxWrapper = ".ant-checkbox-wrapper";
         this.antCheckbox = ".ant-checkbox";
@@ -178,6 +185,32 @@ export class Common {
                 }
             })
         })
+    }
+
+    pickColor(options){
+        const { button, r, g, b, a } = options
+
+        cy.get(button).click()
+        cy.get(this.rcColorPicker.inputs).within(() => {
+            if(r){
+                // {selectall} tells Cypress to select entire text in input 
+                // necessary because clearing the text here will reset input to '0', causing your input to start with '0'
+                cy.get("input").eq(1).type(`{selectall}${r}`)
+            }
+
+            if(g){
+                cy.get("input").eq(2).type(`{selectall}${g}`)
+            }
+
+            if(b){
+                cy.get("input").eq(3).type(`{selectall}${b}`)
+            }
+
+            if(a){
+                cy.get("input").eq(4).type(`{selectall}${a*100}`)
+            }
+        })
+        cy.get(button).click()
     }
 
 }

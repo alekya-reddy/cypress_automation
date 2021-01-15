@@ -6,15 +6,18 @@ export class Configurations extends Common {
         this.configRoute = `${this.baseUrl}/authoring/content-library/config`;
         this.pageUrls = {
             webhooks: `${this.configRoute}/webhooks`,
-            widgets: `${this.configRoute}/widgets`
+            widgets: `${this.configRoute}/widgets`,
+            appearances: `${this.configRoute}/appearance`
         };
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
-            widgets: "Widgets Configuration"
+            widgets: "Widgets Configuration",
+            appearances: "Appearances Configuration"
         };
         this.visit = {
             webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
-            widgets: ()=>{ cy.visit(this.pageUrls.widgets) }
+            widgets: ()=>{ cy.visit(this.pageUrls.widgets) },
+            appearances: () => { cy.visit(this.pageUrls.appearances) }
         };
         this.addWebhookModal = {
             name: "#name",
@@ -33,7 +36,19 @@ export class Configurations extends Common {
             deleteIcon: "i[title='Delete Widget']"
         }
         // The following are empty, but gives you an idea of how I want locators organized in this class 
-        this.appearances = {};
+        this.appearances = {
+            sidebar: "div[data-qa-hook='page-sidebar']",
+            secondaryNav: "div[data-qa-hook='page-secondary-navigation']",
+            fontSizeSmall: "#fontSizeSmall",
+            fontSizeMedium: "#fontSizeMedium",
+            fontSizeLarge: "#fontSizeLarge",
+            vex: {
+                backgroundColor: "#backgroundColor",
+                headerTitleSettings: "#headerTitleAppearance",
+                headerFontWeight: "#headerTextFontWeight",
+                headerFontColor: "#headerTextColor"
+            }
+        };
         this.languages = {};
         this.forms = {};
         this.ctas = {};
@@ -63,8 +78,8 @@ export class Configurations extends Common {
                 cy.get(this.modal).within(()=>{
                     cy.get(this.addWebhookModal.name).clear().type(name)
                     cy.get(this.addWebhookModal.url).clear().type(url)
-                    cy.get(this.selectList).click()
-                    cy.get(this.dropDownOption(type)).click()
+                    cy.get(this.dropdown.box).click()
+                    cy.get(this.dropdown.option(type)).click()
                     cy.contains("button", "Add Webhook").click()
                 })
                 cy.get(this.modal).should("not.exist")
@@ -119,13 +134,13 @@ export class Configurations extends Common {
         })
         cy.get(this.modal).within(()=>{
             Object.entries(fields).forEach((field)=>{
-                cy.ifNoElementWithExactTextExists(this.selectValue, field[0], 500, ()=>{
+                cy.ifNoElementWithExactTextExists(this.dropdown.selectedValue, field[0], 500, ()=>{
                     cy.log("adding field")
                     cy.contains("button", "Add Field").click()
-                    cy.get(this.selectValue).last().click()
-                    cy.get(this.dropDownOption(field[0])).click()
+                    cy.get(this.dropdown.selectedValue).last().click()
+                    cy.get(this.dropdown.option(field[0])).click()
                 }, 'div')
-                cy.containsExact(this.selectValue, field[0]).parents().eq(7).within(()=>{
+                cy.containsExact(this.dropdown.selectedValue, field[0]).parents().eq(7).within(()=>{
                     cy.get("#value").invoke('attr', 'value').then((value)=>{
                         if(value !== field[1]){
                             cy.get("#value").clear().type(field[1])
@@ -212,4 +227,101 @@ export class Configurations extends Common {
         cy.angryClick({clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgets.previewName}:contains('${widget}')`})
     }
 
+    /*********************************************************************************/
+    /********************************* APPEARANCE ************************************/
+    /*********************************************************************************/
+    clickAppearance(appearance){
+        cy.get(this.appearances.sidebar).within(() => {
+            cy.containsExact("a", appearance, {timeout: 10000}).click()
+        })
+    }
+
+    clickAppearanceTab(tab){
+        cy.get(this.appearances.secondaryNav).within(() => {
+            cy.containsExact("a", tab, {timeout: 10000}).click()
+        })
+    }
+
+    configureVEXAppearance(options){
+        const {appearance, backgroundColor, headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor, verify} = options
+
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        this.clickAppearance(appearance)
+        this.clickAppearanceTab("Virtual Event")
+
+        if(backgroundColor){
+            const { r, g, b, a } = backgroundColor
+            this.pickColor({button: this.appearances.vex.backgroundColor, r: r, g: g, b: b, a: a})
+        }
+
+        if(headerTitleFontFamily){
+            cy.get(this.appearances.vex.headerTitleSettings).within(() => {
+                cy.get(this.dropdown.input).type(headerTitleFontFamily + "\n", {force: true})
+            })
+        }
+
+        if(headerTitleBoldFont == true || headerTitleBoldFont == false){
+            cy.get(this.appearances.vex.headerFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(headerTitleBoldFont && !fontWeightClass.includes("containerActive") || !headerTitleBoldFont && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.vex.headerFontWeight).click()
+                }
+            })
+        }
+
+        if(headerTitleFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.headerTitleSettings).within(() => {
+                cy.get(this.appearances[size[headerTitleFontSize]]).click()
+            })
+        }
+
+        if(headerTitleFontColor){
+            const { r, g, b, a } = headerTitleFontColor
+            this.pickColor({button: this.appearances.vex.headerFontColor, r: r, g: g, b: b, a: a})
+        }
+
+        if(verify !== false){
+            this.verifyVEXappearance(options)
+        }
+    }
+
+    verifyVEXappearance(options){
+        const {backgroundColor, headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
+
+        if(backgroundColor){
+            const { r, g, b, a } = backgroundColor
+            cy.get(this.appearances.vex.backgroundColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    expect(style).to.include(`background-color: rgba(${r}, ${g}, ${b}, ${a})`)
+                })
+            })
+        }
+
+        if(headerTitleFontFamily){
+            cy.get(this.appearances.vex.headerTitleSettings).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", headerTitleFontFamily)
+            })
+        }
+
+        if(headerTitleBoldFont == true || headerTitleBoldFont == false){
+            const containOrNotContain = headerTitleBoldFont ? "contain" : "not.contain"
+            cy.get(this.appearances.vex.headerFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+
+        if(headerTitleFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.headerTitleSettings).within(() => {
+                cy.get(this.appearances[size[headerTitleFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+
+        if(headerTitleFontColor){
+            const { r, g, b, a } = headerTitleFontColor
+            cy.get(this.appearances.vex.headerFontColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    expect(style).to.include(`background-color: rgba(${r}, ${g}, ${b}, ${a})`)
+                })
+            })
+        }
+    }
 }

@@ -92,10 +92,10 @@ describe('VEX - Virtual Event', function() {
         cy.get(consumption.vex.vexFormTitle).should("have.css", "color", "rgb(255, 0, 255)").should("have.css", "font-family", "Overpass")
         cy.get(consumption.vex.vexFormDescription).should("have.css", "color", "rgb(0, 255, 255)").should("have.css", "font-family", "Overpass")
 
-        // Go to session and check the flow appearance settings (event session sidebar)
+        // Go to session and check the vex appearance settings (event session sidebar, and body)
         cy.contains("a", "Youtube").click()
         consumption.vex.fillStandardForm({email: "getOutOfMyWay@gmail.com"}) // Settings (other than the blue button) not applied to form on session page... not sure if this is intended?
-        cy.get(consumption.vex.sessionSidebar, {timeout: 20000}).should("have.css", "background-color", "rgb(255, 255, 0)")
+        cy.get(consumption.vex.jukeBoxApp + ">div", {timeout: 20000}).should("have.css", "background-color", "rgb(255, 255, 0)")
         cy.get(consumption.vex.supplementalContent).children("li").eq(0).invoke("attr", "style").then((style)=>{
             expect(style).to.include("color: rgb(255, 0, 0); font-family: Roboto; font-size: 15px; font-weight: normal;")
         })

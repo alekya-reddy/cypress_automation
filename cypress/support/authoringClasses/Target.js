@@ -207,11 +207,11 @@ export class Target extends Common {
 
         cy.get(this.pageSidebar.accessProtectionLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
-            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.selectList).click()
-            cy.get(this.dropDownOption(type)).click()
+            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.dropdown.box).click()
+            cy.get(this.dropdown.option(type)).click()
             groups.forEach( group => {
-                cy.get(this.popoverElements.APGroupLabel).siblings(this.selectList).click()
-                cy.get(this.dropDownOption(group)).click()
+                cy.get(this.popoverElements.APGroupLabel).siblings(this.dropdown.box).click()
+                cy.get(this.dropdown.option(group)).click()
             })
             cy.contains("button", "Update").click()
         })

@@ -26,7 +26,7 @@ export class Settings extends Common {
 
         this.goToPage(this.cookieConsent.pageTitle, this.cookieConsent.pageUrl)
         cy.get(this.cookieConsent.cookieConsentSelect).click()
-        cy.get(this.dropDownOption(option)).click()
+        cy.get(this.dropdown.option(option)).click()
         cy.contains("button", "Save").click()
         cy.contains(this.messages.recordSaved).should('exist')
     }
