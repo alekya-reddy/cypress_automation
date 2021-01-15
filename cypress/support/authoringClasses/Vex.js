@@ -989,7 +989,7 @@ export class Vex extends Common {
     goToNavigation(){
         cy.url().then((url)=>{
             if(!url.includes("/navigation")){
-                cy.containsExact("a", "Navigation", {timeout: 10000}).click()
+                cy.containsExact("a", "Navigation", {timeout: 10000}).should("exist").click()
             }
         })
     }

@@ -46,7 +46,14 @@ export class Configurations extends Common {
                 backgroundColor: "#backgroundColor",
                 headerTitleSettings: "#headerTitleAppearance",
                 headerFontWeight: "#headerTextFontWeight",
-                headerFontColor: "#headerTextColor"
+                headerFontColor: "#headerTextColor",
+                bodySettings: "#bodyAppearance",
+                bodyFontWeight: "#bodyTextFontWeight",
+                bodyFontColor: "#bodyTextColor",
+                activeSettings: "#activeItemAppearance",
+                activeFontWeight: "#activeItemFontWeight",
+                activeFontColor: "#activeItemColor",
+                hideNavigation: "div[data-qa-hook='checkbox']"
             }
         };
         this.languages = {};
@@ -243,7 +250,10 @@ export class Configurations extends Common {
     }
 
     configureVEXAppearance(options){
-        const {appearance, backgroundColor, headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor, verify} = options
+        const {appearance, backgroundColor, hideNavigation, verify} = options
+        const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
+        const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
+        const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
@@ -280,19 +290,86 @@ export class Configurations extends Common {
             this.pickColor({button: this.appearances.vex.headerFontColor, r: r, g: g, b: b, a: a})
         }
 
+        if(bodyFontFamily){
+            cy.get(this.appearances.vex.bodySettings).within(() => {
+                cy.get(this.dropdown.input).type(bodyFontFamily + "\n", {force: true})
+            })
+        }
+
+        if(bodyBoldFont == true || bodyBoldFont == false){
+            cy.get(this.appearances.vex.bodyFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(bodyBoldFont && !fontWeightClass.includes("containerActive") || !bodyBoldFont && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.vex.bodyFontWeight).click()
+                }
+            })
+        }
+
+        if(bodyFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.bodySettings).within(() => {
+                cy.get(this.appearances[size[bodyFontSize]]).click()
+            })
+        }
+
+        if(bodyFontColor){
+            const { r, g, b, a } = bodyFontColor
+            this.pickColor({button: this.appearances.vex.bodyFontColor, r: r, g: g, b: b, a: a})
+        }
+
+        if(activeFontFamily){
+            cy.get(this.appearances.vex.activeSettings).within(() => {
+                cy.get(this.dropdown.input).type(activeFontFamily + "\n", {force: true})
+            })
+        }
+
+        if(activeBoldFont == true || activeBoldFont == false){
+            cy.get(this.appearances.vex.activeFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(activeBoldFont && !fontWeightClass.includes("containerActive") || !activeBoldFont && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.vex.activeFontWeight).click()
+                }
+            })
+        }
+
+        if(activeFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.activeSettings).within(() => {
+                cy.get(this.appearances[size[activeFontSize]]).click()
+            })
+        }
+
+        if(activeFontColor){
+            const { r, g, b, a } = activeFontColor
+            this.pickColor({button: this.appearances.vex.activeFontColor, r: r, g: g, b: b, a: a})
+        }
+
+        if(hideNavigation == true || hideNavigation == false){
+            cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
+                if(hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")){
+                    cy.get(this.appearances.vex.hideNavigation).click()
+                }
+            })
+        }
+
+        cy.contains("button", "Save Virtual Event Settings").click()
+
         if(verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
             this.verifyVEXappearance(options)
         }
     }
 
     verifyVEXappearance(options){
-        const {backgroundColor, headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
+        const {backgroundColor, hideNavigation} = options
+        const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
+        const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
+        const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
 
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
             cy.get(this.appearances.vex.backgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
-                    expect(style).to.include(`background-color: rgba(${r}, ${g}, ${b}, ${a})`)
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
                 })
             })
         }
@@ -319,8 +396,72 @@ export class Configurations extends Common {
             const { r, g, b, a } = headerTitleFontColor
             cy.get(this.appearances.vex.headerFontColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
-                    expect(style).to.include(`background-color: rgba(${r}, ${g}, ${b}, ${a})`)
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
                 })
+            })
+        }
+
+        if(bodyFontFamily){
+            cy.get(this.appearances.vex.bodySettings).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", bodyFontFamily)
+            })
+        }
+
+        if(bodyBoldFont == true || bodyBoldFont == false){
+            const containOrNotContain = bodyBoldFont ? "contain" : "not.contain"
+            cy.get(this.appearances.vex.bodyFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+
+        if(bodyFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.bodySettings).within(() => {
+                cy.get(this.appearances[size[bodyFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+
+        if(bodyFontColor){
+            const { r, g, b, a } = bodyFontColor
+            cy.get(this.appearances.vex.bodyFontColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+
+        if(activeFontFamily){
+            cy.get(this.appearances.vex.activeSettings).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", activeFontFamily)
+            })
+        }
+
+        if(activeBoldFont == true || activeBoldFont == false){
+            const containOrNotContain = activeBoldFont ? "contain" : "not.contain"
+            cy.get(this.appearances.vex.activeFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+
+        if(activeFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.activeSettings).within(() => {
+                cy.get(this.appearances[size[activeFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+
+        if(activeFontColor){
+            const { r, g, b, a } = activeFontColor
+            cy.get(this.appearances.vex.activeFontColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+
+        if(hideNavigation == true || hideNavigation == false){
+            cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
+                const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
+                expect(checkboxClass).to.include(checkOrUnchecked)
             })
         }
     }

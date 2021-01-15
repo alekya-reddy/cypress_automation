@@ -20,6 +20,34 @@ const appearance = {
     contentDescription: "VEX Content Description",
 }
 
+const vexAppearanceSettings = {
+    appearance: "vexAppearance.js",
+    headerTitleFontFamily: "Overpass",
+    headerTitleBoldFont: true,
+    backgroundColor: {r: 10, g: 200, b: 155, a: 0.5},
+    headerTitleFontSize: "large",
+    headerTitleFontColor: {r: 200, g: 50, b: 9, a: 0.25},
+    bodyFontFamily: "Roboto",
+    bodyBoldFont: false,
+    bodyFontSize: "medium",
+    bodyFontColor: {r: 111, g: 22, b: 3, a: 0.35},
+    activeFontFamily: "Verdana",
+    activeBoldFont: true,
+    activeFontSize: "small",
+    activeFontColor: {r: 255, g: 11, b: 1, a: 1},
+    hideNavigation: false
+}
+
+const colorConfigToCSS = (colorConfig) => {
+    const { r, g, b, a } = colorConfig
+    const CSS = a == 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
+    return CSS;
+}
+
+const fontSizeToCSS = {small: "13px", medium: "15px", large: "27px"}
+
+const fontWeightToCSS = (bold) => { return bold ? "700" : "400" }
+
 const navItem = {
     label: "Text",
     type: "Text"
@@ -49,7 +77,8 @@ const landingPage = "page"
 describe('VEX - Virtual Event', function() {
     it('Configure appearance on authoring side then verify on consumption', function() {
         cy.viewport(1500, 1000)
-        authoring.common.login();
+        authoring.common.login()
+        authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
@@ -95,12 +124,24 @@ describe('VEX - Virtual Event', function() {
         // Go to session and check the vex appearance settings (event session sidebar, and body)
         cy.contains("a", "Youtube").click()
         consumption.vex.fillStandardForm({email: "getOutOfMyWay@gmail.com"}) // Settings (other than the blue button) not applied to form on session page... not sure if this is intended?
-        cy.get(consumption.vex.jukeBoxApp + ">div", {timeout: 20000}).should("have.css", "background-color", "rgb(255, 255, 0)")
-        cy.get(consumption.vex.supplementalContent).children("li").eq(0).invoke("attr", "style").then((style)=>{
-            expect(style).to.include("color: rgb(255, 0, 0); font-family: Roboto; font-size: 15px; font-weight: normal;")
-        })
-
+        cy.get(consumption.vex.jukeBoxApp + ">div", {timeout: 20000}).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.backgroundColor))
+        cy.get(consumption.vex.supplementalContent).children("li").eq(0)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.bodyFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.bodyFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.bodyFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.bodyBoldFont))
+            .click()
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.activeFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.activeFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.activeFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.activeBoldFont))
+        cy.get(consumption.vex.supplementalTitle)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.headerTitleFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.headerTitleFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.headerTitleFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.headerTitleBoldFont))
         // Return to authoring and add a navigation item - this will replace the event/session header with a navigation header
+        cy.go("back")
         cy.go("back")
         cy.go("back")
         authoring.vex.addNavItem(navItem)
@@ -119,5 +160,18 @@ describe('VEX - Virtual Event', function() {
             cy.get("input").should("have.css", "color", "rgb(0, 0, 100)").should("have.css", "background-color", "rgb(0, 100, 0)")
             cy.contains("button", "Search").should("have.css", "color", "rgb(0, 100, 0)").should("have.css", "background-color", "rgb(100, 0, 0)")
         })
+
+        // Turn of navigation header in the vex appearance settings
+        authoring.configurations.visit.appearances()
+        authoring.configurations.configureVEXAppearance({
+            appearance: "vexAppearance.js",
+            hideNavigation: true
+        })
+
+        // Verify on consumption that navigation header no longer exists
+        cy.visit(event.url)
+        cy.get(consumption.vex.vexHeader).should("not.exist")
+        cy.visit(session.url)
+        cy.get(consumption.vex.vexHeader).should("not.exist")
     })
 })
