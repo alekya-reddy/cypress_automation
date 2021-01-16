@@ -91,10 +91,10 @@ describe("Microsites - main setup", () => {
         authoring.microsites.verifySetup({slug: "special"})
         authoring.microsites.setup({
             name: microsite1.name,
-            slug: " ", // Blank reverts back to what it was before
+            slug: " ",
             verify: false
         })
-        authoring.microsites.verifySetup({slug: "special"})
+        cy.contains("cannot be empty", {timeout: 10000}).should("exist")
         authoring.microsites.setup({
             name: microsite1.name,
             slug: microsite2.slug, // slug already exists in another microsite

@@ -36,7 +36,8 @@ export class Microsites extends Common {
             classNameInput: "input[name*='className']",
             trackRow: ".pf-event-sessions",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
-            titleOverrideInput: "input[name*='trackTitleOverride']"
+            titleOverrideInput: "input[name*='trackTitleOverride']",
+            spacingInput: "input[name*='spacing.padding']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -547,7 +548,7 @@ export class Microsites extends Common {
 
         if(spacing){
             cy.containsExact("div", "Spacing").click()
-            cy.get("input:visible").clear().type(spacing)
+            cy.get(this.landingPages.spacingInput).clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
         }
 
