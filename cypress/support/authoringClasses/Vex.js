@@ -33,7 +33,7 @@ export class Vex extends Common {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
             return `td[title="${escapedName}"]`
         };
-        this.sessionShareCell = ".share-cell";
+        this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
         this.caretUp = "span[aria-label='caret-up']";
@@ -128,7 +128,6 @@ export class Vex extends Common {
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
             searchToggle: "input[name*='virtualEventEnableSearch']",
-            shareCell: ".share-cell",
             sessionCardTitle: ".pf-event-session-card-title > div"
         };
         this.navigation = {

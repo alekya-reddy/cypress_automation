@@ -77,7 +77,7 @@ describe("VEX - Sharing links", ()=>{
 
         // Check for sharing link on the first session card
         authoring.vex.goToSessionList()
-        cy.get(authoring.vex.sessionName(session1.name)).siblings(authoring.vex.pages.shareCell).within(()=>{
+        cy.get(authoring.vex.sessionName(session1.name)).siblings(authoring.vex.shareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
@@ -87,7 +87,7 @@ describe("VEX - Sharing links", ()=>{
         cy.contains(authoring.vex.modal).should("not.exist")
 
         // Check for sharing link on the second session card
-        cy.get(authoring.vex.sessionName(session2.name)).siblings(authoring.vex.sessionShareCell).within(()=>{
+        cy.get(authoring.vex.sessionName(session2.name)).siblings(authoring.vex.shareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
@@ -98,7 +98,7 @@ describe("VEX - Sharing links", ()=>{
 
         // Check for sharing link on landing page
         authoring.vex.goToLandingPage()
-        cy.containsExact(authoring.vex.antCell, landingPageShare.name, {timeout: 20000}).siblings(authoring.vex.pages.shareCell).within(()=>{
+        cy.containsExact(authoring.vex.antCell, landingPageShare.name, {timeout: 20000}).siblings(authoring.vex.shareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
