@@ -25,7 +25,6 @@ export class Vex extends Common {
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
-        this.landingPageShareCell = ".share-cell";
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "#search-session-name";
         this.addSessionButton = "button:contains('Add Session')";
@@ -34,7 +33,6 @@ export class Vex extends Common {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
             return `td[title="${escapedName}"]`
         };
-        this.sessionShareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
         this.caretUp = "span[aria-label='caret-up']";
@@ -130,7 +128,8 @@ export class Vex extends Common {
             classNameInput: "input[name*='className']",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
-            searchToggle: "input[name*='virtualEventEnableSearch']"
+            searchToggle: "input[name*='virtualEventEnableSearch']",
+            shareCell: ".share-cell"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
