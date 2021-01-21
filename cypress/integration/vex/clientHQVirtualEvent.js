@@ -15,16 +15,11 @@ describe('VEX - Virtual Event', function() {
         if(authoring.common.env.TEST_ENV !== 'prod'){
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-            cy.get(authoring.common.vexNavigation).should('exist').should('have.attr', 'style', 'opacity: 0.5;').click()
-            cy.contains('Looking for a virtual event experience that offers more than a typical webinar platform').should('exist')
-            cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist')
-        }
-    })
-    it('When virtual event toggled off, you should not see vex appearance settings tab', function() {
-        if(authoring.common.env.TEST_ENV !== 'prod'){
-            authoring.common.login();
-            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-            authoring.configurations.visit.appearances();
+            cy.get(authoring.common.vexNavigation).should('exist').should('have.attr', 'style', 'opacity: 0.5;').click();
+            cy.contains('Looking for a virtual event experience that offers more than a typical webinar platform').should('exist');
+            cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist');
+            //When virtual event toggled off, you should not see vex appearance settings tab
+            authoring.configurations.visit.appearances(); 
             cy.get(authoring.configurations.appearances.secondaryNav).within(() => {
                 cy.get('a[href$="virtual-event"]').should('not.exist');
             })
