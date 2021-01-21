@@ -20,4 +20,14 @@ describe('VEX - Virtual Event', function() {
             cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist')
         }
     })
+    it('When virtual event toggled off, you should not see vex appearance settings tab', function() {
+        if(authoring.common.env.TEST_ENV !== 'prod'){
+            authoring.common.login();
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
+            authoring.configurations.visit.appearances();
+            cy.get(authoring.configurations.appearances.secondaryNav).within(() => {
+                cy.get('a[href$="virtual-event"]').should('not.exist');
+            })
+        }
+    })
 })
