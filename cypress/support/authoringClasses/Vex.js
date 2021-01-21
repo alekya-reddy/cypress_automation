@@ -33,6 +33,7 @@ export class Vex extends Common {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
             return `td[title="${escapedName}"]`
         };
+        this.sessionShareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
         this.caretUp = "span[aria-label='caret-up']";

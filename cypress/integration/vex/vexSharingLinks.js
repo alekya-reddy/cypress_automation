@@ -87,7 +87,7 @@ describe("VEX - Sharing links", ()=>{
         cy.contains(authoring.vex.modal).should("not.exist")
 
         // Check for sharing link on the second session card
-        cy.get(authoring.vex.sessionName(session2.name)).siblings(authoring.vex.pages.shareCell).within(()=>{
+        cy.get(authoring.vex.sessionName(session2.name)).siblings(authoring.vex.sessionShareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
