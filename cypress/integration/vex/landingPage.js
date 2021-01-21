@@ -78,7 +78,8 @@ const testLandingPage = {
             },
             typography: {
                 color: {r: "255", g: "255", b: "255"},
-                textAlign: 'right'
+                textAlign: 'right',
+                fontSize: "14px"
             },
             className: "george",
             background: {
@@ -110,7 +111,12 @@ const testLandingPage = {
                 position: "bottom",
                 size: "cover"
             },
-            spacing: "91px"
+            spacing: "91px",
+            card: {
+                color: {r: "43", g: "91", b: "200"},
+                textAlign: "right",
+                fontSize: "17px"
+            }
         },
         {
             type: "HTML",
