@@ -26,8 +26,16 @@ const session2 = {
     }
 }
 
+const landingPageShare = {
+    name: "landingPageShare",
+    slug: "landingpageshare",
+    get url(){
+        return `${event.url}/${this.slug}`
+    }
+}
+
 describe("VEX - Sharing links", ()=>{
-    it("Set up event and sessions if not already done", ()=>{
+    it("Set up event, sessions and landing page if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
@@ -35,11 +43,12 @@ describe("VEX - Sharing links", ()=>{
                 authoring.vex.configureEvent(event)
                 authoring.vex.addSession(session1.name)
                 authoring.vex.addSession(session2.name)
+                authoring.vex.addLandingPages(landingPageShare.name)
             }
         })
     })
 
-    it("There should be sharing links in the event cards, session cards, and event configuration page", ()=>{
+    it("There should be sharing links in the event cards, session cards,event configuration page and landing pages", ()=>{
         // Note: Not going into detail to ensure query string options are present, or that base domain changings according to sharing url 
         // These features are already tested in test files dedicated to testing sharing urls and query strings 
         authoring.common.login()
@@ -68,7 +77,7 @@ describe("VEX - Sharing links", ()=>{
 
         // Check for sharing link on the first session card
         authoring.vex.goToSessionList()
-        cy.get(authoring.vex.sessionName(session1.name)).siblings(authoring.vex.sessionShareCell).within(()=>{
+        cy.get(authoring.vex.sessionName(session1.name)).siblings(authoring.vex.pages.shareCell).within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
@@ -83,6 +92,17 @@ describe("VEX - Sharing links", ()=>{
         })
         cy.contains(authoring.vex.modal, "Share Link").within(()=>{
             cy.contains(session2.url).should("exist")
+        })
+        cy.get(authoring.vex.closeModal).click()
+        cy.contains(authoring.vex.modal).should("not.exist")
+
+        // Check for sharing link on landing page
+        authoring.vex.goToLandingPage()
+        cy.containsExact(authoring.vex.antCell, landingPageShare.name, {timeout: 20000}).siblings(authoring.vex.pages.shareCell).within(()=>{
+            cy.get(authoring.vex.shareIcon).click()
+        })
+        cy.contains(authoring.vex.modal, "Share Link").within(()=>{
+            cy.contains(landingPageShare.url).should("exist")
         })
         cy.get(authoring.vex.closeModal).click()
         cy.contains(authoring.vex.modal).should("not.exist")

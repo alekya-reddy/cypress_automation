@@ -128,6 +128,7 @@ export class Vex extends Common {
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
             searchToggle: "input[name*='virtualEventEnableSearch']",
+            shareCell: ".share-cell",
             sessionCardTitle: ".pf-event-session-card-title > div"
         };
         this.navigation = {
