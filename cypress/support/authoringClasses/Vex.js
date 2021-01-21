@@ -25,6 +25,7 @@ export class Vex extends Common {
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
+        this.landingPageShareCell = ".share-cell";
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "#search-session-name";
         this.addSessionButton = "button:contains('Add Session')";
