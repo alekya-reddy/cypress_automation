@@ -167,6 +167,7 @@ export class VexCX extends CommonCX {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+        const card = config.card
         const enableSearch = config.enableSearch
 
         if(className && !sessionGroup){
@@ -177,6 +178,9 @@ export class VexCX extends CommonCX {
                 }
                 if(typography && typography.color && !typography.color.hex){
                     expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+                }
+                if(typography && typography.fontSize){
+                    expect(style).to.include(`font-size: ${typography.fontSize}`)
                 }
                 if(background && background.color && !background.color.hex){
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
@@ -246,6 +250,20 @@ export class VexCX extends CommonCX {
             }
             if(spacing){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
+            }
+            if(card){
+                const { color, textAlign, fontSize} = card
+                if(color){
+                    cy.contains(blockLocator, sessionGroup).within(() => {
+                        cy.get(this.sessionCardTitle + "> div:nth-child(1)").should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
+                    })
+                }
+                if(textAlign){
+                    cy.get(this.sessionCardTitle + "> div:nth-child(1)").should("have.css", "text-align", textAlign)
+                }
+                if(fontSize){
+                    cy.get(this.sessionCardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
+                }
             }
             if(enableSearch){
                 cy.contains(blockLocator, sessionGroup).within(() => {

@@ -5,6 +5,7 @@ export class MicrositesCX extends CommonCX {
         super(env, org, tld, baseUrl);
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
+        this.cardTitle = ".pf-microsite-card-title";
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -32,6 +33,7 @@ export class MicrositesCX extends CommonCX {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+        const card = config.card
 
         if(className && !track){
             let locator = `.${className}`
@@ -41,6 +43,9 @@ export class MicrositesCX extends CommonCX {
             }
             if(typography && typography.color && !typography.color.hex){
                 cy.get(locator).should("have.css", "color", `rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+            }
+            if(typography && typography.fontSize){
+                cy.get(locator).should("have.css", "font-size", typography.fontSize)
             }
             if(background && background.color && !background.color.hex){
                 cy.get(locator).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
@@ -106,6 +111,20 @@ export class MicrositesCX extends CommonCX {
             }
             if(spacing){
                 cy.containsExact("h4", trackName).parent().should("have.css", "padding", spacing)
+            }
+            if(card){
+                const { color, textAlign, fontSize} = card
+                if(color){
+                    cy.containsExact("h4", trackName).parent().within(() => {
+                        cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
+                    })
+                }
+                if(textAlign){
+                    cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "text-align", textAlign)
+                }
+                if(fontSize){
+                    cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
+                }
             }
         }
     }

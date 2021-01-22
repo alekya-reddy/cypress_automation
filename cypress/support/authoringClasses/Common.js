@@ -65,6 +65,10 @@ export class Common {
             container: ".rc-color-picker",
             inputs: ".rc-color-picker-panel-params-input",
         };
+        this.lpColorPicker = {
+            bar: ".swatch-inner",
+            popover: ".sketch-picker",
+        };
         this.previewSideBar = "div[data-qa-hook='page-preview']";
         this.messages = {
             recordSaved: "The record was saved successfully",
@@ -97,13 +101,30 @@ export class Common {
     }
 
     login(user = this.userName, password = this.password) {
-        cy.visit(this.baseUrl)
+        cy.visit(this.baseUrl + "/users/sign_in")
+
+        const clearCookiesAndReload = () => {
+            // Sometimes, a new it function takes us directly to authoring even though cookies should be cleared
+            // This could be a Cypress bug. This function handles this bug until they fix it. 
+            // Once they fix the bug, this function can be removed
+            cy.url().then( url => {
+                if (!url.includes("/users/sign_in")){
+                    cy.clearCookies()
+                    cy.reload()
+                    cy.visit(this.baseUrl + "/users/sign_in")
+                    clearCookiesAndReload()
+                }
+            })
+        }
+        clearCookiesAndReload()
+
         cy.get('body').then((body)=>{
             const linkText = 'Sign in with email and password';
             if(body.find(`a:contains(${linkText})`).length > 0){
                 cy.contains(linkText).click()
             }
         })
+
         cy.get(this.userNameInputLocator).type(user).should('have.value', user)
         cy.get(this.passwordInputLocator).type(password)
         cy.get(this.submitButtonLocator).click()
@@ -188,6 +209,7 @@ export class Common {
     }
 
     pickColor(options){
+        // This color picker component can be found in appearance settings
         const { button, r, g, b, a } = options
 
         cy.get(button).click()
@@ -213,4 +235,25 @@ export class Common {
         cy.get(button).click()
     }
 
+    pickColor2(options){
+        // This color picker component can be found in landing page editors (VEX and Microsites)
+        const { hex, r, g, b } = options
+
+        cy.get(this.lpColorPicker.bar).click() // Clicking this bar opens the color picker
+        cy.get(this.lpColorPicker.popover).within(()=>{
+            if(hex){
+                cy.get("input").eq(0).clear().type(hex)
+            }
+            if(r){
+                cy.get("input").eq(1).clear().type(r)
+            }
+            if(g){
+                cy.get("input").eq(2).clear().type(g)
+            }
+            if(b){
+                cy.get("input").eq(3).clear().type(b)
+            }
+        })
+        cy.get(this.lpColorPicker.bar).click() // clicking this bar again closes the color picker
+    }
 }

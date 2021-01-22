@@ -181,7 +181,7 @@ export class CommonCX {
 
         if(checkSuccess){
             cy.waitFor({element: "form:visible", to: "not.exist", wait: 20000})
-            cy.get("form").should("not.be.visible")
+            cy.expectNotVisible({locator: "form"})
         }
     }
 }

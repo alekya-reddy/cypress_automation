@@ -62,7 +62,12 @@ const landingPage = {
                 position: "bottom",
                 size: "cover"
             },
-            spacing: "91px"
+            spacing: "91px",
+            card: {
+                color: {r: "43", g: "91", b: "200"},
+                textAlign: "right",
+                fontSize: "17px"
+            }
         },
         {
             id: "HTML block",
@@ -74,7 +79,8 @@ const landingPage = {
             },
             typography: {
                 color: {r: "255", g: "255", b: "255"},
-                textAlign: 'right'
+                textAlign: 'right',
+                fontSize: "12px"
             },
             className: "landingpageblock",
             background: {

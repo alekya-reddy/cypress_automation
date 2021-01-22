@@ -134,12 +134,13 @@ describe("Microsites - Navigation setup", () => {
         authoring.microsites.removeLandingPages(landingPage2.name)
         authoring.microsites.tabToLandingPages()
         cy.containsExact(authoring.microsites.navigation.navTitle, landingPage2.name).should('not.exist') 
-        cy.containsExact(authoring.microsites.navigation.navTitle, link2).should('not.exist') 
+        cy.containsExact(authoring.microsites.navigation.navTitle, link2).should('not.exist')
 
         // Verify can delete nav items 
         authoring.microsites.removeNavItems(navigation.deleteLink.label)
+    })
 
-        // Go to consumption and verify that the navigation header is correct
+    it("Go to consumption and verify that the navigation header is correct", () => {
         cy.visit(microsite.url)
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
@@ -150,8 +151,8 @@ describe("Microsites - Navigation setup", () => {
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
         })
-        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("not.be.visible") // Not yet visible as it's a submenu item
-        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("not.exist")
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).should("be.visible").trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("be.visible").within(() => {
             cy.get("a").should("have.attr", "href", navigation.link1.source)
         })

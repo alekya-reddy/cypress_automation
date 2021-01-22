@@ -33,7 +33,7 @@ export class Vex extends Common {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
             return `td[title="${escapedName}"]`
         };
-        this.sessionShareCell = ".share-cell";
+        this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
         this.caretUp = "span[aria-label='caret-up']";
@@ -124,12 +124,11 @@ export class Vex extends Common {
             tableRow: ".ant-table-row",
             editorMenu: "div[class^='BlockMenu']",
             menuBlock: "div[class^='BlockAction']",
-            colorPickerBar: ".swatch-inner",
-            colorPicker: ".sketch-picker",
             classNameInput: "input[name*='className']",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
-            searchToggle: "input[name*='virtualEventEnableSearch']"
+            searchToggle: "input[name*='virtualEventEnableSearch']",
+            sessionCardTitle: ".pf-event-session-card-title > div"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1297,6 +1296,7 @@ export class Vex extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const card = config.card
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
         cy.get(this.pages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
@@ -1330,22 +1330,7 @@ export class Vex extends Common {
 
             cy.containsExact("div", "Background").click()
             if(color){
-                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.pages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker 
+                this.pickColor2(color)
             }
             if(image){
                 cy.contains("button", "Add Image").click()
@@ -1366,22 +1351,7 @@ export class Vex extends Common {
 
             cy.containsExact("div", "Heading").click()
             if(color){
-                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.pages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker
+                this.pickColor2(color)
             }
             if(textAlign){
                 cy.get("select[id*='heading.textAlign']").select(textAlign)
@@ -1390,30 +1360,20 @@ export class Vex extends Common {
         }
 
         if(typography){
-            let color = typography.color // In HEX code or rgb (rgb preferred)
-            let textAlign = typography.textAlign // center, left, right
+            // "color" In HEX code or rgb (rgb preferred)
+            // "textAlign" could be center, left, or right
+            // fontSize - please only use pixels, eg 5px
+            const { color, textAlign, fontSize } = typography 
 
             cy.containsExact("div", "Typography").click()
             if(color){
-                cy.get(this.pages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.pages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.pages.colorPickerBar).click() // clicking this bar again closes the color picker
+                this.pickColor2(color)
             }
             if(textAlign){
                 cy.get("select[id*='typography.textAlign']").select(textAlign)
+            }
+            if(fontSize){
+                cy.get("input[name*='typography.fontSize']").clear().type(fontSize)
             }
             cy.containsExact("span", "Typography").click()
         }
@@ -1422,6 +1382,24 @@ export class Vex extends Common {
             cy.containsExact("div", "Spacing").click()
             cy.get("input:visible").clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
+        }
+
+        if(card){
+            const { color, textAlign, fontSize } = card
+
+            cy.containsExact("div", "Card Configuration").click()
+
+            if(color){
+                this.pickColor2(color)
+            }
+
+            if(textAlign){
+                cy.get("select[id*='cardConfiguration.textAlign']").select(textAlign)
+            }
+
+            if(fontSize){
+                cy.get("input[name*='cardConfiguration.fontSize']").clear().type(fontSize)
+            }
         }
 
         if(enableSearch){
@@ -1448,6 +1426,7 @@ export class Vex extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const card = config.card
         const enableSearch = config.enableSearch
 
         if(type == "html" && className){ // className is required to be able to find the correct block
@@ -1458,6 +1437,9 @@ export class Vex extends Common {
                 }
                 if(typography && typography.color && !typography.color.hex){
                     expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+                }
+                if(typography && typography.fontSize){
+                    expect(style).to.include(`font-size: ${typography.fontSize}`)
                 }
                 if(background && background.color && !background.color.hex){
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
@@ -1517,6 +1499,22 @@ export class Vex extends Common {
             }
             if(spacing){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
+            }
+            if(card){
+                const { color, textAlign, fontSize } = card
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    if(color){
+                        cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
+                    }
+
+                    if(textAlign){
+                        cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "text-align", textAlign)
+                    }
+                    
+                    if(fontSize){
+                        cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "font-size", fontSize)
+                    }
+                })
             }
             if(enableSearch){
                 cy.contains(blockLocator, sessionGroup).within(() => {
@@ -1745,7 +1743,7 @@ export class Vex extends Common {
                 cy.contains("button", "Clone this Session").click()
             })
             if(verify !== false){
-                cy.contains(this.antModal, "Clone this Session").should("not.be.visible")
+                cy.expectNotVisible({locator: this.antModal + ":contains('Clone this Session')"})
                 cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
             }
         }

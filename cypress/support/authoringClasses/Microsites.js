@@ -37,7 +37,8 @@ export class Microsites extends Common {
             trackRow: ".pf-event-sessions",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             titleOverrideInput: "input[name*='trackTitleOverride']",
-            spacingInput: "input[name*='spacing.padding']"
+            spacingInput: "input[name*='spacing.padding']",
+            micrositeCardTitle: ".pf-event-session-card-title > div"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -106,7 +107,7 @@ export class Microsites extends Common {
     }
 
     setup(options){
-        const { name, slug, newName, cookieConsent, accessProtection, verify} = options
+        const { name, slug, externalCode, newName, cookieConsent, accessProtection, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -116,6 +117,10 @@ export class Microsites extends Common {
 
         if(slug){
             cy.get(this.setupPage.slugInput).clear().type(slug)
+        }
+
+        if(externalCode){
+            this.addExternalCode(externalCode, verify)
         }
 
         if(accessProtection){
@@ -139,9 +144,7 @@ export class Microsites extends Common {
     }
 
     verifySetup(options){
-        const slug = options.slug 
-        const newName = options.newName 
-        const cookieConsent = options.cookieConsent
+        const { slug, newName, cookieConsent } = options
 
         if(newName){
             cy.get(this.setupPage.nameInput).should("have.value", newName)
@@ -162,9 +165,45 @@ export class Microsites extends Common {
         }
     }
 
-    addAccessProtection(options, verify){
-        const type = options.type
-        const groups = [options.groups].flat()
+    addExternalCode(externalCode, verify){
+        const codes = [externalCode].flat()
+        cy.contains(this.antRow, "External Codes").within(() => {
+            codes.forEach( code => {
+                cy.get(this.antDropSelect.selector).type(code + "\n")
+            })
+        })
+
+        if(verify !== false){
+            cy.contains(this.antRow, "External Codes").within(() => {
+                codes.forEach( code => {
+                    cy.containsExact("span", code, {timeout: 10000}).should("exist")
+                })
+            })
+        }
+    }
+
+    removeExternalCode(list, verify){
+        const codes = [list].flat()
+        codes.forEach( code => {
+            cy.ifElementWithExactTextExists("span", code, 1000, () => {
+                cy.contains(this.antRow, "External Codes").within(() => {
+                    cy.containsExact("span", code).siblings("span").click()
+                })
+            })
+        })
+
+        if(verify !== false){
+            codes.forEach( code => {
+                cy.contains(this.antRow, "External Codes").within(() => {
+                    cy.containsExact("span", code).should("not.exist")
+                })
+            })
+        }
+    }
+
+    addAccessProtection(accessProtection, verify){
+        const type = accessProtection.type
+        const groups = [accessProtection.groups].flat()
 
         if(type){
             cy.contains(this.antRow, "Protection Type").within(()=>{
@@ -421,8 +460,10 @@ export class Microsites extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const card = config.card
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
+        cy.waitFor({element: this.landingPages.addBlockButton, to: "exist", wait: 10000})
         cy.get(this.landingPages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
 
         if(type == "html"){
@@ -458,22 +499,7 @@ export class Microsites extends Common {
 
             cy.containsExact("div", "Background").click()
             if(color){
-                cy.get(this.landingPages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.landingPages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.landingPages.colorPickerBar).click() // clicking this bar again closes the color picker 
+                this.pickColor2(color)
             }
             if(image){
                 cy.contains("button", "Add Image").click()
@@ -494,22 +520,7 @@ export class Microsites extends Common {
 
             cy.containsExact("div", "Heading").click()
             if(color){
-                cy.get(this.landingPages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.landingPages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.landingPages.colorPickerBar).click() // clicking this bar again closes the color picker
+                this.pickColor2(color)
             }
             if(textAlign){
                 cy.get("select[id*='heading.textAlign']").select(textAlign)
@@ -518,30 +529,20 @@ export class Microsites extends Common {
         }
 
         if(typography){
-            let color = typography.color // In HEX code or rgb (rgb preferred)
-            let textAlign = typography.textAlign // center, left, right
+            // color should be nn HEX code or rgb (rgb preferred)
+            // textAlign should be center, left, or right
+            // fontSize should be in pixels (eg 5px)
+            const { color, textAlign, fontSize } = typography
 
             cy.containsExact("div", "Typography").click()
             if(color){
-                cy.get(this.landingPages.colorPickerBar).click() // Clicking this bar opens the color picker
-                cy.get(this.landingPages.colorPicker).within(()=>{
-                    if(color.hex){
-                        cy.get("input").eq(0).clear().type(color.hex) // This is the HEX color input
-                    }
-                    if(color.r){
-                        cy.get("input").eq(1).clear().type(color.r)
-                    }
-                    if(color.g){
-                        cy.get("input").eq(2).clear().type(color.g)
-                    }
-                    if(color.b){
-                        cy.get("input").eq(3).clear().type(color.b)
-                    }
-                })
-                cy.get(this.landingPages.colorPickerBar).click() // clicking this bar again closes the color picker
+                this.pickColor2(color)
             }
             if(textAlign){
                 cy.get("select[id*='typography.textAlign']").select(textAlign)
+            }
+            if(fontSize){
+                cy.get("input[name*='typography.fontSize']").clear().type(fontSize)
             }
             cy.containsExact("span", "Typography").click()
         }
@@ -550,6 +551,24 @@ export class Microsites extends Common {
             cy.containsExact("div", "Spacing").click()
             cy.get(this.landingPages.spacingInput).clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
+        }
+
+        if(card){
+            const { color, textAlign, fontSize } = card
+
+            cy.containsExact("div", "Card Configuration").click()
+
+            if(color){
+                this.pickColor2(color)
+            }
+
+            if(textAlign){
+                cy.get("select[id*='cardConfiguration.textAlign']").select(textAlign)
+            }
+
+            if(fontSize){
+                cy.get("input[name*='cardConfiguration.fontSize']").clear().type(fontSize)
+            }
         }
 
         if(className){
@@ -573,6 +592,7 @@ export class Microsites extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const card = config.card
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -582,6 +602,9 @@ export class Microsites extends Common {
                 }
                 if(typography && typography.color && !typography.color.hex){
                     expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
+                }
+                if(typography && typography.fontSize){
+                    expect(style).to.include(`font-size: ${typography.fontSize}`)
                 }
                 if(background && background.color && !background.color.hex){
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
@@ -642,6 +665,22 @@ export class Microsites extends Common {
             }
             if(spacing){
                 cy.contains(blockLocator, trackName).should("have.css", "padding", spacing)
+            }
+            if(card){
+                const { color, textAlign, fontSize } = card
+                cy.contains(blockLocator, trackName).within(() => {
+                    if(color){
+                        cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
+                    }
+
+                    if(textAlign){
+                        cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "text-align", textAlign)
+                    }
+                    
+                    if(fontSize){
+                        cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "font-size", fontSize)
+                    }
+                })
             }
         }
     }
