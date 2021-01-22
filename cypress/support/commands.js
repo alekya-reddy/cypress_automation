@@ -27,11 +27,16 @@
 import {constants} from './constants.js'
 
 Cypress.Commands.add("expectNotVisible", (options) => {
-    const { locator } = options
+    // wait has to be in milliseconds
+    const locator = options.locator
+    const wait = Number.isInteger(options.wait) ? options.wait : 5000 
     if ( Cypress.$(locator).length == 0 ) {
         cy.get(locator).should("not.exist")
     } else if ( !Cypress.$(locator).is(":visible") ) {
-        cy.get(loctor).should("not.be.visible")
+        cy.get(locator).should("not.be.visible")
+    } else if (wait > 0) {
+        cy.wait(500)
+        cy.expectNotVisible({locator: locator, wait: wait - 500})
     } else {
         expect(locator).to.eq("either not exist or not be visible, but it is visible")
     }

@@ -1743,7 +1743,7 @@ export class Vex extends Common {
                 cy.contains("button", "Clone this Session").click()
             })
             if(verify !== false){
-                cy.contains(this.antModal, "Clone this Session").should("not.be.visible")
+                cy.expectNotVisible({locator: this.antModal + ":contains('Clone this Session')"})
                 cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
             }
         }
