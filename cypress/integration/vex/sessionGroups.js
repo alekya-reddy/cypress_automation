@@ -249,12 +249,12 @@ describe('VEX - Sessions Groups', function() {
         // Remove group cancel 
         cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Remove").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
-        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.be.visible")
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.exist")
 
         // Remove session from group cancel 
         cy.contains(authoring.vex.sessionRow, groupA.sessions[0]).contains("button", "Remove").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
-        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.be.visible")
+        cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.exist")
 
         // Add a session to a group, verify that the session is no longer in the options if you try to add another session (there was bug where it was still available as option, leading to internal server error)
         cy.contains("button", "Add Sessions to Group").click()

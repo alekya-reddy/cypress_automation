@@ -7,16 +7,19 @@ export class Configurations extends Common {
         this.pageUrls = {
             webhooks: `${this.configRoute}/webhooks`,
             widgets: `${this.configRoute}/widgets`,
+            externalCode: `${this.configRoute}/external-code`,
             appearances: `${this.configRoute}/appearance`
         };
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
             widgets: "Widgets Configuration",
+            externalCode: "External Code Configuration",
             appearances: "Appearances Configuration"
         };
         this.visit = {
             webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
             widgets: ()=>{ cy.visit(this.pageUrls.widgets) },
+            externalCode: () => { cy.visit(this.pageUrls.externalCode) },
             appearances: () => { cy.visit(this.pageUrls.appearances) }
         };
         this.addWebhookModal = {
@@ -34,7 +37,13 @@ export class Configurations extends Common {
             codeEditor: "#code > textarea",
             previewName: "div[data-qa-hook='preview-section-widget-name']",
             deleteIcon: "i[title='Delete Widget']"
-        }
+        };
+        this.externalCode = {
+            nameInput: "#name",
+            codeEditor: "#code > textarea",
+            previewName: "div[data-qa-hook='preview-section-external-code-name']",
+            deleteIcon: "i[title='Delete External Code']"
+        };
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {
             sidebar: "div[data-qa-hook='page-sidebar']",
@@ -157,6 +166,97 @@ export class Configurations extends Common {
             })
             cy.contains("button", "Save").click()
         })
+    }
+
+    /*********************************************************************************/
+    /********************************* External code *********************************/
+    /*********************************************************************************/
+    addExternalCode(config){
+        const { name, code, interceptCode } = config
+
+        this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
+        cy.contains("button", "Add External Code").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.externalCode.nameInput).clear().type(name)
+            if (code){
+                cy.get(this.externalCode.codeEditor).type(code, {force: true})
+            }
+            if (interceptCode) {
+                cy.get(this.externalCode.codeEditor).type(interceptCode, {force: true})
+                cy.intercept('POST', "/api/v3/external_codes", (req) => {
+                    // It is necessary to intercept the request payload and set the code to what is intended
+                    // Because the code editor will automatically add closing tags etc, which screws up the code
+                    req.body.code = interceptCode
+                })
+            }
+            cy.contains("button", "Add External Code").click() 
+        })
+    }
+
+    openCodePreview(code){
+        cy.angryClick({clickElement: this.table.cellName + `:contains('${code}')`, checkElement: `${this.externalCode.previewName}:contains('${code}')`})
+    }
+
+    deleteExternalCode(list){
+        const codes = [list].flat()
+
+        this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
+        codes.forEach((code)=>{
+            cy.ifElementWithExactTextExists(this.table.cellName, code, 1500, ()=>{
+                this.openCodePreview(code)
+                cy.contains(this.previewSideBar, code).should('exist').within(()=>{
+                    cy.get(this.externalCode.deleteIcon).click()
+                })
+                cy.contains(this.modal, "Delete External Code?").within(()=>{
+                    cy.contains("button", "Delete External Code").click()
+                })
+            })
+            cy.ifNoElementWithExactTextExists(this.modal, "Delete External Code?", 10000, ()=>{}) // This just smart-waits for modal to disappear
+            cy.ifNoElementWithExactTextExists(this.table.cellName, code, 10000, ()=>{}) // This just smart-waits for widget to disappear
+            cy.containsExact(this.table.cellName, code).should("not.exist")
+        })
+    }
+
+    editExternalCode(config){
+        const { name, newName, newCode, interceptCode } = config
+
+        this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
+        this.openCodePreview(name)
+        if(newName){
+            cy.get(this.externalCode.previewName).click().within(()=>{
+                cy.get(this.externalCode.nameInput).clear().type(newName)
+                cy.contains("button", "Save").click()
+                cy.contains(newName).should("exist")
+            })
+            cy.containsExact(this.table.cellName, newName).should('exist')
+        }
+
+        if(newCode){
+            cy.get("code").click()
+            cy.contains(this.modal, "Edit Code").within(()=>{
+                cy.get(this.externalCode.codeEditor).clear({force: true}).type(newCode, {force: true})
+                cy.contains("button", "Save Code").click()
+            })
+            cy.get(this.modal).should('not.exist')
+            cy.contains(this.table.cellCode, newCode).should('exist')
+        }
+
+        if(interceptCode){
+            cy.contains(this.table.cellName, name).parent().invoke("attr", "data-qa-hook").then( val => {
+                const matches = val.match(/\d+/g)
+                const id = matches[0]
+
+                cy.intercept('PATCH', `/api/v3/external_codes/${id}`, (req) => {
+                    // set the request body to something different before it's sent to the destination
+                    req.body.code = interceptCode
+                })
+                cy.get("code").click()
+                cy.contains(this.modal, "Edit Code").within(()=>{
+                    cy.get(this.externalCode.codeEditor).clear({force: true}).type("replace me", {force: true})
+                    cy.contains("button", "Save Code").click()
+                })
+            })
+        }
     }
 
     /*********************************************************************************/

@@ -107,7 +107,7 @@ export class Microsites extends Common {
     }
 
     setup(options){
-        const { name, slug, newName, cookieConsent, accessProtection, verify} = options
+        const { name, slug, externalCode, newName, cookieConsent, accessProtection, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -117,6 +117,10 @@ export class Microsites extends Common {
 
         if(slug){
             cy.get(this.setupPage.slugInput).clear().type(slug)
+        }
+
+        if(externalCode){
+            this.addExternalCode(externalCode, verify)
         }
 
         if(accessProtection){
@@ -140,9 +144,7 @@ export class Microsites extends Common {
     }
 
     verifySetup(options){
-        const slug = options.slug 
-        const newName = options.newName 
-        const cookieConsent = options.cookieConsent
+        const { slug, newName, cookieConsent } = options
 
         if(newName){
             cy.get(this.setupPage.nameInput).should("have.value", newName)
@@ -163,9 +165,45 @@ export class Microsites extends Common {
         }
     }
 
-    addAccessProtection(options, verify){
-        const type = options.type
-        const groups = [options.groups].flat()
+    addExternalCode(externalCode, verify){
+        const codes = [externalCode].flat()
+        cy.contains(this.antRow, "External Codes").within(() => {
+            codes.forEach( code => {
+                cy.get(this.antDropSelect.selector).type(code + "\n")
+            })
+        })
+
+        if(verify !== false){
+            cy.contains(this.antRow, "External Codes").within(() => {
+                codes.forEach( code => {
+                    cy.containsExact("span", code, {timeout: 10000}).should("exist")
+                })
+            })
+        }
+    }
+
+    removeExternalCode(list, verify){
+        const codes = [list].flat()
+        codes.forEach( code => {
+            cy.ifElementWithExactTextExists("span", code, 1000, () => {
+                cy.contains(this.antRow, "External Codes").within(() => {
+                    cy.containsExact("span", code).siblings("span").click()
+                })
+            })
+        })
+
+        if(verify !== false){
+            codes.forEach( code => {
+                cy.contains(this.antRow, "External Codes").within(() => {
+                    cy.containsExact("span", code).should("not.exist")
+                })
+            })
+        }
+    }
+
+    addAccessProtection(accessProtection, verify){
+        const type = accessProtection.type
+        const groups = [accessProtection.groups].flat()
 
         if(type){
             cy.contains(this.antRow, "Protection Type").within(()=>{
@@ -425,6 +463,7 @@ export class Microsites extends Common {
         const card = config.card
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
+        cy.waitFor({element: this.landingPages.addBlockButton, to: "exist", wait: 10000})
         cy.get(this.landingPages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
 
         if(type == "html"){

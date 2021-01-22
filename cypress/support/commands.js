@@ -26,6 +26,17 @@
 
 import {constants} from './constants.js'
 
+Cypress.Commands.add("expectNotVisible", (options) => {
+    const { locator } = options
+    if ( Cypress.$(locator).length == 0 ) {
+        cy.get(locator).should("not.exist")
+    } else if ( !Cypress.$(locator).is(":visible") ) {
+        cy.get(loctor).should("not.be.visible")
+    } else {
+        expect(locator).to.eq("either not exist or not be visible, but it is visible")
+    }
+})
+
 Cypress.Commands.add("ifElementHasText", (locator, textToMatch, waitTime, callBack) => {
     // Use this function to do conditional testing where you want to wait for an element with text to exist before doing something, otherwise move on 
     // You do not need to use this function if element with text appears immediately - use this function only if it takes time for this element to exist, if at all
