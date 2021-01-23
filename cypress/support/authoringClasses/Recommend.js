@@ -12,6 +12,7 @@ export class Recommend extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
+            externalCodeLabel: "label:contains('External Code')",
             accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
             sidebarToggle: "[data-qa-hook='sidebar']",
@@ -89,7 +90,7 @@ export class Recommend extends Common {
     }
 
     configure(options){
-        const { name, slug, accessProtection, contents, verify } = options
+        const { name, slug, externalCode, accessProtection, contents, verify } = options
         // These toggle options should have values of "on" or "off"
         const { sidebar, topicSidebar, exit, formsStrategy, cookieConsent, cookieMessage, header } = options
         // These options will require certain toggles to be "on"
@@ -103,6 +104,10 @@ export class Recommend extends Common {
 
         if(slug){
             this.setCustomUrl(slug, verify)
+        }
+
+        if(externalCode){
+            this.addExternalCode(externalCode)
         }
 
         if(accessProtection){
@@ -163,6 +168,46 @@ export class Recommend extends Common {
         }
     }
 
+    addExternalCode(list, verify){
+        const codes = [list].flat()
+
+        cy.get(this.pageSidebar.externalCodeLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            codes.forEach( code => {
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(code)).click()
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            codes.forEach( code => {
+                cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("contain", code)
+            })
+        }
+    }
+
+    removeExternalCode(list, verify){
+        const codes = [list].flat()
+        cy.get(this.pageSidebar.externalCodeLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            codes.forEach( code => {
+                cy.ifElementWithExactTextExists("span", code, 1000, ()=>{
+                    cy.containsExact("span", code).parent().siblings("span").click()
+                })
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            codes.forEach( code => {
+                cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("not.contain", code)
+            })
+        }
+    }
+
     addAccessProtection(accessProtection, verify){
         const type = accessProtection.type
         const groups = [accessProtection.groups].flat()
@@ -179,7 +224,7 @@ export class Recommend extends Common {
         })
 
         if(verify !== false){
-            cy.get(this.popover).should("not.be.visible")
+            cy.get(this.popover).should("not.exist")
             groups.forEach( group => {
                 cy.contains(this.pageSidebar.accessProtectionGroup, group).should("exist")
             })
@@ -268,7 +313,7 @@ export class Recommend extends Common {
         })
 
         if(verify !== false){
-            cy.contains(this.modal, "Exit Overrides for this Track").should("not.be.visible")
+            cy.contains(this.modal, "Exit Overrides for this Track").should("not.exist")
             cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
                 if(delay){
                     cy.contains(`${delay} seconds`).should("exist")
@@ -319,7 +364,7 @@ export class Recommend extends Common {
         })
 
         if(verify !== false){
-            cy.contains(this.modal, "Add Track Rule").should("not.be.visible")
+            cy.contains(this.modal, "Add Track Rule").should("not.exist")
         }
     }
 }
