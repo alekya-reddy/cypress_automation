@@ -9,7 +9,7 @@ describe('Microsites - Client HQs', function() {
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'on');
             authoring.microsites.visit()
             cy.get(authoring.common.pageTitleLocator).should('contain', authoring.microsites.pageTitle);
-            //When Microsites is toggled off, you should see Microsites appearance settings tab
+            //When Microsites is toggled on, you should see Microsites appearance settings tab
             authoring.configurations.visit.appearances(); 
             cy.get(authoring.configurations.appearances.secondaryNav, {timeout: 10000}).within(() => {
                 cy.get('a[href$="microsite-builder"]').should('exist');
