@@ -17,6 +17,7 @@ import { VexCX } from './consumptionClasses/VexCX.js';
 import { MicrositesCX } from './consumptionClasses/MicrositesCX.js';
 import { TargetCX } from './consumptionClasses/TargetCX.js';
 import { RecommendCX } from './consumptionClasses/RecommendCX.js';
+import { websiteToolsCX } from './consumptionClasses/websiteToolsCX.js';
 
 export const createAuthoringInstance = function(config = {}){
     // Set up default values for your convenience 
@@ -71,7 +72,8 @@ export const createConsumptionInstance = function(config = {}){
             vex: new VexCX(env, org, tld, baseUrl),
             microsites: new MicrositesCX(env, org, tld, baseUrl),
             target: new TargetCX(env, org, tld, baseUrl),
-            recommend: new RecommendCX(env, org, tld, baseUrl)
+            recommend: new RecommendCX(env, org, tld, baseUrl),
+            websiteTools: new websiteToolsCX(env, org, tld, baseUrl),
         }
     );
 }

@@ -310,7 +310,7 @@ html itself is bugged. If so, then it's not just our app that has problems, but 
 a different domain than the current page. In this case, whatever UI elements the script is supposed to drop onto the webpage will get blocked by the iframe busting
 code. FOR THIS REASON:
 
-i. WHEN TESTING ON CONSUMPTION, YOU MUST ALWAYS VISIT on HTTPS PROTOCOL AND YOU MUST ALWAYS VISIT ON LOOKBOOKHQ DOMAIN. 
+i. WHEN TESTING ON CONSUMPTION, YOU MUST ALWAYS VISIT on HTTPS PROTOCOL AND YOU MUST ALWAYS VISIT ON LOOKBOOKHQ DOMAIN AS THIS IS WHERE JUKEBOX SCRIPT COMES FROM 
 
 ii. WE CANNOT TEST OLD WEBSITE CAMPAIGN PROMOTERS AND WEBSITE TOOLS ON CONSUMPTION BECAUSE THE WEBPAGE WILL BE A DIFFERENT DOMAIN FROM THE LOOKBOOKHQ SCRIPT
 
@@ -325,6 +325,8 @@ https://app.cdn.lookbookhq.com/staging2/jukebox/current/tracks.js?x=2
 https://app.cdn.lookbookhq.com/qa/jukebox/current/tracks.js?x=2
 https://app.cdn.lookbookhq.com/production/jukebox/current/tracks.js?x=2
 
+Update Jan 22, 2021: I have developed a method to intercept the incoming jukebox script and modify the iframe blocking code before it reaches the browser. 
+Iframe-blocking code from 3rd party domains is no longer a limitation.
 
 
 VERY IMPORTANT TO UNDERSTAND THE FOLLOWING: 
