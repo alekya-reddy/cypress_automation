@@ -159,10 +159,6 @@ describe("VEX - Session group search", () => {
     })
     it("Session group filter by topic should search sessions by topics", () => {
         cy.visit(event.url)
-        landingPage.blocks.forEach((block) => {
-            consumption.vex.verifyLandingPageBlock(block)
-        })
-
         // In Group A block, search by topic filter
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
             cy.contains("Filter By Topic").click()
@@ -188,9 +184,6 @@ describe("VEX - Session group search", () => {
 
     it("Session group filter by topic and search should should work together", () => {
         cy.visit(event.url)
-        landingPage.blocks.forEach((block) => {
-            consumption.vex.verifyLandingPageBlock(block)
-        })
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
             cy.contains("Filter By Topic").click()
             cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
