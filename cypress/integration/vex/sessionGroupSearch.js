@@ -83,17 +83,20 @@ const landingPage = {
         {
             type: "Session Group",
             sessionGroup: sessionGroups.groupA.name,
-            enableSearch: true
+            enableSearch: true,
+            enableTopicFilter: true
         },
         {
             type: "Session Group",
             sessionGroup: sessionGroups.groupB.name,
-            enableSearch: true
+            enableSearch: true,
+            enableTopicFilter: false
         },
         {
             type: "Session Group",
             sessionGroup: sessionGroups.groupC.name,
-            enableSearch: false
+            enableSearch: false,
+            enableTopicFilter: true
         }
     ]
 }
@@ -152,6 +155,56 @@ describe("VEX - Session group search", () => {
             cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
             consumption.vex.searchSessionGroup("I don't exist anywhere")
             cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("not.exist")
+        })
+    })
+    it("Session group filter by topic should search sessions by topics", () => {
+        cy.visit(event.url)
+        // In Group A block, search by topic filter
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
+            cy.contains("Filter By Topic").click()
+            cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
+                // Confirm have correct option
+                cy.wrap(option).contains(sessions.sessionWithTopic.topics)
+                option[0].click()
+                // After click, dropdown should hold the text of the selected option
+                cy.contains("Topic: " + sessions.sessionWithTopic.topics).should("exist")
+            })
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")  
+        })
+        // Verify that filtering in one block does not affect content in a different blocks
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupB.name).within(() => {
+            cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
+        })
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupC.name).within(() => {
+            cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
+        })
+    })
+
+    it("Session group filter by topic and search should should work together", () => {
+        cy.visit(event.url)
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
+            cy.contains("Filter By Topic").click()
+            cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
+                option[0].click()
+            })
+            consumption.vex.searchSessionGroup(sessions.sessionWithTopic.topics)
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
+            // Verify that session group is empty when using topic filter and searching for name that doesn't exist
+            consumption.vex.searchSessionGroup("I don't exist anywhere")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("not.exist")
+        })
+        // Verify that filtering in one block does not affect content in a different blocks
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupB.name).within(() => {
+            cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
+        })
+        cy.contains(consumption.vex.sessionGroup, sessionGroups.groupC.name).within(() => {
+            cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
         })
     })
 })

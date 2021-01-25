@@ -29,6 +29,7 @@ export class VexCX extends CommonCX {
         this.vexFormTitle = ".pf-event-hero-form-title";
         this.vexFormDescription = ".pf-event-hero-form-description";
         this.supplementalTitle = ".pf-event-session-content > div:nth-child(1)";
+        this.filterByTopicValue= "#qa-virtual-topic-filter-topic > span";
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
@@ -169,6 +170,7 @@ export class VexCX extends CommonCX {
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
         const card = config.card
         const enableSearch = config.enableSearch
+        const enableTopicFilter = config.enableTopicFilter
 
         if(className && !sessionGroup){
             let locator = `.${className}`
@@ -272,6 +274,15 @@ export class VexCX extends CommonCX {
             } else {
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     cy.contains("button", "Search").should("not.exist")
+                })
+            }
+            if(enableTopicFilter){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("Filter By Topic").should("exist")
+                })
+            } else {
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("Filter By Topic").should("not.exist")
                 })
             }
         }
