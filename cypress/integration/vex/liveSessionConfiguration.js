@@ -260,6 +260,12 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.endTimeInput).should('not.exist')
         cy.get(authoring.vex.timeZonePicker).should('not.exist')
         cy.get(authoring.vex.liveTypePicker).should('not.exist')
+
+        // Should not be able to delete any added on-demand video if toggled to on-demand
+        authoring.vex.pickOnDemandVideo('Youtube - Used in Cypress automation for VEX testing')
+        cy.get(authoring.vex.saveButton).click()
+        cy.contains(authoring.vex.recordSavedMessage, {timeout: 20000}).should("exist")
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("not.exist")
         
         // If on-demand is toggled off and live is on, then should see the live configuration options 
         cy.get(authoring.vex.liveRadio).click()
@@ -286,13 +292,6 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.modal).within(()=>{
             cy.contains("h3", "Select Live Content Video").should('exist')
             cy.get(authoring.vex.cancelButton).click()
-        }) 
-
-        // Pressing 'Select on demand video' should open a different video picker
-        cy.get(authoring.vex.selectVideoButton).click()
-        cy.get(authoring.vex.modal).within(()=>{
-            cy.contains("h3", "Select On Demand Video").should('exist')
-            cy.get(authoring.vex.cancelButton).click()
         })
 
         // If live content type is zoom, should see zoom configuration options 
@@ -305,15 +304,41 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.applyPasswordRadio).should('exist')
         cy.contains('button', 'Select Live Video').should('not.exist')
 
+        // If zoom's 'apply password' option is selected, then should see zoom password input 
+        cy.get(authoring.vex.applyPasswordRadio).click()
+        cy.get(authoring.vex.noPasswordRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
+        cy.get(authoring.vex.zoomPWInput).should('exist')
+
         // If zoom's 'no password' option is selected, then should not see zoom password input 
         cy.get(authoring.vex.noPasswordRadio).click()
         cy.get(authoring.vex.applyPasswordRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
         cy.get(authoring.vex.zoomPWInput).should('not.exist')
 
-        // If zoom's 'apply password' option is selected, then should see zoom password input 
-        cy.get(authoring.vex.applyPasswordRadio).click()
-        cy.get(authoring.vex.noPasswordRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
-        cy.get(authoring.vex.zoomPWInput).should('exist')
+        // Save the current settings
+        cy.get(authoring.vex.saveButton).click()
+        cy.contains(authoring.vex.recordSavedMessage, {timeout: 20000}).should("exist")
+
+        // Once saved, the on-demand video should have option to delete it if session is of type "live"
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("exist").click()
+        cy.get(".ant-popover-buttons").within(()=>{
+            cy.contains('button', "Delete").click()
+        })
+        cy.contains("The on demand video was removed successfully.", {timeout: 20000}).should("exist")
+        cy.containsExact("div", 'Youtube - Used in Cypress automation for VEX testing').should("not.exist")
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("not.exist")
+
+        // Set the end date to the past so that this would, in theory, cause the session to fallback to on-demand in any exists.
+        // In our case, we deleted the on-demand so it should instead remain on zoom on consumption side
+        authoring.vex.configureSession({
+            name: sessions[2].name,
+            live: {
+                end: 'Jun 24, 2020 8:00pm'
+            }
+        })
+        cy.visit(sessions[2].url)
+        consumption.vex.fillStandardForm({email: "getoutofmyway@gmail.com"})
+        consumption.vex.expectZoom()
+        cy.go("back")
 
         // Sometimes bugs are found if we save a change on authoring and verify on consumption side
         // Whereas if we only verify on consumption side for a configuration on authoring that was saved long ago, the bug would not be revealed
