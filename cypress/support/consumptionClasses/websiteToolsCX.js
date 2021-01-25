@@ -1,6 +1,6 @@
 import { CommonCX } from "./CommonCX";
 
-export class websiteToolsCX extends CommonCX {
+export class WebsiteToolsCX extends CommonCX {
     constructor(env, org, tld, baseUrl){
         super(env, org, tld, baseUrl);
         this.spoof = {
