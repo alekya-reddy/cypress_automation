@@ -56,8 +56,8 @@ export const createAuthoringInstance = function(config = {}){
 
 export const createConsumptionInstance = function(config = {}){
     const env = config.env ? config.env : constants.testENV;
-    const org = config.org ? config.org : constants.orgs['automation'].name 
-    const tld = config.tld ? config.tld : false;
+    const org = config.org ? config.org : constants.orgs['automation'].name;
+    const tld = config.tld ? config.tld : "lookbookhq";
     const baseUrl = (()=>{
         if(config.baseUrl){
             return config.baseUrl

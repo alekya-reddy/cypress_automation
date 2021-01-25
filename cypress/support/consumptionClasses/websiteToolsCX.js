@@ -5,10 +5,13 @@ export class websiteToolsCX extends CommonCX {
         super(env, org, tld, baseUrl);
         this.spoof = {
             trendingByIndustry: (contents) => {this.spoofRecommendedContent("recommendationType=trending_by_industry", "trending_by_industry", contents)},
+            trendingByRegion: (contents) => {this.spoofRecommendedContent("recommendationType=trending_by_region", "trending_by_region", contents)},
+            trendingByAccount: (contents) => {this.spoofRecommendedContent("recommendationType=trending_by_account", "trending_by_account", contents)},
+            relatedContent: (contents) => {this.spoofRecommendedContent("recommendationType=yml", "recommended", contents)},
         };
     }
 
-    removeIframeBlockingCode(){
+    modifyIframeBlockingCode(){
         // This is needed when testing on consumption for website tools because iframe blocking code from 3rd party domains 
         // aren't handled by Cypress. Call this method before you visit any website tools consumption page
         const jukeboxUrlSubstring = "/jukebox/current"
