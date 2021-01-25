@@ -8,13 +8,17 @@ executors:
 workflows:
   build:
     jobs:
-      - cypress/run:
+      - hold:
           type: approval
+      - cypress/run:
+          requires:
+            - hold
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
       - cypress/run:
-          type: approval
+          requires:
+            - hold
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
