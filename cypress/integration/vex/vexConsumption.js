@@ -55,6 +55,16 @@ const sessions = [
         video: 'Wistia - Used in Cypress automation for VEX testing'
     },
     {
+        name: 'Embed Url Wistia',
+        contents: [],
+        visibility: 'Public',
+        slug: 'embed-url-wistia',
+        get url(){ return `${event.url}/${this.slug}`; },
+        description: 'Wistia embed description',
+        type: 'On Demand',
+        video: 'vexConsumption.js'
+    },
+    {
         name: 'Brightcove',
         contents: [],
         visibility: 'Public',
@@ -77,7 +87,7 @@ const sessions = [
         description: 'Private description',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'
-    }
+    },
 ]
 
 const contentSource = authoring.common.env.orgs['automation-vex'].resources
@@ -137,6 +147,9 @@ describe('VEX - Consumption', function(){
                     consumption.vex.expectVidyard()
                     break;
                 case 'Wistia':
+                    cy.get(consumption.vex.wistia.videoPlayer).should('exist')
+                    break;
+                case 'Embed Url Wistia':
                     cy.get(consumption.vex.wistia.videoPlayer).should('exist')
                     break;
                 case 'Brightcove':
