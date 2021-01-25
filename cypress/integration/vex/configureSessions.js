@@ -1,8 +1,8 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
-
 const event = 'configureSessions';
+const successfulDeletedMessage = "The on demand video was removed successfully.";
 
 const videos = [
     // We don't own any of these video. If any of them get deleted, find a replacement 
@@ -51,6 +51,27 @@ const session = {
     type: 'On Demand',
     video: videos[2].internalTitle,
     newVideo: videos[3].internalTitle
+}
+const session_live = {
+    name: "zoom",
+    newName: "zoom",
+    slug: "zoom",
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Zoom',
+        zoomNum: '111 111 111',
+        zoomAuth: 'No Password',
+    },
+    maxAttendees: "1",
+    stayOnPage: true,
+    video: videos[2].internalTitle
 }
 
 describe('VEX - Virtual Event', function() {
@@ -149,5 +170,33 @@ describe('VEX - Virtual Event', function() {
         for(let i = 1; i < contents.length ; i++){
             cy.containsExact(authoring.vex.supplementalContentCardTitle, contents[i]).should('exist');
         }
+    })
+    it('Verify that an on demand video can be deleted from a configured session when the session type is live', function() {
+        // Clean up - delete previously added event
+        authoring.common.login()
+        authoring.vex.deleteVirtualEvent(event)
+
+        // Set up: Add event, add session to it
+        authoring.vex.addVirtualEvent(event)
+        authoring.vex.goToEventConfig(event)
+        authoring.vex.addSession(session_live.name)
+        authoring.vex.goToSessionConfig(session_live.name)
+        // Configure the session
+        authoring.vex.configureSession(session_live);
+        // Add an on demand video and see that it can be deleted when the session Type is live
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("exist")
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").click()
+        cy.get(".ant-popover-buttons").within(()=>{
+            cy.contains('button', "Delete").click()
+        })
+        cy.contains(successfulDeletedMessage, {timeout: 20000}).should("exist")
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("not.exist")
+
+        //On Video cannot be deleted when the session Type is not live
+        cy.get(authoring.vex.onDemandRadio).click()
+        authoring.vex.pickOnDemandVideo(session_live.video);
+        cy.get(authoring.vex.saveButton).click()
+        cy.contains(authoring.vex.recordSavedMessage, {timeout: 20000}).should("exist")
+        cy.contains(authoring.vex.removeonDemandVideo,"Delete").should("not.exist")
     })
 })
