@@ -68,6 +68,7 @@ export class Vex extends Common {
         this.topicsTag = ".ant-select-selection-item";
         this.removeTopicTagButton = ".ant-select-selection-item-remove";
         this.removeButton = "button:contains('Remove')";
+        this.removeonDemandVideo='#remove-on-demand-video'
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
             headerTitleInput: "input[name='headerTitle']",
