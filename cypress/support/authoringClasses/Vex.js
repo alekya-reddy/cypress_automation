@@ -128,6 +128,7 @@ export class Vex extends Common {
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
             searchToggle: "input[name*='virtualEventEnableSearch']",
+            topicFilterToggle: "input[name*='virtualEventEnableTopicFilter']",
             sessionCardTitle: ".pf-event-session-card-title > div"
         };
         this.navigation = {
@@ -1293,6 +1294,7 @@ export class Vex extends Common {
         const className = config.className 
         const sessionGroup = config.sessionGroup
         const enableSearch = config.enableSearch
+        const enableTopicFilter = config.enableTopicFilter
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
@@ -1406,6 +1408,10 @@ export class Vex extends Common {
             cy.get(this.pages.searchToggle).click()
         }
 
+        if(enableTopicFilter){
+            cy.get(this.pages.topicFilterToggle).click()
+        }
+
         if(className){
             cy.get(this.pages.classNameInput).clear().type(className)
         }
@@ -1428,6 +1434,7 @@ export class Vex extends Common {
         const spacing = config.spacing // Padding in valid css units
         const card = config.card
         const enableSearch = config.enableSearch
+        const enableTopicFilter = config.enableTopicFilter
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -1523,6 +1530,15 @@ export class Vex extends Common {
             } else {
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     cy.contains("button", "Search").should("not.exist")
+                })
+            }
+            if(enableTopicFilter){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("Filter By Topic").should("exist")
+                })
+            } else {
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    cy.contains("Filter By Topic").should("not.exist")
                 })
             }
         }
