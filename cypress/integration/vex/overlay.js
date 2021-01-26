@@ -68,8 +68,8 @@ const landingPage = {
     ]
 }
 
-describe("Microsites - Overlay Tracks", () => {
-    it("Setup tracks and microsite if not already done", () => {
+describe("VEX - Overlay Tracks", () => {
+    it("Setup if not already done", () => {
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
@@ -87,10 +87,10 @@ describe("Microsites - Overlay Tracks", () => {
         })
     })
 
-    it("Visit the microsite on consumption and verify that the overlay script works", ()=>{
+    it("Visit VEX on consumption and verify that the overlay script works", ()=>{
         // Note: an Overlay track is viewing a track inside a modal on a webpage
         // You put the link and script down in the html of your webpage, and it should open the track in a modal
-        // This test verifies that you can do this on a microsite landing page
+        // This test verifies that you can do this on a vex landing page
         cy.visit(landingPage.url)
         landingPage.blocks.forEach((block) => {
             consumption.vex.verifyLandingPageBlock(block)
@@ -105,7 +105,7 @@ describe("Microsites - Overlay Tracks", () => {
             cy.get(consumption.target.flowSidebar).should("exist")
         })
 
-        // Verify that the microsite still exists on the page
+        // Verify that VEX landing page still exists on the page
         cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist")
 
         // Close the target track overlay and verify the recommend overlay
