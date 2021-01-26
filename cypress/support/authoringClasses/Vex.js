@@ -1302,6 +1302,7 @@ export class Vex extends Common {
         const card = config.card
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
+        cy.waitFor({element: this.pages.addBlockButton, to: "exist", wait: 10000})
         cy.get(this.pages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
 
         if(type == "html"){
