@@ -43,6 +43,11 @@ export class CommonCX {
             toggle: "#optIn"
         };
         this.ctaButton = "#qa-cta-button";
+        this.overlay = {
+            modal: "#lookbook-overlay-mask",
+            close: "#lookbook-overlay-close",
+            iframe: ".lookbook-overlay-content",
+        };
     }
 
     checkSessionCookie(wait){
