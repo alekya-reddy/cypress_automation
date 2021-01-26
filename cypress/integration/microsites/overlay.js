@@ -83,6 +83,9 @@ describe("Microsites - Overlay Tracks", () => {
     })
 
     it("Visit the microsite on consumption and verify that the overlay script works", ()=>{
+        // Note: an Overlay track is viewing a track inside a modal on a webpage
+        // You put the link and script down in the html of your webpage, and it should open the track in a modal
+        // This test verifies that you can do this on a microsite landing page
         cy.visit(landingPage.url)
         landingPage.blocks.forEach((block) => {
             consumption.microsites.verifyLandingPageBlock(block)
