@@ -3,13 +3,21 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
 const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
 
+const headerAppearance = {
+    appearance: "dynamicLogoFieldMerge.js",
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/animal-dog-pet-cute.jpg",
+    }
+}
+
 const microsite = {
     name: "dynamicLogoFieldMerge.js",
     slug: "dynamiclogofieldmerge-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    appearance: "dynamicLogoFieldMerge.js",
+    appearance: headerAppearance.appearance,
 }
 
 const landingPage = {
@@ -44,6 +52,8 @@ describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
+                authoring.configurations.addNewAppearance({name: headerAppearance.appearance})
+                authoring.configurations.configureHeaderAppearance(headerAppearance)
                 authoring.microsites.addMicrosite(microsite.name)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addLandingPages(landingPage.name)

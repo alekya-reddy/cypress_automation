@@ -8,7 +8,8 @@ const micrositeApp = {
     slug: 'micrositesappearence-js',
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
-    }
+    },
+    appearance: "micrositesAppearance.js"
 }
 
 const newAppearanceSetting = {
@@ -94,24 +95,17 @@ const navigation = {
 
 describe("Microsites - Appeararnace", () => {
     it("Set up microsites with tracks, landing page, navigation and microsite appearance if doesn't exist", ()=>{
-        // Add microsite if doesn't exist
         cy.request({url: micrositeApp.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
-                // setup
+                authoring.configurations.addNewAppearance(newAppearanceSetting)
                 authoring.microsites.addMicrosite(micrositeApp.name)
                 authoring.microsites.setup(micrositeApp)
                 authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
-                authoring.microsites.tabToLandingPages()
                 authoring.microsites.configureLandingPage(landingPage)
-                // Add navigation items of all types (Tracks, Landing Page)
                 Object.values(navigation).forEach((navItem) => {
-                   authoring.microsites.addNavItem(navItem)
-
-                // Add Microsite appearance settings if doesn't exist     
-                authoring.configurations.visit.appearances()
-                authoring.configurations.addNewAppearance(newAppearanceSetting)   
-                }) 
+                   authoring.microsites.addNavItem(navItem)   
+                })    
             }
         }) 
     }) 
@@ -119,13 +113,7 @@ describe("Microsites - Appeararnace", () => {
     it("Configure Appearance setting in microsites and appearence and verify consumption", ()=>{
         // configure appearence in microsite setup and verify 
         authoring.common.login()
-        cy.visit(authoring.microsites.pageUrl);
 
-        authoring.microsites.setup({
-            name: micrositeApp.name,
-            appearance: newAppearanceSetting.name
-        })
-        
         // Verify header navigation checkbox in appearence setting and also verify on consumption
         // Turn off and hide navigation header in the Appearences > Microsite settings
         authoring.configurations.configureMicrositesAppearance({
