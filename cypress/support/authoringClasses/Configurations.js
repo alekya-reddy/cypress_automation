@@ -51,9 +51,15 @@ export class Configurations extends Common {
             fontSizeSmall: "#fontSizeSmall",
             fontSizeMedium: "#fontSizeMedium",
             fontSizeLarge: "#fontSizeLarge",
+            appearanceName: "#name",
+            primaryColor: "#primaryColor",
+            titleFont: "#titleOnPrimaryColor",
+            bodyTextFont: "#bodyOnWhite",
+            bodyTextColor: "#bodyOnWhite > span[id='color']",
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
+
             vex: {
                 backgroundColor: "#backgroundColor",
                 headerTitleSettings: "#headerTitleAppearance",
@@ -65,6 +71,9 @@ export class Configurations extends Common {
                 activeSettings: "#activeItemAppearance",
                 activeFontWeight: "#activeItemFontWeight",
                 activeFontColor: "#activeItemColor",
+                hideNavigation: "div[data-qa-hook='checkbox']"
+            },
+            microsites: { 
                 hideNavigation: "div[data-qa-hook='checkbox']"
             }
         };
@@ -346,10 +355,59 @@ export class Configurations extends Common {
         })
     }
 
+    clickAddAppearance(){
+        cy.get(this.appearances.sidebar).within(() => {
+            cy.containsExact("div", '+ Add Appearance', {timeout: 10000}).click()
+        })
+    }
+
     clickAppearanceTab(tab){
         cy.get(this.appearances.secondaryNav).within(() => {
             cy.containsExact("a", tab, {timeout: 10000}).click()
         })
+    } 
+
+    addNewAppearance(options){
+        const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor} = options
+
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        
+        cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
+            this.clickAddAppearance()  
+
+            if(name){
+                cy.contains(this.modal, "Add Appearance").within(()=>{
+                    cy.get(this.appearances.appearanceName).clear().type(name)
+                })
+            }    
+        
+            if(primaryColor){
+                const { r, g, b, a } = primaryColor
+                this.pickColor({button: this.appearances.primaryColor, r: r, g: g, b: b, a: a})
+            }
+        
+            if(titleAppearanceFont){
+                cy.get(this.appearances.titleFont).within(() => {
+                    cy.get(this.dropdown.input).type(titleAppearanceFont + "\n", {force: true})
+                })
+            }
+            
+            if(bodyTextFont){
+                cy.get(this.appearances.bodyTextFont).within(() => {
+                    cy.get(this.dropdown.input).type(bodyTextFont + "\n", {force: true})
+                })
+            }
+    
+            if(bobyTextcolor){
+                const { r, g, b, a } = bodyTextFont
+                this.pickColor({button: this.appearances.bodyTextColor, r: r, g: g, b: b, a: a})
+            }
+            
+            cy.contains(this.modal, "Add Appearance").within(()=>{
+                cy.contains("button", "Add Appearance").click()
+            })
+
+        })  
     }
 
     configureHeaderAppearance(options){
@@ -586,5 +644,41 @@ export class Configurations extends Common {
                 expect(checkboxClass).to.include(checkOrUnchecked)
             })
         }
+    } 
+
+    configureMicrositesAppearance(options){
+        const {appearance, hideNavigation, verify} = options
+    
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        this.clickAppearance(appearance)
+        this.clickAppearanceTab("Microsite Builder")
+
+        if(hideNavigation == true || hideNavigation == false){
+            cy.get(this.appearances.microsites.hideNavigation).invoke("attr", "class").then(checkboxClass => {
+                if(hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")){
+                    cy.get(this.appearances.microsites.hideNavigation).click()
+                }
+            })
+        }
+
+        cy.contains("button", "Save Microsite Builder Settings").click()
+
+        if(verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+            this.verifyMicrositeAppearance(options)
+        }
+    
+    } 
+
+    verifyMicrositeAppearance(options){
+        const {hideNavigation} = options
+
+        if(hideNavigation == true || hideNavigation == false){
+            cy.get(this.appearances.microsites.hideNavigation).invoke("attr", "class").then(checkboxClass => {
+                const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
+                expect(checkboxClass).to.include(checkOrUnchecked)
+            })
+        }
     }
 }
+

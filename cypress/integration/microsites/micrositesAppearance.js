@@ -1,0 +1,180 @@
+import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
+
+const authoring = createAuthoringInstance({org: 'automation-microsites', tld: 'lookbookhq'}); 
+const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
+
+const micrositeApp = {
+    name: 'micrositesAppearence.js',
+    slug: 'micrositesappearence-js',
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
+const newAppearanceSetting = {
+    name:"micrositesAppearance.js", 
+    primaryColor: {r: 106, g: 171, b: 233, a: 100},
+    titleAppearanceFont: "Overpass",
+    titleAppearancecolor: {r: 255, g: 255, b: 255, a: 100},
+    bodyTextFont: "Overpass",
+    bobyTextcolor: {r: 180, g: 74, b: 13, a: 100}
+}
+
+const colorConfigToCSS = (colorConfig) => {
+    const { r, g, b, a } = colorConfig
+    const CSS = a == 100 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
+    return CSS;
+}
+
+const target = {
+    name: "Target Common Resource",
+    slug: "target-common-resource",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Website Common Resource"],
+    firtContentSlug: "openai"
+}
+
+const recommend = {
+    name: "Recommend Common Resource",
+    slug: "recommend-common-resource",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Website Common Resource"],
+    firtContentSlug: "openai"
+}
+
+const landingPage = {
+    name: "landing Page Home Page",
+    slug: "landing-page-home-pa",
+    get url(){
+        return `${microsite.url}/${this.slug}`
+    },
+    blocks: [
+        {
+            id: "Target Block",
+            type: "track",
+            track: target.name,
+            expectContents: target.contents,
+        },
+        {
+            id: "HTML block",
+            type: "HTML",
+            content: `<h1>Landing Page Appearence</h1>`,
+            checkContent: {
+                text: ["Landing Page Appearence"],
+                locators: ["h1"]
+            }
+        }
+    ]
+}    
+
+const navigation = {
+    landingPage: {
+        label: "landingPage",
+        type: "Landing Page",
+        source: landingPage.name,
+        reference: landingPage
+    },
+    target: {
+        label: "targetTrack",
+        type: "Track",
+        source: target.name,
+        reference: target
+    },
+    recommend: {
+        label: "recTrack",
+        type: "Track",
+        source: recommend.name,
+        reference: recommend
+    }
+}    
+
+describe("Microsites - Appeararnace", () => {
+    it("Set up microsites with tracks, landing page, navigation and microsite appearance if doesn't exist", ()=>{
+        // Add microsite if doesn't exist
+        cy.request({url: micrositeApp.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){
+                authoring.common.login()
+                // setup
+                authoring.microsites.addMicrosite(micrositeApp.name)
+                authoring.microsites.setup(micrositeApp)
+                authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
+                authoring.microsites.tabToLandingPages()
+                authoring.microsites.configureLandingPage(landingPage)
+                // Add navigation items of all types (Tracks, Landing Page)
+                Object.values(navigation).forEach((navItem) => {
+                   authoring.microsites.addNavItem(navItem)
+
+                // Add Microsite appearance settings if doesn't exist     
+                authoring.configurations.visit.appearances()
+                authoring.configurations.addNewAppearance(newAppearanceSetting)   
+                }) 
+            }
+        }) 
+    }) 
+
+    it("Configure Appearance setting in microsites and appearence and verify consumption", ()=>{
+        // configure appearence in microsite setup and verify 
+        authoring.common.login()
+        cy.visit(authoring.microsites.pageUrl);
+
+        authoring.microsites.setup({
+            name: micrositeApp.name,
+            appearance: newAppearanceSetting.name
+        })
+        
+        // Verify header navigation checkbox in appearence setting and also verify on consumption
+        // Turn off and hide navigation header in the Appearences > Microsite settings
+        authoring.configurations.configureMicrositesAppearance({
+            appearance: "micrositesAppearance.js",
+            hideNavigation: true
+        })
+        // Verify on consumption that navigation header no longer exists
+        cy.visit(micrositeApp.url)
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("not.exist")
+        cy.visit(`${micrositeApp.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("not.exist")
+        cy.visit(`${micrositeApp.url}/${navigation.recommend.reference.slug}/${navigation.recommend.reference.firtContentSlug}`)
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("not.exist")
+          
+        // Turn on and show navigation header in the Appearences > Microsite settings
+        authoring.configurations.visit.appearances()
+        authoring.configurations.configureMicrositesAppearance({
+            appearance: "micrositesAppearance.js",
+            hideNavigation: false
+        }) 
+        // verify on consumption that navigation header appears on top 
+        cy.visit(micrositeApp.url)
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).click()
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.recommend.label).click()
+        cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
+       
+        //  Verify Header, Tracks and landing page appearence are inherited from microsite appearences 
+        cy.visit(micrositeApp.url) 
+        
+        // Check the header appearance settings 
+        cy.get(consumption.microsites.navigation.header).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor)).within(()=>{  
+            cy.contains('a', navigation.landingPage.label).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
+            cy.contains('a', navigation.target.label).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
+            cy.contains('a', navigation.recommend.label).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
+        }) 
+         
+        //go to target track and verify appearance setting 
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).click()
+        cy.get(consumption.target.flowActiveItem).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.primaryColor))        
+        cy.get(consumption.target.flowHeaderShare).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.primaryColor))
+
+        //go to Reccomand track and verify appearance setting 
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.recommend.label).click()
+        cy.get(consumption.recommend.sidebarTitle).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor)) 
+        cy.get(consumption.recommend.sidebarBackground).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor))             
+    })    
+
+})       
+
+      
