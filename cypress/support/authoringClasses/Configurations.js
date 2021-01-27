@@ -56,10 +56,10 @@ export class Configurations extends Common {
             titleFont: "#titleOnPrimaryColor",
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
+            imagePicker: "i[title='Select a thumbnail']",
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
-
             vex: {
                 backgroundColor: "#backgroundColor",
                 headerTitleSettings: "#headerTitleAppearance",
@@ -351,7 +351,7 @@ export class Configurations extends Common {
     /*********************************************************************************/
     clickAppearance(appearance){
         cy.get(this.appearances.sidebar).within(() => {
-            cy.containsExact("a", appearance, {timeout: 10000}).click()
+            cy.containsExact("a", appearance, {timeout: 10000}).should("exist").click()
         })
     }
 
@@ -368,12 +368,13 @@ export class Configurations extends Common {
     } 
 
     addNewAppearance(options){
-        const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor} = options
+        const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor, verify} = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
         
         cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
-            this.clickAddAppearance()  
+            this.clickAddAppearance() 
 
             if(name){
                 cy.contains(this.modal, "Add Appearance").within(()=>{
@@ -407,11 +408,22 @@ export class Configurations extends Common {
                 cy.contains("button", "Add Appearance").click()
             })
 
+            if (verify !== false) {
+                cy.waitFor({element: this.modal, to: "not.exist"})
+                cy.get(this.appearances.sidebar).within(() => {
+                    cy.containsExact("div", name, {timeout: 5000}).should("exist")
+                })
+            }
         })  
     }
 
     configureHeaderAppearance(options){
-        const { appearance, dynamicLogo, verify } = options
+        const { 
+            appearance, 
+            dynamicLogo,
+            thumbnail,
+            verify 
+        } = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
@@ -420,6 +432,11 @@ export class Configurations extends Common {
         if (dynamicLogo) {
             // dynamicLogo must either be "on" or "off"
             this.toggle(this.appearances.header.dynamicLogo, dynamicLogo)
+        }
+
+        if (thumbnail) {
+            cy.get(this.appearances.imagePicker).click()
+            this.pickThumbnail(thumbnail)
         }
 
         cy.contains("button", "Save Header Settings").click()
