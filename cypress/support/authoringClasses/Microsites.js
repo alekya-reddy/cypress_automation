@@ -488,7 +488,7 @@ export class Microsites extends Common {
 
         if(content){
             cy.containsExact("div", "HTML Content").click() // Slides open the html content area
-            cy.get("textarea").clear().type(content)
+            cy.get("textarea").clear().type(content, {parseSpecialCharSequences: false})
             cy.containsExact("span", "HTML Content").click() // Slides shut the html content area
         }
 

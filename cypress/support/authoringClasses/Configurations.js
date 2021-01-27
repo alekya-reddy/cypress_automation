@@ -56,6 +56,10 @@ export class Configurations extends Common {
             titleFont: "#titleOnPrimaryColor",
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
+            header: {
+                dynamicLogo: "div[data-qa-hook='dynamicLogo']",
+            },
+
             vex: {
                 backgroundColor: "#backgroundColor",
                 headerTitleSettings: "#headerTitleAppearance",
@@ -404,6 +408,25 @@ export class Configurations extends Common {
             })
 
         })  
+    }
+
+    configureHeaderAppearance(options){
+        const { appearance, dynamicLogo, verify } = options
+
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        this.clickAppearance(appearance)
+        this.clickAppearanceTab("Header")
+
+        if (dynamicLogo) {
+            // dynamicLogo must either be "on" or "off"
+            this.toggle(this.appearances.header.dynamicLogo, dynamicLogo)
+        }
+
+        cy.contains("button", "Save Header Settings").click()
+
+        if (verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        }
     }
 
     configureVEXAppearance(options){
