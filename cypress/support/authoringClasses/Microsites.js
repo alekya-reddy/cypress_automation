@@ -126,8 +126,6 @@ export class Microsites extends Common {
                 cy.get(this.setupPage.appearanceInput).clear({force: true}).type(appearance +'\n', {force: true})   
             })
             cy.get(`span[title='${appearance}']`).should("exist")
-            cy.contains('button:visible', "Save").click()
-            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
         }
 
         if(externalCode){

@@ -403,7 +403,7 @@ export class Configurations extends Common {
                 cy.contains("button", "Add Appearance").click()
             })
 
-            })  
+        })  
     }
 
     configureVEXAppearance(options){

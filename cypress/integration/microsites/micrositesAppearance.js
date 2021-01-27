@@ -107,13 +107,13 @@ describe("Microsites - Appeararnace", () => {
                 // Add navigation items of all types (Tracks, Landing Page)
                 Object.values(navigation).forEach((navItem) => {
                    authoring.microsites.addNavItem(navItem)
+
+                // Add Microsite appearance settings if doesn't exist     
+                authoring.configurations.visit.appearances()
+                authoring.configurations.addNewAppearance(newAppearanceSetting)   
                 }) 
             }
         }) 
-        // Add Microsite appearance settings if doesn't exist 
-        authoring.common.login()
-        authoring.configurations.visit.appearances()
-        authoring.configurations.addNewAppearance(newAppearanceSetting)
     }) 
 
     it("Configure Appearance setting in microsites and appearence and verify consumption", ()=>{
@@ -121,7 +121,6 @@ describe("Microsites - Appeararnace", () => {
         authoring.common.login()
         cy.visit(authoring.microsites.pageUrl);
 
-        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
         authoring.microsites.setup({
             name: micrositeApp.name,
             appearance: newAppearanceSetting.name
@@ -129,7 +128,6 @@ describe("Microsites - Appeararnace", () => {
         
         // Verify header navigation checkbox in appearence setting and also verify on consumption
         // Turn off and hide navigation header in the Appearences > Microsite settings
-        authoring.configurations.visit.appearances()
         authoring.configurations.configureMicrositesAppearance({
             appearance: "micrositesAppearance.js",
             hideNavigation: true
