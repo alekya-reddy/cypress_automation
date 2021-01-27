@@ -13,6 +13,7 @@ export class Microsites extends Common {
         this.setupPage = {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
+            appearanceInput: "input[class='ant-select-selection-search-input']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             accessProtectionGroup: ".ant-select-selection-item",
             removeAccessProtectionGroup: ".ant-select-selection-item-remove"
@@ -107,7 +108,8 @@ export class Microsites extends Common {
     }
 
     setup(options){
-        const { name, slug, externalCode, newName, cookieConsent, accessProtection, verify} = options
+
+        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -117,6 +119,15 @@ export class Microsites extends Common {
 
         if(slug){
             cy.get(this.setupPage.slugInput).clear().type(slug)
+        }
+        
+        if(appearance){
+            cy.contains(this.antRow,'Appearance').within(()=>{
+                cy.get(this.setupPage.appearanceInput).clear({force: true}).type(appearance +'\n', {force: true})   
+            })
+            cy.get(`span[title='${appearance}']`).should("exist")
+            cy.contains('button:visible', "Save").click()
+            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
         }
 
         if(externalCode){
