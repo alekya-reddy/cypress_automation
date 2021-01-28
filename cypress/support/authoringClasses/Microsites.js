@@ -449,6 +449,37 @@ export class Microsites extends Common {
             })
         })
     }
+    configureFilter(filterName, filterSettings){
+        const { enableToggle, overrideLabel , textColor, backgroundColor } = filterSettings
+        cy.containsExact("div", "Filters Configuration").click()
+        cy.containsExact("span", filterName).click()
+        if(enableToggle){
+            cy.get("input[name*='.enable']").click()
+        }
+        if(overrideLabel){
+            cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
+        }
+        if(textColor){
+            this.pickColor2(textColor)
+        }
+        if(backgroundColor){
+            this.pickColor2(backgroundColor)
+        }
+        cy.get("span:contains('" + filterName + "')").eq(1).click()
+        cy.containsExact("span", "Filters Configuration").click()
+    }
+
+    verifyFilterConfiguration(filterName, filterSettings){
+        const { enableToggle, overrideLabel } = filterSettings
+            if(enableToggle){
+                if(overrideLabel){
+                    cy.containsExact("option", overrideLabel).should("exist")
+                }
+                else{
+                    cy.containsExact("option", filterName).should("exist")
+                }
+            }
+    }
 
     addAdvancedBlock(config){
         const type = config.type.toLowerCase()
@@ -560,118 +591,22 @@ export class Microsites extends Common {
             cy.containsExact("span", "Spacing").click()
         }
         if(topicFilter){
-            const { enableToggle, overrideLabel, textColor, backgroundColor } = topicFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Topic Filter").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Topic Filter')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Topic Filter", topicFilter)
         }
         if(contentTypeFilter){
-            const { enableToggle, overrideLabel , textColor, backgroundColor } = contentTypeFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Content Type").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Content Type')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Content Type", contentTypeFilter)
         }
         if(funnelStageFilter){
-            const { enableToggle, overrideLabel, textColor, backgroundColor } = funnelStageFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Funnel Stage").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Funnel Stage')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Funnel Stage", funnelStageFilter)
         }
         if(industryFilter){
-            const { enableToggle, overrideLabel, textColor, backgroundColor } = industryFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Industry").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Industry')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Industry", industryFilter)
         }
         if(personaFilter){
-            const { enableToggle, overrideLabel, textColor, backgroundColor } = personaFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Persona").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Persona')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Persona", personaFilter)
         }
         if(businessUnitFilter){
-            const { enableToggle, overrideLabel, textColor, backgroundColor } = businessUnitFilter
-            cy.containsExact("div", "Filters Configuration").click()
-            cy.containsExact("span", "Business Unit").click()
-            if(enableToggle){
-                cy.get("input[name*='.enable']").click()
-            }
-            if(overrideLabel){
-                cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
-            }
-            if(textColor){
-                this.pickColor2(textColor)
-            }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
-            }
-            cy.get("span:contains('Business Unit')").eq(1).click()
-            cy.containsExact("span", "Filters Configuration").click()
+            this.configureFilter("Business Unit", businessUnitFilter)
         }
         if(card){
             const { color, textAlign, fontSize } = card
@@ -807,84 +742,26 @@ export class Microsites extends Common {
             if(spacing){
                 cy.contains(blockLocator, trackName).should("have.css", "padding", spacing)
             }
-            if(topicFilter){
-                const { enableToggle, overrideLabel } = topicFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Topic Filter").should("exist")
-                        }
-                    }
-                })
-            }
-            if(contentTypeFilter){
-                const { enableToggle, overrideLabel } = contentTypeFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Content Type").should("exist")
-                        }
-                    }
-                })
-            }
-            if(funnelStageFilter){
-                const { enableToggle, overrideLabel } = funnelStageFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Funnel Stage").should("exist")
-                        }
-                    }
-                })
-            }
-            if(industryFilter){
-                const { enableToggle, overrideLabel } = industryFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Industry").should("exist")
-                        }
-                    }
-                })
-            }
-            if(personaFilter){
-                const { enableToggle, overrideLabel } = personaFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Persona").should("exist")
-                        }
-                    }
-                })
-            }
-            if(businessUnitFilter){
-                const { enableToggle, overrideLabel } = businessUnitFilter
-                cy.contains(blockLocator, trackName).within(() => {
-                    if(enableToggle){
-                        if(overrideLabel){
-                            cy.containsExact("option", overrideLabel).should("exist")
-                        }
-                        else{
-                            cy.containsExact("option", "Business Unit").should("exist")
-                        }
-                    }
-                })
-            }
+            cy.contains(blockLocator, trackName).within(() => {
+                if(topicFilter){
+                    this.verifyFilterConfiguration("Topic Filter", topicFilter)
+                }
+                if(contentTypeFilter){
+                    this.verifyFilterConfiguration("Content Type", contentTypeFilter)
+                }
+                if(funnelStageFilter){
+                    this.verifyFilterConfiguration("Funnel Stage", funnelStageFilter)
+                }
+                if(industryFilter){
+                    this.verifyFilterConfiguration("Industry", industryFilter)
+                }
+                if(personaFilter){
+                    this.verifyFilterConfiguration("Persona", personaFilter)
+                }
+                if(businessUnitFilter){
+                    this.verifyFilterConfiguration("Business Unit", businessUnitFilter)
+                }
+            })
             if(card){
                 const { color, textAlign, fontSize } = card
                 cy.contains(blockLocator, trackName).within(() => {

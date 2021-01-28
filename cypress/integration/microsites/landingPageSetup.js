@@ -18,7 +18,7 @@ const filtersContent = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    contents: ["Canada"]
+    contents: ["Pie"]
 }
 
 const recommend = {
@@ -123,8 +123,8 @@ const landingPage = {
             },
             searchConfiguration: {
                 enableToggle: true,
-                textColor: {r: "87", g: "255", b: "78"},
-                backgroundColor: {r: "43", g: "91", b: "200"},
+                textColor: {r: "87", g: "255", b: "78", position: 0},
+                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
             }
         },
         {

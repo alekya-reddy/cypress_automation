@@ -102,13 +102,12 @@ describe("Microsites - Search and Filter Content", () => {
                 authoring.microsites.addMicrosite(microsite.name)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({target: target.name})
-                authoring.microsites.tabToLandingPages()
                 authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
 
                 cy.visit(microsite.url)
                 landingPage.blocks.forEach((block) => {
-                consumption.microsites.verifyLandingPageBlock(block)
+                    consumption.microsites.verifyLandingPageBlock(block)
                 })
             }
         })
