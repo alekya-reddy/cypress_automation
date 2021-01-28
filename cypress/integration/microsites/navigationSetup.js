@@ -34,6 +34,7 @@ const recommend = {
 const landingPage1 = {
     name: "Main Page",
     slug: "main-page",
+    visibility: 'Public',
     get url(){
         return `${microsite.url}/${this.slug}`
     },
@@ -50,6 +51,7 @@ const landingPage1 = {
 const landingPage2 = {
     name: "Other Page",
     slug: "other-page",
+    visibility: 'Public',
     get url(){
         return `${microsite.url}/${this.slug}`
     }
@@ -115,6 +117,7 @@ describe("Microsites - Navigation setup", () => {
         authoring.microsites.addLandingPages(landingPage1.name)
         authoring.microsites.configureLandingPage(landingPage1)
         authoring.microsites.addLandingPages(landingPage2.name)
+        authoring.microsites.editLandingPage(landingPage2)
 
         // Add navigation items of all types (Track, Landing Page, Link)
         Object.values(navigation).forEach((navItem) => {

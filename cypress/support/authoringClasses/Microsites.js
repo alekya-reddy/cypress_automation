@@ -39,7 +39,9 @@ export class Microsites extends Common {
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             titleOverrideInput: "input[name*='trackTitleOverride']",
             spacingInput: "input[name*='spacing.padding']",
-            micrositeCardTitle: ".pf-event-session-card-title > div"
+            micrositeCardTitle: ".pf-event-session-card-title > div",
+            privateRadio: "input[value='private']",
+            publicRadio: "input[value='public']",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -418,6 +420,7 @@ export class Microsites extends Common {
         const name = config.name
         const newName = config.newName
         const slug = config.slug
+        const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const verify = config.verify 
 
         this.tabToLandingPages()
@@ -427,6 +430,11 @@ export class Microsites extends Common {
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(()=>{
             if(newName){
                 cy.get(this.landingPages.nameInput).clear().type(newName)
+            }
+            if (visibility == 'public') {
+                cy.get(this.landingPages.publicRadio).click()
+            } else if (visibility == 'private') {
+                cy.get(this.landingPages.privateRadio).click()
             }
             if(slug){
                 cy.get(this.landingPages.slugInput).clear().type(slug)
@@ -438,6 +446,13 @@ export class Microsites extends Common {
             cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
             if(newName){ 
                 cy.containsExact(this.table.antCell, checkName).should('exist') 
+            }
+            if(visibility == 'public'){
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Public')").should('exist')
+            } else if(visibility == 'private'){
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
+                cy.containsExact(this.antCell, checkName).siblings("td:contains('Private')").should('exist')
             }
             if(slug){
                 cy.containsExact(this.table.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')

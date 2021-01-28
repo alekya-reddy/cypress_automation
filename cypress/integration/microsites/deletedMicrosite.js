@@ -13,6 +13,7 @@ const microsite = {
 const landingPage = {
     name: "Delete me",
     slug: "delete-me",
+    visibility: 'Public',
     get url(){
         return `${microsite.url}/${this.slug}`
     }
@@ -27,6 +28,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         authoring.microsites.addMicrosite(microsite.name)
         authoring.microsites.setup(microsite)
         authoring.microsites.addLandingPages(landingPage.name)
+        authoring.microsites.editLandingPage(landingPage)
 
         // Verify urls return a good response
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{

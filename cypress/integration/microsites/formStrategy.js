@@ -60,6 +60,7 @@ const landingPage = {
     get url(){
         return `${microsite.url}/${this.slug}`
     },
+    visibility: 'Public',
     blocks: [
         {
             type: "track",
