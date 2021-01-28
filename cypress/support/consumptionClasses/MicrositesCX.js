@@ -6,6 +6,14 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
+        this.topicFilterLocator = "#dropdowntopics"
+        this.contentTypeFilterLocator = '#dropdowncontentTypeName'
+        this.funnelStageFilterLocator = '#dropdownfunnelStages'
+        this.industryFilterLocator = '#dropdownindustries'
+        this.personaFilterLocator = '#dropdownpersonas'
+        this.businessUnitFilterLocator = '#dropdownbusinessUnits'
+        this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.micrositeCardTitle = "div[class^='pf-microsite-card-title']"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -33,7 +41,14 @@ export class MicrositesCX extends CommonCX {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+        const topicFilter = config.topicFilter
+        const contentTypeFilter = config.contentTypeFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
         const card = config.card
+        const searchConfiguration = config.searchConfiguration
 
         if(className && !track){
             let locator = `.${className}`
@@ -126,6 +141,112 @@ export class MicrositesCX extends CommonCX {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
+
         }
+        if(topicFilter) {
+            const { overrideLabel, textColor, backgroundColor } = topicFilter
+            if(overrideLabel){
+                cy.containsExact(this.topicFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.topicFilterLocator + " > span:nth-child(1)", "Topic Filter").should("exist")
+            }
+            if(textColor){
+                cy.get(this.topicFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.topicFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(contentTypeFilter) {
+            const { overrideLabel, textColor, backgroundColor } = contentTypeFilter
+            if(overrideLabel){
+                cy.containsExact(this.contentTypeFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.contentTypeFilterLocator + " > span:nth-child(1)", "Content Type").should("exist")
+            }
+            if(textColor){
+                cy.get(this.contentTypeFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.contentTypeFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(funnelStageFilter) {
+            const { overrideLabel, textColor, backgroundColor } = funnelStageFilter
+            if(overrideLabel){
+                cy.containsExact(this.funnelStageFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.funnelStageFilterLocator + " > span:nth-child(1)", "Funnel Stage").should("exist")
+            }
+            if(textColor){
+                cy.get(this.funnelStageFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.funnelStageFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(industryFilter) {
+            const { overrideLabel, textColor, backgroundColor } = industryFilter
+            if(overrideLabel){
+                cy.containsExact(this.industryFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.industryFilterLocator + " > span:nth-child(1)", "Industry").should("exist")
+            }
+            if(textColor){
+                cy.get(this.industryFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.industryFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(personaFilter) {
+            const { overrideLabel, textColor, backgroundColor } = personaFilter
+            if(overrideLabel){
+                cy.containsExact(this.personaFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.personaFilterLocator + " > span:nth-child(1)", "Persona").should("exist")
+            }
+            if(textColor){
+                cy.get(this.personaFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.personaFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(businessUnitFilter) {
+            const { overrideLabel, textColor, backgroundColor } = businessUnitFilter
+            if(overrideLabel){
+                cy.containsExact(this.businessUnitFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            }
+            else{
+                cy.containsExact(this.businessUnitFilterLocator + " > span:nth-child(1)", "Business Unit").should("exist")
+            }
+            if(textColor){
+                cy.get(this.businessUnitFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            }
+            if(backgroundColor){
+                cy.get(this.businessUnitFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+        if(searchConfiguration) {
+            const { textColor, backgroundColor } = searchConfiguration
+            // Text color doesn't work yet
+            // if(textColor){
+            //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            // }
+            if(backgroundColor){
+                cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+    }
+    searchMicrositeCard(searchTerm){
+        // Must be within session group block before using this function
+        cy.get("input").clear().type(searchTerm)
+        cy.contains("button", "Search").click()
     }
 }
