@@ -44,6 +44,7 @@ const landingPage = {
     get url(){
         return `${microsite.url}/${this.slug}`
     },
+    visibility: 'Public',
     setHome: true,
     blocks: [
         {
@@ -51,7 +52,6 @@ const landingPage = {
             type: "track",
             track: target.name,
             expectContents: target.contents
-            
         },
         {
             id: "Filters Block",
@@ -175,7 +175,7 @@ describe("Microsites - Landing page setup", () => {
         authoring.microsites.tabToLandingPages()
         cy.containsExact(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 10000}).should("exist")
         .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(4).should("contain", "Home Page").should("not.contain", "Set as Home Page")
+            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
             cy.contains("button", "Remove").should("not.exist") // Any landing page that is set to home page cannot be removed 
         })
 
@@ -186,14 +186,14 @@ describe("Microsites - Landing page setup", () => {
         // Verify that the default landing page is no longer home page 
         cy.containsExact(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 10000}).should("exist")
         .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(4).should("contain", "Set as Home Page")
+            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Set as Home Page")
             cy.contains("button", "Remove").should("exist") 
         })
 
         // And verify that the new landing page is now the home page
         cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, {timeout: 10000}).should("exist")
         .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(4).should("contain", "Home Page").should("not.contain", "Set as Home Page")
+            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
             cy.contains("button", "Remove").should("not.exist")
         })
 
@@ -209,24 +209,54 @@ describe("Microsites - Landing page setup", () => {
             consumption.microsites.verifyLandingPageBlock(block)
         })
 
-        // Return to authoring and test various input validations
+        // Back in authoring, you should not be able to set the home page to private
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.editLandingPage({
+            name: landingPage.name,
+            visibility: "private",
+            verify: false
+        })
+        cy.contains("Home page visibility cannot be set to private").should("exist")
+        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => {
+            cy.contains("button", "Cancel").click()
+        })
+        authoring.common.waitForAntModal({title: "Edit Landing Page"})
+
+        // Set the main page to 'not-home-page' by setting default page to home page, and verify you can now set main page to private
+        authoring.microsites.setToHomePage(defaultLandingPage.name)
+        authoring.microsites.editLandingPage({
+            name: landingPage.name,
+            visibility: "private"
+        })
+
+        // A landing page that's set to private cannot be set as a home page and should be removable
+        cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, {timeout: 10000}).should("exist")
+        .parents(authoring.microsites.antTable.row).within(() => {
+            cy.get(authoring.microsites.antTable.cell).eq(5).should("not.contain", "Set as Home Page")
+            cy.contains("button", "Remove").should("exist") 
+        })
+
+        // Verify that the private landing page is not accessible on consumption side
+        cy.request({url: landingPage.url, failOnStatusCode: false}).then((response)=>{
+            expect(response.status).to.eq(404)
+        })
+
+        // Test various input validations
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: landingPage.slug, verify: false})
         cy.contains(authoring.microsites.messages.duplicateEntry3).should("exist")
-        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: "haha&^%&^", verify: false})
         cy.contains("Only alphanumeric characters, hyphens and underscores are allowed").should("exist")
-        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: landingPage.name, verify: false})
         cy.contains(authoring.microsites.messages.duplicateEntry2).should("exist")
-        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
         authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: "%^&*(&^", verify: false})
         cy.contains("Name must contain letters or numbers").should("exist")
-        cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
+        cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
 
         // Verify that a landing page not set as home page can be removed 
-        authoring.microsites.setToHomePage(defaultLandingPage.name)
         authoring.microsites.removeLandingPages(landingPage.name)
     })
 })
