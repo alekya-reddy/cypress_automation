@@ -26,6 +26,7 @@ const landingPage = {
     get url(){
         return `${microsite.url}/${this.slug}`
     },
+    visibility: 'Public',
     setHome: true,
     blocks: [
         {

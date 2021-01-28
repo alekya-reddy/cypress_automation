@@ -53,6 +53,7 @@ const landingPage = {
     get url(){
         return `${microsite.url}/${this.slug}`
     },
+    visibility: 'Public',
     blocks: [
         {
             id: "Target Block",
