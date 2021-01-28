@@ -12,6 +12,15 @@ const target = {
     contents: ["Website Common Resource"]
 }
 
+const filtersContent = {
+    name: "Authoring SearchAndFilters",
+    slug: "search-and-filters-authoring",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Pie"]
+}
+
 const recommend = {
     name: "Recommend Common Resource",
     slug: "recommend-common-resource",
@@ -41,7 +50,51 @@ const landingPage = {
             id: "Target Block",
             type: "track",
             track: target.name,
-            expectContents: target.contents,
+            expectContents: target.contents
+            
+        },
+        {
+            id: "Filters Block",
+            type: "track",
+            track: filtersContent.name,
+            expectContents: filtersContent.contents,
+            searchConfiguration: {
+                enableToggle: true,
+                textColor: {r: "87", g: "255", b: "78", position: 0},
+                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+            },
+            topicFilter: {
+                enableToggle: true,
+                overrideLabel: 'Filter By Topics Here',
+                textColor: {r: "43", g: "91", b: "200", position: 0},
+                backgroundColor: {r: "87", g: "255", b: "78", position: 1}
+            },
+            contentTypeFilter:{
+                enableToggle: true,
+                overrideLabel: 'Filter By Content Type Here',
+                backgroundColor: {r: "184", g: "106", b: "164", position: 1}
+            },
+            funnelStageFilter:{
+                enableToggle: true,
+                overrideLabel: 'Filter By Funnel Stage Here',
+                textColor: {r: "117", g: "133", b: "76", position: 0}
+            },
+            industryFilter:{
+                enableToggle: true,
+                overrideLabel: 'Filter By Industry Here',
+                backgroundColor: {r: "184", g: "106", b: "164", position: 1}
+            },
+            personaFilter:{
+                enableToggle: true,
+                overrideLabel: 'Filter By Persona Here',
+                textColor: {r: "43", g: "91", b: "200", position: 0},
+                backgroundColor: {r: "87", g: "255", b: "78", position: 1}
+            },
+            businessUnitFilter:{
+                enableToggle: true,
+                overrideLabel: 'Filter By Business Unit Here',
+                textColor: {r: "87", g: "255", b: "78", position: 0}
+            }
         },
         {
             id: "Recommend Block",
@@ -67,6 +120,11 @@ const landingPage = {
                 color: {r: "43", g: "91", b: "200"},
                 textAlign: "right",
                 fontSize: "17px"
+            },
+            searchConfiguration: {
+                enableToggle: true,
+                textColor: {r: "87", g: "255", b: "78", position: 0},
+                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
             }
         },
         {
@@ -111,7 +169,7 @@ describe("Microsites - Landing page setup", () => {
         authoring.microsites.removeMicrosite(microsite.name)
         authoring.microsites.addMicrosite(microsite.name)
         authoring.microsites.setup(microsite)
-        authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
+        authoring.microsites.addTracks({target: [target.name, filtersContent.name], recommend: recommend.name})
 
         // Every new microsite has a default landing page with these settings: 
         authoring.microsites.tabToLandingPages()

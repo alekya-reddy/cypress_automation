@@ -6,6 +6,14 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
+        this.topicFilterLocator = "#dropdowntopics"
+        this.contentTypeFilterLocator = '#dropdowncontentTypeName'
+        this.funnelStageFilterLocator = '#dropdownfunnelStages'
+        this.industryFilterLocator = '#dropdownindustries'
+        this.personaFilterLocator = '#dropdownpersonas'
+        this.businessUnitFilterLocator = '#dropdownbusinessUnits'
+        this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.micrositeCardTitle = "div[class^='pf-microsite-card-title']"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -21,6 +29,21 @@ export class MicrositesCX extends CommonCX {
             cy.contains(this.gridCard, content).click()
         })
     }
+    verifyFilterConfiguration(filterName, filterLocator, filterSettings){
+        const { overrideLabel, textColor, backgroundColor} = filterSettings
+        if(overrideLabel){
+            cy.containsExact(filterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+        }
+        else{
+            cy.containsExact(filterLocator + " > span:nth-child(1)", filterName).should("exist")
+        }
+        if(textColor){
+            cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+        }
+        if(backgroundColor){
+            cy.get(filterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+        }
+    }
 
     verifyLandingPageBlock(config){
         // This should be the same config object as the one passed into authoring method 'addAdvancedBlock'
@@ -33,7 +56,14 @@ export class MicrositesCX extends CommonCX {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
+        const topicFilter = config.topicFilter
+        const contentTypeFilter = config.contentTypeFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
         const card = config.card
+        const searchConfiguration = config.searchConfiguration
 
         if(className && !track){
             let locator = `.${className}`
@@ -126,6 +156,40 @@ export class MicrositesCX extends CommonCX {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
+
         }
+        if(topicFilter) {
+            this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+        }
+        if(contentTypeFilter) {
+            this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
+        }
+        if(funnelStageFilter) {
+            this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+        }
+        if(industryFilter) {
+            this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+        }
+        if(personaFilter) {
+            this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+        }
+        if(businessUnitFilter) {
+            this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+        }
+        if(searchConfiguration) {
+            const { textColor, backgroundColor } = searchConfiguration
+            // Text color doesn't work yet
+            // if(textColor){
+            //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+            // }
+            if(backgroundColor){
+                cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            }
+        }
+    }
+    searchMicrositeCard(searchTerm){
+        // Must be within session group block before using this function
+        cy.get("input").clear().type(searchTerm)
+        cy.contains("button", "Search").click()
     }
 }

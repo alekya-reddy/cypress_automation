@@ -273,7 +273,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             recommend.forEach((track)=>{
-                cy.get(this.antDropSelect.options(track)).click()
+                cy.get('input[class="ant-select-selection-search-input"]').type(track + "\n")
             })
         }        
 
@@ -283,7 +283,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             target.forEach((track)=>{
-                cy.get(this.antDropSelect.options(track), {timeout: 5000}).click()
+                cy.get('input[class="ant-select-selection-search-input"]').type(track + "\n")
             })
         }
         
@@ -458,6 +458,37 @@ export class Microsites extends Common {
             })
         })
     }
+    configureFilter(filterName, filterSettings){
+        const { enableToggle, overrideLabel , textColor, backgroundColor } = filterSettings
+        cy.containsExact("div", "Filters Configuration").click()
+        cy.containsExact("span", filterName).click()
+        if(enableToggle){
+            cy.get("input[name*='.enable']").click()
+        }
+        if(overrideLabel){
+            cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
+        }
+        if(textColor){
+            this.pickColor2(textColor)
+        }
+        if(backgroundColor){
+            this.pickColor2(backgroundColor)
+        }
+        cy.get("span:contains('" + filterName + "')").eq(1).click()
+        cy.containsExact("span", "Filters Configuration").click()
+    }
+
+    verifyFilterConfiguration(filterName, filterSettings){
+        const { enableToggle, overrideLabel } = filterSettings
+            if(enableToggle){
+                if(overrideLabel){
+                    cy.containsExact("option", overrideLabel).should("exist")
+                }
+                else{
+                    cy.containsExact("option", filterName).should("exist")
+                }
+            }
+    }
 
     addAdvancedBlock(config){
         const type = config.type.toLowerCase()
@@ -469,9 +500,16 @@ export class Microsites extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const topicFilter = config.topicFilter
+        const contentTypeFilter = config.contentTypeFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
         const card = config.card
         const verify = config.verify // Do not verify if using HEX color for any color pickers
-
+        const searchConfiguration = config.searchConfiguration
+        
         cy.waitFor({element: this.landingPages.addBlockButton, to: "exist", wait: 10000})
         cy.get(this.landingPages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
 
@@ -561,7 +599,24 @@ export class Microsites extends Common {
             cy.get(this.landingPages.spacingInput).clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
         }
-
+        if(topicFilter){
+            this.configureFilter("Topic Filter", topicFilter)
+        }
+        if(contentTypeFilter){
+            this.configureFilter("Content Type", contentTypeFilter)
+        }
+        if(funnelStageFilter){
+            this.configureFilter("Funnel Stage", funnelStageFilter)
+        }
+        if(industryFilter){
+            this.configureFilter("Industry", industryFilter)
+        }
+        if(personaFilter){
+            this.configureFilter("Persona", personaFilter)
+        }
+        if(businessUnitFilter){
+            this.configureFilter("Business Unit", businessUnitFilter)
+        }
         if(card){
             const { color, textAlign, fontSize } = card
 
@@ -577,6 +632,20 @@ export class Microsites extends Common {
 
             if(fontSize){
                 cy.get("input[name*='cardConfiguration.fontSize']").clear().type(fontSize)
+            }
+            cy.containsExact("span", "Card Configuration").click()
+        }
+        if(searchConfiguration){
+            const { enableToggle, textColor, backgroundColor} = searchConfiguration
+            cy.containsExact("div","Search Configuration").click()
+            if(enableToggle){
+                cy.get("input[name*='searchConfiguration.enable']").click()
+            }
+            if(textColor){
+                this.pickColor2(textColor)
+            }
+            if(backgroundColor){
+                this.pickColor2(backgroundColor)
             }
         }
 
@@ -601,7 +670,14 @@ export class Microsites extends Common {
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
+        const topicFilter = config.topicFilter
+        const contentTypeFilter = config.contentTypeFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
         const card = config.card
+        const searchConfiguration = config.searchConfiguration
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -675,6 +751,26 @@ export class Microsites extends Common {
             if(spacing){
                 cy.contains(blockLocator, trackName).should("have.css", "padding", spacing)
             }
+            cy.contains(blockLocator, trackName).within(() => {
+                if(topicFilter){
+                    this.verifyFilterConfiguration("Topic Filter", topicFilter)
+                }
+                if(contentTypeFilter){
+                    this.verifyFilterConfiguration("Content Type", contentTypeFilter)
+                }
+                if(funnelStageFilter){
+                    this.verifyFilterConfiguration("Funnel Stage", funnelStageFilter)
+                }
+                if(industryFilter){
+                    this.verifyFilterConfiguration("Industry", industryFilter)
+                }
+                if(personaFilter){
+                    this.verifyFilterConfiguration("Persona", personaFilter)
+                }
+                if(businessUnitFilter){
+                    this.verifyFilterConfiguration("Business Unit", businessUnitFilter)
+                }
+            })
             if(card){
                 const { color, textAlign, fontSize } = card
                 cy.contains(blockLocator, trackName).within(() => {
@@ -689,6 +785,11 @@ export class Microsites extends Common {
                     if(fontSize){
                         cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "font-size", fontSize)
                     }
+                })
+            }
+            if(searchConfiguration){
+                cy.contains(blockLocator, trackName).within(() => {
+                    cy.containsExact('button', ' Search ').should("exist")
                 })
             }
         }

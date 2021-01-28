@@ -237,9 +237,9 @@ export class Common {
 
     pickColor2(options){
         // This color picker component can be found in landing page editors (VEX and Microsites)
-        const { hex, r, g, b } = options
+        const { hex, r, g, b, position = 0 } = options
 
-        cy.get(this.lpColorPicker.bar).click() // Clicking this bar opens the color picker
+        cy.get(this.lpColorPicker.bar).eq(position).click() // Clicking this bar opens the color picker
         cy.get(this.lpColorPicker.popover).within(()=>{
             if(hex){
                 cy.get("input").eq(0).clear().type(hex)
@@ -254,6 +254,6 @@ export class Common {
                 cy.get("input").eq(3).clear().type(b)
             }
         })
-        cy.get(this.lpColorPicker.bar).click() // clicking this bar again closes the color picker
+        cy.get(this.lpColorPicker.bar).eq(position).click() // clicking this bar again closes the color picker
     }
 }
