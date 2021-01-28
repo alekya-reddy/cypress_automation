@@ -124,9 +124,9 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Topic Filter: " + contentPages.contentWithTopicContentTypePersona.topics).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")  
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")  
 
         // Select Content Type filter withour removing Topic filter
         cy.containsExact(consumption.microsites.contentTypeFilterLocator + " > span:nth-child(1)", "Content Type").click()
@@ -137,15 +137,15 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Content Type: " + contentPages.contentWithTopicContentTypePersona.contentType).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
         // Remove Topic Filter so we have only Content Type filter selected
         cy.get(consumption.microsites.topicFilterLocator + " > span:nth-child(2)").click()
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
         // Remove Content Type and apply Funnel Stage filter
         cy.get(consumption.microsites.contentTypeFilterLocator + " > span:nth-child(2)").click()
@@ -157,9 +157,9 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Funnel Stage: " + contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
         // Remove Funnel Stage and apply Industry filter
         cy.get(consumption.microsites.funnelStageFilterLocator + " > span:nth-child(2)").click()
@@ -171,9 +171,9 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Industry: " + contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
         // Remove Industry and apply Persona filter
         cy.get(consumption.microsites.industryFilterLocator + " > span:nth-child(2)").click()
@@ -185,9 +185,9 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Persona: " + contentPages.contentWithTopicContentTypePersona.persona).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
         // Remove Persona and apply Business Unit filter
         cy.get(consumption.microsites.personaFilterLocator + " > span:nth-child(2)").click()
@@ -199,15 +199,15 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Business Unit: " + contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
         // Search by Description with Business Unit filter on
         consumption.microsites.searchMicrositeCard(contentPages.contentWithTopicFunnelBusinessUnit.description)
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
         // Select axtra Topic Filter
         cy.containsExact(consumption.microsites.topicFilterLocator + " > span:nth-child(1)", "Topic Filter").click()
@@ -218,9 +218,9 @@ describe("Microsites - Search and Filter Content", () => {
             // After click, dropdown should hold the text of the selected option
             cy.contains("Topic Filter: " + contentPages.contentWithTopicContentTypePersona.topics).should("exist")
         })
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.micrositeCardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
     })
 

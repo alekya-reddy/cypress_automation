@@ -13,7 +13,6 @@ export class MicrositesCX extends CommonCX {
         this.personaFilterLocator = '#dropdownpersonas'
         this.businessUnitFilterLocator = '#dropdownbusinessUnits'
         this.filterByValue = '#qa-microsite-topic-filter-topic > span'
-        this.micrositeCardTitle = "div[class^='pf-microsite-card-title']"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
