@@ -29,6 +29,21 @@ export class MicrositesCX extends CommonCX {
             cy.contains(this.gridCard, content).click()
         })
     }
+    verifyFilterConfiguration(filterName, filterLocator, filterSettings){
+        const { overrideLabel, textColor, backgroundColor} = filterSettings
+        if(overrideLabel){
+            cy.containsExact(filterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+        }
+        else{
+            cy.containsExact(filterLocator + " > span:nth-child(1)", filterName).should("exist")
+        }
+        if(textColor){
+            cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+        }
+        if(backgroundColor){
+            cy.get(filterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+        }
+    }
 
     verifyLandingPageBlock(config){
         // This should be the same config object as the one passed into authoring method 'addAdvancedBlock'
@@ -144,94 +159,22 @@ export class MicrositesCX extends CommonCX {
 
         }
         if(topicFilter) {
-            const { overrideLabel, textColor, backgroundColor } = topicFilter
-            if(overrideLabel){
-                cy.containsExact(this.topicFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.topicFilterLocator + " > span:nth-child(1)", "Topic Filter").should("exist")
-            }
-            if(textColor){
-                cy.get(this.topicFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.topicFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
         }
         if(contentTypeFilter) {
-            const { overrideLabel, textColor, backgroundColor } = contentTypeFilter
-            if(overrideLabel){
-                cy.containsExact(this.contentTypeFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.contentTypeFilterLocator + " > span:nth-child(1)", "Content Type").should("exist")
-            }
-            if(textColor){
-                cy.get(this.contentTypeFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.contentTypeFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
         }
         if(funnelStageFilter) {
-            const { overrideLabel, textColor, backgroundColor } = funnelStageFilter
-            if(overrideLabel){
-                cy.containsExact(this.funnelStageFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.funnelStageFilterLocator + " > span:nth-child(1)", "Funnel Stage").should("exist")
-            }
-            if(textColor){
-                cy.get(this.funnelStageFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.funnelStageFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
         }
         if(industryFilter) {
-            const { overrideLabel, textColor, backgroundColor } = industryFilter
-            if(overrideLabel){
-                cy.containsExact(this.industryFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.industryFilterLocator + " > span:nth-child(1)", "Industry").should("exist")
-            }
-            if(textColor){
-                cy.get(this.industryFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.industryFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
         }
         if(personaFilter) {
-            const { overrideLabel, textColor, backgroundColor } = personaFilter
-            if(overrideLabel){
-                cy.containsExact(this.personaFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.personaFilterLocator + " > span:nth-child(1)", "Persona").should("exist")
-            }
-            if(textColor){
-                cy.get(this.personaFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.personaFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
         }
         if(businessUnitFilter) {
-            const { overrideLabel, textColor, backgroundColor } = businessUnitFilter
-            if(overrideLabel){
-                cy.containsExact(this.businessUnitFilterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
-            }
-            else{
-                cy.containsExact(this.businessUnitFilterLocator + " > span:nth-child(1)", "Business Unit").should("exist")
-            }
-            if(textColor){
-                cy.get(this.businessUnitFilterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            }
-            if(backgroundColor){
-                cy.get(this.businessUnitFilterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
-            }
+            this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
         }
         if(searchConfiguration) {
             const { textColor, backgroundColor } = searchConfiguration
