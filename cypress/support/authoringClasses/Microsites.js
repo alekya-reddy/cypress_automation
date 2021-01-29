@@ -835,12 +835,12 @@ export class Microsites extends Common {
         const contents = config.contents
 
         contents.forEach(content => {
-            cy.contains(this.landingPages.trackRow, blockName, {timeout: 10000}).should("exist").within(() => {
+            cy.contains(this.landingPages.trackRow, blockName, {timeout: 10000}).should("exist").within((block) => {
                 // Get the content menu modal to open
                 let cardExists = false
                 cy.waitFor({element: this.landingPages.micrositeCard, to: "exist", wait: 1500})
                 cy.do(() => {
-                    if (Cypress.$(this.landingPages.micrositeCard).length > 0) {
+                    if (block.find(this.landingPages.micrositeCard).length > 0) {
                         cardExists = true
                         cy.get(this.landingPages.micrositeCard).last().click({force: true})
                         cy.get(this.landingPages.addBlockButton).last().click()
@@ -893,6 +893,45 @@ export class Microsites extends Common {
 
             cy.contains("button", "Confirm").click()
         })
+    }
+
+    removeFeaturedContent(options, verify){
+        const { 
+            block, 
+            content, 
+            index = 0 
+        } = options
+        cy.contains(this.landingPages.trackRow, block, {timeout: 10000}).within(() => {
+            const containsContent = content ? `:contains('${content}')` : ""
+            cy.get(this.landingPages.micrositeCard + containsContent).eq(index).click({force: true})
+            cy.get("div[class*='StyledFocusRing']" + containsContent).eq(index).within(() => {
+                cy.get(this.landingPages.editorMenu).within(() => {
+                    cy.get(this.landingPages.menuBlock).eq(4).click()
+                })
+            })
+
+            if (verify !== false){
+                // Note: if deleting contents with the same name, or using purely index, disable verify or this will fail
+                cy.contains(this.landingPages.micrositeCard, content).should("not.exist")
+            }
+        })
+    }
+
+    removeBlock(locator){
+        // Must first navigate to the landing page editor 
+        // locator should be something specific to the block 
+        // The blocks are shifty, getting attached, detached, then reattached to dom
+        // There is case where Cypress finds the block, but when it tries to interact with it, block has been detached and reattached
+        // Cypress not smart enough to requery for the same block, and instead tries to click the previously found block that has been detached 
+        // Hence, need to wait for DOM to settle before interacting with it
+        cy.get(locator).should("exist")
+        cy.waitFor({element: locator, to: "not.exist", wait: 1000})
+        cy.get(locator).should('exist')
+        cy.get(locator).parents(this.landingPages.blockContainer).click() // this selects the block and makes the menu appear
+        cy.get(locator).parents(this.landingPages.blockContainer).within(()=>{
+            cy.get(this.landingPages.menuBlock).eq(4).click() 
+        })
+        cy.get(locator).should("not.exist")
     }
 
     configureLandingPage(config){

@@ -160,13 +160,6 @@ export class MicrositesCX extends CommonCX {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
-            if(contents){
-                cy.containsExact("h4", trackName).parent().within(() => {
-                    contents.forEach(content => {
-                        cy.contains(this.cardTitle, content.name).should("exist")
-                    })
-                })
-            }
             cy.containsExact("h4", trackName).parent().within(() => {
                 if(topicFilter) {
                     this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
@@ -195,6 +188,11 @@ export class MicrositesCX extends CommonCX {
                     if(backgroundColor){
                         cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
                     }
+                }
+                if(contents){
+                    contents.forEach(content => {
+                        cy.contains(this.cardTitle, content.name).should("exist")
+                    })
                 }
             })
         }
