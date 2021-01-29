@@ -13,6 +13,7 @@ export class MicrositesCX extends CommonCX {
         this.personaFilterLocator = '#dropdownpersonas'
         this.businessUnitFilterLocator = '#dropdownbusinessUnits'
         this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -28,6 +29,7 @@ export class MicrositesCX extends CommonCX {
             cy.contains(this.gridCard, content).click()
         })
     }
+
     verifyFilterConfiguration(filterName, filterLocator, filterSettings){
         const { overrideLabel, textColor, backgroundColor} = filterSettings
         if(overrideLabel){
@@ -49,7 +51,9 @@ export class MicrositesCX extends CommonCX {
         const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
         const typography = config.typography // this has sub options color, textAlign // color: {r, g, b} is the only format that will be checked - hex not checked 
         const className = config.className // Required to locate html block
+        const type = config.type
         const track = config.track
+        const name = config.name
         const titleOverride = config.titleOverride
         const expectContents = config.expectContents
         const heading = config.heading // this has sub options color, textAlign
@@ -63,6 +67,7 @@ export class MicrositesCX extends CommonCX {
         const businessUnitFilter = config.businessUnitFilter
         const card = config.card
         const searchConfiguration = config.searchConfiguration
+        const contents = config.contents
 
         if(className && !track){
             let locator = `.${className}`
@@ -106,8 +111,8 @@ export class MicrositesCX extends CommonCX {
             }
         }
         
-        if(track){ 
-            const trackName = titleOverride ? titleOverride : track
+        if(type == "track" || type == "featured"){
+            const trackName = titleOverride || track || name
             cy.containsExact("h4", trackName, {timeout: 10000}).should("exist")
 
             if(heading){
@@ -155,35 +160,43 @@ export class MicrositesCX extends CommonCX {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
-
-        }
-        if(topicFilter) {
-            this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
-        }
-        if(contentTypeFilter) {
-            this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
-        }
-        if(funnelStageFilter) {
-            this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
-        }
-        if(industryFilter) {
-            this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
-        }
-        if(personaFilter) {
-            this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
-        }
-        if(businessUnitFilter) {
-            this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
-        }
-        if(searchConfiguration) {
-            const { textColor, backgroundColor } = searchConfiguration
-            // Text color doesn't work yet
-            // if(textColor){
-            //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-            // }
-            if(backgroundColor){
-                cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+            if(contents){
+                cy.containsExact("h4", trackName).parent().within(() => {
+                    contents.forEach(content => {
+                        cy.contains(this.cardTitle, content.name).should("exist")
+                    })
+                })
             }
+            cy.containsExact("h4", trackName).parent().within(() => {
+                if(topicFilter) {
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                }
+                if(contentTypeFilter) {
+                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
+                }
+                if(funnelStageFilter) {
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                }
+                if(industryFilter) {
+                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                }
+                if(personaFilter) {
+                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                }
+                if(businessUnitFilter) {
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                }
+                if(searchConfiguration) {
+                    const { textColor, backgroundColor } = searchConfiguration
+                    // Text color doesn't work yet
+                    // if(textColor){
+                    //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+                    // }
+                    if(backgroundColor){
+                        cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+                    }
+                }
+            })
         }
     }
     searchMicrositeCard(searchTerm){

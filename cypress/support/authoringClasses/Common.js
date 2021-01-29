@@ -53,6 +53,7 @@ export class Common {
         };
         this.antDropSelect = {
             selector: ".ant-select-selector",
+            optionsContainer: "div[class*='ant-select-dropdown']",
             options: function(option){ return `div[label="${option}"]`; }
         };
         this.dropdown = {
