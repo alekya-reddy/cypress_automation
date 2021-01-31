@@ -924,7 +924,6 @@ export class Microsites extends Common {
         // There is case where Cypress finds the block, but when it tries to interact with it, block has been detached and reattached
         // Cypress not smart enough to requery for the same block, and instead tries to click the previously found block that has been detached 
         // Hence, need to wait for DOM to settle before interacting with it
-        cy.get(locator).should("exist")
         cy.waitFor({element: locator, to: "not.exist", wait: 1000})
         cy.get(locator).should('exist')
         cy.get(locator).parents(this.landingPages.blockContainer).click() // this selects the block and makes the menu appear
@@ -938,6 +937,7 @@ export class Microsites extends Common {
         const name = config.name
         const setHome = config.setHome 
         const blocks = config.blocks
+        const stayInEditor = config.stayInEditor
 
         this.editLandingPage(config)
 
@@ -963,7 +963,9 @@ export class Microsites extends Common {
                 cy.get(this.landingPages.blockContainer).eq(0).click() // This makes the add block button reappear
             })
             cy.contains("button", "Save").click()
-            cy.go("back")
+            if (!stayInEditor){
+                cy.go("back")
+            }
         }
     }
 

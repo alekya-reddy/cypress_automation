@@ -139,6 +139,8 @@ const landingPage = {
 }
 
 describe("Microsites - Landing page featured content block setup", () => {
+    // Note: landingPageSetup.js is already so long that I decided to create a separate file for featured content blocks
+    // Cypress slows down significantly if tests are too long, so it's important not to go over ~3 minutes/file
     it("Setup target track if not already done", ()=>{
         cy.request({url: trackWithTopics.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
@@ -159,21 +161,12 @@ describe("Microsites - Landing page featured content block setup", () => {
         authoring.microsites.setup(microsite)
         authoring.microsites.addTracks({target: [target.name, trackWithTopics.name], recommend: recommend.name})
         authoring.microsites.addLandingPages(landingPage.name)
-        authoring.microsites.configureLandingPage(landingPage) // Includes verification that block configuration is correct
-
-        // Verify on consumption that the blocks were set up correctly - do this before any of the blocks get deleted or else can't use verify method
-        cy.visit(landingPage.url)
-        landingPage.blocks.forEach((block) => {
-            consumption.microsites.verifyLandingPageBlock(block)
-        })
+        authoring.microsites.configureLandingPage({...landingPage, stayInEditor: true}) // Includes verification that block configuration is correct
 
         // Verify that we can remove content from a featured content block
-        cy.go("back")
-        authoring.microsites.goToPageEditor(landingPage.name)
         cy.contains(authoring.microsites.landingPages.trackRow, featureBlock.name).within(() => {
             cy.get(authoring.microsites.landingPages.micrositeCard + `:contains("${recommend.contents[0]}")`).should("have.length", 2) // There's 2 with same name
         })
-        cy.wait(2000)
         authoring.microsites.removeFeaturedContent({
             block: featureBlock.name,
             content: recommend.contents[0],
@@ -184,10 +177,10 @@ describe("Microsites - Landing page featured content block setup", () => {
         })
 
         // Verify that featured content blocks can be deleted
-        cy.wait(2000)
         authoring.microsites.removeBlock(authoring.microsites.landingPages.trackRow + `:contains('${deleteBlock.name}')`)
 
         cy.contains("button", "Save").click()
+        cy.wait(1500)
 
         // VEX's landingPage.js also tests reordering of the blocks
         // We should also do that here since both follow different code paths (despite similar appearance) 
@@ -196,13 +189,21 @@ describe("Microsites - Landing page featured content block setup", () => {
     })
 
     it("Verify that the featured content block has the correct settings on consumption", () => {
-        // Verify that the cards would redirect to the correct url
+        // Verify on consumption that the blocks were set up correctly - do this before any of the blocks get deleted or else can't use verify method
         cy.visit(landingPage.url)
+        const blockToVerify = {...featureBlock}
+        blockToVerify.contents = false // Disable checking for contents since one was deleted
+        consumption.microsites.verifyLandingPageBlock(blockToVerify)
+
+        // Verify that the cards would redirect to the correct url
         cy.get(`a[href='${trackWithTopics.micrositeUrl}']`).should("exist").contains(trackWithTopics.contents[0]).should("exist")
         cy.get(`a[href='${target.micrositeUrl}']`).should("exist").contains(target.contents[0]).should("exist")
+
+        // Verify that the deleted content doesn't exist
         cy.get(`a[href='${recommend.micrositeUrl}']`).should("not.exist")
 
-        // Basic verification of filters for featured content block
+        // Basic verification of filters for featured content block (
+        // Technically this test should go in searchAndFiltersConsumption.js, but the featured content block is already set up here
         cy.get(consumption.microsites.topicFilterLocator).click()
         cy.get(consumption.microsites.filterByValue).contains(contentWithTopics.topics[0]).click()
         cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
