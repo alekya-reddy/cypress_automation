@@ -145,6 +145,7 @@ describe("Microsites - Navigation setup", () => {
 
     it("Go to consumption and verify that the navigation header is correct", () => {
         cy.visit(microsite.url)
+        cy.wait(1500) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         })

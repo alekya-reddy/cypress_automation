@@ -57,21 +57,21 @@ export class ContentLibrary extends Common{
         const wait = config.wait ? config.wait : 20000
 
         cy.get(this.pageTitleLocator).click() // In case preview of the content already open, this will close it
-        if(internalTitle){
-            cy.get(this.pageSearch, {timeout: 20000}).clear().type(internalTitle)
-            cy.ifElementWithExactTextExists(this.table.internalTitleCell, internalTitle, wait, ()=>{
-                cy.containsExact(this.table.internalTitleCell, internalTitle, {timeout: 20000}).click()
-                cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
-                config.contentExists = true // This allows you to check the config object if element exists or not 
-            })
-            cy.get(this.clearSearchIcon).click()
-        } else if(url){
+        if(url){
             let url_no_protocol = url.replace(/^https?:\/\//,'')
             cy.get(this.pageSearch, {timeout: 20000}).clear().type(url_no_protocol)
             cy.ifElementWithExactTextExists(this.table.urlCell, url_no_protocol, wait, ()=>{
                 cy.containsExact(this.table.urlCell, url_no_protocol).siblings(this.table.internalTitleCell).click()
                 cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
                 config.contentExists = true
+            })
+            cy.get(this.clearSearchIcon).click()
+        } else if(internalTitle){
+            cy.get(this.pageSearch, {timeout: 20000}).clear().type(internalTitle)
+            cy.ifElementWithExactTextExists(this.table.internalTitleCell, internalTitle, wait, ()=>{
+                cy.containsExact(this.table.internalTitleCell, internalTitle, {timeout: 20000}).click()
+                cy.get(this.previewSideBar, {timeout: 20000}).should('be.visible')
+                config.contentExists = true // This allows you to check the config object if element exists or not 
             })
             cy.get(this.clearSearchIcon).click()
         }
@@ -138,11 +138,11 @@ export class ContentLibrary extends Common{
         const seoTitle = config.seoTitle
         const verify = config.verify
 
-        if(internalTitle){
-            this.openPreview({internalTitle: internalTitle})
-        } else if(url){
+        if(url){
             this.openPreview({url: url})
-        }   
+        } else if(internalTitle){
+            this.openPreview({internalTitle: internalTitle})
+        }  
 
         if(thumbnail){
             cy.get(this.sidebarComponent.thumbnail).click()
@@ -201,10 +201,12 @@ export class ContentLibrary extends Common{
                 checkElement: this.dropdown.box
             })
             cy.get(this.sidebarComponent.topics).within(()=>{
-                // First clear away the existing topics 
-                cy.get(".Select-value-icon").each((removeTopic)=>{
-                    cy.get(".Select-value-icon").eq(0).click()
-                })
+                // First clear away the existing topics
+                if(Cypress.$(".Select-value-icon").length > 0){
+                    cy.get(".Select-value-icon").each(()=>{
+                        cy.get(".Select-value-icon").eq(0).click()
+                    })
+                }
                 // Now add the ones you want
                 topics.forEach((topic)=>{
                     cy.get(this.dropdown.box).click()

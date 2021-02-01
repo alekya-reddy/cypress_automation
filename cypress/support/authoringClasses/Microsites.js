@@ -30,6 +30,7 @@ export class Microsites extends Common {
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addTracksButton: "button:contains('Tracks')",
+            addFeaturedButton: "button:contains('Featured Content')",
             editorMenu: "div[class^='BlockMenu']",
             menuBlock: "div[class^='BlockAction']",
             colorPickerBar: ".swatch-inner",
@@ -39,9 +40,12 @@ export class Microsites extends Common {
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             titleOverrideInput: "input[name*='trackTitleOverride']",
             spacingInput: "input[name*='spacing.padding']",
+            micrositeCard: ".microsite-session-card",
             micrositeCardTitle: ".pf-event-session-card-title > div",
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
+            recommendRadio: "input[value='recommend']",
+            targetRadio: "input[value='target']",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -509,6 +513,7 @@ export class Microsites extends Common {
         const type = config.type.toLowerCase()
         const content = config.content // HTML content that goes into the html block 
         const track = config.track
+        const name = config.name
         const titleOverride = config.titleOverride
         const typography = config.typography // this has sub options 
         const className = config.className 
@@ -532,6 +537,8 @@ export class Microsites extends Common {
             cy.get(this.landingPages.addHTMLButton + ":visible").eq(0).click({force: true})
         } else if (type == "track"){
             cy.get(this.landingPages.addTracksButton + ":visible").eq(0).click({force: true})
+        } else if (type == "featured") {
+            cy.get(this.landingPages.addFeaturedButton + ":visible").eq(0).click({force: true})
         }
 
         // The menu of the most recently added one will be visible 
@@ -547,6 +554,10 @@ export class Microsites extends Common {
 
         if(track){
             cy.get("select[id*='experienceId']").select(track)
+        }
+
+        if(name){
+            cy.get("input[name*='name']").clear().type(name)
         }
 
         if(titleOverride){
@@ -682,6 +693,7 @@ export class Microsites extends Common {
         const className = config.className 
         const track = config.track
         const titleOverride = config.titleOverride
+        const name = config.name
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
@@ -693,6 +705,7 @@ export class Microsites extends Common {
         const businessUnitFilter = config.businessUnitFilter
         const card = config.card
         const searchConfiguration = config.searchConfiguration
+        const contents = config.contents
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -736,9 +749,9 @@ export class Microsites extends Common {
             }
         }
 
-        if(type == "track" && track){ 
-            const blockLocator = this.landingPages.trackRow 
-            const trackName = titleOverride ? titleOverride : track
+        if(type == "track" || type == "featured"){ 
+            const blockLocator = this.landingPages.trackRow
+            const trackName = titleOverride || track || name
             cy.contains(blockLocator, trackName).should("exist")
             if(heading){
                 cy.contains(blockLocator, trackName).within(()=>{
@@ -807,13 +820,124 @@ export class Microsites extends Common {
                     cy.containsExact('button', ' Search ').should("exist")
                 })
             }
+            if(contents){
+                cy.contains(blockLocator, trackName).within(() => {
+                    contents.forEach(content => {
+                        cy.contains(this.landingPages.micrositeCardTitle, content.name).should("exist")
+                    })
+                })
+            }
         }
+    }
+
+    addFeaturedContent(config, verify){
+        const blockName = config.to
+        const contents = config.contents
+
+        contents.forEach(content => {
+            cy.contains(this.landingPages.trackRow, blockName, {timeout: 10000}).should("exist").within((block) => {
+                // Get the content menu modal to open
+                let cardExists = false
+                cy.waitFor({element: this.landingPages.micrositeCard, to: "exist", wait: 1500})
+                cy.do(() => {
+                    if (block.find(this.landingPages.micrositeCard).length > 0) {
+                        cardExists = true
+                        cy.get(this.landingPages.micrositeCard).last().click({force: true})
+                        cy.get(this.landingPages.addBlockButton).last().click()
+                        cy.get("div[class*='StyledFocusRing']").last().within(() => {
+                            cy.get(this.landingPages.editorMenu).within(() => {
+                                cy.get(this.landingPages.menuBlock).eq(3).click()
+                            })
+                        })
+                    }
+                })
+                cy.do(() => {
+                    if (!cardExists) {
+                        cy.get("div[class*='BlocksEmptyState']").click({force: true})
+                        cy.get(this.landingPages.addBlockButton).click()
+                        cy.get(this.landingPages.editorMenu).within(() => {
+                            cy.get(this.landingPages.menuBlock).eq(3).click()
+                        })
+                    }
+                })
+            })
+
+            // Set track type
+            if (content.trackType == "target") {
+                cy.angryClick({clickElement: this.landingPages.targetRadio, checkElement: "label[class*='ant-radio-wrapper-checked']:contains('Target')"})
+            } else if (content.trackType == "recommend") {
+                cy.get(this.landingPages.recommendRadio).click()
+            }
+            
+            // Set track
+            cy.contains(this.antRow, "Tracks").within(() => {
+                cy.get(this.antDropSelect.selector).click()
+            })
+            cy.get(this.antDropSelect.optionsContainer + ":visible").within(() => {
+                cy.get(this.antDropSelect.options(content.track)).click()
+            })
+
+            // Set contents
+            cy.contains(this.antRow, "Contents").within(() => {
+                cy.get(this.antDropSelect.selector).click()
+            })
+            cy.get(this.antDropSelect.optionsContainer + ":visible").within(() => {
+                cy.get(this.antDropSelect.options(content.name)).click()
+            })
+
+            if (verify !== false) {
+                cy.contains(this.landingPages.trackRow, blockName, {timeout: 10000}).should("exist").within(() => {
+                    cy.contains(this.landingPages.micrositeCard, content.name, {timeout: 10000}).should("exist")
+                })
+            }
+
+            cy.contains("button", "Confirm").click()
+        })
+    }
+
+    removeFeaturedContent(options, verify){
+        const { 
+            block, 
+            content, 
+            index = 0 
+        } = options
+        cy.contains(this.landingPages.trackRow, block, {timeout: 10000}).within(() => {
+            const containsContent = content ? `:contains('${content}')` : ""
+            cy.get(this.landingPages.micrositeCard + containsContent).eq(index).click({force: true})
+            cy.get("div[class*='StyledFocusRing']" + containsContent).eq(index).within(() => {
+                cy.get(this.landingPages.editorMenu).within(() => {
+                    cy.get(this.landingPages.menuBlock).eq(4).click()
+                })
+            })
+
+            if (verify !== false){
+                // Note: if deleting contents with the same name, or using purely index, disable verify or this will fail
+                cy.contains(this.landingPages.micrositeCard, content).should("not.exist")
+            }
+        })
+    }
+
+    removeBlock(locator){
+        // Must first navigate to the landing page editor 
+        // locator should be something specific to the block 
+        // The blocks are shifty, getting attached, detached, then reattached to dom
+        // There is case where Cypress finds the block, but when it tries to interact with it, block has been detached and reattached
+        // Cypress not smart enough to requery for the same block, and instead tries to click the previously found block that has been detached 
+        // Hence, need to wait for DOM to settle before interacting with it
+        cy.waitFor({element: locator, to: "not.exist", wait: 1000})
+        cy.get(locator).should('exist')
+        cy.get(locator).parents(this.landingPages.blockContainer).click() // this selects the block and makes the menu appear
+        cy.get(locator).parents(this.landingPages.blockContainer).within(()=>{
+            cy.get(this.landingPages.menuBlock).eq(4).click() 
+        })
+        cy.get(locator).should("not.exist")
     }
 
     configureLandingPage(config){
         const name = config.name
         const setHome = config.setHome 
         const blocks = config.blocks
+        const stayInEditor = config.stayInEditor
 
         this.editLandingPage(config)
 
@@ -824,11 +948,24 @@ export class Microsites extends Common {
         if(blocks){
             this.goToPageEditor(name)
             blocks.forEach((block)=>{
-                this.addAdvancedBlock(block)
+                const featuredBlockType = block.type == "featured"
+                if (featuredBlockType) {
+                    const featuredBlock = {...block}
+                    featuredBlock.verify = false // Need to turn off verification or else might verify cards that don't exist yet
+                    this.addAdvancedBlock(featuredBlock)
+                    if(featuredBlock.contents && featuredBlock.contents.length > 0){
+                        this.addFeaturedContent({to: featuredBlock.name, contents: featuredBlock.contents})
+                    }
+                    this.verifyBlock(block) // block retains the original value of verify
+                } else {
+                    this.addAdvancedBlock(block)
+                }
                 cy.get(this.landingPages.blockContainer).eq(0).click() // This makes the add block button reappear
             })
             cy.contains("button", "Save").click()
-            cy.go("back")
+            if (!stayInEditor){
+                cy.go("back")
+            }
         }
     }
 

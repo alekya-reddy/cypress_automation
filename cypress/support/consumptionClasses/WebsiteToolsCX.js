@@ -8,6 +8,7 @@ export class WebsiteToolsCX extends CommonCX {
             trendingByRegion: (contents) => {this.spoofRecommendedContent("recommendationType=trending_by_region", "trending_by_region", contents)},
             trendingByAccount: (contents) => {this.spoofRecommendedContent("recommendationType=trending_by_account", "trending_by_account", contents)},
             relatedContent: (contents) => {this.spoofRecommendedContent("recommendationType=yml", "recommended", contents)},
+            recentlyVisited: (contents) => {this.spoofRecommendedContent("recommendationType=recently_visited", "recently_visited", contents)}
         };
     }
 
@@ -41,9 +42,11 @@ export class WebsiteToolsCX extends CommonCX {
             return newContent
         })
         cy.intercept(apiUrlSubstring, (req) => {
-            req.reply((res) => {
+            /*req.reply((res) => {
+                // Do this if you want to modify the actual response from the server
                 res.send({body: {contents: processedContents}})
-            })
+            })*/
+            req.reply({body: {contents: processedContents}})
         })
     }
 }
