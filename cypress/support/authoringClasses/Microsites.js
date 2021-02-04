@@ -30,7 +30,8 @@ export class Microsites extends Common {
             recommendRadio: "input[value='recommend']",
             targetRadio: "input[value='target']",
             selectionItem: ".ant-select-selection-item",
-            removeSelectionItem: ".ant-select-selection-item-remove"
+            removeSelectionItem: ".ant-select-selection-item-remove",
+            emptyTracksTabImage: ".ant-empty-image"
         };
         this.landingPages = {
             nameInput: "input[name='name']",
@@ -967,14 +968,14 @@ export class Microsites extends Common {
         const verify = config.verify
 
         cy.get(this.cloneButton).click()
-            cy.contains(this.antModal, "Clone this Microsite").within(()=>{
-                cy.get(this.micrositesPage.nameInput).clear().type(name)
-            })
-            this.selectCloneOptions(config)
-            cy.contains("button", "Add Microsite").click()
-            if(verify !== false){
-                cy.contains(this.antModal, "Clone this Microsite").should("not.be.visible")
-                cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
-            }
+        cy.contains(this.antModal, "Clone this Microsite").within(()=>{
+            cy.get(this.micrositesPage.nameInput).clear().type(name)
+        })
+        this.selectCloneOptions(config)
+        cy.contains("button", "Add Microsite").click()
+        if(verify !== false){
+            cy.contains(this.antModal, "Clone this Microsite").should("not.be.visible")
+            cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+        }
     }
 }
