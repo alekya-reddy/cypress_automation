@@ -23,7 +23,8 @@ export class Microsites extends Common {
             appearanceInput: "input[class='ant-select-selection-search-input']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             accessProtectionGroup: ".ant-select-selection-item",
-            removeAccessProtectionGroup: ".ant-select-selection-item-remove"
+            removeAccessProtectionGroup: ".ant-select-selection-item-remove",
+            disallowGroups: ".ant-select-selection-item"
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
@@ -251,7 +252,7 @@ export class Microsites extends Common {
         }
     }
 
-    addDisallowedGroups(disallowGroups){
+    addDisallowedGroups(disallowGroups, verify){
         const groups = [disallowGroups].flat()
         cy.contains(this.antRow, "Disallow Groups").within(() => {
             groups.forEach( group => {
@@ -259,6 +260,12 @@ export class Microsites extends Common {
             })
             cy.get(this.antDropSelect.selector).click()
         })
+        if(verify !== false && groups[0]){
+            groups.forEach((group)=>{
+                cy.contains(this.setupPage.disallowGroups, group).should('exist')
+            })
+        }
+
     }
 
     removeAccessProtection(list){
