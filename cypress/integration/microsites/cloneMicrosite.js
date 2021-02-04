@@ -9,7 +9,7 @@ const microsite = {
     cloneName: "Clone of cloneMicrosite.js",
     clone2Name: "Second Clone of cloneMicrosite.js",
     appearance: 'cloneMicrosite.js',
-    externalCode: "microsite externalCode.js",
+    externalCode: "clone cloneMicrosite.js",
     accessProtection: {
         type: "None",
         groups: ""
