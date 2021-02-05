@@ -1623,10 +1623,7 @@ export class Vex extends Common {
 
         if(appearance){
             cy.get("span[class='ant-select-selection-search']").click
-            //cy.get(this.appearance.input).click()
             cy.get(this.appearance.input).type(appearance + "\n", {force: true})
-            // cy.get(this.antDropSelect.options(appearance)).click()
-            // cy.get(`span[title='${appearance}']`).should("exist")
         }
 
         if(heroImage){
