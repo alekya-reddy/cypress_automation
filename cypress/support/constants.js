@@ -93,6 +93,78 @@ export const constants = {
                     slug: "youtube"
                 }
             }
+        },
+        'automation-target': {
+            name: 'automation-target',
+            subdomain: 'automation-target',
+            adminUser: 'cy-admin',
+            adminUserPassword: 'Cypress1234',
+            get defaultUser() {
+                return this.adminUser;
+            },
+            get defaultUserPassword(){
+                return this.adminUserPassword;
+            },
+            resources: {
+                "Website Common Resource": {
+                    title: "Website Common Resource",
+                    source: "https://en.wikipedia.org/wiki/OpenAI",
+                    slug: "commonresource"
+                },
+                "Youtube Shared Resource": {
+                    title: "Youtube Shared Resource",
+                    source: "https://www.youtube.com/watch?v=ap-BkkrRg-o",
+                    slug: "youtube"
+                }
+            }
+        },
+        'automation-recommend': {
+            name: 'automation-recommend',
+            subdomain: 'automation-recommend',
+            adminUser: 'cy-admin',
+            adminUserPassword: 'Cypress1234',
+            get defaultUser() {
+                return this.adminUser;
+            },
+            get defaultUserPassword(){
+                return this.adminUserPassword;
+            },
+            resources: {
+                "Website Common Resource": {
+                    title: "Website Common Resource",
+                    source: "https://en.wikipedia.org/wiki/OpenAI",
+                    slug: "commonresource"
+                },
+                "Youtube Shared Resource": {
+                    title: "Youtube Shared Resource",
+                    source: "https://www.youtube.com/watch?v=ap-BkkrRg-o",
+                    slug: "sharedresource"
+                }
+            }
+        },
+        'automation-explore': {
+            name: 'automation-explore',
+            subdomain: 'automation-explore',
+            adminUser: 'cy-admin',
+            adminUserPassword: 'Cypress1234',
+            get defaultUser() {
+                return this.adminUser;
+            },
+            get defaultUserPassword(){
+                return this.adminUserPassword;
+            },
+            resources: {
+                "Website Common Resource": {
+                    title: "Website Common Resource",
+                    source: "https://en.wikipedia.org/wiki/OpenAI",
+                    slug: "commonresource"
+                },
+                "Youtube Shared Resource": {
+                    title: "Youtube Shared Resource",
+                    source: "https://www.youtube.com/watch?v=ap-BkkrRg-o",
+                    slug: "sharedresource"
+                }
+            }
         }
     }
 }

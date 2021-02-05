@@ -13,6 +13,7 @@ export class Recommend extends Common {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
             externalCodeLabel: "label:contains('External Code')",
+            appearanceLabel: "label:contains('Appearance')",
             accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
             sidebarToggle: "[data-qa-hook='sidebar']",
@@ -90,7 +91,7 @@ export class Recommend extends Common {
     }
 
     configure(options){
-        const { name, slug, externalCode, accessProtection, contents, verify } = options
+        const { name, slug, appearance, externalCode, accessProtection, contents, verify } = options
         // These toggle options should have values of "on" or "off"
         const { sidebar, topicSidebar, exit, formsStrategy, cookieConsent, cookieMessage, header } = options
         // These options will require certain toggles to be "on"
@@ -104,6 +105,10 @@ export class Recommend extends Common {
 
         if(slug){
             this.setCustomUrl(slug, verify)
+        }
+
+        if(appearance){
+            this.setAppearance(appearance, verify)
         }
 
         if(externalCode){
@@ -205,6 +210,22 @@ export class Recommend extends Common {
             codes.forEach( code => {
                 cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("not.contain", code)
             })
+        }
+    }
+
+
+    setAppearance(appearance, verify){
+        cy.get(this.pageSidebar.appearanceLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(appearance)).click()
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.appearanceLabel).siblings("span").should("contain", appearance)
+
         }
     }
 

@@ -85,7 +85,7 @@ describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
 
         // Verify that dynamic logo and field merges are their default values when visiting with a spoofed IP address for which there is 
         // no available information
-        cy.visit(landingPage.url + "?lbhqip=7171.117.159.107")
+        cy.visit(landingPage.url + "?lbhqip=" + nonCompany.ip)
         cy.get(consumption.microsites.navigation.header).within(() => {
             cy.get('img[src*="/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
         })

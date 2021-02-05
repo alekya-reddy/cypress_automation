@@ -1318,7 +1318,7 @@ export class Vex extends Common {
 
         if(content){
             cy.containsExact("div", "HTML Content").click() // Slides open the html content area
-            cy.get("textarea").clear().type(content)
+            cy.get("textarea").clear().type(content, { parseSpecialCharSequences: false })
             cy.containsExact("span", "HTML Content").click() // Slides shut the html content area
         }
 
@@ -1622,23 +1622,19 @@ export class Vex extends Common {
         this.goToAppearance()
 
         if(appearance){
-            cy.get(this.appearance.input).clear({force: true}).type(appearance, {force: true})
-            cy.get(this.antDropSelect.options(appearance)).click()
-            cy.get(`span[title='${appearance}']`).should("exist")
-            cy.contains('button:visible', "Save").click()
-            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
+            cy.get("span[class='ant-select-selection-search']").click
+            //cy.get(this.appearance.input).click()
+            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            // cy.get(this.antDropSelect.options(appearance)).click()
+            // cy.get(`span[title='${appearance}']`).should("exist")
         }
 
         if(heroImage){
             this.selectThumbnail(heroImage)
-            cy.contains('button:visible', "Save").click()
-            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
         }
 
         if(heroHeight){
             cy.get(this.appearance.heroHeightInput).clear().type(heroHeight)
-            cy.contains('button:visible', "Save").click()
-            cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")
         }
 
         if(headerTitle){
@@ -1668,6 +1664,8 @@ export class Vex extends Common {
             cy.get(this.appearance.contentDescriptionInput).parents("form").contains("Save").click()
             cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
         }
+        cy.contains('button:visible', "Save").click()
+        cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")     
     }
 
     selectCloneOptions(config){
