@@ -10,19 +10,28 @@ export class Microsites extends Common {
             cardTitle: this.antCard.title,
             nameInput: "input[name='name']"
         };
+        this.cloneButton = "i[class*='Icon__fa-clone']";
+        this.cloneOptions = {
+            micrositeSetup: "input[value='Microsite setup']",
+            tracks: "input[value='Tracks']",
+            landingPages: "input[value='Landing pages']",
+            navigation: "input[value='Navigation']"
+        };
         this.setupPage = {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
             appearanceInput: "input[class='ant-select-selection-search-input']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             accessProtectionGroup: ".ant-select-selection-item",
-            removeAccessProtectionGroup: ".ant-select-selection-item-remove"
+            removeAccessProtectionGroup: ".ant-select-selection-item-remove",
+            disallowGroups: ".ant-select-selection-item"
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
             targetRadio: "input[value='target']",
             selectionItem: ".ant-select-selection-item",
-            removeSelectionItem: ".ant-select-selection-item-remove"
+            removeSelectionItem: ".ant-select-selection-item-remove",
+            emptyTracksTabImage: ".ant-empty-image"
         };
         this.landingPages = {
             nameInput: "input[name='name']",
@@ -115,7 +124,7 @@ export class Microsites extends Common {
 
     setup(options){
 
-        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, verify} = options
+        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, disallowGroups, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -140,6 +149,10 @@ export class Microsites extends Common {
 
         if(accessProtection){
             this.addAccessProtection(accessProtection, verify)
+        }
+
+        if(disallowGroups){
+            this.addDisallowedGroups(disallowGroups, verify)
         }
 
         if(cookieConsent == false || cookieConsent == true){
@@ -186,6 +199,7 @@ export class Microsites extends Common {
             codes.forEach( code => {
                 cy.get(this.antDropSelect.selector).type(code + "\n")
             })
+            cy.get(this.antDropSelect.selector).click()
         })
 
         if(verify !== false){
@@ -232,6 +246,7 @@ export class Microsites extends Common {
                 groups.forEach(group => {
                     cy.get(this.antDropSelect.selector).type(group + "\n")
                 })
+                cy.get(this.antDropSelect.selector).click()
             })
         }
 
@@ -240,6 +255,22 @@ export class Microsites extends Common {
                 cy.contains(this.setupPage.accessProtectionGroup, group).should('exist')
             })
         }
+    }
+
+    addDisallowedGroups(disallowGroups, verify){
+        const groups = [disallowGroups].flat()
+        cy.contains(this.antRow, "Disallow Groups").within(() => {
+            groups.forEach( group => {
+                cy.get(this.antDropSelect.selector).type(group + "\n")
+            })
+            cy.get(this.antDropSelect.selector).click()
+        })
+        if(verify !== false && groups[0]){
+            groups.forEach((group)=>{
+                cy.contains(this.setupPage.disallowGroups, group).should('exist')
+            })
+        }
+
     }
 
     removeAccessProtection(list){
@@ -306,6 +337,20 @@ export class Microsites extends Common {
                 cy.containsExact(this.antTable.cell, track, {timeout: 20000}).should("exist")
             })
         }
+    }
+
+    verifyTracks(options){
+        const target = options.target ? [options.target].flat() : false
+        const recommend = options.recommend ? [options.recommend].flat() : false
+
+        this.tabToTracks()
+
+        let allTracks = []
+        allTracks = target ? allTracks.concat(target) : allTracks
+        allTracks = recommend ? allTracks.concat(recommend) : allTracks
+        allTracks.forEach((track)=>{
+            cy.containsExact(this.antTable.cell, track, {timeout: 20000}).should("exist")
+        })
     }
 
     removeTracks(list, verify){
@@ -1044,4 +1089,30 @@ export class Microsites extends Common {
         cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
     }
 
+    selectCloneOptions(config){
+        // To specify which event 'tabs' you want to clone, pass them in as a key and set to true. 
+        // The key must be the same as their corresponding locator keys in the this.cloneOptions object.
+        Object.keys(config).forEach(option => {
+            if(this.cloneOptions[option] && config[option]){
+                cy.get(this.cloneOptions[option]).click()
+                cy.get(this.cloneOptions[option]).parent().should("have.class", "ant-checkbox-checked")
+            }
+        })
+    }
+
+    cloneMicrosite(config){
+        const name = config.name
+        const verify = config.verify
+
+        cy.get(this.cloneButton).click()
+        cy.contains(this.antModal, "Clone this Microsite").within(()=>{
+            cy.get(this.micrositesPage.nameInput).clear().type(name)
+        })
+        this.selectCloneOptions(config)
+        cy.contains("button", "Add Microsite").click()
+        if(verify !== false){
+            cy.contains(this.antModal, "Clone this Microsite").should("not.be.visible")
+            cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+        }
+    }
 }
