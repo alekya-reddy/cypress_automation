@@ -25,6 +25,7 @@ const vexAppearanceSettings = {
     headerTitleFontFamily: "Overpass",
     headerTitleBoldFont: true,
     backgroundColor: {r: 10, g: 200, b: 155, a: 0.5},
+    headerBackgroundColor: {r: 145, g: 214, b: 224, a: 1},
     headerTitleFontSize: "large",
     headerTitleFontColor: {r: 200, g: 50, b: 9, a: 0.25},
     bodyFontFamily: "Roboto",
@@ -79,6 +80,28 @@ describe('VEX - Virtual Event', function() {
         cy.viewport(1500, 1000)
         authoring.common.login()
         authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
+        // verify VEX appearance preview in setting to reflect updated settings
+        cy.get(authoring.configurations.appearances.vex.backgroundcolorPreview).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.backgroundColor))
+        cy.get(authoring.configurations.appearances.vex.headerBackgroundColorPreview).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.headerBackgroundColor))
+        cy.get(authoring.configurations.appearances.vex.headerTitleFontPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.headerTitleFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.headerTitleFontFamily)  
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.headerTitleFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.headerTitleBoldFont))
+        cy.get(authoring.configurations.appearances.vex.bodySessionTitleFontPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.bodyFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.bodyFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.bodyFontSize])
+        cy.get(authoring.configurations.appearances.vex.bodySuppplementalContentFontPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.bodyFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.bodyFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.bodyFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.bodyBoldFont))
+        cy.get(authoring.configurations.appearances.vex.activeTitleFontPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.activeFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.activeFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.activeFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.activeBoldFont))
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
@@ -134,9 +157,10 @@ describe('VEX - Virtual Event', function() {
             .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.activeFontColor))
             .should("have.css", "font-family", vexAppearanceSettings.activeFontFamily)
             .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.activeFontSize])
-            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.activeBoldFont))
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.activeBoldFont))    
         cy.get(consumption.vex.supplementalTitle)
             .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.headerTitleFontColor))
+            .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.headerBackgroundColor))
             .should("have.css", "font-family", vexAppearanceSettings.headerTitleFontFamily)
             .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.headerTitleFontSize])
             .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.headerTitleBoldFont))
@@ -161,7 +185,7 @@ describe('VEX - Virtual Event', function() {
             cy.contains("button", "Search").should("have.css", "color", "rgb(0, 100, 0)").should("have.css", "background-color", "rgb(100, 0, 0)")
         })
 
-        // Turn of navigation header in the vex appearance settings
+        // Turn off navigation header in the vex appearance settings
         authoring.configurations.visit.appearances()
         authoring.configurations.configureVEXAppearance({
             appearance: "vexAppearance.js",
