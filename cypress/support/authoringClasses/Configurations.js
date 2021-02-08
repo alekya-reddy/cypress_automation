@@ -42,7 +42,8 @@ export class Configurations extends Common {
             nameInput: "#name",
             codeEditor: "#code > textarea",
             previewName: "div[data-qa-hook='preview-section-external-code-name']",
-            deleteIcon: "i[title='Delete External Code']"
+            deleteIcon: "i[title='Delete External Code']",
+            globalToggle: "#qa-enable-external-code-globally > div:nth-child(2)",
         };
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {
@@ -237,7 +238,7 @@ export class Configurations extends Common {
     }
 
     editExternalCode(config){
-        const { name, newName, newCode, interceptCode } = config
+        const { name, newName, newCode, interceptCode, global } = config
 
         this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
         this.openCodePreview(name)
@@ -248,6 +249,11 @@ export class Configurations extends Common {
                 cy.contains(newName).should("exist")
             })
             cy.containsExact(this.table.cellName, newName).should('exist')
+        }
+
+        if (global) {
+            // global must be 'on' or 'off'
+            this.toggle(this.externalCode.globalToggle, global)
         }
 
         if(newCode){
@@ -372,7 +378,28 @@ export class Configurations extends Common {
         cy.get(this.appearances.secondaryNav).within(() => {
             cy.containsExact("a", tab, {timeout: 10000}).click()
         })
-    } 
+    }
+
+    deleteAppearance(name, verify){
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        cy.waitFor({element: this.appearances.sidebar, to: "exist", wait: 10000})
+        cy.get(this.appearances.sidebar).within(sidebar => {
+            if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('Delete Appearance')").click()
+                })
+            }
+            if (verify !== false) {
+                cy.containsExact("div", name).should("not.exist")
+            }
+        })
+    }
 
     addNewAppearance(options){
         const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor, verify} = options
@@ -422,6 +449,33 @@ export class Configurations extends Common {
                 })
             }
         })  
+    }
+
+    addAppearanceExternalCode(codes, verify){
+        [codes].flat().forEach(code => {
+            cy.get("div[class*='withFormFieldLayout']:contains('External Codes')").find(".Select-control").find("input").type(code + "\n", {force: true})
+        })
+        if(verify !== false){
+            [codes].flat().forEach(code => {
+                cy.contains("span", code, {timeout: 10000}).should("exist")
+            })
+        }
+    }
+
+    removeAppearanceExternalCode(list){
+        const codes = [list].flat()
+        cy.get(this.dropdown.box).within(box => {
+            codes.forEach(code => {
+                if (box.find(`div[class="Select-value"]:contains('${code}')`).length > 0) {
+                    cy.get(`div[class="Select-value"]:contains('${code}')`).children("span[class='Select-value-icon']").click()
+                }
+            })
+        })
+        cy.contains("button", "Save").click()
+        cy.contains("The record was saved successfully").should("exist")
+        codes.forEach(code => {
+            cy.contains('div[class="Select-value"]', code).should("not.exist")
+        })
     }
 
     configureHeaderAppearance(options){
@@ -686,7 +740,7 @@ export class Configurations extends Common {
     } 
 
     configureMicrositesAppearance(options){
-        const {appearance, hideNavigation, verify} = options
+        const {appearance, hideNavigation, externalCodes, verify} = options
     
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
@@ -698,6 +752,10 @@ export class Configurations extends Common {
                     cy.get(this.appearances.microsites.hideNavigation).click()
                 }
             })
+        }
+
+        if(externalCodes){
+            this.addAppearanceExternalCode(externalCodes, verify)
         }
 
         cy.contains("button", "Save Microsite Builder Settings").click()
@@ -717,6 +775,24 @@ export class Configurations extends Common {
                 const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
                 expect(checkboxClass).to.include(checkOrUnchecked)
             })
+        }
+    }
+
+    configureExploreAppearance(options){
+        const { appearance, externalCodes, verify } = options
+
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        this.clickAppearance(appearance)
+        this.clickAppearanceTab("Explore")
+
+        if (externalCodes) {
+            this.addAppearanceExternalCode(externalCodes, verify)
+        }
+
+        cy.contains("button", "Save Explore Settings").click()
+        
+        if(verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
         }
     }
 }
