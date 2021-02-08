@@ -16,14 +16,14 @@ function waitAndAddAttr (attributeValue) {
 }
 const codeGenerator = (attributeValue) => `<script id="${attributeValue}">${waitAndAddAttr.toString()}; waitAndAddAttr("${attributeValue}");</script>`
 // These codes test script codes
-const micrositeExternalCode = {name: "microsite externalCode.js", interceptCode: codeGenerator("microsite")}
-const targetExternalCode = {name: "target externalCode.js", interceptCode: codeGenerator("target")}
-const recommendExternalCode = {name: "recommend externalCode.js", interceptCode: codeGenerator("recommend")}
+const micrositeExternalCode = {name: "microsite externalCode.js", interceptCode: codeGenerator("microsite"), locator: "#microsite"}
+const targetExternalCode = {name: "target externalCode.js", interceptCode: codeGenerator("target"), locator: "#target"}
+const recommendExternalCode = {name: "recommend externalCode.js", interceptCode: codeGenerator("recommend"), locator: "#recommend"}
 // These codes test html-element codes
 const micrositeAppearanceExternalCode = {name: "External Code 1 - Shared Resource", interceptCode: `<div id="ec-shared-1">External Code 1 - Shared Resource</div>`}
 const micrositeSetupExternalCode = {name: "External Code 2 - Shared Resource", interceptCode: `<div id="ec-shared-2">External Code 2 - Shared Resource</div>`}
 // A harmless global external code that won't break any tests if left on permanently - it just console.logs a message
-const globalExternalCode = {name: "External Code 3 - Shared Resource", interceptCode: `<script id="global">console.log("Global External Code")</script>`}
+const globalExternalCode = {name: "External Code 3 - Shared Resource", interceptCode: `<script id="global">console.log("Global External Code")</script>`, locator: "#global"}
 const testSpecificCodes = [micrositeExternalCode, targetExternalCode, recommendExternalCode]
 
 const contents = authoring.common.env.orgs["automation-microsites"].resources
@@ -146,8 +146,8 @@ describe("Microsites - External Code", () => {
         // Verify that the all applicable codes are being applied in the landing page editor
         authoring.microsites.tabToLandingPages()
         authoring.microsites.goToPageEditor(landingPage.name)
-        cy.get('script[id="global"]').should("exist") // Comes from global external code
-        cy.get(`script[id="microsite"]`).should("exist") // Comes from microsite setup
+        cy.get(globalExternalCode.locator).should("exist") // Comes from global external code
+        cy.get(micrositeExternalCode.locator).should("exist") // Comes from microsite setup
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // Comes from microsite appearance. Make sure no duplicate from Explore.
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist") // Comes from microsite setup
     })
@@ -159,7 +159,7 @@ describe("Microsites - External Code", () => {
         // Microsite external code should be present on all microsite urls - home page, landing page, target or recommend
         cy.visit(microsite.url)
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
-        cy.get('script[id="global"]').should("exist") // From global external code
+        cy.get(globalExternalCode.locator).should("exist") // From global external code
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // From microsite appearance - make sure no duplicate from explore appearance
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist") // From microsite setup area
         cy.get(consumption.microsites.navigation.header).should("have.attr", "microsite", "microsite") // From microsite setup area
@@ -167,7 +167,7 @@ describe("Microsites - External Code", () => {
         cy.get(consumption.microsites.navigation.header).should("not.have.attr", "recommend") // Recommend's external code should not be active
 
         cy.visit(landingPage.url)
-        cy.get('script[id="global"]').should("exist")
+        cy.get(globalExternalCode.locator).should("exist")
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1)
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist")
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
@@ -177,7 +177,7 @@ describe("Microsites - External Code", () => {
 
         // Target external codes should be active only on target
         cy.visit(target.micrositeUrl)
-        cy.get('script[id="global"]').should("exist")
+        cy.get(globalExternalCode.locator).should("exist")
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1)
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist")
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
@@ -187,7 +187,7 @@ describe("Microsites - External Code", () => {
 
         // Recommend external codes should be active only on recommend
         cy.visit(recommend.micrositeUrl)
-        cy.get('script[id="global"]').should("exist")
+        cy.get(globalExternalCode.locator).should("exist")
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1)
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist")
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
@@ -197,12 +197,12 @@ describe("Microsites - External Code", () => {
 
         // Visiting a target track (not as part of a microsite) - should see only the target track's external code + the global one
         cy.visit(target.url)
-        cy.get('script[id="global"]').should("exist")
+        cy.get(globalExternalCode.locator).should("exist")
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("not.exist")
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("not.exist")
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("not.exist")
-        cy.get('script[id="target"]').should("exist") // since the nav header doesn't exist, just check for the script tag itself
-        cy.get('script[id="recommend"]').should("not.exist")
-        cy.get('script[id="microsite"]').should("not.exist")
+        cy.get(targetExternalCode.locator).should("exist") // since the nav header doesn't exist, just check for the script tag itself
+        cy.get(recommendExternalCode.locator).should("not.exist")
+        cy.get(micrositeExternalCode.locator).should("not.exist")
     })
 })
