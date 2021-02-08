@@ -62,6 +62,7 @@ export class Configurations extends Common {
             },
             vex: {
                 backgroundColor: "#backgroundColor",
+                headerBackgroundColor: "#headerBackgroundColor",
                 headerTitleSettings: "#headerTitleAppearance",
                 headerFontWeight: "#headerTextFontWeight",
                 headerFontColor: "#headerTextColor",
@@ -71,7 +72,13 @@ export class Configurations extends Common {
                 activeSettings: "#activeItemAppearance",
                 activeFontWeight: "#activeItemFontWeight",
                 activeFontColor: "#activeItemColor",
-                hideNavigation: "div[data-qa-hook='checkbox']"
+                hideNavigation: "div[data-qa-hook='checkbox']",
+                backgroundcolorPreview: "div[data-qa-hook='page-body'] > div > div > div > div:nth-child(1) > div:nth-child(2)",
+                headerBackgroundColorPreview: "div[class='ant-col ant-col-14'] > div:nth-child(1)",
+                headerTitleFontPreview: "div[class='ant-col ant-col-14'] > div:nth-child(1) > div",
+                bodySessionTitleFontPreview: "div[class='ant-col ant-col-14'] > div:nth-child(3)",
+                bodySuppplementalContentFontPreview: "div[class='ant-col ant-col-10'] > div:nth-child(3)",
+                activeTitleFontPreview: "div[class='ant-col ant-col-10'] > div:nth-child(4)",
             },
             microsites: { 
                 hideNavigation: "div[data-qa-hook='checkbox']"
@@ -447,7 +454,7 @@ export class Configurations extends Common {
     }
 
     configureVEXAppearance(options){
-        const {appearance, backgroundColor, hideNavigation, verify} = options
+        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, verify} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
@@ -459,6 +466,11 @@ export class Configurations extends Common {
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
             this.pickColor({button: this.appearances.vex.backgroundColor, r: r, g: g, b: b, a: a})
+        }
+
+        if(headerBackgroundColor){
+            const { r, g, b, a } = headerBackgroundColor
+            this.pickColor({button: this.appearances.vex.headerBackgroundColor, r: r, g: g, b: b, a: a})
         }
 
         if(headerTitleFontFamily){
@@ -556,7 +568,7 @@ export class Configurations extends Common {
     }
 
     verifyVEXappearance(options){
-        const {backgroundColor, hideNavigation} = options
+        const {backgroundColor, headerBackgroundColor, hideNavigation} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
@@ -564,6 +576,16 @@ export class Configurations extends Common {
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
             cy.get(this.appearances.vex.backgroundColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+
+        if(headerBackgroundColor){
+            const { r, g, b, a } = headerBackgroundColor
+            cy.get(this.appearances.vex.headerBackgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
                     const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
                     expect(style).to.include(backgroundColorStyle)
