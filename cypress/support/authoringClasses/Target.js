@@ -12,6 +12,7 @@ export class Target extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
+            appearanceLabel: "label:contains('Appearance')",
             externalCodeLabel: "label:contains('External Code')",
             accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
@@ -96,6 +97,7 @@ export class Target extends Common {
     configure(options){
         const name = options.name
         const slug = options.slug
+        const appearance = options.appearance
         const accessProtection = options.accessProtection
         const externalCode = options.externalCode
         const contents = options.contents
@@ -127,6 +129,10 @@ export class Target extends Common {
 
         if(slug){
             this.setCustomUrl(slug, verify)
+        }
+
+        if(appearance){
+            this.setAppearance(appearance, verify)
         }
 
         if(externalCode){
@@ -244,6 +250,21 @@ export class Target extends Common {
             codes.forEach( code => {
                 cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("not.contain", code)
             })
+        }
+    }
+
+    setAppearance(appearance, verify){
+        cy.get(this.pageSidebar.appearanceLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(appearance)).click()
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.appearanceLabel).siblings("span").should("contain", appearance)
+
         }
     }
 
