@@ -57,14 +57,14 @@ describe("Recommend - Dynamic Header Logo", () => {
         authoring.configurations.configureHeaderAppearance({appearance: recommend.appearance, dynamicLogo: "on"})
 
         cy.visit(recommend.url + `?lbhqip=${company.ip}`)
-        cy.get(consumption.recommend.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src="${company.logo}"]`).should("exist")
         })
 
         // Verify that dynamic logo is a default value when visiting with a spoofed IP address for which there is 
         // no available information
         cy.visit(recommend.url + "?lbhqip=" + nonCompany.ip)
-        cy.get(consumption.recommend.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src*="${headerAppearance.thumbnail.url}"]`).should("exist")
         })
 
@@ -72,7 +72,7 @@ describe("Recommend - Dynamic Header Logo", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.configureHeaderAppearance({appearance: recommend.appearance, dynamicLogo: "off"})
         cy.visit(recommend.url + `/?lbhqip=${company.ip}`)
-        cy.get(consumption.recommend.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src*="${headerAppearance.thumbnail.url}"]`).should("exist")
         })
     })

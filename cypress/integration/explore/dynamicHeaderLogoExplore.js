@@ -48,7 +48,7 @@ const nonCompany = {
 }
 
 describe("Explore - Dynamic Header Logo", () => {
-    it("Setup appearance and explore page if not already done", () => {
+    it("Setup appearance and Recommend Track if not already done", () => {
         cy.request({url: recommend.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
@@ -58,6 +58,9 @@ describe("Explore - Dynamic Header Logo", () => {
                 authoring.recommend.configure(recommend)
             }
         })
+    })
+
+    it("Setup Explore page if not already done", () => {
         cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
@@ -76,14 +79,14 @@ describe("Explore - Dynamic Header Logo", () => {
         authoring.configurations.configureHeaderAppearance({appearance: explore.appearance, dynamicLogo: "on"})
 
         cy.visit(explore.url + `?lbhqip=${company.ip}`)
-        cy.get(consumption.explore.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src="${company.logo}"]`).should("exist")
         })
 
         // Verify that dynamic logo is a default value when visiting with a spoofed IP address for which there is 
         // no available information
         cy.visit(explore.url + "?lbhqip=" + nonCompany.ip)
-        cy.get(consumption.explore.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src*="${headerAppearance.thumbnail.url}"]`).should("exist")
         })
 
@@ -91,7 +94,7 @@ describe("Explore - Dynamic Header Logo", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.configureHeaderAppearance({appearance: explore.appearance, dynamicLogo: "off"})
         cy.visit(explore.url + `/?lbhqip=${company.ip}`)
-        cy.get(consumption.explore.header).within(() => {
+        cy.get(consumption.common.header.locator).within(() => {
             cy.get(`img[src*="${headerAppearance.thumbnail.url}"]`).should("exist")
         })
     })

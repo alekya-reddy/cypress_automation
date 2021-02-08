@@ -3,7 +3,6 @@ import { CommonCX } from "./CommonCX";
 export class TargetCX extends CommonCX {
     constructor(env, org, tld, baseUrl){
         super(env, org, tld, baseUrl);
-        this.header = "#qa-header";
         this.flowHeader = "#qa-header-common";
         this.flowHeaderShare = "#qa-share-common"
         this.flowSidebar = "#sidebar-container"; 
