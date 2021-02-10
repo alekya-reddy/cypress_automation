@@ -93,8 +93,8 @@ const landingPage = {
             expectContents: target.contents,
             searchConfiguration: {
                 enableToggle: true,
-                textColor: {r: "87", g: "255", b: "78", position: 0},
-                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+                inputTextColor: {r: "87", g: "255", b: "78", position: 1},
+                buttonBackgroundAndBorderColor: {r: "43", g: "91", b: "200", position: 2}
             }
         },
         {
@@ -115,8 +115,8 @@ const landingPage = {
             },
             searchConfiguration: {
                 enableToggle: true,
-                textColor: {r: "87", g: "255", b: "78", position: 0},
-                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+                inputTextColor: {r: "87", g: "255", b: "78", position: 1},
+                buttonBackgroundAndBorderColor: {r: "43", g: "91", b: "200", position: 2}
             }
         }
     ]

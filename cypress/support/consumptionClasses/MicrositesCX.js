@@ -14,6 +14,7 @@ export class MicrositesCX extends CommonCX {
         this.businessUnitFilterLocator = '#dropdownbusinessUnits'
         this.filterByValue = '#qa-microsite-topic-filter-topic > span'
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
+        this.searchInputLocator = 'input[type="search"]'
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -180,15 +181,25 @@ export class MicrositesCX extends CommonCX {
                     this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
                 }
                 if(searchConfiguration) {
-                    const { textColor, backgroundColor } = searchConfiguration
-                    // Text color doesn't work yet
-                    // if(textColor){
-                    //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-                    // }
-                    if(backgroundColor){
-                        cy.contains("button", "Search").should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
+                    const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
+                    const searchButtonText = searchButtonTitle || "Search"
+                  
+                    cy.contains("button", searchButtonText).should("exist")
+
+                    if(buttonTextColor){
+                        cy.contains("button", searchButtonText).should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
+                    }
+
+                    if(buttonBackgroundAndBorderColor){
+                        cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                    }
+
+                    if(inputTextColor){
+                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
+
                 if(contents){
                     contents.forEach(content => {
                         cy.contains(this.cardTitle, content.name).should("exist")

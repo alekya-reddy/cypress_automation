@@ -48,6 +48,7 @@ export class Microsites extends Common {
             trackRow: ".pf-event-sessions",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             titleOverrideInput: "input[name*='trackTitleOverride']",
+            searchButtonOverrideInput: "input[name*='searchButtonTitle']",
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
             micrositeCardTitle: ".pf-event-session-card-title > div",
@@ -707,16 +708,22 @@ export class Microsites extends Common {
             cy.containsExact("span", "Card Configuration").click()
         }
         if(searchConfiguration){
-            const { enableToggle, textColor, backgroundColor} = searchConfiguration
+            const { enableToggle, searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor} = searchConfiguration
             cy.containsExact("div","Search Configuration").click()
             if(enableToggle){
                 cy.get("input[name*='searchConfiguration.enable']").click()
             }
-            if(textColor){
-                this.pickColor2(textColor)
+            if(searchButtonTitle){
+                cy.get(this.landingPages.searchButtonOverrideInput).clear().type(searchButtonTitle)
             }
-            if(backgroundColor){
-                this.pickColor2(backgroundColor)
+            if(buttonTextColor){
+                this.pickColor2(buttonTextColor)
+            }
+            if(inputTextColor){
+                this.pickColor2(inputTextColor)
+            }
+            if(buttonBackgroundAndBorderColor){
+                this.pickColor2(buttonBackgroundAndBorderColor)
             }
         }
 
@@ -861,8 +868,13 @@ export class Microsites extends Common {
                 })
             }
             if(searchConfiguration){
+                const overrideTitle = searchConfiguration.searchButtonTitle
                 cy.contains(blockLocator, trackName).within(() => {
-                    cy.containsExact('button', ' Search ').should("exist")
+                    if(overrideTitle){
+                        cy.contains('button', overrideTitle).should("exist")
+                    } else {
+                        cy.containsExact('button', ' Search ').should("exist")
+                    }
                 })
             }
             if(contents){

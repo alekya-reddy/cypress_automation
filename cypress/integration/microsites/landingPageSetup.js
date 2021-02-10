@@ -60,8 +60,10 @@ const landingPage = {
             expectContents: filtersContent.contents,
             searchConfiguration: {
                 enableToggle: true,
-                textColor: {r: "87", g: "255", b: "78", position: 0},
-                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+                searchButtonTitle: "Test Search",
+                buttonTextColor: {r: "225", g: "107", b: "140", position: 0},
+                inputTextColor: {r: "204", g: "162", b: "162", position: 1},
+                buttonBackgroundAndBorderColor: {r: "231", g: "185", b: "141", position: 2}
             },
             topicFilter: {
                 enableToggle: true,
@@ -76,24 +78,19 @@ const landingPage = {
             },
             funnelStageFilter:{
                 enableToggle: true,
-                overrideLabel: 'Filter By Funnel Stage Here',
-                textColor: {r: "117", g: "133", b: "76", position: 0}
+                overrideLabel: 'Filter By Funnel Stage Here'
             },
             industryFilter:{
                 enableToggle: true,
-                overrideLabel: 'Filter By Industry Here',
-                backgroundColor: {r: "184", g: "106", b: "164", position: 1}
+                overrideLabel: 'Filter By Industry Here'
             },
             personaFilter:{
                 enableToggle: true,
-                overrideLabel: 'Filter By Persona Here',
-                textColor: {r: "43", g: "91", b: "200", position: 0},
-                backgroundColor: {r: "87", g: "255", b: "78", position: 1}
+                overrideLabel: 'Filter By Persona Here'
             },
             businessUnitFilter:{
                 enableToggle: true,
-                overrideLabel: 'Filter By Business Unit Here',
-                textColor: {r: "87", g: "255", b: "78", position: 0}
+                overrideLabel: 'Filter By Business Unit Here'
             }
         },
         {
@@ -123,8 +120,10 @@ const landingPage = {
             },
             searchConfiguration: {
                 enableToggle: true,
-                textColor: {r: "87", g: "255", b: "78", position: 0},
-                backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+                searchButtonTitle: 'Test Search2',
+                buttonTextColor: {r: "215", g: "107", b: "140", position: 0},
+                inputTextColor: {r: "234", g: "162", b: "172", position: 1},
+                buttonBackgroundAndBorderColor: {r: "101", g: "15", b: "205", position: 2}
             }
         },
         {
