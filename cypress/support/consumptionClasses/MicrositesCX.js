@@ -182,33 +182,16 @@ export class MicrositesCX extends CommonCX {
                 }
                 if(searchConfiguration) {
                     const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
-                    // Text color doesn't work yet
-                    // if(textColor){
-                    //     cy.contains("button", "Search").should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
-                    // }
-                    if(searchButtonTitle){
-                        cy.contains("button", searchButtonTitle).should("exist")
-                    }
-                    else{
-                        cy.contains("button", "Search").should("exist")
-                    }
+                    const searchButtonText = searchButtonTitle || "Search"
+                  
+                    cy.contains("button", searchButtonText).should("exist")
 
                     if(buttonTextColor){
-                        if(searchButtonTitle){
-                            cy.contains("button", searchButtonTitle).should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
-                        }
-                        else{
-                            cy.contains("button", "Search").should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
-                        }
+                        cy.contains("button", searchButtonText).should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
                     }
 
                     if(buttonBackgroundAndBorderColor){
-                        if(searchButtonTitle){
-                            cy.contains("button", searchButtonTitle).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        }
-                        else{
-                            cy.contains("button", "Search").should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        }
+                        cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                         cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
