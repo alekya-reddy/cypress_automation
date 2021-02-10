@@ -380,6 +380,12 @@ export class Configurations extends Common {
         })
     }
 
+    goToVEXAppearance(appearance){
+        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
+        this.clickAppearance(appearance)
+        this.clickAppearanceTab("Virtual Event")
+    }
+
     deleteAppearance(name, verify){
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         cy.waitFor({element: this.appearances.sidebar, to: "exist", wait: 10000})
@@ -508,7 +514,7 @@ export class Configurations extends Common {
     }
 
     configureVEXAppearance(options){
-        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, verify} = options
+        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, verify} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
@@ -611,6 +617,10 @@ export class Configurations extends Common {
                     cy.get(this.appearances.vex.hideNavigation).click()
                 }
             })
+        }
+        if(externalCodes){
+            const codes = [externalCodes].flat()
+            this.addAppearanceExternalCode(codes)
         }
 
         cy.contains("button", "Save Virtual Event Settings").click()
