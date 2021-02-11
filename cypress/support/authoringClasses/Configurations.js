@@ -380,10 +380,10 @@ export class Configurations extends Common {
         })
     }
 
-    goToVEXAppearance(appearance){
+    goToCampaignAppearance(appearance, campaignName){
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
-        this.clickAppearanceTab("Virtual Event")
+        this.clickAppearanceTab(campaignName)
     }
 
     deleteAppearance(name, verify){
@@ -519,9 +519,7 @@ export class Configurations extends Common {
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
 
-        this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
-        this.clickAppearance(appearance)
-        this.clickAppearanceTab("Virtual Event")
+        this.goToCampaignAppearance(appearance, "Virtual Event")
 
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
@@ -619,8 +617,7 @@ export class Configurations extends Common {
             })
         }
         if(externalCodes){
-            const codes = [externalCodes].flat()
-            this.addAppearanceExternalCode(codes)
+            this.addAppearanceExternalCode(externalCodes, verify)
         }
 
         cy.contains("button", "Save Virtual Event Settings").click()

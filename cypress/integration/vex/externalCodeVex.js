@@ -52,7 +52,6 @@ const landingPage = {
 describe("VEX - External Code", () => {
     it("Setup if not already done", ()=>{
         // If vex is not created, automatically tear down all resources, and add them back.
-        // This applies only to test specific resources.
         // If vex exists, assume entire setup is correct and move on to the actual test
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
@@ -84,17 +83,17 @@ describe("VEX - External Code", () => {
 
         // Check that all external codes are present in Landing Page editor
         cy.get(globalExternalCode.locator).should("exist") // Comes from global external code
-        cy.get(eventExternalCode.locator).should("exist") // Comes from microsite setup
-        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // Comes from microsite appearance. Make sure no duplicate from Explore.
-        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("exist").should("have.length", 1) // Comes from microsite appearance. Make sure no duplicate from Explore.
+        cy.get(eventExternalCode.locator).should("exist")
+        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
+        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
 
         // Check consumption
         cy.visit(event.url)
         cy.get(consumption.vex.vexHeader, {timeout: 10000}).should("exist")
         cy.get(globalExternalCode.locator).should("exist") // From global external code
-        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // From microsite appearance - make sure no duplicate from explore appearance
-        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("exist") // From microsite setup area
-        cy.get(consumption.vex.vexHeader).should("have.attr", "event", "event") // From microsite setup area
+        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
+        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("exist")
+        cy.get(consumption.vex.vexHeader).should("have.attr", "event", "event")
         
 
         // Delete external code from External Code configuration
@@ -106,23 +105,23 @@ describe("VEX - External Code", () => {
         authoring.vex.goToPageEditor(landingPage.name)
 
         // Check that all external codes are present in Landing Page editor
-        cy.get(globalExternalCode.locator).should("exist") // Comes from global external code
-        cy.get(eventExternalCode.locator).should("exist") // Comes from microsite setup
-        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // Comes from microsite appearance. Make sure no duplicate from Explore.
+        cy.get(globalExternalCode.locator).should("exist")
+        cy.get(eventExternalCode.locator).should("exist")
+        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
         cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("not.exist") 
 
         // Check consumption
         cy.visit(event.url)
         cy.get(consumption.vex.vexHeader, {timeout: 10000}).should("exist")
         cy.get(globalExternalCode.locator).should("exist") // From global external code
-        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // From microsite appearance - make sure no duplicate from explore appearance
-        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("not.exist") // From microsite setup area
-        cy.get(consumption.vex.vexHeader).should("have.attr", "event", "event") // From microsite setup area
+        cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
+        cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("not.exist")
+        cy.get(consumption.vex.vexHeader).should("have.attr", "event", "event")
 
 
         // Go back to the appearance and delete one external code from appearances
         authoring.configurations.visit.appearances()
-        authoring.configurations.goToVEXAppearance(vexAppearance.name)
+        authoring.configurations.goToCampaignAppearance(vexAppearance.name, "Virtual Event")
         authoring.configurations.removeAppearanceExternalCode(vexAppearanceExternalCode.name)
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
@@ -131,7 +130,7 @@ describe("VEX - External Code", () => {
 
         // Check that all external codes are present in Landing Page editor
         cy.get(globalExternalCode.locator).should("exist") // Comes from global external code
-        cy.get(eventExternalCode.locator).should("exist") // Comes from microsite setup
+        cy.get(eventExternalCode.locator).should("exist")
         cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("not.exist")
         cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("not.exist") 
 
