@@ -105,6 +105,7 @@ describe("VEX - Blacklist", ()=>{
         consumption.vex.fillStandardForm(visitor)
         cy.contains(consumption.vex.messages.blacklisted, {timeout: 10000}).should('exist')
         cy.visit(session.url)
+        consumption.vex.fillStandardForm({email: visitor.email.toUpperCase(), checkSuccess: false}) // Should be able to detect regardless of case
         cy.contains(consumption.vex.messages.blacklisted, {timeout: 10000}).should('exist')
 
         // Register on session page and verify that blacklisted can't attend

@@ -335,8 +335,7 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 end: 'Jun 24, 2020 8:00pm'
             }
         })
-        cy.visit(sessions[2].url)
-        consumption.vex.fillStandardForm({email: "getoutofmyway@gmail.com"})
+        cy.visit(sessions[2].url + "?lb_email=getoutofmyway@gmail.com")
         consumption.vex.expectZoom()
         cy.go("back")
 

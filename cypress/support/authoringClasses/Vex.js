@@ -313,7 +313,7 @@ export class Vex extends Common {
             cy.get(this.antDropSelect.selector).click()
         })
         cy.get(this.antDropSelect.options(type)).click()
-        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
             cy.get(this.antDropSelect.selector).click()
         })
         groups.forEach((group)=>{
@@ -328,7 +328,7 @@ export class Vex extends Common {
     removeTrackProtection(list){
         let groups = [list].flat()
 
-        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
             groups.forEach((group)=>{
                 cy.contains('.ant-select-selection-item', group).within(()=>{
                     cy.get(".ant-select-selection-item-remove").click()

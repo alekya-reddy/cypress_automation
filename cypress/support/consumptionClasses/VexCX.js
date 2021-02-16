@@ -36,7 +36,7 @@ export class VexCX extends CommonCX {
             videoPlayer: 'video',
             play: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
             pause: function(){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
-            getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'getCurrentTime()', undefined, state) },
+            getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
             paused: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) }
         };
         this.vimeo = {

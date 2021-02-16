@@ -27,7 +27,7 @@ workflows:
             - hold
           executor: latest-chrome
           browser: chrome
-          spec: "cypress/integration/common/*\
-                cypress/integration/explore/*\
-                cypress/integration/recommend/*\
+          spec: "cypress/integration/common/*,\
+                cypress/integration/explore/*,\
+                cypress/integration/recommend/*,\
                 cypress/integration/target/*"

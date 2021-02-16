@@ -27,7 +27,11 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        rocketChat: {on_off: "ON"}
+        rocketChat: {
+            addNew: true,
+            live: true,
+            onDemand: true
+        },
     },
     {
         name: "Live ended with on-demand",
@@ -45,7 +49,11 @@ const sessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        rocketChat: {on_off: "ON"}
+        rocketChat: {
+            addNew: true,
+            live: true,
+            onDemand: true
+        },
     },
     {
         name: "no-chat",
@@ -141,7 +149,7 @@ describe("Vex - Rocket Chat Registration", ()=>{
         authoring.vex.configureForm(noForm)
         cy.wait(1500) // allow DB time to update before visiting consumption 
 
-        // A live session that has ended and is now showing on-demand should not have chat if there is no registration even if rocket chat enabled 
+        // A live session that has ended that has chat should ask for email
         cy.visit(sessions[1].url)
         consumption.vex.fillStandardForm({email: visitor.email})
         consumption.vex.expectYoutube()
