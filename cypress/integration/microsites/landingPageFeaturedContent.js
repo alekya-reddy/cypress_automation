@@ -29,7 +29,7 @@ const trackWithTopics = {
     get micrositeUrl(){
         return `${microsite.url}/${this.slug}/${contentWithTopics.slug}`
     },
-    contents: [contentWithTopics.internalTitle]
+    contents: [contentWithTopics.internalTitle, "Youtube Shared Resource"]
 }
 
 const target = {
@@ -82,9 +82,9 @@ const featureBlock = {
             name: trackWithTopics.contents[0]
         },
         {
-            trackType: target.trackType,
-            track: target.name,
-            name: target.contents[0]
+            trackType: trackWithTopics.trackType,
+            track: trackWithTopics.name,
+            name: trackWithTopics.contents[1]
         },
         {
             trackType: recommend.trackType,
@@ -164,16 +164,12 @@ describe("Microsites - Landing page featured content block setup", () => {
         authoring.microsites.configureLandingPage({...landingPage, stayInEditor: true}) // Includes verification that block configuration is correct
 
         // Verify that we can remove content from a featured content block
-        cy.contains(authoring.microsites.landingPages.trackRow, featureBlock.name).within(() => {
-            cy.get(authoring.microsites.landingPages.micrositeCard + `:contains("${recommend.contents[0]}")`).should("have.length", 2) // There's 2 with same name
-        })
         authoring.microsites.removeFeaturedContent({
             block: featureBlock.name,
-            content: recommend.contents[0],
-            index: 1
+            content: trackWithTopics.contents[1]
         }, false)
         cy.contains(authoring.microsites.landingPages.trackRow, featureBlock.name).within(() => {
-            cy.get(authoring.microsites.landingPages.micrositeCard + `:contains("${recommend.contents[0]}")`).should("have.length", 1)
+            cy.get(authoring.microsites.landingPages.micrositeCard + `:contains("${trackWithTopics.contents[1]}")`).should("not.exist")
         })
 
         // Verify that featured content blocks can be deleted
@@ -197,10 +193,10 @@ describe("Microsites - Landing page featured content block setup", () => {
 
         // Verify that the cards would redirect to the correct url
         cy.get(`a[href='${trackWithTopics.micrositeUrl}']`).should("exist").contains(trackWithTopics.contents[0]).should("exist")
-        cy.get(`a[href='${target.micrositeUrl}']`).should("exist").contains(target.contents[0]).should("exist")
+        cy.get(`a[href='${recommend.micrositeUrl}']`).should("exist").contains(recommend.contents[0]).should("exist")
 
         // Verify that the deleted content doesn't exist
-        cy.get(`a[href='${recommend.micrositeUrl}']`).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[1]).should("not.exist")
 
         // Basic verification of filters for featured content block (
         // Technically this test should go in searchAndFiltersConsumption.js, but the featured content block is already set up here

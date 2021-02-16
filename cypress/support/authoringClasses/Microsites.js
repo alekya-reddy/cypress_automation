@@ -48,14 +48,14 @@ export class Microsites extends Common {
             trackRow: ".pf-event-sessions",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             titleOverrideInput: "input[name*='trackTitleOverride']",
-            searchButtonOverrideInput: "input[name*='searchButtonTitle']",
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
-            micrositeCardTitle: ".pf-event-session-card-title > div",
+            micrositeCardTitle: ".pf-event-microsite-card-title > div",
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
             recommendRadio: "input[value='recommend']",
             targetRadio: "input[value='target']",
+            searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -714,7 +714,9 @@ export class Microsites extends Common {
                 cy.get("input[name*='searchConfiguration.enable']").click()
             }
             if(searchButtonTitle){
-                cy.get(this.landingPages.searchButtonOverrideInput).clear().type(searchButtonTitle)
+                cy.get(this.landingPages.searchOverrideLabel).parent().within(() => {
+                    cy.get("input").clear().type(searchButtonTitle)
+                })
             }
             if(buttonTextColor){
                 this.pickColor2(buttonTextColor)
@@ -873,7 +875,7 @@ export class Microsites extends Common {
                     if(overrideTitle){
                         cy.contains('button', overrideTitle).should("exist")
                     } else {
-                        cy.containsExact('button', ' Search ').should("exist")
+                        cy.containsExact('button', 'Search').should("exist")
                     }
                 })
             }
@@ -948,7 +950,7 @@ export class Microsites extends Common {
                 })
             }
 
-            cy.contains("button", "Confirm").click()
+            cy.contains("button", "Confirm").click({force: true})
         })
     }
 
