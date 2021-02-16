@@ -9,6 +9,7 @@ export class CommonCX {
         this.trackProtectionEmailInput = "#email";
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
+        this.customFormIframe = "#qa-custom-form";
         this.standardForm = {
             locator: "form[id='qa-standard-form']",
             firstNameInput: "input[id^='firstName']",

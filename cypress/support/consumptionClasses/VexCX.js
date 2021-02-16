@@ -84,7 +84,7 @@ export class VexCX extends CommonCX {
             meetingInfo: ".meeting-info"
         }
         this.rocketChat = {
-            iframe: "iframe[src*='rocket.pathfactory']",
+            iframe: ".pf-event-session-widgets-frame",
             container: "#rocket-chat",
             messageInput: "textarea[name='msg']",
             moderatorViewButton: "button:contains('Open Moderator View')"
@@ -149,6 +149,7 @@ export class VexCX extends CommonCX {
         const message = config.message
         const user = config.user 
 
+        cy.waitForIframeToLoad(this.rocketChat.iframe, this.rocketChat.messageInput, 20000)
         cy.getIframeBody(this.rocketChat.iframe).within(()=>{
             cy.get(this.rocketChat.container).should('exist')
             cy.get(this.rocketChat.messageInput).type(`${message}\n`)
