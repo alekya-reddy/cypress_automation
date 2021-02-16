@@ -297,11 +297,9 @@ export class Vex extends Common {
         const save = form.save == false ? false : true 
 
         cy.contains(this.antRow, "Attendee Registration Form").within(()=>{
-            cy.get(this.antSelector).click()
+            cy.get("input").clear({force: true}).type(name, {force: true})
         })
-        cy.get(this.antDropdownContainer).within(()=>{
-            cy.get(this.antDropSelect.options(name)).click()
-        })
+        cy.get(this.antDropSelect.options(name)).click()
         if(save){
             cy.get(this.saveButton).click()
             cy.get('body').should('contain', this.recordSavedMessage)
@@ -315,7 +313,7 @@ export class Vex extends Common {
             cy.get(this.antDropSelect.selector).click()
         })
         cy.get(this.antDropSelect.options(type)).click()
-        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
             cy.get(this.antDropSelect.selector).click()
         })
         groups.forEach((group)=>{
@@ -330,7 +328,7 @@ export class Vex extends Common {
     removeTrackProtection(list){
         let groups = [list].flat()
 
-        cy.contains(this.trackProtectionArea, "Access Protection").within(()=>{
+        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
             groups.forEach((group)=>{
                 cy.contains('.ant-select-selection-item', group).within(()=>{
                     cy.get(".ant-select-selection-item-remove").click()
@@ -361,6 +359,12 @@ export class Vex extends Common {
             cy.get(this.addSessionButton).click();
         })
         cy.get(this.antModal).should("not.be.visible")
+        cy.do(() => {
+            cy.waitFor({element: this.sessionName(sessionName), to: "exist", wait: 1000})
+            if (Cypress.$(this.sessionName(sessionName)).length == 0) {
+                this.searchSession(sessionName)
+            }
+        })
         cy.get(this.sessionName(sessionName), {timeout: 10000}).should('exist');
     }
 
@@ -390,6 +394,12 @@ export class Vex extends Common {
 
     goToSessionConfig(sessionName){
         this.goToSessionList()
+        cy.do(() => {
+            cy.waitFor({element: this.sessionName(sessionName), to: "exist", wait: 1000})
+            if (Cypress.$(this.sessionName(sessionName)).length == 0) {
+                this.searchSession(sessionName)
+            }
+        })
         cy.get(this.sessionName(sessionName), {timeout: 20000}).parent().within(()=>{
             cy.contains("a", "Configure").click()
         })
@@ -489,7 +499,9 @@ export class Vex extends Common {
         const rocketChat = config.rocketChat
         const engagementThreshold = config.engagementThreshold
         const engagementScore = config.engagementScore
-        const maxAttendees = config.maxAttendees 
+        const maxAttendees = config.maxAttendees
+        const form = config.form
+        const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
 
         if(!stayOnPage){
@@ -552,6 +564,17 @@ export class Vex extends Common {
             this.configureLive(live);
         }
 
+        if(form){
+            this.setForm(form)
+        }
+
+        if(formVisibility){
+            cy.contains(this.antRow, "Form Visibilty").within(() => {
+                cy.get(this.antDropSelect.selector).click()
+            })
+            cy.get(this.antDropSelect.options(formVisibility)).click()
+        }
+
         if(maxAttendees && type !== "On Demand"){
         cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
         }
@@ -567,6 +590,13 @@ export class Vex extends Common {
         if(rocketChat){
             this.configureRocketChat(rocketChat)
         }
+    }
+
+    setForm(form){
+        cy.contains(this.antRow, "Attendee Session Registration Form").within(() => {
+            cy.get("input").clear({force: true}).type(form, {force: true})
+        })
+        cy.get(this.antDropSelect.options(form)).click()
     }
 
     addSupplementalContent(contents){

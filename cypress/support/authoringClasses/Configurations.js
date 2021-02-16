@@ -8,19 +8,22 @@ export class Configurations extends Common {
             webhooks: `${this.configRoute}/webhooks`,
             widgets: `${this.configRoute}/widgets`,
             externalCode: `${this.configRoute}/external-code`,
-            appearances: `${this.configRoute}/appearance`
+            appearances: `${this.configRoute}/appearance`,
+            forms: `${this.configRoute}/forms`,
         };
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
             widgets: "Widgets Configuration",
             externalCode: "External Code Configuration",
-            appearances: "Appearances Configuration"
+            appearances: "Appearances Configuration",
+            forms: "Form Configuration",
         };
         this.visit = {
             webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
             widgets: ()=>{ cy.visit(this.pageUrls.widgets) },
             externalCode: () => { cy.visit(this.pageUrls.externalCode) },
-            appearances: () => { cy.visit(this.pageUrls.appearances) }
+            appearances: () => { cy.visit(this.pageUrls.appearances) },
+            forms: () => { cy.visit(this.pageUrls.forms) },
         };
         this.addWebhookModal = {
             name: "#name",
@@ -86,7 +89,10 @@ export class Configurations extends Common {
             }
         };
         this.languages = {};
-        this.forms = {};
+        this.forms = {
+            nameInput: "#name",
+            delete: "i[title='Delete form']",
+        };
         this.ctas = {};
         this.imageLibrary = {};
         this.contentTags = {};
@@ -357,6 +363,28 @@ export class Configurations extends Common {
 
     openWidgetPreview(widget){
         cy.angryClick({clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgets.previewName}:contains('${widget}')`})
+    }
+
+    /*********************************************************************************/
+    /************************************* FORMS *************************************/
+    /*********************************************************************************/
+    addForm(name){
+        this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
+        cy.contains("button", "Add Form").click()
+        cy.get(this.forms.nameInput).clear().type(name + "\n")
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
+    }
+
+    deleteForm(name){
+        this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, () => {
+            cy.containsExact(this.table.cellName, name).click()
+            cy.get(this.forms.delete).click()
+            cy.contains("button", "Delete Form").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("not.exist")
     }
 
     /*********************************************************************************/

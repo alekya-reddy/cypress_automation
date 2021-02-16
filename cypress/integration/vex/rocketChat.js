@@ -27,7 +27,11 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        rocketChat: {on_off: "ON"}
+        rocketChat: {
+            addNew: true,
+            live: true,
+            onDemand: true
+        },
     },
     {
         name: "Live ended with on-demand",
@@ -45,7 +49,11 @@ const sessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
-        rocketChat: {on_off: "ON"}
+        rocketChat: {
+            addNew: true,
+            live: true,
+            onDemand: true
+        },
     },
     {
         name: "no-chat",
@@ -89,7 +97,7 @@ describe("Vex - Rocket Chat Registration", ()=>{
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureForm(form)
-        cy.wait(2000) // allow DB time to update before visiting consumption 
+        cy.wait(2000) // allow DB time to update before visiting consumption
 
         // Go to consumption and register on the event page 
         cy.clearCookies()
@@ -141,22 +149,18 @@ describe("Vex - Rocket Chat Registration", ()=>{
         authoring.vex.configureForm(noForm)
         cy.wait(1500) // allow DB time to update before visiting consumption 
 
-        // A live session that has ended and is now showing on-demand should not have chat if there is no registration even if rocket chat enabled 
+        // A live session that has ended that has chat should ask for email
         cy.visit(sessions[1].url)
+        consumption.vex.fillStandardForm({email: visitor.email})
         consumption.vex.expectYoutube()
-        cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
-
-        // Now visit a live session, which should ask you to provide email even though form is disabled
-        cy.visit(sessions[0].url)
-        cy.get(consumption.vex.emailInput).clear().type(visitor.email)
-        cy.contains("button", "Submit").click()
-        consumption.vex.expectWebex()
         consumption.vex.expectRocketChat()
 
-        // Visiting the live session that has ended (and has on-demand fallback) should still not show the rocket chat 
-        cy.visit(sessions[1].url)
-        consumption.vex.expectYoutube()
-        cy.get(consumption.vex.rocketChat.iframe).should("not.exist") 
+        // Now visit a live session, which should ask you to provide email even though form is disabled
+        cy.clearCookies()
+        cy.visit(sessions[0].url)
+        consumption.vex.fillStandardForm({email: visitor.email})
+        consumption.vex.expectWebex()
+        consumption.vex.expectRocketChat()
 
         // Confirm that the on-demand session has no rocket chat 
         cy.visit(sessions[2].url)

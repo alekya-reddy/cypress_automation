@@ -243,7 +243,7 @@ export class Microsites extends Common {
         }
         
         if(groups[0]){
-            cy.contains(this.antRow, "Access Protection").within(()=>{
+            cy.contains(this.antRow, "Groups").within(()=>{
                 groups.forEach(group => {
                     cy.get(this.antDropSelect.selector).type(group + "\n")
                 })
@@ -279,7 +279,7 @@ export class Microsites extends Common {
 
         groups.forEach((group)=>{
             cy.ifElementExists(this.setupPage.accessProtectionGroup + `:contains('${group}')`, 2000, () => {
-                cy.contains(this.antRow, "Access Protection").within(()=>{
+                cy.contains(this.antRow, "Groups").within(()=>{
                     cy.contains(this.setupPage.accessProtectionGroup, group).within(()=>{
                         cy.get(this.setupPage.removeAccessProtectionGroup).click()
                     })
