@@ -372,6 +372,8 @@ export class Configurations extends Common {
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
         cy.contains("button", "Add Form").click()
         cy.get(this.forms.nameInput).clear().type(name + "\n")
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
     }
 
     deleteForm(name){
