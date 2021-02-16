@@ -223,6 +223,16 @@ describe("Microsites - Search and Filter Content", () => {
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
+        // Search by pressing Enter keyboard
+        // Remove filters applied 
+        cy.get(consumption.microsites.topicFilterLocator + " > span:nth-child(2)").click()
+        cy.get(consumption.microsites.businessUnitFilterLocator + " > span:nth-child(2)").click()
+        cy.get("input").clear().type("this is \n" )
+
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
     })
 
 })
