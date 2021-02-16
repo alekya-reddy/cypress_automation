@@ -137,7 +137,8 @@ describe("VEX - Session group search", () => {
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("not.exist")
 
-            consumption.vex.searchSessionGroup(sessions.sessionWithTopic.topics)
+            // Search by pressing Enter keyboard
+            cy.get("input").clear().type(sessions.sessionWithTopic.topics + "\n")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
