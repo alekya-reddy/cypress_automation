@@ -77,6 +77,9 @@ describe("Explore - create new explore", () => {
         cy.contains(consumption.explore.hero.heroTitle, "Browse our Content")
 
         // Check that target tracks are there
+        target.contents.forEach(content => {
+            cy.contains('.pf-explore-grid-container', content).should("exist")
+        })
 
         // Edit Explore page name 
 
