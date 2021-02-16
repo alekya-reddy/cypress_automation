@@ -154,12 +154,16 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.get(`a[href^='https://zoom.us/j/${session.live.zoomNum}']`).should('exist')
     })
 
+    /*
+    // As of Sprint 102 Feb 16, 2021, it will not remember that you provided meeting PW previously and will ask you for email and meeting pw again
+    // See https://lookbookhq.atlassian.net/browse/DEV-12319 for what changed
     it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
         cy.visit(`${session.url}?lb_email=${emailQueryString}`) 
         cy.wait(1000)
         cy.get(consumption.vex.emailInput).should('not.exist')
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
+    */
 
     it("If require zoom password option is still active but live type has been switched to content library, you should not be asked for zoom password", ()=>{
         // There was a bug where if the 'require password' option is still active, it would still ask for zoom PW despite no longer being a zoom session 
