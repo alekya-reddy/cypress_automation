@@ -21,7 +21,7 @@ describe('Microsites - Client HQs', function() {
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'off');
             authoring.microsites.visit()
-            cy.contains('You don\'t have permission to view this page.').should('exist');
+            cy.contains('The Microsites module is not enabled for your instance.').should('exist');
             //When Microsites is toggled off, you should not see Microsites appearance settings tab
             authoring.configurations.visit.appearances(); 
             cy.get(authoring.configurations.appearances.secondaryNav).within(() => {
