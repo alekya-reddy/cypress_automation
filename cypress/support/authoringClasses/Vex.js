@@ -371,6 +371,7 @@ export class Vex extends Common {
     removeSession(sessionName){
         this.goToSessionList()
         cy.waitFor({element: this.sessionTableTitle, to: "exist", wait: 10000})
+        this.searchSession(sessionName)
         cy.ifElementExists(this.sessionName(sessionName), 1500, () => {
             cy.get(this.sessionName(sessionName)).parent().within(()=>{
                 cy.contains("a", "Delete").click(); 
@@ -380,6 +381,7 @@ export class Vex extends Common {
             })
         })
         cy.get(this.sessionName(sessionName)).should('not.exist')
+        this.clearSessionSearch()
     }
 
     searchSession(search){
@@ -1773,6 +1775,7 @@ export class Vex extends Common {
             })
             if(verify !== false){
                 cy.contains(this.antModal, "Add Session").should("not.be.visible")
+                this.searchSession(name)
                 cy.get(this.sessionName(name), {timeout: 10000}).should('exist')
                 this.goToSessionConfig(name)
             }

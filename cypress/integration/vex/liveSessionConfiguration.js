@@ -233,23 +233,38 @@ const contentSource = authoring.common.env.orgs['automation-vex'].resources
 // Live zoom sessions can also have on-demand video configured as a fallback when the live zoom session ends 
 // Note: Will not be using a real zoom id number, so zoom won't actually connect to a meeting. That's ok. Zoom's sdk is not in our control - just test that it is there. 
 describe('VEX - Virtual Event Live Sessions', function() {
+    it("Setup if not already done", () => {
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login();
+                authoring.vex.visit() 
+                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.configureEvent(event)
+                sessions.forEach(session => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    authoring.vex.backToEvent(event.name)
+                })
+            }
+        })
+    })
+
     it('Add and configure any live sessions which do not already exist', function() {
         authoring.common.login();
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
-        sessions.forEach((session)=>{
-            // Only add session if doesn't already exist. This way, can save time on the set up
-            cy.request({url: session.url, failOnStatusCode: false}).then((response)=>{
-                if(response.status == 404){ 
-                    authoring.vex.addSession(session.name)
-                    authoring.vex.configureSession(session)
-                    authoring.vex.backToEvent(event.name)
-                }
-            })
-        })
 
-        // Do some testing to make sure live config UI works as expected 
-        authoring.vex.goToSessionConfig(sessions[2].name)
+        // Do some testing to make sure live config UI works as expected
+        const clonedSession = {
+            name: "cloned session",
+            slug: "cloned",
+            get url(){ return `${event.url}/${this.slug}` },
+            live: {
+                end: 'Jun 24, 2020 8:00pm'
+            }
+        }
+        authoring.vex.removeSession(clonedSession.name)
+        authoring.vex.cloneSession({name: clonedSession.name, template: sessions[2].name})
 
         // If on-demand is toggled on and live is off, then should not see any of the live configuration options
         cy.get(authoring.vex.onDemandRadio).click()
@@ -329,23 +344,10 @@ describe('VEX - Virtual Event Live Sessions', function() {
 
         // Set the end date to the past so that this would, in theory, cause the session to fallback to on-demand in any exists.
         // In our case, we deleted the on-demand so it should instead remain on zoom on consumption side
-        authoring.vex.configureSession({
-            name: sessions[2].name,
-            live: {
-                end: 'Jun 24, 2020 8:00pm'
-            }
-        })
-        cy.visit(sessions[2].url + "?lb_email=getoutofmyway@gmail.com")
+        authoring.vex.configureSession(clonedSession)
+        cy.visit(clonedSession.url + "?lb_email=getoutofmyway@gmail.com")
         consumption.vex.expectZoom()
         cy.go("back")
-
-        // Sometimes bugs are found if we save a change on authoring and verify on consumption side
-        // Whereas if we only verify on consumption side for a configuration on authoring that was saved long ago, the bug would not be revealed
-        // So, for 1 of the sessions, delete it and re-add it so that it will be added using the latest code. 
-        authoring.vex.backToEvent(event.name)
-        authoring.vex.removeSession(sessions[2].name)
-        authoring.vex.addSession(sessions[2].name)
-        authoring.vex.configureSession(sessions[2])
     })
 
     it('Go to consumption, visit the live sessions, and verify that we see the expected behavior', function(){

@@ -74,7 +74,7 @@ export class VexCX extends CommonCX {
             paused: function(state){ cy.invokeJS(this.videoPlayer, 'paused', state) }
         };
         this.zoom = {
-            iframe: "iframe",
+            iframe: "iframe[src*='/api/virtual_event_sessions/']",
             container: '#zmmtg-root'
         };
         this.webex = {
