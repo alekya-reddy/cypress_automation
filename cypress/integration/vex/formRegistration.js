@@ -67,7 +67,8 @@ const event = {
     slug: 'formregistration-js',
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
-    }
+    },
+    form: standardFormLong
 }
 
 const sessions = {
@@ -228,7 +229,7 @@ const sessions = {
             },
         }
     },
-    /*liveBeforeStandardBeforeDuringNoChat: {
+    liveBeforeStandardBeforeDuringNoChat: {
         name: 'Live; Before; Standard; Before-during; No-chat',
         slug: '7',
         get url(){
@@ -248,10 +249,15 @@ const sessions = {
         formVisibility: "Before and During Live Session",
         scenarios: {
             1: {
-                form: standardForm.expect // Bug: The form isn't showing
-            }
+                form: standardForm.expect
+            },
+            2: {
+                form: standardForm.fill,
+                video: () => { cy.get(consumption.vex.zoom.iframe).should("not.exist") },
+                chat: expectNoChat
+            },
         }
-    },*/
+    },
     liveCurrentStandardAlwaysNoChat: {
         name: 'Live; Current; Standard; Always; No-chat',
         slug: '8',
@@ -431,7 +437,7 @@ describe('VEX - Session Form Registration', function() {
         })
     })
 
-    it("Scenario 1: Event has form. Cycle through each session and verify you see the expected form", () => {
+    it("Event has form. Cycle through each session and verify you see the expected form", () => {
         const scenarioIndex = 1
         Object.values(sessions).forEach(session => {
             cy.visit(session.url)
