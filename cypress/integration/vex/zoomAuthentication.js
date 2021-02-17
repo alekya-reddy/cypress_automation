@@ -28,11 +28,10 @@ const session = {
         zoomAuth: 'No Password'
     }
 }
-
-// For the next to 2 sessions, the set up is that session2 (a zoom session requiring password) is switched to a content library live session 
-const session2 = {
-    name: 'Zoom to CL',
-    slug: 'zoomtocl-js',
+ 
+const zoomPWCustomForm = {
+    name: 'Zoom Custom Form With Password',
+    slug: 'zoom-c-pw',
     get url(){
         return `${event.url}/${this.slug}`
     },
@@ -46,9 +45,12 @@ const session2 = {
         zoomNum: '1234',
         zoomAuth: "Require Password From Attendee",
         zoomPW: "12345"
-    }
+    },
+    form: 'Custom Form Shared Resource',
+    formVisibility: "Always",
 }
 
+// To set up session3, you need to first set it up as a zoom session requiring password, then switch it to a live content library session
 const session3 = {
     name: 'Zoom to CL',
     slug: 'zoomtocl-js',
@@ -67,7 +69,6 @@ const session3 = {
 }
 
 const email = `bobman${Math.random()}@gmail.com` // Need to generate new email each time because it will remember you from last time, and not ask for meeting PW again
-const emailQueryString = email.replace("@", "%40") // @ won't work in a query string, so using %40 encoding
 
 /* Expected behavior for zoom authentication 
     If 'no password' option is set, should be able to attend a zoom session.
@@ -158,6 +159,7 @@ describe('VEX - Virtual Event, zoom authentication', function() {
     // As of Sprint 102 Feb 16, 2021, it will not remember that you provided meeting PW previously and will ask you for email and meeting pw again
     // See https://lookbookhq.atlassian.net/browse/DEV-12319 for what changed
     it("If you have previously registered and provided meeting PW, and then revisit with same email on fresh browser, no need to provide name or zoom pw again", ()=>{
+        const emailQueryString = email.replace("@", "%40") // @ won't work in a query string, so using %40 encoding
         cy.visit(`${session.url}?lb_email=${emailQueryString}`) 
         cy.wait(1000)
         cy.get(consumption.vex.emailInput).should('not.exist')
@@ -172,4 +174,17 @@ describe('VEX - Virtual Event, zoom authentication', function() {
         cy.get(consumption.vex.meetingPWInput).should('not.exist')
     })
 
+    it("Zoom session that requires password that has custom form should allow you to enter password after filling form", () => {
+        cy.visit(zoomPWCustomForm.url)
+        cy.waitForIframeToLoad(consumption.vex.customFormIframe, "input[name='emailAddress']", 20000)
+        cy.getIframeBody(consumption.vex.customFormIframe).within(()=>{
+            cy.get("input[name='emailAddress']").type(email)
+            cy.get(".submit-button").click()
+        })
+        cy.waitFor({element: consumption.vex.customFormIframe, to: "not.exist"})
+        cy.get(consumption.vex.customFormIframe).should("not.exist")
+        cy.get(consumption.vex.meetingPWInput).clear().type("12345")
+        cy.contains("button", "Submit").click()
+        consumption.vex.expectZoom()
+    })
 })

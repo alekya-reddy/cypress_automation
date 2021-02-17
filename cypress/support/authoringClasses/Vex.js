@@ -310,16 +310,14 @@ export class Vex extends Common {
         let groups = [list].flat() 
 
         cy.contains(this.antRow, "Protection Type").within(()=>{
-            cy.get(this.antDropSelect.selector).click()
+            cy.get(this.antDropSelect.selector).type(type + "\n")
         })
-        cy.get(this.antDropSelect.options(type)).click()
         cy.contains(this.trackProtectionArea, "Groups").within(()=>{
-            cy.get(this.antDropSelect.selector).click()
+            groups.forEach((group)=>{
+                cy.get(this.antDropSelect.selector).type(group + "\n")
+                cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+            })
         })
-        groups.forEach((group)=>{
-            cy.get(this.antDropSelect.options(group)).click()
-        })
-        cy.get('body').click() // need to click away to close the dropdown menu
         groups.forEach((group)=>{
             cy.contains('.ant-select-selection-item', group).should('exist')
         })

@@ -88,7 +88,7 @@ describe('VEX - Virtual Event Registration', function() {
         sessions.forEach((session)=>{
             cy.visit(session.url) 
 
-            if(session.name == "live current"){
+            if(session.name == "live current" || session.name == "live upcoming"){
                 // Any live session that has started and not yet ended would require registration regardless of whether or not a form is configured
                 cy.get('form').should('exist')
                 noForm.expectedFormFieldLocators.forEach((locator)=>{
