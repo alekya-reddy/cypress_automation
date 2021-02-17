@@ -15,4 +15,19 @@ workflows:
             - hold
           executor: latest-chrome
           browser: chrome
-          spec: "cypress/integration/vex/vexTrackProtection.js"
+          spec: "cypress/integration/vex/*"
+      - cypress/run:
+          requires:
+            - hold
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/microsites/*"
+      - cypress/run:
+          requires:
+            - hold
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/common/*,\
+                cypress/integration/explore/*,\
+                cypress/integration/recommend/*,\
+                cypress/integration/target/*"
