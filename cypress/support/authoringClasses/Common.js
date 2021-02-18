@@ -14,6 +14,7 @@ export class Common {
         this.pageTitleBar = '[data-qa-hook="title-bar"]';
         this.pageTitleLocator = '[data-qa-hook="title-bar"] > h1'; 
         this.pageBody = '[data-qa-hook="page-body"]';
+        this.pageControls = 'div[data-qa-hook="page-controls"]';
         this.pageSearch = "input[name='page-search']";
         this.editIcon = 'i[title="Edit"]';
         this.editPencil = 'i[class*="fa-pencil"]';

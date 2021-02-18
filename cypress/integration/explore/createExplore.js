@@ -9,19 +9,13 @@ const youtubeContent = contents["Youtube Shared Resource"]
 
 const target = {
     name: 'sharedTarget',
-    contents: [webContent.title, youtubeContent.title],
-    // get url(){
-    //     return `${authoring.common.baseUrl}/${this.slug}/${webContent.slug}`
-    // }
-}
+    contents: [webContent.title, youtubeContent.title]
+};
 
 const recommend = {
     name: 'sharedRecommend',
-    contents: ["Do-Not-Edit Cisco Systems - Wikipedia", "Do-Not-Edit Capybara - Wikipedia"],
-    // get url(){
-    //     return `${authoring.common.baseUrl}/${this.slug}/${webContent.slug}`
-    // }
-}
+    contents: ["Do-Not-Edit Cisco Systems - Wikipedia", "Do-Not-Edit Capybara - Wikipedia"]
+};
 
 const exploreTarget = {
     name: 'createExploreTarget.js',
@@ -31,21 +25,24 @@ const exploreTarget = {
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
-}
+};
 
 const exploreRecommend = {
     name: 'createExploreRecommend.js',
     experienceType: 'Recommend',
-    trackName: recommend.name,
-    slug: 'createexplorer',
-    get url(){
-        return `${authoring.common.baseUrl}/l/${this.slug}`
-    }
-}
+    trackName: recommend.name
+};
 
 describe("Explore - create new explore", () => {
-    it("Create new Explore page validation", () => {
 
+    it("Delete Explore Pages if exist", () => {
+        authoring.common.login()
+        authoring.explore.visit() 
+        authoring.explore.deleteExplore(exploreTarget.name)
+        authoring.explore.deleteExplore(exploreRecommend.name)
+    })
+
+    it("Create new Explore page validation", () => {
         authoring.common.login()
         authoring.explore.visit()   
         cy.contains("button", "Create Explore Page").click()
@@ -57,18 +54,18 @@ describe("Explore - create new explore", () => {
             // Verify creating explore with existing name
             cy.get(authoring.explore.createExploreModal.nameInput).clear().type("cloneExplore.js")
             cy.contains("button", "Create Explore Page").click()
-            cy.contains("has already been taken")
-            
+            cy.contains("has already been taken")  
         })      
     })
 
     it("Create new Explore page and check consumption", () => {
-
         authoring.common.login()
         authoring.explore.addExplore(exploreTarget)
         authoring.explore.configureExplore(exploreTarget)
+        
         cy.contains("label", "Target Track: ").click()
         cy.containsExact("h1", target.name, {timeout: 10000}).should("exist")
+        // Make sure Explore page is added to selected Track
         cy.contains("a", exploreTarget.name).click()
         cy.containsExact("h1", exploreTarget.name, {timeout: 10000}).should("exist")
 
@@ -78,21 +75,32 @@ describe("Explore - create new explore", () => {
 
         // Check that target tracks are there
         target.contents.forEach(content => {
-            cy.contains('.pf-explore-grid-container', content).should("exist")
+            cy.contains(consumption.explore.body.card, content).should("exist")
         })
 
-        // Edit Explore page name 
+        // Edit Explore page name and Edit track
+        authoring.explore.visit()
+        authoring.explore.goToExplore(exploreTarget.name)
+        authoring.explore.editExplore(exploreRecommend) // includes verification
 
-        // Edit track
+        // Veify that explore with previous name doesn't exist
+        cy.get(authoring.common.pageControls).within(()=>{
+            cy.containsExact("a", "Explore Pages").click()
+        })
+        cy.get(authoring.common.pageSearch).clear().type(exploreTarget.name)
+        cy.containsExact(authoring.common.table.cellName, exploreTarget.name).should("not.exist")
 
-        // Check consumption
+        // Check consumption, we haven't changed slug
+        cy.visit(exploreTarget.url)
+        cy.contains(consumption.explore.hero.heroTitle, "Browse our Content")
 
+        // Check that recommend tracks are there
+        recommend.contents.forEach(content => {
+            cy.contains(consumption.explore.body.card, content).should("exist")
+        })
         // Delete Explore page
-        
-        
-
-
-
+        authoring.explore.visit()
+        authoring.explore.deleteExplore(exploreRecommend.name)
     })
 })
 

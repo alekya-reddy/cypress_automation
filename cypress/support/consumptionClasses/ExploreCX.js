@@ -9,7 +9,8 @@ export class ExploreCX extends CommonCX {
         }
         this.body = {
             bodyTitle: ".lx-content-title__text",
-            bodyDescription: ".lx-content-description__text"
+            bodyDescription: ".lx-content-description__text",
+            card: ".pf-explore-grid-container"
         }
     } 
 }
