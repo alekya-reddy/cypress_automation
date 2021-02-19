@@ -7,7 +7,7 @@ const duplicateMessage = "already exists";
 const invalidCharacterMessage = 'Only alphanumeric characters, hyphens and underscores are allowed';
 const successfulSaveMessage = "The record was saved successfully.";
 
-const event = 'Session Slug Test';
+const event = 'sessionSlugValidation.js';
 
 const session1 = {
     name: 'Test Session',

@@ -3,7 +3,7 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const originalEvent = {
-    name: 'Reset test',
+    name: 'resetEventSessions.js',
     slug: 'reset',
     form: {
         name: 'resetEventSession.js'
@@ -11,7 +11,7 @@ const originalEvent = {
 }
 
 const newEvent = {
-    name: 'Reset test',
+    name: 'new resetEventSession.js',
     newEventName: 'Different name',
     slug: 'differentslug',
     form: {
