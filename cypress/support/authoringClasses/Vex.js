@@ -79,7 +79,9 @@ export class Vex extends Common {
             contentDescription: "div[data-qa-hook^='content-description']",
             contentDescriptionInput: ".ql-editor",
             input: "input[class='ant-select-selection-search-input']",
-            heroHeightInput: "input[name='landingExperience.landingExperienceConfig.headerHeight']"
+            heroHeightInput: "input[name='landingExperience.landingExperienceConfig.headerHeight']",
+            richTextBold: ".ql-bold",
+            richTextCodeBlock: ".ql-code-block",
         };
         this.resetButton = "button:contains('Reset')";
         this.selectImageButton = "button:contains('Change Image')";
