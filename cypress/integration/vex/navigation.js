@@ -250,14 +250,14 @@ describe("VEX - Navigation Builder", ()=>{
         })
 
         // Click the session and landing page links to verify they redirect correctly
-        cy.contains("a", nav1[0].label).click() // Session link
-        consumption.vex.expectYoutube()
-        cy.go("back")
         cy.contains("a", nav1[3].label).click() // public landing page link
         cy.contains(publicLandingPage.blocks[0].content).should("exist")
         cy.go("back")
         cy.contains("a", nav1[5].label).click() // delete landing page link
         cy.contains(deleteLandingPage.blocks[0].content).should("exist")
+        cy.go("back")
+        cy.contains("a", nav1[0].label).click() // Session link
+        consumption.vex.expectYoutube()
         cy.go("back")
         cy.contains("a", nav1[6].label).click() // weblink - important that it redirects to the same domain or else cypress won't allow it!
         cy.contains("Browse Sessions").should("exist")
