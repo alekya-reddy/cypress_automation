@@ -63,18 +63,18 @@ describe("VEX - Edge Cases", ()=>{
         cy.visit(event.url) // test would fail if this results in 500 error page
     })
 
-    it("An event with default landing page that has styling in description field should display normally", () => {
+    it("An event with default landing page that has styling in description field should not display the description twice", () => {
         // This bug was caused by html elements being passed into meta tags on the baker-side html.erb file
         // This caused the contents of the description field to be rendered at the top of the body along with all the meta tags
         // In addition to being rendered in its normal position
         cy.visit(event2.url)
         cy.contains(boldText).should("exist")
         cy.contains(codeBlockText).should("exist")
-        cy.get(consumption.vex.eventContentDescription).invoke("text").then(descriptionText => {
+        cy.get("body").invoke("text").then(bodyText => {
             const boldTextRegex = new RegExp(boldText, "g")
             const codeBlockRegex = new RegExp(codeBlockText, "g")
-            expect(descriptionText.match(boldTextRegex).length).to.eq(1)
-            expect(descriptionText.match(codeBlockRegex).length).to.eq(1)
+            expect(bodyText.match(boldTextRegex).length).to.eq(1)
+            expect(bodyText.match(codeBlockRegex).length).to.eq(1)
         })
     })
 })
