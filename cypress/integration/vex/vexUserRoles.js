@@ -46,7 +46,7 @@ if (Cypress.env('TEST_ENV') == 'prod') {
     users.shift() // Need to remove superuser from prod test because there are no super automation users on prod
 }
 
-const event = 'User Roles'
+const event = 'vexUserRoles.js'
 const userAddedEvent = "User Added Event"
 
 // Bare bones test for now. Will update as user roles become more defined. 
