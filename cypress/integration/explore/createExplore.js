@@ -14,11 +14,11 @@ const target = {
 
 const recommend = {
     name: 'sharedRecommend',
-    contents: ["Do-Not-Edit Cisco Systems - Wikipedia", "Do-Not-Edit Capybara - Wikipedia"]
+    contents: ["Do-Not-Edit Cisco Systems - Shared Resource", "Do-Not-Edit Capybara - Shared Resource"]
 };
 
 const exploreTarget = {
-    name: 'createExploreTarget.js',
+    name: 'Target createExplore.js',
     experienceType: 'Target',
     trackName: target.name,
     slug: 'createexploret',
@@ -28,7 +28,7 @@ const exploreTarget = {
 };
 
 const exploreRecommend = {
-    name: 'createExploreRecommend.js',
+    name: 'Recommend createExplore.js',
     experienceType: 'Recommend',
     trackName: recommend.name
 };
@@ -77,6 +77,14 @@ describe("Explore - create new explore", () => {
         target.contents.forEach(content => {
             cy.contains(consumption.explore.body.card, content).should("exist")
         })
+        // Click on a card
+        cy.contains(consumption.explore.body.card, webContent.title).click()
+        // Redirected to the track
+        cy.contains("span", webContent.title).should("exist")
+        // Click on 'Home' button
+        cy.get(consumption.common.backToHomePageButton).click()
+        // Explore page is shown
+        cy.contains(consumption.explore.hero.heroTitle, "Browse our Content")
 
         // Edit Explore page name and Edit track
         authoring.explore.visit()
@@ -98,6 +106,15 @@ describe("Explore - create new explore", () => {
         recommend.contents.forEach(content => {
             cy.contains(consumption.explore.body.card, content).should("exist")
         })
+        // Click on a card
+        cy.contains(consumption.explore.body.card, recommend.contents[0]).click()
+        // Redirected to the track
+        cy.contains(consumption.recommend.topicSidebarHeaderTitle, recommend.contents[0]).should("exist")
+        // Click on 'Home' button
+        cy.get(consumption.common.backToHomePageButton).click()
+        // Explore page is shown
+        cy.contains(consumption.explore.hero.heroTitle, "Browse our Content")
+
         // Delete Explore page
         authoring.explore.visit()
         authoring.explore.deleteExplore(exploreRecommend.name)

@@ -48,6 +48,7 @@ export class CommonCX {
             close: "#lookbook-overlay-close",
             iframe: ".lookbook-overlay-content",
         };
+        this.backToHomePageButton = 'i[title="See All"]';
     }
 
     checkSessionCookie(wait){

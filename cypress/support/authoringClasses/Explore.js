@@ -88,6 +88,7 @@ export class Explore extends Common {
                 cy.contains(this.modal, "Do you want to delete this Explore Page?").should("not.exist")
                 cy.get(this.pageSearch).clear().type(name)
                 cy.containsExact(this.table.cellName, name).should("not.exist")
+                cy.get(this.pageSearch).clear() // clear search field
                 
             } else {
                cy.get(this.pageSearch).clear()
