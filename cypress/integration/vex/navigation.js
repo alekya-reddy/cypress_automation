@@ -51,7 +51,7 @@ const publicLandingPage = {
     blocks: [
         {
             type: "HTML",
-            content: "This is a paragraph..."
+            content: "I am a public landing page"
         }
     ]
 }
@@ -80,7 +80,7 @@ const deleteLandingPage = {
     ]
 }
 
-const  webLink = 'https://en.wikipedia.org/wiki/SpaceX'
+const  webLink = event.url
 
 const textLink = "I am text"
 
@@ -192,13 +192,10 @@ describe("VEX - Navigation Builder", ()=>{
                     authoring.vex.configureSession(session)
                     authoring.vex.backToEvent(event.name)
                 })
-                landingPages.forEach((page)=>{
-                    authoring.vex.addLandingPages(page.name)
-                    authoring.vex.editLandingPage(page)
-                    authoring.vex.goToPageEditor(page.name)
-                    authoring.vex.addBasicBlock()
-                    cy.go("back")
-                })
+                authoring.vex.addLandingPages(publicLandingPage.name)
+                authoring.vex.configureLandingPage(publicLandingPage)
+                authoring.vex.addLandingPages(privateLandingPage.name)
+                authoring.vex.configureLandingPage(privateLandingPage)
             }
         })
     })
@@ -251,6 +248,20 @@ describe("VEX - Navigation Builder", ()=>{
                 }
             })
         })
+
+        // Click the session and landing page links to verify they redirect correctly
+        cy.contains("a", nav1[0].label).click() // Session link
+        consumption.vex.expectYoutube()
+        cy.go("back")
+        cy.contains("a", nav1[3].label).click() // public landing page link
+        cy.contains(publicLandingPage.blocks[0].content).should("exist")
+        cy.go("back")
+        cy.contains("a", nav1[5].label).click() // delete landing page link
+        cy.contains(deleteLandingPage.blocks[0].content).should("exist")
+        cy.go("back")
+        cy.contains("a", nav1[6].label).click() // weblink - important that it redirects to the same domain or else cypress won't allow it!
+        cy.contains("Browse Sessions").should("exist")
+        cy.go("back")
         cy.go("back")
 
         // Delete session and landing page, then verify removed from navigation and consumption 
