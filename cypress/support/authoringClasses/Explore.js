@@ -5,12 +5,15 @@ export class Explore extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/explore`;
         this.pageTitle = "Explore Pages";
+        
         this.createExploreModal = {
             nameInput: "input[name='name']",
             experienceType: 'input[name="experienceType"]',
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
+        this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
+        this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
@@ -24,6 +27,12 @@ export class Explore extends Common {
 
     visit(){
         cy.visit(this.pageUrl);
+    }
+
+    goToExplore(name){
+        cy.get(this.pageSearch).clear().type(name)
+        cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+        cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
 
     addExplore(options){
@@ -45,10 +54,46 @@ export class Explore extends Common {
         cy.containsExact("h1", name, {timeout: 10000}).should("exist")
     }
 
-    goToExplore(name){
+    editExplore(options){
+        const name = options.name
+        const experienceType = options.experienceType
+        const trackName = options.trackName
+
+        cy.get(this.editExplorePageIcon).click()
+        cy.contains(this.modal, "Edit Explore Page").within(()=>{
+            cy.get(this.createExploreModal.nameInput).clear().type(name)
+            cy.contains(this.experienceType, experienceType).click()
+            cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
+            cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(trackName + "\n")
+        
+            cy.contains("button", "Save Explore Page").click()
+        })
+        cy.contains(this.modal, "Save Explore Page").should("not.exist")
+        cy.containsExact("h1", name, {timeout: 10000}).should("exist")
+    }
+
+    deleteExplore(name){
         cy.get(this.pageSearch).clear().type(name)
-        cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
-        cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+
+        cy.get("body").then($body => {
+            if ($body.find(`a[title='${name}']`).length > 0) {
+                cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+                cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+        
+                cy.get(this.deleteExplorePageIcon).click()
+                cy.contains(this.modal, "Do you want to delete this Explore Page?").within(()=>{
+                    cy.contains("button", "Yes").click()
+                })
+                // verify that explore doesn't exist anymore
+                cy.contains(this.modal, "Do you want to delete this Explore Page?").should("not.exist")
+                cy.get(this.pageSearch).clear().type(name)
+                cy.containsExact(this.table.cellName, name).should("not.exist")
+                cy.get(this.pageSearch).clear() // clear search field
+                
+            } else {
+               cy.get(this.pageSearch).clear()
+            }
+        })          
     }
 
     configureExplore(options){

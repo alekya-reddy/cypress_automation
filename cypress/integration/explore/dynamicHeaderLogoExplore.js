@@ -18,7 +18,6 @@ const recommend = {
     name: 'dynamicHeaderLogoExplore.js',
     slug: 'dynamicheaderlogoexplore',
     contents: [webContent.title],
-    //appearance: headerAppearance.appearance,
     header: "on",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}/${webContent.slug}`

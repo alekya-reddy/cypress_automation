@@ -7,5 +7,6 @@ export class RecommendCX extends CommonCX {
         this.sidebarTitle = "#sidebar-title";
         this.sidebarBackground = "#sidebar-outer";
         this.topicSidebarDropdown = "#qa-topic-sidebar-dropdown";
+        this.topicSidebarHeaderTitle = "#qa-topic-sidebar-header-title";
     } 
 }
