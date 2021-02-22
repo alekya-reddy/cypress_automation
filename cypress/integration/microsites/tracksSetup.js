@@ -43,7 +43,37 @@ const recommend2 = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
+    trackType: "recommend",
     contents: ["Website Common Resource"]
+}
+
+const landingPage = {
+    name: "Main Page",
+    slug: "main-page",
+    get url(){
+        return `${microsite.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            id: "Target Block",
+            type: "track",
+            track: target2.name,
+            expectContents: target2.contents,
+        },
+        {
+            id: "Recommend Featured Content Block",
+            type: "featured",
+            name: "The Featured Content Block",
+            contents: [
+                {
+                    trackType: recommend2.trackType,
+                    track: recommend2.name,
+                    name: recommend2.contents[0]
+                },
+            ],
+        }
+    ]
 }
 
 describe("Microsites - tracks setup", () => {
@@ -65,6 +95,22 @@ describe("Microsites - tracks setup", () => {
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.addTracks({target: [target1.name, target2.name], recommend: [recommend1.name, recommend2.name]})
+
+        // Add the tracks to a landing page block
+        authoring.microsites.addLandingPages(landingPage.name)
+        authoring.microsites.configureLandingPage(landingPage)
+
+        // Should not be able to remove the tracks from the microsite while used in landing page block
+        const verify = false
+        authoring.microsites.removeTracks(target2.name, verify)
+        cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
+        cy.contains("button", "Cancel").click()
+        authoring.microsites.removeTracks(recommend2.name, verify)
+        cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
+        cy.contains("button", "Cancel").click()
+
+        // Delete the landing page (will verify later that you can now remove the tracks from microsite)
+        authoring.microsites.removeLandingPages(landingPage.name)
         
         // Go to target and attempt to delete a target track used in a microsite 
         authoring.target.deleteTrack(target2.name, false)
@@ -78,7 +124,7 @@ describe("Microsites - tracks setup", () => {
         cy.contains(authoring.recommend.modal, "Before you delete this Track, you need to remove it from the following Microsite(s):").should("exist")
         cy.contains(authoring.recommend.modal, microsite.name).should("exist")
 
-        // Remove a target and a recommend track from the microsite 
+        // Verify can remove a target and a recommend track from the microsite (after they've been removed from landing page)
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.removeTracks([target2.name, recommend2.name])
