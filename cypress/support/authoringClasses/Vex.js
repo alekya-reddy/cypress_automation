@@ -1332,6 +1332,7 @@ export class Vex extends Common {
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
         const card = config.card
+        const layout = config.layout
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
         cy.waitFor({element: this.pages.addBlockButton, to: "exist", wait: 10000})
@@ -1356,6 +1357,11 @@ export class Vex extends Common {
 
         if(sessionGroup){
             cy.get("select[id*='virtualEventGroupId']").select(sessionGroup)
+        }
+
+        if(layout){
+            // Values should be "Carousel" or "Grid"
+            cy.get("select[id*='landingPageLayout']").select(layout)
         }
 
         if(background){
@@ -1469,6 +1475,7 @@ export class Vex extends Common {
         const card = config.card
         const enableSearch = config.enableSearch
         const enableTopicFilter = config.enableTopicFilter
+        const layout = config.layout
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -1537,6 +1544,12 @@ export class Vex extends Common {
             }
             if(background && background.size){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-size", background.size)
+            }
+            if(layout){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
+                    cy.get(".pf-microsite-carousel-arrow").should(shouldExistOrNot)
+                })
             }
             if(spacing){
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)

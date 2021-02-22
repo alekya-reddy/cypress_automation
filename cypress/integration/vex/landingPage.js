@@ -33,7 +33,12 @@ const privateSession = {
     video: 'Youtube - Used in Cypress automation for VEX testing'
 }
 
-const sessions = [publicSession, privateSession]
+const carouselSession1 = {...publicSession, name: "cs1", slug: "cs1"}
+const carouselSession2 = {...publicSession, name: "cs2", slug: "cs2"}
+const carouselSession3 = {...publicSession, name: "cs3", slug: "cs3"}
+const carouselSession4 = {...publicSession, name: "cs4", slug: "cs4"}
+const carouselSession5 = {...publicSession, name: "cs5", slug: "cs5"}
+const carouselSession6 = {...publicSession, name: "cs6", slug: "cs6"}
 
 const sessionGroupA = {
     name: "Group A",
@@ -50,6 +55,16 @@ const deleteSessionGroup = {
     sessions: [publicSession.name]
 }
 
+const carouselSessionGroup = {
+    name: "Carousel Session Group",
+    sessions: [carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
+}
+
+const gridSessionGroup = {
+    name: "Grid Session Group",
+    sessions: [carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
+}
+
 const firstBlockText = "I should be first"
 
 const testLandingPage = {
@@ -63,6 +78,16 @@ const testLandingPage = {
         {
             type: "Session Group",
             sessionGroup: deleteSessionGroup.name,
+        },
+        {
+            type: "Session Group",
+            layout: "Carousel",
+            sessionGroup: carouselSessionGroup.name
+        },
+        {
+            type: "Session Group",
+            layout: "Grid",
+            sessionGroup: gridSessionGroup.name
         },
         {
             type: "Session Group",
@@ -125,8 +150,6 @@ const testLandingPage = {
     ]
 }
 
-const emptySessionBlockLocator = "h4:contains('Please select a session group')"
-
 describe("VEX - Landing Page Editor", ()=>{
     it("Set up if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
@@ -135,15 +158,17 @@ describe("VEX - Landing Page Editor", ()=>{
                 authoring.vex.visit()
                 authoring.vex.addVirtualEvent(event.name)
                 authoring.vex.configureEvent(event)
+                const sessions = [publicSession, privateSession, carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
                     authoring.vex.backToEvent(event.name)
                 })
-                authoring.vex.addSessionGroup(sessionGroupA.name)
-                authoring.vex.addToGroup(sessionGroupA)
-                authoring.vex.addSessionGroup(privateSessionGroup.name)
-                authoring.vex.addToGroup(privateSessionGroup)
+                const sessionGroups = [sessionGroupA, privateSessionGroup, carouselSessionGroup, gridSessionGroup]
+                sessionGroups.forEach(group => {
+                    authoring.vex.addSessionGroup(group.name)
+                    authoring.vex.addToGroup(group)
+                })
             }
         })
     })
@@ -221,10 +246,38 @@ describe("VEX - Landing Page Editor", ()=>{
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[4])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[5])
         cy.contains(consumption.vex.landingPage.block, "Delete me").should("not.exist")
         cy.contains(consumption.vex.landingPage.block, deleteSessionGroup.name).should("not.exist")
         cy.contains("Please select a session group").should("not.exist") // empty session block should not exist 
-        cy.get(consumption.vex.sessionGroup).should("have.length", 2) // This checks that there are only 2 session group blocks (blocks 2 and 4)
+        cy.get(consumption.vex.sessionGroup).should("have.length", 4) // This checks that there are only 4 session group blocks (blocks 1, 2, 4 and 5)
+
+        // Verify carousel session block
+        cy.contains(consumption.vex.sessionGroup, testLandingPage.blocks[1].sessionGroup).within(() => {
+            cy.get(consumption.vex.sessionCardTitle).should("have.length", 6)
+            cy.get(consumption.vex.sessionCardTitle).eq(0).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(1).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(2).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(3).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(4).should("not.be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(5).should("not.be.visible")
+            cy.get(consumption.vex.landingPage.arrowRight).click({force: true})
+            cy.get(consumption.vex.sessionCardTitle).eq(0).should("not.be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(1).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(2).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(3).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(4).should("be.visible")
+            cy.get(consumption.vex.sessionCardTitle).eq(5).should("not.be.visible")
+        })
+
+        // Verify grid session block
+        cy.contains(consumption.vex.sessionGroup, testLandingPage.blocks[2].sessionGroup).within(() => {
+            cy.get(consumption.vex.sessionCardTitle).should("have.length", 6)
+            cy.get(consumption.vex.sessionCardTitle).each(sessionCard => {
+                cy.get(sessionCard).should("be.visible")
+            })
+        })
 
         // Go back to authoring, set landing page as the home page  
         authoring.vex.visit()
@@ -238,6 +291,8 @@ describe("VEX - Landing Page Editor", ()=>{
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[1])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[4])
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[5])
 
         // Unset the homepage and verify and consumption
         cy.go("back")
