@@ -43,6 +43,7 @@ const recommend2 = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
+    trackType: "recommend",
     contents: ["Website Common Resource"]
 }
 
@@ -61,10 +62,16 @@ const landingPage = {
             expectContents: target2.contents,
         },
         {
-            id: "Recommend Block",
-            type: "track",
-            track: recommend2.name,
-            expectContents: recommend2.contents,
+            id: "Recommend Featured Content Block",
+            type: "featured",
+            name: "The Featured Content Block",
+            contents: [
+                {
+                    trackType: recommend2.trackType,
+                    track: recommend2.name,
+                    name: recommend2.contents[0]
+                },
+            ],
         }
     ]
 }
