@@ -163,6 +163,15 @@ describe("Microsites - Landing page featured content block setup", () => {
         authoring.microsites.addLandingPages(landingPage.name)
         authoring.microsites.configureLandingPage({...landingPage, stayInEditor: true}) // Includes verification that block configuration is correct
 
+        // Verify cannot add a content that already exists in the block
+        authoring.microsites.addFeaturedContent({
+            to: featureBlock.name,
+            contents: [featureBlock.contents[0]]
+        }, false)
+        cy.contains(authoring.microsites.landingPages.trackRow, featureBlock.name).within(() => {
+            cy.get(authoring.microsites.landingPages.micrositeCard + `:contains("${featureBlock.contents[0].name}")`).should("have.length", 1)
+        })
+
         // Verify that we can remove content from a featured content block
         authoring.microsites.removeFeaturedContent({
             block: featureBlock.name,
