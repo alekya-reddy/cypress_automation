@@ -542,7 +542,7 @@ export class Configurations extends Common {
     }
 
     configureVEXAppearance(options){
-        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, verify} = options
+        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, layout, verify} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
@@ -644,8 +644,17 @@ export class Configurations extends Common {
                 }
             })
         }
+
         if(externalCodes){
             this.addAppearanceExternalCode(externalCodes, verify)
+        }
+
+        if(layout){
+            // Values should be "Grid" or "Carousel"
+            cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(layout)).click()
+            })
         }
 
         cy.contains("button", "Save Virtual Event Settings").click()
@@ -657,7 +666,7 @@ export class Configurations extends Common {
     }
 
     verifyVEXappearance(options){
-        const {backgroundColor, headerBackgroundColor, hideNavigation} = options
+        const {backgroundColor, headerBackgroundColor, hideNavigation, layout} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
@@ -770,6 +779,12 @@ export class Configurations extends Common {
             cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
                 const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
                 expect(checkboxClass).to.include(checkOrUnchecked)
+            })
+        }
+
+        if(layout){
+            cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
+                cy.contains("span", layout).should("exist")
             })
         }
     } 

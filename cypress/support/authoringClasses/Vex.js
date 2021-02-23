@@ -132,7 +132,8 @@ export class Vex extends Common {
             sessionGroupRow: ".pf-event-sessions",
             searchToggle: "input[name*='virtualEventEnableSearch']",
             topicFilterToggle: "input[name*='virtualEventEnableTopicFilter']",
-            sessionCardTitle: ".pf-event-session-card-title > div"
+            sessionCardTitle: ".pf-event-session-card-title > div",
+            carouselArrow: ".pf-microsite-carousel-arrow",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1548,7 +1549,7 @@ export class Vex extends Common {
             if(layout){
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
-                    cy.get(".pf-microsite-carousel-arrow").should(shouldExistOrNot)
+                    cy.get(this.pages.carouselArrow).should(shouldExistOrNot)
                 })
             }
             if(spacing){
