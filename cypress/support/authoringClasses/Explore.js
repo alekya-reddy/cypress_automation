@@ -14,11 +14,17 @@ export class Explore extends Common {
         };
         this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
         this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
+        this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
+        this.topicFilterSection = 'div[data-qa-hook="topic-filter-section"]',
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
             appearanceLabel: "label:contains('Appearance')",
-            headerToggle: 'div[data-qa-hook="header"]'
+            headerToggle: 'div[data-qa-hook="header"]',
+            searchToggle: 'div[data-qa-hook="displaySearchSection"]',
+            filtersToggle: 'div[data-qa-hook="filtersSection"]',
+            selectFiltersCheckbox: 'div[data-qa-hook="checkbox"]',
+
         };
         this.popoverElements = {
             customUrlInput: "#slug"
@@ -99,8 +105,7 @@ export class Explore extends Common {
     configureExplore(options){
         const { name, slug, appearance, verify } = options
         // These toggle options should have values of "on" or "off"
-        const { header } = options
-
+        const { header, searchFunction, filters, selectFilters } = options
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -119,7 +124,44 @@ export class Explore extends Common {
         if(header){
             this.toggle(this.pageSidebar.headerToggle, header)
         }
-    }
+
+        if(searchFunction){
+            this.toggle(this.pageSidebar.searchToggle, searchFunction)
+        }
+        
+        if(filters){
+            this.toggle(this.pageSidebar.filtersToggle, filters)
+        }    
+
+        if(selectFilters){
+            const { topic, contentType, funnelStage,  businessUnit, Persona, industry} = selectFilters
+           
+            if(topic) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Topic').click() 
+                cy.wait(1000)       
+            }
+            if(contentType) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Content Type').click()  
+                cy.wait(1000)   
+            }
+            if(funnelStage) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Funnel Stage').click()   
+                cy.wait(1000)  
+            }
+            if(businessUnit) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Business Unit').click() 
+                cy.wait(1000)    
+            }
+            if(Persona) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Persona').click()
+                cy.wait(1000)     
+            }
+            if(industry) {
+                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Industry').click()    
+                cy.wait(1000) 
+            }   
+        }   
+    }    
 
     setCustomUrl(slug, verify){
         cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()
