@@ -56,6 +56,7 @@ export class Microsites extends Common {
             recommendRadio: "input[value='recommend']",
             targetRadio: "input[value='target']",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
+            carouselArrow: ".pf-microsite-carousel-arrow",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -517,7 +518,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page){
-        cy.containsExact(this.antTable.cell, page).siblings(`td:contains('Modify Page')`).within(()=>{
+        cy.containsExact(this.antTable.cell, page, {timeout: 10000}).siblings(`td:contains('Modify Page')`).within(()=>{
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -888,7 +889,7 @@ export class Microsites extends Common {
                 }
                 if(layout){
                     const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
-                    cy.get(".pf-microsite-carousel-arrow").should(shouldExistOrNot)
+                    cy.get(this.landingPages.carouselArrow).should(shouldExistOrNot)
                 }
             })
         }
