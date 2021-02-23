@@ -32,7 +32,7 @@ const landingPage = {
         {
             id: "HTML block",
             type: "HTML",
-            content: `<h1>{{company.name | default: default text}}</h1>`,
+            content: `<h1>{{company.name | default: default text}}</h1><h2>{{visitor.email}}</h2>`,
             className: "landingpageblock",
         }
     ]
@@ -47,6 +47,8 @@ const company = {
 const nonCompany = {
     ip: "171.117.159.107",
 }
+
+const visitor = "test@gmail.com"
 
 describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
     it("Set up if not already done", () => {
@@ -75,12 +77,13 @@ describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
         authoring.common.login()
         authoring.configurations.configureHeaderAppearance({appearance: microsite.appearance, dynamicLogo: "on"})
 
-        cy.visit(landingPage.url + `?lbhqip=${company.ip}`)
+        cy.visit(landingPage.url + `?lbhqip=${company.ip}&lb_email=${visitor}`)
         cy.get(consumption.microsites.navigation.header).within(() => {
             cy.get(`img[src="${company.logo}"]`).should("exist")
         })
         cy.get(`.${landingPage.blocks[0].className}`).within(() => {
             cy.contains("h1", company.name).should("exist")
+            cy.contains("h2", visitor).should("exist")
         })
 
         // Verify that dynamic logo and field merges are their default values when visiting with a spoofed IP address for which there is 
@@ -99,6 +102,14 @@ describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
         cy.visit(landingPage.url + `?lbhqip=${company.ip}`)
         cy.get(consumption.microsites.navigation.header).within(() => {
             cy.get('img[src*="/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
+        })
+
+        // Verify that if there is no known visitor, the email field would be blank
+        cy.clearCookies()
+        cy.visit(landingPage.url)
+        cy.get(`.${landingPage.blocks[0].className}`).within(() => {
+            cy.get("h1").should("exist")
+            cy.contains("h2", visitor).should("not.exist")
         })
     })
 })
