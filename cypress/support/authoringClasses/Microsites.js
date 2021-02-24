@@ -56,6 +56,7 @@ export class Microsites extends Common {
             recommendRadio: "input[value='recommend']",
             targetRadio: "input[value='target']",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
+            carouselArrow: ".pf-microsite-carousel-arrow",
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -517,7 +518,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page){
-        cy.containsExact(this.antTable.cell, page).siblings(`td:contains('Modify Page')`).within(()=>{
+        cy.containsExact(this.antTable.cell, page, {timeout: 10000}).siblings(`td:contains('Modify Page')`).within(()=>{
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -573,6 +574,7 @@ export class Microsites extends Common {
         const personaFilter = config.personaFilter
         const businessUnitFilter = config.businessUnitFilter
         const card = config.card
+        const layout = config.layout
         const verify = config.verify // Do not verify if using HEX color for any color pickers
         const searchConfiguration = config.searchConfiguration
         
@@ -600,6 +602,11 @@ export class Microsites extends Common {
 
         if(track){
             cy.get("select[id*='experienceId']").select(track)
+        }
+
+        if(layout){
+            // Values should be "Carousel" or "Grid"
+            cy.get("select[id*='landingPageLayout']").select(layout)
         }
 
         if(name){
@@ -760,6 +767,7 @@ export class Microsites extends Common {
         const card = config.card
         const searchConfiguration = config.searchConfiguration
         const contents = config.contents
+        const layout = config.layout
 
         if(type == "html" && className){ // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
@@ -852,14 +860,12 @@ export class Microsites extends Common {
                 if(businessUnitFilter){
                     this.verifyFilterConfiguration("Business Unit", businessUnitFilter)
                 }
-            })
-            if(card){
-                const { color, textAlign, fontSize } = card
-                cy.contains(blockLocator, trackName).within(() => {
+                if(card){
+                    const { color, textAlign, fontSize } = card
                     if(color){
                         cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
                     }
-
+    
                     if(textAlign){
                         cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "text-align", textAlign)
                     }
@@ -867,25 +873,25 @@ export class Microsites extends Common {
                     if(fontSize){
                         cy.get(this.landingPages.micrositeCardTitle).eq(0).should("have.css", "font-size", fontSize)
                     }
-                })
-            }
-            if(searchConfiguration){
-                const overrideTitle = searchConfiguration.searchButtonTitle
-                cy.contains(blockLocator, trackName).within(() => {
+                }
+                if(searchConfiguration){
+                    const overrideTitle = searchConfiguration.searchButtonTitle
                     if(overrideTitle){
                         cy.contains('button', overrideTitle).should("exist")
                     } else {
                         cy.containsExact('button', 'Search').should("exist")
                     }
-                })
-            }
-            if(contents){
-                cy.contains(blockLocator, trackName).within(() => {
+                }
+                if(contents){
                     contents.forEach(content => {
                         cy.contains(this.landingPages.micrositeCardTitle, content.name).should("exist")
                     })
-                })
-            }
+                }
+                if(layout){
+                    const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
+                    cy.get(this.landingPages.carouselArrow).should(shouldExistOrNot)
+                }
+            })
         }
     }
 

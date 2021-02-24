@@ -4,12 +4,12 @@ const authoring = createAuthoringInstance({org: "automation-microsites", tld: "l
 const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
 
 const target = {
-    name: "Target Common Resource",
-    slug: "target-common-resource",
+    name: "Target 2 Shared Resource",
+    slug: "target-2-shared-resource",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    contents: ["Website Common Resource"]
+    contents: ["Wiki-1 Shared Resource", "Wiki-2 Shared Resource", "Wiki-3 Shared Resource","Wiki-4 Shared Resource","Wiki-5 Shared Resource","Wiki-6 Shared Resource"]
 }
 
 const filtersContent = {
@@ -48,9 +48,19 @@ const landingPage = {
     setHome: true,
     blocks: [
         {
-            id: "Target Block",
+            id: "Target Block Grid",
             type: "track",
             track: target.name,
+            titleOverride: "Track Grid",
+            layout: "Grid",
+            expectContents: target.contents
+        },
+        {
+            id: "Target Block Carousel",
+            type: "track",
+            track: target.name,
+            titleOverride: "Track Carousel",
+            layout: "Carousel",
             expectContents: target.contents
         },
         {
@@ -200,6 +210,32 @@ describe("Microsites - Landing page setup", () => {
         cy.visit(microsite.url)
         landingPage.blocks.forEach((block) => {
             consumption.microsites.verifyLandingPageBlock(block)
+        })
+
+        // Verify the carousel block
+        cy.contains("h4", landingPage.blocks[1].titleOverride).parent().within(() => {
+            cy.get(consumption.microsites.cardTitle).should("have.length", 6)
+            cy.get(consumption.microsites.cardTitle).eq(0).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(4).should("not.be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(5).should("not.be.visible")
+            cy.get(consumption.microsites.arrowRight).click({force: true})
+            cy.get(consumption.microsites.cardTitle).eq(0).should("not.be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(4).should("be.visible")
+            cy.get(consumption.microsites.cardTitle).eq(5).should("not.be.visible")
+        })
+
+        // Verify the grid block
+        cy.contains("h4", landingPage.blocks[0].titleOverride).parent().within(() => {
+            cy.get(consumption.microsites.cardTitle).should("have.length", 6)
+            cy.get(consumption.microsites.cardTitle).each(card => {
+                cy.get(card).should("be.visible")
+            })
         })
 
         // Visiting the home landing page url (which is microsite url + landing page slug) directly should take you to the same place 

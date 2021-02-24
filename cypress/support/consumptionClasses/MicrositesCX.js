@@ -15,6 +15,7 @@ export class MicrositesCX extends CommonCX {
         this.filterByValue = '#qa-microsite-topic-filter-topic > span'
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
+        this.arrowRight = "#qa-arrow-right"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
@@ -69,6 +70,7 @@ export class MicrositesCX extends CommonCX {
         const card = config.card
         const searchConfiguration = config.searchConfiguration
         const contents = config.contents
+        const layout = config.layout
 
         if(className && !track){
             let locator = `.${className}`
@@ -126,7 +128,7 @@ export class MicrositesCX extends CommonCX {
             }
             if(expectContents){
                 expectContents.forEach((content)=>{
-                    cy.containsExact("h4", trackName).siblings(this.grid).within(() => {
+                    cy.containsExact("h4", trackName).parent().within(() => {
                         cy.contains(this.gridCard, content).should('exist')
                     })
                 })
@@ -204,6 +206,11 @@ export class MicrositesCX extends CommonCX {
                     contents.forEach(content => {
                         cy.contains(this.cardTitle, content.name).should("exist")
                     })
+                }
+
+                if(layout){
+                    const existOrNot = layout == "Carousel" ? "exist" : "not.exist"
+                    cy.get(this.arrowRight).should(existOrNot)
                 }
             })
         }

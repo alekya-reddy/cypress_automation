@@ -36,7 +36,8 @@ const vexAppearanceSettings = {
     activeBoldFont: true,
     activeFontSize: "small",
     activeFontColor: {r: 255, g: 11, b: 1, a: 1},
-    hideNavigation: false
+    hideNavigation: false,
+    layout: "Carousel"
 }
 
 const colorConfigToCSS = (colorConfig) => {
@@ -73,6 +74,21 @@ const session = {
 const sessionGroup = "Group A"
 
 const landingPage = "page"
+
+const landingPage2 = {
+    name: "Landing-Page2",
+    slug: "landing-page2",
+    get url(){
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "Session Group",
+            sessionGroup: sessionGroup,
+        },
+    ]
+}
 
 // Test the appearance set up area. For now, this test is deliberately sparse because this area will likely change a lot soon 
 describe('VEX - Virtual Event', function() {
@@ -115,7 +131,34 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.deleteAllNavItems()
         authoring.vex.goToLandingPage()
         authoring.vex.unsetHomePage(landingPage)
-        cy.wait(1500)
+
+        // Verify landing page blocks will now have carousel by default
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.configureLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup).within(() => {
+            cy.get(authoring.vex.pages.carouselArrow).should("exist")
+        })
+
+        // Switch appearance settings to grid by default
+        authoring.configurations.visit.appearances()
+        authoring.configurations.configureVEXAppearance({
+            appearance: "vexAppearance.js",
+            layout: "Grid"
+        })
+
+        // Verify landing page blocks will have grid by default
+        authoring.vex.visit() 
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.configureLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup).within(() => {
+            cy.get(authoring.vex.pages.carouselArrow).should("not.exist")
+        })
+        cy.go("back")
 
         // Go to consumption side and verify settings got applied 
         cy.visit(event.url)

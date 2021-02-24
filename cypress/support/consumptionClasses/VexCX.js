@@ -93,7 +93,8 @@ export class VexCX extends CommonCX {
             iframe: "iframe[id^='vex_widget_iframe']"
         };
         this.landingPage = {
-            block: ".pf-html-block"
+            block: ".pf-html-block",
+            arrowRight: "#qa-arrow-right",
         };
         this.messages = {
             maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached.",
@@ -172,6 +173,7 @@ export class VexCX extends CommonCX {
         const card = config.card
         const enableSearch = config.enableSearch
         const enableTopicFilter = config.enableTopicFilter
+        const layout = config.layout
 
         if(className && !sessionGroup){
             let locator = `.${className}`
@@ -284,6 +286,12 @@ export class VexCX extends CommonCX {
             } else {
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     cy.contains("Filter By Topic").should("not.exist")
+                })
+            }
+            if(layout){
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    const existOrNot = layout == "Carousel" ? "exist" : "not.exist"
+                    cy.get(this.landingPage.arrowRight).should(existOrNot)
                 })
             }
         }

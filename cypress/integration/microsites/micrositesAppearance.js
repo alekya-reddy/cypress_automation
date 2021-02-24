@@ -71,7 +71,21 @@ const landingPage = {
             }
         }
     ]
-}    
+}
+
+const gridCarouselLandingPage = {
+    name: "Grid Carousel LP",
+    slug: "grid-carousel-lp",
+    get url(){
+        return `${microsite.url}/${this.slug}`
+    },
+    blocks: [
+        {
+            type: "track",
+            track: target.name,
+        },
+    ]
+} 
 
 const navigation = {
     landingPage: {
@@ -119,8 +133,22 @@ describe("Microsites - Appeararnace", () => {
         // Turn off and hide navigation header in the Appearences > Microsite settings
         authoring.configurations.configureMicrositesAppearance({
             appearance: "micrositesAppearance.js",
-            hideNavigation: true
+            hideNavigation: true,
+            layout: "Carousel"
         })
+
+        // Verify that landing page will add carousel blocks by default
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
+        authoring.microsites.removeLandingPages(gridCarouselLandingPage.name)
+        authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+        cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
+        authoring.microsites.addAdvancedBlock(gridCarouselLandingPage.blocks[0])
+        cy.contains(authoring.microsites.landingPages.trackRow, target.name).within(() => {
+            cy.get(authoring.microsites.landingPages.carouselArrow).should("exist")
+        })
+
         // Verify on consumption that navigation header no longer exists
         cy.visit(micrositeApp.url)
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("not.exist")
@@ -133,8 +161,22 @@ describe("Microsites - Appeararnace", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.configureMicrositesAppearance({
             appearance: "micrositesAppearance.js",
-            hideNavigation: false
+            hideNavigation: false,
+            layout: "Grid"
         }) 
+
+        // Verify that landing page will add grid blocks by default
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
+        authoring.microsites.removeLandingPages(gridCarouselLandingPage.name)
+        authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+        cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
+        authoring.microsites.addAdvancedBlock(gridCarouselLandingPage.blocks[0])
+        cy.contains(authoring.microsites.landingPages.trackRow, target.name).within(() => {
+            cy.get(authoring.microsites.landingPages.carouselArrow).should("not.exist")
+        })
+
         // verify on consumption that navigation header appears on top 
         cy.visit(micrositeApp.url)
         cy.get(consumption.microsites.navigation.header, {timeout: 10000}).should("exist")
