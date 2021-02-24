@@ -57,7 +57,7 @@ const explore = {
         contentType: true, 
         businessUnit: true,
         funnelStage: true,
-        Persona: true,
+        persona: true,
         industry: true,
     },    
     get url(){
@@ -90,7 +90,7 @@ describe("Explore - language setting", () => {
     it("Customize Language setting and verify explore preview and consumption ", () => {
         authoring.common.login()
         // Error validation on language customization settings page 
-        authoring.configurations.goToLanguages()
+        authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
         authoring.configurations.clickLanguageTab("Explore")
         cy.get(authoring.configurations.languages.explore.searchInput).clear()
@@ -167,8 +167,8 @@ describe("Explore - language setting", () => {
         })
 
         // Reset language settings and verify the defaults values on preview and consumption page 
-        authoring.configurations.goToLanguages()
-        authoring.configurations.resetExploreLanguageSetting({name: language.name})
+        authoring.configurations.visit.languages()
+        authoring.configurations.resetLanguageSetting({name: language.name, tab: 'Explore'})
         // Verify Default language custumization on explore preview page 
         authoring.explore.visit()
         authoring.explore.goToExplore(explore.name) 

@@ -851,10 +851,6 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /********************************* LANGUAGES **************************************/
     /*********************************************************************************/
-    
-    goToLanguages(){
-        cy.visit(this.pageUrls.languages)
-    }
      
     clickAddLanguage(){
         cy.get(this.languages.sidebar).within(() => {
@@ -874,29 +870,23 @@ export class Configurations extends Common {
         })    
     }
 
-    addNewLanguage(options){
-        const {name, verify} = options
-
+    addNewLanguage(name){
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
 
         cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
             this.clickAddLanguage() 
                
-            if(name){
-                cy.contains(this.modal, "Add Language").within(()=>{
-                    cy.log(name)
-                    cy.get(this.dropdown.input).type(name + "\n", {force: true})
-                    cy.contains("button", "Add Language").click()
-                })
-            }    
-
-            if (verify !== false) {
-                cy.waitFor({element: this.modal, to: "not.exist"})
-                cy.get(this.languages.sidebar).within(() => {
-                    cy.containsExact("div", name, {timeout: 5000}).should("exist")
-                })
-            }
+            cy.contains(this.modal, "Add Language").within(()=>{
+                cy.get(this.dropdown.input).type(name + "\n", {force: true})
+                cy.contains("button", "Add Language").click()
+            })
+    
+            cy.waitFor({element: this.modal, to: "not.exist"})
+            cy.get(this.languages.sidebar).within(() => {
+                cy.containsExact("div", name, {timeout: 5000}).should("exist")
+            })
+            
         })    
     }
 
@@ -947,19 +937,18 @@ export class Configurations extends Common {
         }
     }
 
-    resetExploreLanguageSetting(options){
-        const{name, verify} = options
+    resetLanguageSetting(options){
+        const{name, tab} = options
 
         this.clicklanguage(name)
-        this.clickLanguageTab("Explore")
+        this.clickLanguageTab(tab)
         cy.contains("button", "Reset Settings").click()
         cy.contains(this.modal, "Are you sure?").within(()=>{
             cy.contains("button", "Yes").click()
         })    
-
-        if (verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
-        }
+        
+        cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
     }
+
 }
 

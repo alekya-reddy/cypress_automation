@@ -23,8 +23,6 @@ export class Explore extends Common {
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
             filtersToggle: 'div[data-qa-hook="filtersSection"]',
-            selectFiltersCheckbox: 'div[data-qa-hook="checkbox"]',
-
         };
         this.popoverElements = {
             customUrlInput: "#slug"
@@ -134,31 +132,26 @@ export class Explore extends Common {
         }    
 
         if(selectFilters){
-            const { topic, contentType, funnelStage,  businessUnit, Persona, industry} = selectFilters
-           
-            if(topic) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Topic').click() 
-                cy.wait(1000)       
+            // Required. Must be true or false
+            const { topic, contentType, funnelStage,  businessUnit, persona, industry} = selectFilters
+             
+            if(topic == true || topic == false) {
+                this.clickCheckbox({label: "Topic", check: topic})    
             }
-            if(contentType) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Content Type').click()  
-                cy.wait(1000)   
+            if(contentType == true || contentType == false) {  
+                this.clickCheckbox({label: "Content Type", check: contentType}) 
             }
-            if(funnelStage) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Funnel Stage').click()   
-                cy.wait(1000)  
+            if(funnelStage == true || funnelStage == false) {
+                this.clickCheckbox({label: "Funnel Stage", check: funnelStage})
             }
-            if(businessUnit) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Business Unit').click() 
-                cy.wait(1000)    
+            if(businessUnit == true || businessUnit == false) {
+                this.clickCheckbox({label: "Business Unit", check: businessUnit})
             }
-            if(Persona) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Persona').click()
-                cy.wait(1000)     
+            if(persona == true || persona == false) {
+               this.clickCheckbox({label: "Persona", check: persona})   
             }
-            if(industry) {
-                cy.get(this.pageSidebar.selectFiltersCheckbox).contains('Industry').click()    
-                cy.wait(1000) 
+            if(industry == true || industry == false) {
+                this.clickCheckbox({label: "Industry", check: industry})
             }   
         }   
     }    
