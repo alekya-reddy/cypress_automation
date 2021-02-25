@@ -9,6 +9,7 @@ export class Configurations extends Common {
             widgets: `${this.configRoute}/widgets`,
             externalCode: `${this.configRoute}/external-code`,
             appearances: `${this.configRoute}/appearance`,
+            languages:`${this.configRoute}/language`,
             forms: `${this.configRoute}/forms`,
         };
         this.pageTitles = {
@@ -16,6 +17,7 @@ export class Configurations extends Common {
             widgets: "Widgets Configuration",
             externalCode: "External Code Configuration",
             appearances: "Appearances Configuration",
+            languages: "Languages Configuration",
             forms: "Form Configuration",
         };
         this.visit = {
@@ -23,6 +25,7 @@ export class Configurations extends Common {
             widgets: ()=>{ cy.visit(this.pageUrls.widgets) },
             externalCode: () => { cy.visit(this.pageUrls.externalCode) },
             appearances: () => { cy.visit(this.pageUrls.appearances) },
+            languages: () => { cy.visit(this.pageUrls.languages) },
             forms: () => { cy.visit(this.pageUrls.forms) },
         };
         this.addWebhookModal = {
@@ -88,7 +91,21 @@ export class Configurations extends Common {
                 hideNavigation: "div[data-qa-hook='checkbox']"
             }
         };
-        this.languages = {};
+        this.languages = {
+            sidebar: "div[data-qa-hook='page-sidebar']",
+            secondaryNav: "div[data-qa-hook='page-secondary-navigation']",
+            explore: {
+                featuredLabelInput: "#featuredLabel",
+                searchInput : "#searchButtonTitle",
+                searchPlaceholderInput: "#searchInputFieldPlaceholder",
+                contentTypeInput: "#filterByContentTypeTitle",
+                funnelStageInput: "#filterByFunnelStageTitle",
+                businessUnitInput: "#filterByBusinessUnitTitle",
+                personaInput: "#filterByPersonaTitle",
+                industryTitleInput: "#filterByIndustryTitle",
+            }
+
+        };
         this.forms = {
             nameInput: "#name",
             delete: "i[title='Delete form']",
@@ -859,5 +876,108 @@ export class Configurations extends Common {
             cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
         }
     }
+    
+    /*********************************************************************************/
+    /********************************* LANGUAGES **************************************/
+    /*********************************************************************************/
+     
+    clickAddLanguage(){
+        cy.get(this.languages.sidebar).within(() => {
+            cy.containsExact("div", '+ Add Language', {timeout: 10000}).click()
+        })
+    }
+
+    clicklanguage(language){
+        cy.get(this.languages.sidebar).within(() => {
+            cy.containsExact("a", language, {timeout: 10000}).should("exist").click()
+        })
+    }
+    
+    clickLanguageTab(tab){
+        cy.get(this.languages.secondaryNav).within(() => {
+            cy.containsExact("a", tab, {timeout: 10000}).click()
+        })    
+    }
+
+    addNewLanguage(name){
+        this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
+        cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
+
+        cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
+            this.clickAddLanguage() 
+               
+            cy.contains(this.modal, "Add Language").within(()=>{
+                cy.get(this.dropdown.input).type(name + "\n", {force: true})
+                cy.contains("button", "Add Language").click()
+            })
+    
+            cy.waitFor({element: this.modal, to: "not.exist"})
+            cy.get(this.languages.sidebar).within(() => {
+                cy.containsExact("div", name, {timeout: 5000}).should("exist")
+            })
+            
+        })    
+    }
+
+    configureExploreLanguage(options){
+        const {name, featuredLabel, search, searchInputPlaceholder, filterByContentType, verify} = options
+        const {filterByFunnelStage, filterByBusinessUnit, filterByPersona, filterByIndustryTitle} = options
+
+        this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
+        this.clicklanguage(name)
+        this.clickLanguageTab("Explore")
+
+        if (featuredLabel) {
+            cy.get(this.languages.explore.featuredLabelInput).clear().type(featuredLabel)
+        }
+
+        if (search) {
+            cy.get(this.languages.explore.searchInput).clear().type(search)
+        }
+
+        if (searchInputPlaceholder) {
+            cy.get(this.languages.explore.searchPlaceholderInput).clear().type(searchInputPlaceholder)
+        }
+
+        if (filterByContentType) {
+            cy.get(this.languages.explore.contentTypeInput).clear().type(filterByContentType)
+        }
+
+        if (filterByFunnelStage) {
+            cy.get(this.languages.explore.funnelStageInput).clear().type(filterByFunnelStage)
+        }
+
+        if (filterByBusinessUnit) {
+            cy.get(this.languages.explore.businessUnitInput).clear().type(filterByBusinessUnit)
+        }
+
+        if (filterByPersona) {
+            cy.get(this.languages.explore.personaInput).clear().type(filterByPersona)
+        }
+
+        if (filterByIndustryTitle) {
+            cy.get(this.languages.explore.industryTitleInput).clear().type(filterByIndustryTitle)   
+        }
+
+        cy.contains("button", "Save Explore Settings").click()
+
+        if (verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        }
+    }
+
+    resetLanguageSetting(options){
+        const{name, tab} = options
+
+        this.clicklanguage(name)
+        this.clickLanguageTab(tab)
+        cy.contains("button", "Reset Settings").click()
+        cy.contains(this.modal, "Are you sure?").within(()=>{
+            cy.contains("button", "Yes").click()
+        })    
+        
+        cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+    }
+
 }
 

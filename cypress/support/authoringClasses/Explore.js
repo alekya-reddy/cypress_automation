@@ -14,11 +14,15 @@ export class Explore extends Common {
         };
         this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
         this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
+        this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
+        this.topicFilterSection = 'div[data-qa-hook="topic-filter-section"]',
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
             appearanceLabel: "label:contains('Appearance')",
-            headerToggle: 'div[data-qa-hook="header"]'
+            headerToggle: 'div[data-qa-hook="header"]',
+            searchToggle: 'div[data-qa-hook="displaySearchSection"]',
+            filtersToggle: 'div[data-qa-hook="filtersSection"]',
         };
         this.popoverElements = {
             customUrlInput: "#slug"
@@ -99,8 +103,7 @@ export class Explore extends Common {
     configureExplore(options){
         const { name, slug, appearance, verify } = options
         // These toggle options should have values of "on" or "off"
-        const { header } = options
-
+        const { header, searchFunction, filters, selectFilters } = options
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -119,7 +122,39 @@ export class Explore extends Common {
         if(header){
             this.toggle(this.pageSidebar.headerToggle, header)
         }
-    }
+
+        if(searchFunction){
+            this.toggle(this.pageSidebar.searchToggle, searchFunction)
+        }
+        
+        if(filters){
+            this.toggle(this.pageSidebar.filtersToggle, filters)
+        }    
+
+        if(selectFilters){
+            // Required. Must be true or false
+            const { topic, contentType, funnelStage,  businessUnit, persona, industry} = selectFilters
+             
+            if(topic == true || topic == false) {
+                this.clickCheckbox({label: "Topic", check: topic})    
+            }
+            if(contentType == true || contentType == false) {  
+                this.clickCheckbox({label: "Content Type", check: contentType}) 
+            }
+            if(funnelStage == true || funnelStage == false) {
+                this.clickCheckbox({label: "Funnel Stage", check: funnelStage})
+            }
+            if(businessUnit == true || businessUnit == false) {
+                this.clickCheckbox({label: "Business Unit", check: businessUnit})
+            }
+            if(persona == true || persona == false) {
+               this.clickCheckbox({label: "Persona", check: persona})   
+            }
+            if(industry == true || industry == false) {
+                this.clickCheckbox({label: "Industry", check: industry})
+            }   
+        }   
+    }    
 
     setCustomUrl(slug, verify){
         cy.get(this.pageSidebar.customUrlLabel).siblings("span").click()

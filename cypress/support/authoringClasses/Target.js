@@ -13,6 +13,7 @@ export class Target extends Common {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
             appearanceLabel: "label:contains('Appearance')",
+            languageLabel: "label:contains('Language')",
             externalCodeLabel: "label:contains('External Code')",
             accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
@@ -98,6 +99,7 @@ export class Target extends Common {
         const name = options.name
         const slug = options.slug
         const appearance = options.appearance
+        const language = options.language
         const accessProtection = options.accessProtection
         const externalCode = options.externalCode
         const contents = options.contents
@@ -133,6 +135,10 @@ export class Target extends Common {
 
         if(appearance){
             this.setAppearance(appearance, verify)
+        }
+
+        if(language){
+            this.setLanguage(language, verify)
         }
 
         if(externalCode){
@@ -267,6 +273,21 @@ export class Target extends Common {
 
         }
     }
+
+    setLanguage(language, verify){
+        cy.get(this.pageSidebar.languageLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(language)).click()
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.languageLabel).siblings("span").should("contain", language)
+
+        }
+    } 
 
     addAccessProtection(accessProtection, verify){
         const type = accessProtection.type
