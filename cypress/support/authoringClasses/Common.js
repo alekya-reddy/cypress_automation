@@ -215,24 +215,14 @@ export class Common {
         const label = config.label 
         const check = config.check 
      
-        cy.containsExact("div" , label).parent().invoke("attr", "class").then(checkboxClass => {
+        cy.contains(this.checkboxContainer, label, {timeout: 10000}).invoke("attr", "class").then(checkboxClass => {
            if(check && checkboxClass.includes("checkbox-container--unchecked") || !check && checkboxClass.includes("checkbox-container--checked")) {
                 cy.get(this.checkboxContainer).contains(label, {timeout: 30000} ).click()
-                cy.wait(500)
             }       
         })
 
-        // verify the checkbox is checked / unchecked
-        cy.containsExact("div" , label).parent().invoke("attr", "class").then(checkboxClass => {
-            if(check == true) {
-            const checked = "checkbox-container--checked" 
-            expect(checkboxClass).to.include(checked)
-            }
-            if (check == false ){
-            const unchecked = "checkbox-container--unchecked" 
-            expect(checkboxClass).to.include(unchecked)
-            }
-         })
+        const classSubString = check ? "checkbox-container--checked" : "checkbox-container--unchecked"
+        cy.contains(`div[class*="${classSubString}"]`, label, {timeout: 10000}).should("exist")
     }
 
     pickColor(options){
