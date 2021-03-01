@@ -94,6 +94,7 @@ export class Configurations extends Common {
         this.languages = {
             sidebar: "div[data-qa-hook='page-sidebar']",
             secondaryNav: "div[data-qa-hook='page-secondary-navigation']",
+            code: "#code",
             explore: {
                 featuredLabelInput: "#featuredLabel",
                 searchInput : "#searchButtonTitle",
@@ -899,15 +900,18 @@ export class Configurations extends Common {
         })    
     }
 
-    addNewLanguage(name){
+    addNewLanguage(options){
+        const {name, code} = options
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
-
+        
         cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
-            this.clickAddLanguage() 
-               
+            this.clickAddLanguage()              
             cy.contains(this.modal, "Add Language").within(()=>{
                 cy.get(this.dropdown.input).type(name + "\n", {force: true})
+                cy.ifElementWithExactTextExists("span", "Language Code" , 1000, ()=>{  
+                    cy.get(this.languages.code).clear().type(code)
+                })
                 cy.contains("button", "Add Language").click()
             })
     

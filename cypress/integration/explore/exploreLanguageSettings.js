@@ -6,6 +6,7 @@ const consumption = createConsumptionInstance({org: 'automation-explore', tld: '
 
 const language = {
     name: 'exploreLanguageSettings.js',
+    code: '123',
 }
 
 const exploreLanguageNew = {
@@ -70,7 +71,10 @@ describe("Explore - language setting", () => {
         cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
-                authoring.configurations.addNewLanguage({name: exploreLanguageNew.name})
+                authoring.configurations.addNewLanguage({
+                    name: exploreLanguageNew.name, 
+                    code: language.code
+                })
                 authoring.target.addTrack(target)
                 authoring.target.configure(target)
             }
