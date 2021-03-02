@@ -133,8 +133,8 @@ describe('VEX - Sessions Groups', function() {
 
         // Go to consumption and verify that, without any session groups, the default groups are "Agenda" and "On demand"
         cy.visit(event.url)
-        cy.contains("h4", "Agenda", {timeout: 50000}).should('exist')
-        cy.contains("h4", "On Demand Sessions").should('exist')
+        cy.contains("h2", "Agenda", {timeout: 50000}).should('exist')
+        cy.contains("h2", "On Demand Sessions").should('exist')
 
         // Add the groups back 
         authoring.vex.visit()
