@@ -1682,28 +1682,28 @@ export class Vex extends Common {
 
         if(headerTitle){
             cy.get(this.appearance.headerTitle).click()
-            cy.get(this.appearance.headerTitleInput).clear().type(headerTitle)
+            cy.get(this.appearance.headerTitleInput).clear().type(headerTitle , {parseSpecialCharSequences: false})
             cy.get(this.appearance.headerTitleInput).parent().contains('Save').click()
             cy.get(this.appearance.headerTitle, {timeout: 5000}).should('contain', headerTitle)
         }
         
         if(headerSubtitle){
             cy.get(this.appearance.headerSubtitle).click()
-            cy.get(this.appearance.headerSubtitleInput).clear().type(headerSubtitle)
+            cy.get(this.appearance.headerSubtitleInput).clear().type(headerSubtitle , {parseSpecialCharSequences: false})
             cy.get(this.appearance.headerSubtitleInput).parent().contains('Save').click()
             cy.get(this.appearance.headerSubtitle, {timeout: 5000}).should('contain', headerSubtitle)
         }
 
         if(contentTitle){
             cy.get(this.appearance.contentTitle).click()
-            cy.get(this.appearance.contentTitleInput).clear().type(contentTitle)
+            cy.get(this.appearance.contentTitleInput).clear().type(contentTitle, {parseSpecialCharSequences: false})
             cy.get(this.appearance.contentTitleInput).parent().contains("Save").click()
             cy.get(this.appearance.contentTitle, {timeout: 5000}).should('contain', contentTitle)
         }
 
         if(contentDescription){
             cy.get(this.appearance.contentDescription).click()
-            cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription)
+            cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription, {parseSpecialCharSequences: false})
             cy.get(this.appearance.contentDescriptionInput).parents("form").contains("Save").click()
             cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
         }

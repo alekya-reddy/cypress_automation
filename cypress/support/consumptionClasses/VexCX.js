@@ -3,7 +3,7 @@ import { CommonCX } from "./CommonCX";
 export class VexCX extends CommonCX {
     constructor(env, org, tld, baseUrl){
         super(env, org, tld, baseUrl);
-        this.eventHeroTitle = "div[class^='pf-event-hero-title']";
+        this.eventHeroTitle = "h1[class^='pf-event-hero-title']";
         this.eventHeroSubtitle = "div[class^='pf-event-hero-subtitle']";
         this.eventContentTitle = ".pf-event-main-title";
         this.eventContentDescription = ".pf-event-main-description";
