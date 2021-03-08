@@ -383,10 +383,10 @@ describe('VEX - Virtual Event Live Sessions', function() {
             if(session.live.status == 'live' || (session.live.status == 'ended' && !session.video) ){
                 // If live session is currently live, it should be in the "Agenda" section 
                 // Or if a live session has ended and has no on-demand fallback, it still behaves like it's live until somebody manually turns it off 
-                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                cy.containsExact("h2", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
-                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                cy.containsExact("h2", "Agenda").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
                         if(session.live.status == 'live'){
                             cy.containsExact('div', 'Live').should('exist') // If live session is currently live, then it should have 'live' label
@@ -395,23 +395,23 @@ describe('VEX - Virtual Event Live Sessions', function() {
                 })
             } else if(session.live.status == 'upcoming'){
                 // If live session is upcoming, it should be in the "Agenda" section 
-                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                cy.containsExact("h2", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
-                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                cy.containsExact("h2", "Agenda").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
                         cy.containsExact('div', 'Live').should('not.exist') // live session is still pending, so no live label
                     })
                 })
             } else if(session.live.status == 'ended' && session.video){ 
                 // If session has ended, and there is an on-demand video configured as a fall back, then these cards should go in the 'on demand' section
-                cy.containsExact("h4", "On Demand Sessions").parent().within(()=>{
+                cy.containsExact("h2", "On Demand Sessions").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("exist").should('contain', session.live.start).within(()=>{
                         cy.containsExact('div', 'Live').should('not.exist')
                         cy.containsExact("div", "On Demand").should("exist")
                     })
                 })
-                cy.containsExact("h4", "Agenda").parent().within(()=>{
+                cy.containsExact("h2", "Agenda").parent().within(()=>{
                     cy.contains(consumption.vex.sessionCardTitle, session.name).should("not.exist")
                 })
             } 
