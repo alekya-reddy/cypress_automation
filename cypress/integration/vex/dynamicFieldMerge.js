@@ -59,7 +59,6 @@ describe("VEX - Dynamic Field Merge", () => {
                 authoring.common.login()
                 authoring.vex.addVirtualEvent(event.name)
                 authoring.vex.configureEvent(event)
-                // cy.visit('https://automation-vex.pathfactory-development.com/authoring/content-library/virtual-events/594/pages')
                 authoring.vex.configureAppearance(appearance)
                 authoring.vex.addLandingPages(landingPage.name)
                 authoring.vex.configureLandingPage(landingPage)
