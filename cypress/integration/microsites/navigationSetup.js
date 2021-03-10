@@ -102,7 +102,20 @@ const navigation = {
         label: "Delete",
         type: "Link",
         source: "https://delete.me"
-    }
+    },
+    text1: {
+        label: "Text1",
+        type: "Text",
+    },
+    text2: {
+        label: "Text2",
+        type: "Text",
+    },
+    text3: {
+        label: "Text3",
+        type: "Text",
+    } 
+
 }
 
 describe("Microsites - Navigation setup", () => {
@@ -126,7 +139,11 @@ describe("Microsites - Navigation setup", () => {
 
         // Rearrange the links, creating sublinks 
         authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
-        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})
+        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
+        authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.text1.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.text1.label, target: navigation.text2.label})
+        
 
         // Attempt to remove one of the tracks and verify that cannot do this while it's used in navigation 
         authoring.microsites.removeTracks(recommend.name, false)
@@ -168,5 +185,10 @@ describe("Microsites - Navigation setup", () => {
         cy.url().should("eq", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label, {timeout: 20000}).click()
         cy.url().should("eq", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
+        
+        // Mouseover Text navigation menu and Verify dropdowns 
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text3.label).should("be.visible").trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text2.label).should("be.visible").trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.text1.label).should("be.visible")
     })
 })
