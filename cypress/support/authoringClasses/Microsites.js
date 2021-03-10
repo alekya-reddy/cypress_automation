@@ -887,10 +887,11 @@ export class Microsites extends Common {
                         cy.contains(this.landingPages.micrositeCardTitle, content.name).should("exist")
                     })
                 }
-                if(layout){
-                    const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
-                    cy.get(this.landingPages.carouselArrow).should(shouldExistOrNot)
-                }
+                // The assets will render in a carousel in the live experience
+                // if(layout){
+                //     const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
+                //     cy.get(this.landingPages.carouselArrow).should(shouldExistOrNot)
+                // }
             })
         }
     }
