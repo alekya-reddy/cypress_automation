@@ -145,6 +145,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         cy.get(authoring.microsites.landingPages.landingPageLayout).select("Grid")
         cy.contains("button", "Confirm").click({force: true})
         cy.contains(" The assets will render in a carousel in the live experience").should("not.exist")
+        cy.contains("button", "Save").click()
 
         // Check consumption
         cy.visit(landingPage.url)
