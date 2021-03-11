@@ -41,7 +41,6 @@ let users = [
         editPermission: false
     }
 ]
-
 if (Cypress.env('TEST_ENV') == 'prod') {
     users.shift() // Need to remove superuser from prod test because there are no super automation users on prod
 }

@@ -87,7 +87,7 @@ describe("Microsites - User Roles", () => {
                     cy.contains(authoring.microsites.micrositesPage.cardTitle, microsite2.name, {timeout: 10000}).should('exist')
                     authoring.microsites.removeMicrosite(microsite2.name)
                 } else {
-                    cy.get(authoring.microsites.addMicrositeButton).should("not.exist")
+                    cy.contains("button", "Add Microsite").should("not.exist")
                     cy.contains("span", "More Actions"),should("not.exist")
                 }
             }
