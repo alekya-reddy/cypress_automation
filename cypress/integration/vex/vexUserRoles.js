@@ -33,7 +33,7 @@ let users = [
     },
     {
         role: 'reporter',
-        roleDescription: "Reporter should have no access to VEX",
+        roleDescription: "Reporter should have access to VEX Analytics",
         username: constants.orgs[authoring.common.org].reporterUser,
         password: constants.orgs[authoring.common.org].reporterUserPassword,
         vexHomeAccess: true,
@@ -77,19 +77,20 @@ describe('VEX - User roles', function() {
             if(user.eventsPageAccess){
                 cy.containsExact(authoring.vex.pageTitleLocator, event, {timeout: 20000}).should('exist')
             } else {
-                cy.get('body').should('contain', "You don't have permission to view this page.")
-                cy.containsExact(authoring.vex.pageTitleLocator, event).should('not.exist')
+                cy.containsExact(authoring.vex.pageTitleLocator, event, {timeout: 20000}).should('exist')
+                cy.contains("span", "Preview Event").should("not.exist")
+                cy.waitFor({element: "#lk-dashboard-container", to: "exist", wait: 10000})
             }
 
             authoring.vex.visit()
-            authoring.vex.addVirtualEvent(userAddedEvent, false)
             if(user.editPermission){
+                authoring.vex.addVirtualEvent(userAddedEvent, false)
                 cy.containsExact(authoring.vex.eventCardTitle, userAddedEvent, {timeout: 20000}).should('exist')
                 authoring.vex.deleteVirtualEvent(userAddedEvent)
             } else {
-                cy.get('body').should('contain', "You don't have permission to view this page.")
+                cy.contains("span", "Add Virtual Event").should("not.exist")
+                cy.contains("span", "More Actions"),should("not.exist")
             }
-
         })
     })
 

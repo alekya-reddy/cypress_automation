@@ -5,6 +5,7 @@ export class Microsites extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/microsite`;
         this.pageTitle = "Microsites";
+        this.addMicrositeButton = "#add-microsite-button";
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
