@@ -5,7 +5,6 @@ export class Microsites extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/microsite`;
         this.pageTitle = "Microsites";
-        this.addMicrositeButton = "#add-microsite-button";
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
@@ -1074,6 +1073,8 @@ export class Microsites extends Common {
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
                 if(type == "Link" && newTab){
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
+                } else if(type == "Text" ) {
+                    cy.containsExact(this.navigation.navSubtitle, `${type}`).should('exist')
                 } else {
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
                 }

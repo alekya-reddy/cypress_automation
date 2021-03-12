@@ -61,6 +61,8 @@ const link1 = target.url
 
 const link2 = recommend.url 
 
+const link3 = target.url
+
 const navigation = {
     target: {
         label: "Target",
@@ -102,7 +104,22 @@ const navigation = {
         label: "Delete",
         type: "Link",
         source: "https://delete.me"
-    }
+    },
+    link3: {
+        label: "Link3",
+        type: "Link",
+        source: link3,
+        newTab: false
+    },
+    text2: {
+        label: "Text2",
+        type: "Text",
+    },
+    text3: {
+        label: "Text3",
+        type: "Text",
+    } 
+
 }
 
 describe("Microsites - Navigation setup", () => {
@@ -126,7 +143,11 @@ describe("Microsites - Navigation setup", () => {
 
         // Rearrange the links, creating sublinks 
         authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
-        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})
+        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
+        authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text2.label})
+        
 
         // Attempt to remove one of the tracks and verify that cannot do this while it's used in navigation 
         authoring.microsites.removeTracks(recommend.name, false)
@@ -157,7 +178,7 @@ describe("Microsites - Navigation setup", () => {
         })
         cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("not.exist")
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).should("be.visible").trigger("mouseover")
-        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("be.visible").within(() => {
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label, {timeout: 20000}).should("be.visible").within(() => {
             cy.get("a").should("have.attr", "href", navigation.link1.source)
         })
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage2.label).should("not.exist")
@@ -168,5 +189,14 @@ describe("Microsites - Navigation setup", () => {
         cy.url().should("eq", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label, {timeout: 20000}).click()
         cy.url().should("eq", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
+        
+        // Mouseover Text navigation menu, Verify dropdowns, click on the link from dropdowns and verify that it goes tp correct url
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text3.label).should("be.visible").trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text2.label).should("be.visible").trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.link3.label, {timeout: 20000}).should("be.visible").within(() => {
+            cy.get("a").should("have.attr", "href", navigation.link3.source)
+        })
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.link3.label,{timeout: 20000}).click()
+        cy.url().should("eq", navigation.link3.source)
     })
 })
