@@ -24,7 +24,7 @@ const users = [
     },
     {
         role: 'reporter',
-        roleDescription: "Reporter should have no access to Microsites",
+        roleDescription: "Reporter should have access to Microsites Analytics",
         username: org.reporterUser,
         password: org.reporterUserPassword,
         homeAccess: true,
@@ -76,17 +76,19 @@ describe("Microsites - User Roles", () => {
                 if(user.setupAccess){
                     cy.contains(authoring.microsites.pageTitleLocator, microsite.name).should("exist")
                 } else {
-                    cy.get('body').should('contain', "You don't have permission to view this page.")
-                    cy.contains(authoring.microsites.pageTitleLocator, microsite.name).should("not.exist")
+                    cy.contains(authoring.microsites.pageTitleLocator, microsite.name).should("exist")
+                    cy.contains("span", "Preview Microsite").should("not.exist")
+                    cy.waitFor({element: "#lk-dashboard-container", to: "exist", wait: 10000})
                 }
 
                 authoring.microsites.visit()
-                authoring.microsites.addMicrosite(microsite2.name, false)
                 if(user.editPermission){
+                    authoring.microsites.addMicrosite(microsite2.name, false)
                     cy.contains(authoring.microsites.micrositesPage.cardTitle, microsite2.name, {timeout: 10000}).should('exist')
                     authoring.microsites.removeMicrosite(microsite2.name)
                 } else {
-                    cy.get('body').should('contain', "You don't have permission to view this page.")
+                    cy.contains("button", "Add Microsite").should("not.exist")
+                    cy.contains("span", "More Actions"),should("not.exist")
                 }
             }
         })
