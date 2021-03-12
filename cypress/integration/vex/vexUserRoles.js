@@ -88,7 +88,7 @@ describe('VEX - User roles', function() {
                 authoring.vex.deleteVirtualEvent(userAddedEvent)
             } else {
                 cy.contains("span", "Add Virtual Event").should("not.exist")
-                cy.contains("span", "More Actions"),should("not.exist")
+                cy.contains("span", "More Actions").should("not.exist")
             }
         })
     })

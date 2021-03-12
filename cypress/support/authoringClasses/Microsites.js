@@ -57,6 +57,7 @@ export class Microsites extends Common {
             targetRadio: "input[value='target']",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             carouselArrow: ".pf-microsite-carousel-arrow",
+            landingPageLayout: "select[id*='landingPageLayout']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -606,7 +607,7 @@ export class Microsites extends Common {
 
         if(layout){
             // Values should be "Carousel" or "Grid"
-            cy.get("select[id*='landingPageLayout']").select(layout)
+            cy.get(this.landingPages.landingPageLayout).select(layout)
         }
 
         if(name){

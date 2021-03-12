@@ -16,6 +16,7 @@ export class MicrositesCX extends CommonCX {
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
         this.arrowRight = "#qa-arrow-right"
+        this.arrowLeft = "#qa-arrow-left"
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",

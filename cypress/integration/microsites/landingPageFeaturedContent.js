@@ -19,20 +19,6 @@ const contentWithTopics = {
     topics: ["Topic Shared Resource"]
 }
 
-const contentForCarousel = {
-    internalTitle: "2-landingPageFeaturedContent.js",
-    publicTitle: "2-landingPageFeaturedContent.js",
-    url: "https://en.wikipedia.org/wiki/Tulip",
-    slug: "tulip"
-}
-
-const contentForCarousel2 = {
-    internalTitle: "3-landingPageFeaturedContent.js",
-    publicTitle: "3-landingPageFeaturedContent.js",
-    url: "https://en.wikipedia.org/wiki/The_Black_Tulip",
-    slug: "the_black_tulip"
-}
-
 const trackWithTopics = {
     trackType: "target",
     name: "landingPageFeaturedContent.js",
@@ -43,7 +29,7 @@ const trackWithTopics = {
     get micrositeUrl(){
         return `${microsite.url}/${this.slug}/${contentWithTopics.slug}`
     },
-    contents: [contentWithTopics.internalTitle, "Youtube Shared Resource", contentForCarousel.internalTitle, contentForCarousel2.internalTitle]
+    contents: [contentWithTopics.internalTitle, "Youtube Shared Resource"]
 }
 
 const target = {
@@ -138,40 +124,6 @@ const featureBlock = {
     }
 }
 
-const featuredBlockCarousel = {
-    id: "featured-block-carousel",
-    type: "featured",
-    name: "The Featured Content Block Carousel",
-    layout: "Carousel",
-    contents: [
-        {
-            trackType: trackWithTopics.trackType,
-            track: trackWithTopics.name,
-            name: trackWithTopics.contents[0]
-        },
-        {
-            trackType: trackWithTopics.trackType,
-            track: trackWithTopics.name,
-            name: trackWithTopics.contents[1]
-        },
-        {
-            trackType: trackWithTopics.trackType,
-            track: trackWithTopics.name,
-            name: trackWithTopics.contents[2]
-        },
-        {
-            trackType: trackWithTopics.trackType,
-            track: trackWithTopics.name,
-            name: trackWithTopics.contents[3]
-        },
-        {
-            trackType: recommend.trackType,
-            track: recommend.name,
-            name: recommend.contents[0]
-        }
-    ]
-}
-
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
@@ -182,7 +134,6 @@ const landingPage = {
     setHome: true,
     blocks: [
         deleteBlock,
-        featuredBlockCarousel,
         featureBlock
     ]
 }
@@ -248,14 +199,13 @@ describe("Microsites - Landing page featured content block setup", () => {
         const blockToVerify = {...featureBlock}
         blockToVerify.contents = false // Disable checking for contents since one was deleted
         consumption.microsites.verifyLandingPageBlock(blockToVerify)
-        consumption.microsites.verifyLandingPageBlock(featuredBlockCarousel)
 
         // Verify that the cards would redirect to the correct url
         cy.get(`a[href='${trackWithTopics.micrositeUrl}']`).should("exist").contains(trackWithTopics.contents[0]).should("exist")
         cy.get(`a[href='${recommend.micrositeUrl}']`).should("exist").contains(recommend.contents[0]).should("exist")
 
         // Verify that the deleted content doesn't exist, only one is present that was added to featured carousel
-        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[1]).should("have.length", 1)
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[1]).should("have.length", 0)
 
         // Basic verification of filters for featured content block (
         // Technically this test should go in searchAndFiltersConsumption.js, but the featured content block is already set up here
@@ -278,21 +228,6 @@ describe("Microsites - Landing page featured content block setup", () => {
             cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
             cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
             cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
-        })
-
-        // Verify carousel layout
-        cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
-            cy.get(consumption.microsites.cardTitle).eq(0).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(4).should("not.be.visible")
-            cy.get(consumption.microsites.arrowRight).click({force: true})
-            cy.get(consumption.microsites.cardTitle).eq(0).should("not.be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(4).should("be.visible")
         })
 
         // The deleted block should not exist

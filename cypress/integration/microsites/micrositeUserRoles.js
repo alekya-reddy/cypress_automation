@@ -88,7 +88,7 @@ describe("Microsites - User Roles", () => {
                     authoring.microsites.removeMicrosite(microsite2.name)
                 } else {
                     cy.contains("button", "Add Microsite").should("not.exist")
-                    cy.contains("span", "More Actions"),should("not.exist")
+                    cy.contains("span", "More Actions").should("not.exist")
                 }
             }
         })
