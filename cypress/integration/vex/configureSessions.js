@@ -48,28 +48,6 @@ const session = {
     description: 'Testing 123',
     topics: "General Use",
     type: 'On Demand',
-    video: videos[2].internalTitle,
-    newVideo: videos[3].internalTitle
-}
-const session_live = {
-    name: "zoom",
-    newName: "zoom",
-    slug: "zoom",
-    get url(){
-        return `${event.url}/${this.slug}`
-    },
-    visibility: 'Public',
-    type: 'Live',
-    live: {
-        start: 'Jun 24, 2020 8:00pm',
-        end: 'Jun 24, 2041 8:00pm',
-        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-        type: 'Zoom',
-        zoomNum: '111 111 111',
-        zoomAuth: 'No Password',
-    },
-    maxAttendees: "1",
-    stayOnPage: true,
     video: videos[2].internalTitle
 }
 
@@ -129,18 +107,24 @@ describe('VEX - Virtual Event', function() {
             })
             
             // Make sure only 1 can be chosen at at time.
-            cy.get(authoring.vex.contentPickerSearchBar).clear().type(videos[0].internalTitle);
+            cy.get(authoring.vex.contentPickerSearchBar).clear().type(videos[0].url);
             cy.contains(authoring.vex.contentPickerItem, videos[0].internalTitle).click();
             cy.get(authoring.vex.contentPickerSearchBar).clear().type(videos[1].internalTitle);
             cy.contains(authoring.vex.contentPickerItem, videos[1].internalTitle).click();
             cy.containsExact('p', 'Cannot add more than 1 item.').should('exist');
             cy.get(authoring.vex.cancelButton).click(); 
         })
-
         // Choose a different on demand video to validate that you can change the video, then save
-        authoring.vex.pickOnDemandVideo(session.newVideo);
+        cy.get(authoring.vex.selectVideoButton).click();
+        cy.get(authoring.vex.modal).within(()=>{
+            // check that we can add content by typing url in a search field
+            cy.get(authoring.vex.contentPickerSearchBar).clear().type(videos[3].url);
+            cy.contains(authoring.vex.contentPickerItem, videos[3].internalTitle).click();
+            cy.wait(50000)
+            cy.get(authoring.vex.selectVideoButton).click();
+        })
         cy.get(authoring.vex.saveButton).click(); 
-        cy.contains(authoring.vex.onDemandTitleLocator, session.newVideo).should('exist');
+        cy.contains(authoring.vex.onDemandTitleLocator, videos[3].internalTitle).should('exist');
 
         // Verify the contents listed in the supplemental content picker
         cy.get(authoring.vex.addContentButton).click();
