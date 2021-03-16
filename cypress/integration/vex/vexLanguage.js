@@ -5,7 +5,7 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const event = {
     name: 'vexLanguage.js',
     slug: 'vexlanguage-js',
-    trackProtection: "Default",
+    trackProtection: "vexTrackProtection2",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
