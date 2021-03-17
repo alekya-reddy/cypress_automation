@@ -14,5 +14,6 @@ export class ExploreCX extends CommonCX {
             topicFilterContainer: "#explore-topic-filter-container",
             topicSearchContainer: "#explore-topic-search-container",
         }
+        this.headerTitle = '#qa-header-title'
     } 
 }
