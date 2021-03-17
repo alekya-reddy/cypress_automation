@@ -88,7 +88,7 @@ describe("Explore - create new explore", () => {
 
         // Edit Explore page name and Edit track
         authoring.explore.visit()
-        authoring.explore.goToExplore(exploreTarget.name)
+        authoring.explore.goToExplorePage(exploreTarget.name)
         authoring.explore.editExplore(exploreRecommend) // includes verification
 
         // Veify that explore with previous name doesn't exist
