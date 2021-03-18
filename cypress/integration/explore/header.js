@@ -59,6 +59,14 @@ describe("Explore - Header feature", () => {
         // verify on consumption that header title fallback to default value, which is 'Recommended Content' 
         cy.visit(explore.url)
         cy.contains(consumption.explore.headerTitle, 'Recommended Content')   
+
+        // verify header doesn't exist when toggle is off
+        authoring.explore.visit()
+        authoring.explore.goToExplore(explore.name)
+        authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'OFF')
+
+        cy.visit(explore.url)
+        cy.get(consumption.explore.headerTitle).should('not.exist')
     })
 })
 
