@@ -16,7 +16,11 @@ export class ExploreCX extends CommonCX {
             card: ".pf-explore-grid-container",
             topicFilterContainer: "#explore-topic-filter-container",
             topicSearchContainer: "#explore-topic-search-container",
-            searchButton: 'div[class*="pf-explore-search-button"]'
+            searchButton: 'div[class*="pf-explore-search-button"]',
+            bodyCTA: '#qa-cta-button-body'
+        }
+        this.footer = {
+            footerCTA: '#qa-cta-button-footer'
         }
         this.headerTitle = '#qa-header-title'
     } 

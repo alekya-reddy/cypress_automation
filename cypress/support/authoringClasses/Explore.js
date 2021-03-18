@@ -22,6 +22,7 @@ export class Explore extends Common {
             customUrlLabel: "label:contains('URL Slug')",
             publicTitleLabel: "label:contains('Public Title')",
             appearanceLabel: "label:contains('Appearance')",
+            ctaToggle: 'div[data-qa-hook="ctaSection"]',
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
             filtersToggle: 'div[data-qa-hook="filtersSection"]',
@@ -36,7 +37,10 @@ export class Explore extends Common {
             headerTitle: '#title'
         }
         this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
-        this.heroTitleInput = 'input[name="headerTitle"]'
+        this.heroTitleInput = 'input[name="headerTitle"]',
+        this.heroCTA = '#qa-cta-button-hero',
+        this.bodyCTA = '#qa-cta-button-body',
+        this.footerCTA = '#qa-cta-button-footer'
     }
 
     visit(){
@@ -235,5 +239,18 @@ export class Explore extends Common {
         if(verify !== false){
             cy.get(this.pageSidebar.publicTitleLabel).siblings("span").should("contain", title)
         }
+    }
+
+    addCTAButton(type, ctaName, position){
+        // type should be either Hero, Body or Footer
+        // position should be either Left, Center or Right
+        cy.contains('label', type).click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(position + "\n", {force: true})
+            cy.contains('button', 'Update').click()
+        })
     }
 }
