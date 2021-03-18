@@ -50,7 +50,7 @@ describe("Explore CTA buttons", () => {
 
         cy.visit(explore.url)
         // check that all CTA button's are shown in consumption
-        cy.contains(consumption.explore.hero.heroCTA, formCTA).should('exist')
+        cy.contains(consumption.explore.hero.heroCTA, formCTA, {timeout: 10000}).should('exist')
         cy.contains(consumption.explore.body.bodyCTA, linkCTA).should('exist')
         cy.contains(consumption.explore.footer.footerCTA, formCTA).should('exist')
 
@@ -92,7 +92,7 @@ describe("Explore CTA buttons", () => {
 
         cy.visit(explore.url)
         // check that removed CTAs are not shown in consumption
-        cy.contains(consumption.explore.hero.heroCTA, formCTA).should('not.exist')
+        cy.contains(consumption.explore.hero.heroCTA, formCTA, {timeout: 10000}).should('not.exist')
         cy.contains(consumption.explore.body.bodyCTA, linkCTA).should('not.exist')
         cy.contains(consumption.explore.footer.footerCTA, formCTA).should('exist')
 
@@ -107,7 +107,7 @@ describe("Explore CTA buttons", () => {
 
         cy.visit(explore.url)
         // check that removed CTAs are not shown in consumption
-        cy.contains(consumption.explore.hero.heroCTA, formCTA).should('not.exist')
+        cy.contains(consumption.explore.hero.heroCTA, formCTA, {timeout: 10000}).should('not.exist')
         cy.contains(consumption.explore.body.bodyCTA, linkCTA).should('not.exist')
         cy.contains(consumption.explore.footer.footerCTA, formCTA).should('not.exist')
 
