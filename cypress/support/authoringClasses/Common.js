@@ -89,6 +89,18 @@ export class Common {
         this.antPopover = ".ant-popover";
         this.antRow = ".ant-row";
         this.checkboxContainer = 'div[data-qa-hook="checkbox"]';
+        this.accessProtection = {
+            protectionTypeLabel: "label[for='protectionType']",
+            accessProtectionLabel: "label:contains('Access Protection')",
+            APGroupLabel: "label[for='visitorGroupIds']",
+            GroupdropDown: "div[class='Select-menu']",
+            APDisGroupLabel: "label[for='visitorGroupBlacklistIds']",
+            dropDownExpandCollapse: 'span[class="Select-arrow-zone"]',
+            track_removeVisitorGroup: 'span[class="Select-value-icon"]',
+            trackProtectionArea: '.visitorGroupMultiSelect',
+            selectedVisitorGroup: 'span[class="ant-select-selection-item-content"]',
+            vex_microsite_removeVisitorGroup: 'span[class="ant-select-selection-item-remove"]'
+        }
     }
 
     visitHomeUrl(){

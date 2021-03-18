@@ -30,14 +30,14 @@ describe("VEX - Access Protection", ()=>{
         cy.contains(authoring.vex.antRow, "Protection Type").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).type('Email' + "\n")
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
         })
         cy.get(authoring.vex.dropDown).children().each(($el,index,$list)=>{
             cy.wrap($el).should("not.have.class",'ant-select-item-option-disabled')
         })
         //When All Visitors is selected in Allowed Groups list, other groups in the drop down are disabled for selection in the Allowed groups drop down
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).type(allVisitorsGroup + "\n")
         })
         cy.get(authoring.vex.dropDown).children().each(($el,index,$list)=>{
@@ -47,9 +47,9 @@ describe("VEX - Access Protection", ()=>{
                 cy.wrap($el).should("have.class",'ant-select-item-option-disabled')
             }
         })
-        cy.contains("span", allVisitorsGroup).parent().find(authoring.vex.removeVisitorGroup).click()
+        cy.contains("span", allVisitorsGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
         //When a group is selected in Allowed Groups list, then that group should be shown in the drop down list of Allowed with area selected and not shown in Disallowed groups list
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
         })
@@ -60,32 +60,32 @@ describe("VEX - Access Protection", ()=>{
                 }
             })
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Disallow Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.vex.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
             cy.get(authoring.microsites.antDropSelect.selector).click()
         })
         //When a selected group is removed from the Allowed Groups list, then that group should be shown in the drop down list of Allowed and Disallowed groups
-        cy.contains("span", gmailAPGroup).parent().find(authoring.vex.removeVisitorGroup).click()
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.vex.selectedVisitorGroup).should('have.contain', gmailAPGroup)
-            cy.contains("span", gmailAPGroup).parent().find(authoring.vex.removeVisitorGroup).click()
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.contain', gmailAPGroup)
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
             cy.get(authoring.vex.antDropSelect.selector).click()
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Disallow Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.vex.selectedVisitorGroup).should('have.contain', gmailAPGroup)
-            cy.contains("span", gmailAPGroup).parent().find(authoring.vex.removeVisitorGroup).click()
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.contain', gmailAPGroup)
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
         })
         //When a group is selected in Disallowed Groups list, then that group should no more be shown in the drop down list of Allowed and with area selected in Disallowed groups
-        cy.contains(authoring.vex.trackProtectionArea, "Disallow Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
         })
@@ -98,16 +98,16 @@ describe("VEX - Access Protection", ()=>{
                 })
             })
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Disallow Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
         })
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.vex.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
         })
         //Select All Visitors in the Allowed Groups list and "gmailAPGroup" is already selected above in Disallowed Groups list
-        cy.contains(authoring.vex.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.vex.antDropSelect.selector).click()
             cy.get(authoring.vex.antDropSelect.selector).type(allVisitorsGroup + "\n")
         })

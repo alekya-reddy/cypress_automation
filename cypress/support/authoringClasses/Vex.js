@@ -101,7 +101,6 @@ export class Vex extends Common {
         this.sessionRow = ".ant-list-item";
         this.removeGroupButton = "span:contains('Remove')";
         this.renameGroupButton = "button:contains('Rename')";
-        this.trackProtectionArea = '.visitorGroupMultiSelect'; 
         this.antSelector = ".ant-select-selector";
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
@@ -172,8 +171,6 @@ export class Vex extends Common {
         this.allowGroups='div[id="vex-allow-visitor-groups_list"]';
         this.DisallowGroups='div[id="vex-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
-        this.removeVisitorGroup = 'span[class="ant-select-selection-item-remove"]';
-        this.selectedVisitorGroup='span[class="ant-select-selection-item-content"]';
     }
 
     visit(){
@@ -321,7 +318,7 @@ export class Vex extends Common {
         cy.contains(this.antRow, "Protection Type").within(()=>{
             cy.get(this.antDropSelect.selector).type(type + "\n")
         })
-        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(()=>{
             groups.forEach((group)=>{
                 cy.get(this.antDropSelect.selector).type(group + "\n")
                 cy.get(this.antDropSelect.selector).click() // Close dropdown menu
@@ -335,7 +332,7 @@ export class Vex extends Common {
     removeTrackProtection(list){
         let groups = [list].flat()
 
-        cy.contains(this.trackProtectionArea, "Groups").within(()=>{
+        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(()=>{
             groups.forEach((group)=>{
                 cy.contains('.ant-select-selection-item', group).within(()=>{
                     cy.get(".ant-select-selection-item-remove").click()

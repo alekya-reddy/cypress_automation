@@ -26,62 +26,62 @@ describe("Recommend - Access Protection", () => {
         authoring.recommend.deleteTrack(recommend.name)
         authoring.recommend.addTrack(recommend)
         authoring.recommend.configure(recommend)
-        cy.get(authoring.recommend.pageSidebar.accessProtectionLabel).siblings("span").click()
+        cy.get(authoring.common.accessProtection.accessProtectionLabel).siblings("span").click()
         cy.get(authoring.recommend.popover).within(()=>{
-            cy.get(authoring.recommend.popoverElements.protectionTypeLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.protectionTypeLabel).siblings(authoring.recommend.dropdown.box).click()
             cy.get(authoring.recommend.dropdown.option('Email')).click()
             //When All Visitors is not selected in Allowed Groups list, other groups in the drop down are enabled for selection in the Allowed groups drop down
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("not.have.class",'Select-option is-disabled')
             })
             //When All Visitors is selected in Allowed Groups list, other groups in the drop down are disabled for selection in the Allowed groups drop down
             cy.get(authoring.recommend.dropdown.option(allVisitorsGroup)).click()
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("have.class",'Select-option is-disabled')
             })
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
-            cy.contains("span", allVisitorsGroup).parent().parent().find(authoring.recommend.popoverElements.removeVisitorGroup).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
+            cy.contains("span", allVisitorsGroup).parent().parent().find(authoring.common.accessProtection.track_removeVisitorGroup).click()
             //When a group is selected in Allowed Groups list, then that group should no more be shown in the drop down list of Allowed and Disallowed groups
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
             cy.get(authoring.recommend.dropdown.option(gmailAPGroup)).click()
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("not.contain", gmailAPGroup)
             })
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
-            cy.get(authoring.recommend.popoverElements.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
+            cy.get(authoring.common.accessProtection.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("not.contain", gmailAPGroup)
             })
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
 
             //When a selected group is removed from the Allowed Groups list, then that group should be shown in the drop down list of Allowed and Disallowed groups
-            cy.contains("span", gmailAPGroup).parent().parent().find(authoring.recommend.popoverElements.removeVisitorGroup).click()
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).should("contain", gmailAPGroup)
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
-            cy.get(authoring.recommend.popoverElements.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).should("contain", gmailAPGroup)
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
+            cy.contains("span", gmailAPGroup).parent().parent().find(authoring.common.accessProtection.track_removeVisitorGroup).click()
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).should("contain", gmailAPGroup)
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
+            cy.get(authoring.common.accessProtection.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).should("contain", gmailAPGroup)
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
 
             //When a group is selected in Disallowed Groups list, then that group should no more be shown in the drop down list of Allowed and Disallowed groups
-            cy.get(authoring.recommend.popoverElements.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
             cy.get(authoring.recommend.dropdown.option(gmailAPGroup)).click()
-            cy.get(authoring.recommend.popoverElements.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.APDisGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("not.contain", gmailAPGroup)
             })
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).children().each(($el,index,$list)=>{
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).children().each(($el,index,$list)=>{
                 cy.wrap($el).should("not.contain", gmailAPGroup)
             })
-            cy.get(authoring.recommend.popoverElements.GroupdropDown).parent().parent().parent().parent().find(authoring.recommend.popoverElements.dropDownExpandCollapse).click()
+            cy.get(authoring.common.accessProtection.GroupdropDown).parent().parent().parent().parent().find(authoring.common.accessProtection.dropDownExpandCollapse).click()
 
             //Select All Visitors in the Allowed Groups list and "gmailAPGroup" is already selected above in Disallowed Groups list
-            cy.get(authoring.recommend.popoverElements.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
+            cy.get(authoring.common.accessProtection.APGroupLabel).siblings(authoring.recommend.dropdown.box).click()
             cy.get(authoring.recommend.dropdown.option(allVisitorsGroup)).click()
             cy.contains("button", "Update").click()
         })      
