@@ -20,19 +20,23 @@ export class Explore extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
+            publicTitleLabel: "label:contains('Public Title')",
             appearanceLabel: "label:contains('Appearance')",
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
             filtersToggle: 'div[data-qa-hook="filtersSection"]',
         };
         this.popoverElements = {
-            customUrlInput: "#slug"
+            customUrlInput: "#slug",
+            publicTitleInput: "#publicTitle"
         };
         this.header = {
             headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
             headerOverrides: 'div[data-qa-hook="Header overrides"]',
             headerTitle: '#title'
         }
+        this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
+        this.heroTitleInput = 'input[name="headerTitle"]'
     }
 
     visit(){
@@ -124,6 +128,8 @@ export class Explore extends Common {
         // These toggle options should have values of "on" or "off"
         const { header, searchFunction, filters, selectFilters } = options
 
+        const { heroTitle } = options
+
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
                 this.goToExplorePage(name)
@@ -172,7 +178,12 @@ export class Explore extends Common {
             if(industry == true || industry == false) {
                 this.clickCheckbox({label: "Industry", check: industry})
             }   
-        }   
+        } 
+
+        if(heroTitle){
+            cy.get(this.heroTitleLocator).click()
+            cy.get(this.heroTitleInput).clear().type(heroTitle + "\n")
+        }
     }    
 
     setCustomUrl(slug, verify){
@@ -216,5 +227,13 @@ export class Explore extends Common {
             cy.get(this.header.headerTitle).clear().type(headerTitle)
             cy.contains('button', 'Save Header Overrides').click()
         })
+    }
+
+    setPublicTitle(title, verify){
+        cy.get(this.pageSidebar.publicTitleLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.publicTitleInput).clear().type(title + "\n")
+        if(verify !== false){
+            cy.get(this.pageSidebar.publicTitleLabel).siblings("span").should("contain", title)
+        }
     }
 }

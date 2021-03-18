@@ -8,21 +8,22 @@ const webContent = contents["Website Common Resource"]
 const youtubeContent = contents["Youtube Shared Resource"]
 
 const target = {
-    name: 'sharedTarget',
+    name: 'publicTitle.js',
     contents: [webContent.title, youtubeContent.title]
 };
 
 const explore = {
-    name: 'header.js',
+    name: 'publicTitle.js',
     experienceType: 'Target',
     trackName: target.name,
-    slug: 'header-js',
+    slug: 'publictitle-js',
+    heroTitle: 'Original Title',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 };
 
-describe("Explore - Header feature", () => {
+describe("Explore - Change Public Title", () => {
 
     it("Set up if not already done", ()=>{
         cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
@@ -35,38 +36,26 @@ describe("Explore - Header feature", () => {
         })
     })
 
-    it("Add, override and remove Header", () => {
+    it("Change Public Title value", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
-        // turn header toggle on and override headet title
-        authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'ON')
-        authoring.explore.setHeaderOverrides('Automation Headline')
-        
-        // verify on consumption header title changed
-        cy.visit(explore.url)
-        cy.contains(consumption.explore.headerTitle, 'Automation Headline')
+        // change public title and verify consumption
+        authoring.explore.setPublicTitle('Wonderful Title')
 
-        // go back to authoring and remove override title
+        cy.visit(explore.url)
+        cy.title().should('eq', 'Wonderful Title')
+
+        // go back to authoring and remove public title - explore name should be shown
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
-        cy.get(authoring.explore.header.headerOverrides).click()
-        cy.get(authoring.explore.modal).within(() => {
-            cy.get(authoring.explore.header.headerTitle).clear()
-            cy.contains('button', 'Save Header Overrides').click()
-        })
-
-        // verify on consumption that header title fallback to default value, which is 'Recommended Content' 
-        cy.visit(explore.url)
-        cy.contains(consumption.explore.headerTitle, 'Recommended Content')   
-
-        // verify header doesn't exist when toggle is off
-        authoring.explore.visit()
-        authoring.explore.goToExplorePage(explore.name)
-        authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'OFF')
+        cy.get(authoring.explore.pageSidebar.publicTitleLabel).siblings("span").click()
+        cy.get(authoring.explore.popover).get(authoring.explore.popoverElements.publicTitleInput).clear()
+        cy.contains('button', 'Update').click()
 
         cy.visit(explore.url)
-        cy.get(consumption.explore.headerTitle).should('not.exist')
+        cy.title().should('eq', explore.heroTitle)
+
     })
 })
 
