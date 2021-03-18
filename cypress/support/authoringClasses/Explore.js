@@ -28,6 +28,11 @@ export class Explore extends Common {
         this.popoverElements = {
             customUrlInput: "#slug"
         };
+        this.header = {
+            headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
+            headerOverrides: 'div[data-qa-hook="Header overrides"]',
+            headerTitle: '#title'
+        }
     }
 
     visit(){
@@ -197,4 +202,19 @@ export class Explore extends Common {
         }
     }
 
+    setHeaderOverrides(headerTitle) {
+        cy.get("body").then($body => {
+            if ($body.find(this.header.headerNoOverrides).length > 0) {
+                cy.get(this.header.headerNoOverrides).click()
+            }
+            else {
+                cy.get(this.header.headerOverrides).click()
+            }
+        })
+        cy.get(this.modal).within(() => {
+            cy.contains('h3', 'Header Overrides for this Track')
+            cy.get(this.header.headerTitle).clear().type(headerTitle)
+            cy.contains('button', 'Save Header Overrides').click()
+        })
+    }
 }

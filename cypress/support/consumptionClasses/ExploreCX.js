@@ -18,8 +18,7 @@ export class ExploreCX extends CommonCX {
             topicSearchContainer: "#explore-topic-search-container",
             searchButton: 'div[class*="pf-explore-search-button"]'
         }
-
-
+        this.headerTitle = '#qa-header-title'
     } 
             
     featuredContentGrid(i,j) {
