@@ -5,6 +5,7 @@ export class Explore extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/explore`;
         this.pageTitle = "Explore Pages";
+        this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         
         this.createExploreModal = {
             nameInput: "input[name='name']",
@@ -38,7 +39,7 @@ export class Explore extends Common {
         cy.visit(this.pageUrl);
     }
 
-    goToExplore(name){
+    goToExplorePage(name){
         cy.get(this.pageSearch).clear().type(name)
         cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
@@ -81,6 +82,19 @@ export class Explore extends Common {
         cy.containsExact("h1", name, {timeout: 10000}).should("exist")
     }
 
+    cloneExplore(cloneName, exploreName){
+        cy.get(this.cloneExploreIcon).click()
+        cy.contains(this.modal, "Clone this Page").within(()=>{
+            cy.get(this.createExploreModal.nameInput).clear().type(cloneName)
+            cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
+            cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(exploreName + "\n")
+        
+            cy.contains("button", "Clone this Page").click()
+        })
+        cy.contains(this.modal, "Clone this Page").should("not.exist")
+        cy.containsExact("h1", cloneName, {timeout: 10000}).should("exist")
+    }
+
     deleteExplore(name){
         cy.get(this.pageSearch).clear().type(name)
 
@@ -112,7 +126,7 @@ export class Explore extends Common {
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
-                this.goToExplore(name)
+                this.goToExplorePage(name)
             }
         })
 
