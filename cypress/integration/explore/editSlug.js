@@ -8,12 +8,14 @@ const webContent = contents["Website Common Resource"]
 const youtubeContent = contents["Youtube Shared Resource"]
 
 const target = {
-    name: 'sharedTerget',
+    name: 'sharedTarget',
     contents: [webContent.title, youtubeContent.title]
 };
 
 const explore = {
     name: 'editSlug.js',
+    experienceType: 'Target',
+    trackName: target.name,
     slug: 'editslug-js',
     newSlug: 'slug-custom',
     get url(){
@@ -22,6 +24,17 @@ const explore = {
 };
 
 describe("Explore - Edit Slug", () => {
+
+    it("Set up if not already done", ()=>{
+        cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.explore.visit()
+                authoring.explore.addExplore(explore)
+                authoring.explore.configureExplore(explore)
+            }
+        })
+    })
 
     it("Explore Page Slug (Custom URL) can be changed", () => {
         authoring.common.login()
