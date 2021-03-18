@@ -46,7 +46,7 @@ describe("Explore - Change Public Title", () => {
         cy.visit(explore.url)
         cy.title().should('eq', 'Wonderful Title')
 
-        // go back to authoring and remove public title - explore name should be shown
+        // go back to authoring and remove public title - explore hero Title should be shown
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
         cy.get(authoring.explore.pageSidebar.publicTitleLabel).siblings("span").click()
