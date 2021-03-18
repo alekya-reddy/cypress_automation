@@ -144,7 +144,7 @@ describe("Explore - language setting", () => {
 
         // Verify New language custumization on explore preview page 
         authoring.explore.visit()
-        authoring.explore.goToExplore(explore.name) 
+        authoring.explore.goToExplorePage(explore.name) 
         cy.get(authoring.explore.topicFilterDropdown, {timeout: 20000}).within(()=>{
             cy.contains("div", exploreLanguageNew.filterByContentType).should("exist")
             cy.contains("div", exploreLanguageNew.filterByFunnelStage).should("exist")
@@ -175,7 +175,7 @@ describe("Explore - language setting", () => {
         authoring.configurations.resetLanguageSetting({name: language.name, tab: 'Explore'})
         // Verify Default language custumization on explore preview page 
         authoring.explore.visit()
-        authoring.explore.goToExplore(explore.name) 
+        authoring.explore.goToExplorePage(explore.name) 
         cy.get(authoring.explore.topicFilterDropdown, {timeout: 20000}).within(()=>{
             cy.contains("div", exploreLanguageDefaults.filterByContentType).should("exist")
             cy.contains("div", exploreLanguageDefaults.filterByFunnelStage).should("exist")
