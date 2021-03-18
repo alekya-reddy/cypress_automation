@@ -29,7 +29,11 @@ export class Recommend extends Common {
         this.popoverElements = {
             customUrlInput: "#customUrl",
             APGroupLabel: "label[for='visitorGroupIds']",
-            protectionTypeLabel: "label[for='protectionType']"
+            protectionTypeLabel: "label[for='protectionType']",
+            GroupdropDown: "div[class='Select-menu']",
+            APDisGroupLabel: "label[for='visitorGroupBlacklistIds']",
+            dropDownExpandCollapse: 'span[class="Select-arrow-zone"]',
+            removeVisitorGroup: 'span[class="Select-value-icon"]'
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",

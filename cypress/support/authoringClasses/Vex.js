@@ -167,7 +167,13 @@ export class Vex extends Common {
             confirmAddButton: "#add-content-widget-button",
             listItem: ".ant-list-item",
             nameInput: "input[name='widget-name']"
-        }
+        };
+        this.protectionTypeLabel = 'label[title="Protection Type"]';
+        this.allowGroups='div[id="vex-allow-visitor-groups_list"]';
+        this.DisallowGroups='div[id="vex-disallow-visitor-groups_list"]';
+        this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
+        this.removeVisitorGroup = 'span[class="ant-select-selection-item-remove"]';
+        this.selectedVisitorGroup='span[class="ant-select-selection-item-content"]';
     }
 
     visit(){

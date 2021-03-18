@@ -71,6 +71,13 @@ export class Microsites extends Common {
             navContent: ".rst__rowContents",
             navRemoveBox: ".rst__rowToolbar"
         };
+        this.protectionTypeLabel = 'label[title="Protection Type"]';
+        this.trackProtectionArea = '.visitorGroupMultiSelect';
+        this.allowGroups='div[id="microsite-allow-visitor-groups_list"]';
+        this.DisallowGroups='div[id="microsite-disallow-visitor-groups_list"]';
+        this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
+        this.removeVisitorGroup = 'span[class="ant-select-selection-item-remove"]';
+        this.selectedVisitorGroup='span[class="ant-select-selection-item-content"]';
     }
 
     visit(){

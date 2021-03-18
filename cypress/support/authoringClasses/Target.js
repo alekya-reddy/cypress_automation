@@ -34,7 +34,11 @@ export class Target extends Common {
             customUrlInput: "#customUrl",
             endPromoterLinkInput: "#link",
             APGroupLabel: "label[for='visitorGroupIds']",
-            protectionTypeLabel: "label[for='protectionType']"
+            protectionTypeLabel: "label[for='protectionType']",
+            GroupdropDown: "div[class='Select-menu']",
+            APDisGroupLabel: "label[for='visitorGroupBlacklistIds']",
+            dropDownExpandCollapse: 'span[class="Select-arrow-zone"]',
+            removeVisitorGroup: 'span[class="Select-value-icon"]'
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",
