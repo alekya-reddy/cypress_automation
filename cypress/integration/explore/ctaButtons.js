@@ -6,6 +6,8 @@ const consumption = createConsumptionInstance({org: 'automation-explore', tld: '
 const recommend = {
     name: 'sharedRecommend'
 };
+const formCTA = 'sharedFormCTA'
+const linkCTA = 'sharedLinkCTA'
 
 const explore = {
     name: 'ctaButtons.js',
@@ -14,10 +16,27 @@ const explore = {
     slug: 'ctabuttons-js',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
-    }
+    },
+    ctaToggle: "ON",
+    cta: [
+        {
+            type: "Hero",
+            ctaName: formCTA,
+            position: "Center"
+        },
+        {
+            type: "Body",
+            ctaName: linkCTA,
+            position: "Right"
+        },
+        {
+            type: "Footer",
+            ctaName: formCTA,
+            position: "Left"
+        }
+    ]
 };
-const formCTA = 'sharedFormCTA'
-const linkCTA = 'sharedLinkCTA'
+
 
 describe("Explore CTA buttons", () => {
 
@@ -36,12 +55,14 @@ describe("Explore CTA buttons", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
+
         // turn CTA toggle ON
         authoring.common.toggle(authoring.explore.pageSidebar.ctaToggle, 'ON')
+
         // add all CTA's
-        authoring.explore.addCTAButton('Hero', formCTA, 'Center')
-        authoring.explore.addCTAButton('Body', linkCTA, 'Right')
-        authoring.explore.addCTAButton('Footer', formCTA, 'Left')
+        explore.cta.forEach((ctaButton)=>{
+            authoring.explore.addCTAButton(ctaButton)
+        })
         
         // check that all CTA button's are shown in authoring
         cy.contains(authoring.explore.heroCTA, formCTA).should('exist')

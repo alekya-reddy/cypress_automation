@@ -128,9 +128,9 @@ export class Explore extends Common {
     }
 
     configureExplore(options){
-        const { name, slug, appearance, verify } = options
+        const { name, slug, appearance, publicTitle, verify } = options
         // These toggle options should have values of "on" or "off"
-        const { header, searchFunction, filters, selectFilters } = options
+        const { header, headerTitle, searchFunction, filters, ctaToggle, cta, selectFilters } = options
 
         const { heroTitle } = options
 
@@ -148,8 +148,16 @@ export class Explore extends Common {
             this.setAppearance(appearance, verify)
         }
 
+        if(publicTitle){
+            this.setPublicTitle(publicTitle)
+        }
+
         if(header){
             this.toggle(this.pageSidebar.headerToggle, header)
+        }
+
+        if(headerTitle){
+            this.setHeaderOverrides(headerTitle)
         }
 
         if(searchFunction){
@@ -158,7 +166,11 @@ export class Explore extends Common {
         
         if(filters){
             this.toggle(this.pageSidebar.filtersToggle, filters)
-        }    
+        }
+                
+        if(ctaToggle){
+            this.toggle(this.pageSidebar.ctaToggle, ctaToggle)
+        } 
 
         if(selectFilters){
             // Required. Must be true or false
@@ -187,6 +199,13 @@ export class Explore extends Common {
         if(heroTitle){
             cy.get(this.heroTitleLocator).click()
             cy.get(this.heroTitleInput).clear().type(heroTitle + "\n")
+        }
+
+        if(cta){
+            const ctas = [cta].flat()
+            ctas.forEach((cta)=>{
+                this.addCTAButton(cta)
+            })
         }
     }    
 
@@ -241,7 +260,10 @@ export class Explore extends Common {
         }
     }
 
-    addCTAButton(type, ctaName, position){
+    addCTAButton(config){
+        let type = config.type
+        let ctaName = config.ctaName
+        let position = config.position
         // type should be either Hero, Body or Footer
         // position should be either Left, Center or Right
         cy.contains('label', type).click()
