@@ -10,9 +10,12 @@ const microsite = {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
-
+const allVisitorsGroup = "All Visitors"
 const gmailAPGroup = "gmail AP group"
 const hotmailAPGroup = "hotmail AP group"
+const emailRequiredMsg = "Email confirmation is required"
+const emailNotAuthMsg = "Email is not authorized, please try again"
+const emailSuccessMsg = "Success! An email has been sent to your inbox"
 
 const contents = authoring.common.env.orgs["automation-microsites"].resources
 const webContent = contents["Website Common Resource"]
@@ -82,25 +85,101 @@ describe("Microsites - Access Protection", () => {
         })
     })
 
-    it("Microsite access protection settings should override the access protection settings of the individual track", () => {
+    it("Validate access protection configuration section in Microsite builder", () => {
         authoring.common.login()
         authoring.microsites.visit()
-
-        // Add access protection group to microsite and verify this setting applies to all microsite urls (home, landing pages, tracks)
         authoring.microsites.goToMicrositeConfig(microsite.name)
-        authoring.microsites.removeAccessProtection(hotmailAPGroup)
-        authoring.microsites.setup({
-            name: microsite.name,
-            accessProtection: {
-                type: "Email",
-                groups: hotmailAPGroup
+        //When All Visitors is not selected in Allowed Groups list, other groups in the drop down are enabled for selection in the Allowed groups drop down
+        cy.contains(authoring.microsites.antRow, "Protection Type").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).type('Email' + "\n")
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        cy.get(authoring.microsites.dropDown).children().each(($el,index,$list)=>{
+            cy.wrap($el).should("not.have.class",'ant-select-item-option-disabled')
+        })
+        //When All Visitors is selected in Allowed Groups list, other groups in the drop down are disabled for selection in the Allowed groups drop down
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).type(allVisitorsGroup + "\n")
+        })
+        cy.get(authoring.microsites.dropDown).children().each(($el,index,$list)=>{
+            if(index==0){
+                cy.wrap($el).should("have.class",'ant-select-item-option-selected')
+            }else{
+                cy.wrap($el).should("have.class",'ant-select-item-option-disabled')
             }
         })
-
-        const emailRequiredMsg = "Email confirmation is required"
-        const emailNotAuthMsg = "Email is not authorized, please try again"
-        const emailSuccessMsg = "Success! An email has been sent to your inbox"
-
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        cy.contains("span", allVisitorsGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+        //When a group is selected in Allowed Groups list, then that group should be shown in the drop down list of Allowed with area selected and not shown in Disallowed groups list
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+        })
+        cy.get(authoring.microsites.dropDown).children().each(($el,index,$list)=>{
+            cy.wrap($el).invoke('text').then((text)=>{
+                if(text == gmailAPGroup){
+                    cy.wrap($el).should("have.class",'ant-select-item-option-selected')
+                }
+            })
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        //When a selected group is removed from the Allowed Groups list, then that group should be shown in the drop down list of Allowed and Disallowed groups
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.contain', gmailAPGroup)
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.contain', gmailAPGroup)
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+        })
+        //When a group is selected in Disallowed Groups list, then that group should no more be shown in the drop down list of Allowed and with area selected in Disallowed groups
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+        })
+        cy.get(authoring.microsites.DisallowGroups).siblings('div').within(()=>{
+            cy.get(authoring.microsites.dropDown).children().each(($el,index,$list)=>{
+                cy.wrap($el).invoke('text').then((text)=>{
+                    if(text == gmailAPGroup){
+                        cy.wrap($el).should("have.class",'ant-select-item-option-selected')
+                    }
+                })
+            })
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
+            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+        })
+        //Select All Visitors in the Allowed Groups list and "gmailAPGroup" is already selected above in Disallowed Groups list
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            cy.get(authoring.microsites.antDropSelect.selector).type(allVisitorsGroup + "\n")
+        })
+        cy.contains("button", "Save").click()
+})
+    it("Microsite access protection settings should override the access protection settings of the individual track", () => {
         const urls = [microsite.url, landingPage.url, target.micrositeUrl, recommend.micrositeUrl]
         urls.forEach( url => {
             cy.visit(url)
@@ -114,11 +193,16 @@ describe("Microsites - Access Protection", () => {
             cy.get(consumption.microsites.trackProtectionEmailInput).type("h8fdj092hy6b@hotmail.com" + "\n")
             cy.contains(emailSuccessMsg).should("exist")
         })
-
         // Turn off access protection and verify on consumption
+        authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
-        authoring.microsites.removeAccessProtection(hotmailAPGroup)
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
+            cy.contains("span", gmailAPGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.contains("span", allVisitorsGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
+        })
         authoring.microsites.setup({
             name: microsite.name,
             accessProtection: {

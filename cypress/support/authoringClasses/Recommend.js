@@ -14,7 +14,6 @@ export class Recommend extends Common {
             customUrlLabel: "label:contains('Custom URL')",
             externalCodeLabel: "label:contains('External Code')",
             appearanceLabel: "label:contains('Appearance')",
-            accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
             sidebarToggle: "[data-qa-hook='sidebar']",
             topicSidebarToggle: "[data-qa-hook='topicSidebar']",
@@ -27,9 +26,7 @@ export class Recommend extends Common {
             exitOverride: "[data-qa-hook='Exit overrides']"
         };
         this.popoverElements = {
-            customUrlInput: "#customUrl",
-            APGroupLabel: "label[for='visitorGroupIds']",
-            protectionTypeLabel: "label[for='protectionType']"
+            customUrlInput: "#customUrl"
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",
@@ -235,10 +232,10 @@ export class Recommend extends Common {
 
         cy.get(this.pageSidebar.accessProtectionLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
-            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.dropdown.box).click()
+            cy.get(this.accessProtection.protectionTypeLabel).siblings(this.dropdown.box).click()
             cy.get(this.dropdown.option(type)).click()
             groups.forEach( group => {
-                cy.get(this.popoverElements.APGroupLabel).siblings(this.dropdown.box).click()
+                cy.get(this.accessProtection.APGroupLabel).siblings(this.dropdown.box).click()
                 cy.get(this.dropdown.option(group)).click()
             })
             cy.contains("button", "Update").click()

@@ -15,7 +15,6 @@ export class Target extends Common {
             appearanceLabel: "label:contains('Appearance')",
             languageLabel: "label:contains('Language')",
             externalCodeLabel: "label:contains('External Code')",
-            accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
             flowToggle: '[data-qa-hook="flow"]',
             signpostsToggle: '[data-qa-hook="signpost"]',
@@ -32,9 +31,7 @@ export class Target extends Common {
         };
         this.popoverElements = {
             customUrlInput: "#customUrl",
-            endPromoterLinkInput: "#link",
-            APGroupLabel: "label[for='visitorGroupIds']",
-            protectionTypeLabel: "label[for='protectionType']"
+            endPromoterLinkInput: "#link"
         };
         this.formsStrategy = {
             trackRule: "div[data-qa-hook='experience-rules']",
@@ -295,10 +292,10 @@ export class Target extends Common {
 
         cy.get(this.pageSidebar.accessProtectionLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
-            cy.get(this.popoverElements.protectionTypeLabel).siblings(this.dropdown.box).click()
+            cy.get(this.accessProtection.protectionTypeLabel).siblings(this.dropdown.box).click()
             cy.get(this.dropdown.option(type)).click()
             groups.forEach( group => {
-                cy.get(this.popoverElements.APGroupLabel).siblings(this.dropdown.box).click()
+                cy.get(this.accessProtection.APGroupLabel).siblings(this.dropdown.box).click()
                 cy.get(this.dropdown.option(group)).click()
             })
             cy.contains("button", "Update").click()
