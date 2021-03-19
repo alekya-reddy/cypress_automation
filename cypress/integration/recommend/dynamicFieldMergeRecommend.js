@@ -64,6 +64,8 @@ describe("Recommend - Dynamic field Merge", () => {
             cy.contains("p", "ExperienceName=" + recommend.name ).should("exist")
             cy.contains("p", "Content Title=" + webContent.title).should("exist")
         })
+        // verify on CTA link 
+        cy.get(consumption.common.ctaButton).should("have.attr", "href", ctaURLwithIP)
     
         // Verify that dynamic Field merge is a default value when visiting with a spoofed IP address for which there is 
         // no available information
@@ -80,10 +82,5 @@ describe("Recommend - Dynamic field Merge", () => {
 
         // verify on CTA link with non company IP
          cy.get(consumption.common.ctaButton).should("have.attr", "href", ctaURLwithoutIP)
-
-        // verify on CTA link with company IP
-        cy.visit(recommend.url + `?lbhqip=${company.ip}`)
-        cy.get(consumption.common.ctaButton).should("have.attr", "href", ctaURLwithIP)
-
     })
 })
