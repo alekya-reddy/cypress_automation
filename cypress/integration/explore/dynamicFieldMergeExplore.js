@@ -3,7 +3,7 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance({org: "automation-explore", tld: "lookbookhq"})
 const consumption = createConsumptionInstance({org: 'automation-explore', tld: 'lookbookhq'})
 
-const contents = authoring.common.env.orgs["automation-recommend"].resources
+const contents = authoring.common.env.orgs["automation-explore"].resources
 const webContent = contents["Website Common Resource"]
 
 
@@ -48,8 +48,8 @@ const nonCompany = {
     ip: "171.117.159.107",
 }
 
-const ctaURLwithIP = "https://google.com?company_name=PathFactory&lbhqip=76.9.217.70"
-const ctaURLwithoutIP = "https://google.com?company_name=&lbhqip=171.117.159.107"
+const ctaURLwithIP = `https://google.com?company_name=${company.name}&lbhqip=${company.ip}`
+const ctaURLwithoutIP = `https://google.com?company_name=&lbhqip=${nonCompany.ip}`
 
 describe("Explore - Dynamic Merge Field", () => {
     it("Setup Recommend Track if not already done", () => {

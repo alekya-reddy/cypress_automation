@@ -35,8 +35,8 @@ const company = {
 const nonCompany = {
     ip: "171.117.159.107",
 }
-const ctaURLwithIP = "https://google.com?company_name=PathFactory&lbhqip=76.9.217.70"
-const ctaURLwithoutIP = "https://google.com?company_name=&lbhqip=171.117.159.107"
+const ctaURLwithIP = `https://google.com?company_name=${company.name}&lbhqip=${company.ip}`
+const ctaURLwithoutIP = `https://google.com?company_name=&lbhqip=${nonCompany.ip}`
 
 
 describe("Recommend - Dynamic field Merge", () => {
