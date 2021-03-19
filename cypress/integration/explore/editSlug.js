@@ -39,7 +39,7 @@ describe("Explore - Edit Slug", () => {
     it("Explore Page Slug (Custom URL) can be changed", () => {
         authoring.common.login()
         authoring.explore.visit()
-        authoring.explore.goToExplore(explore.name)
+        authoring.explore.goToExplorePage(explore.name)
 
         // change to new slug and verify consumption
         authoring.explore.setCustomUrl(explore.newSlug)
@@ -57,7 +57,7 @@ describe("Explore - Edit Slug", () => {
         cy.contains(consumption.explore.hero.heroTitle, "Browse our Content")
 
         authoring.explore.visit()
-        authoring.explore.goToExplore(explore.name)
+        authoring.explore.goToExplorePage(explore.name)
         // verify edit slug modal and Cancel edit
         cy.get(authoring.explore.pageSidebar.customUrlLabel).siblings("span").click()
         cy.get(authoring.explore.popover).get(authoring.explore.popoverElements.customUrlInput).clear().type(explore.slug + "\n")

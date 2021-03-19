@@ -20,19 +20,27 @@ export class Explore extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
+            publicTitleLabel: "label:contains('Public Title')",
             appearanceLabel: "label:contains('Appearance')",
+            ctaToggle: 'div[data-qa-hook="ctaSection"]',
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
             filtersToggle: 'div[data-qa-hook="filtersSection"]',
         };
         this.popoverElements = {
-            customUrlInput: "#slug"
+            customUrlInput: "#slug",
+            publicTitleInput: "#publicTitle"
         };
         this.header = {
             headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
             headerOverrides: 'div[data-qa-hook="Header overrides"]',
             headerTitle: '#title'
         }
+        this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
+        this.heroTitleInput = 'input[name="headerTitle"]',
+        this.heroCTA = '#qa-cta-button-hero',
+        this.bodyCTA = '#qa-cta-button-body',
+        this.footerCTA = '#qa-cta-button-footer'
     }
 
     visit(){
@@ -120,9 +128,11 @@ export class Explore extends Common {
     }
 
     configureExplore(options){
-        const { name, slug, appearance, verify } = options
+        const { name, slug, appearance, publicTitle, verify } = options
         // These toggle options should have values of "on" or "off"
-        const { header, searchFunction, filters, selectFilters } = options
+        const { header, headerTitle, searchFunction, filters, ctaToggle, cta, selectFilters } = options
+
+        const { heroTitle } = options
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -138,8 +148,16 @@ export class Explore extends Common {
             this.setAppearance(appearance, verify)
         }
 
+        if(publicTitle){
+            this.setPublicTitle(publicTitle)
+        }
+
         if(header){
             this.toggle(this.pageSidebar.headerToggle, header)
+        }
+
+        if(headerTitle){
+            this.setHeaderOverrides(headerTitle)
         }
 
         if(searchFunction){
@@ -148,7 +166,11 @@ export class Explore extends Common {
         
         if(filters){
             this.toggle(this.pageSidebar.filtersToggle, filters)
-        }    
+        }
+                
+        if(ctaToggle){
+            this.toggle(this.pageSidebar.ctaToggle, ctaToggle)
+        } 
 
         if(selectFilters){
             // Required. Must be true or false
@@ -172,7 +194,19 @@ export class Explore extends Common {
             if(industry == true || industry == false) {
                 this.clickCheckbox({label: "Industry", check: industry})
             }   
-        }   
+        } 
+
+        if(heroTitle){
+            cy.get(this.heroTitleLocator).click()
+            cy.get(this.heroTitleInput).clear().type(heroTitle + "\n")
+        }
+
+        if(cta){
+            const ctas = [cta].flat()
+            ctas.forEach((cta)=>{
+                this.addCTAButton(cta)
+            })
+        }
     }    
 
     setCustomUrl(slug, verify){
@@ -215,6 +249,30 @@ export class Explore extends Common {
             cy.contains('h3', 'Header Overrides for this Track')
             cy.get(this.header.headerTitle).clear().type(headerTitle)
             cy.contains('button', 'Save Header Overrides').click()
+        })
+    }
+
+    setPublicTitle(title, verify){
+        cy.get(this.pageSidebar.publicTitleLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.publicTitleInput).clear().type(title + "\n")
+        if(verify !== false){
+            cy.get(this.pageSidebar.publicTitleLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    addCTAButton(config){
+        let type = config.type
+        let ctaName = config.ctaName
+        let position = config.position
+        // type should be either Hero, Body or Footer
+        // position should be either Left, Center or Right
+        cy.contains('label', type).click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(position + "\n", {force: true})
+            cy.contains('button', 'Update').click()
         })
     }
 }
