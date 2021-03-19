@@ -6,6 +6,9 @@ export class Explore extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/explore`;
         this.pageTitle = "Explore Pages";
         this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
+        this.shareExplore = 'i[title="share"]';
+        this.previewExplore = 'i[title="preview"]';
+        this.emailExplore = '#explore-show-email-button';
         
         this.createExploreModal = {
             nameInput: "input[name='name']",
