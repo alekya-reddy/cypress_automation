@@ -175,6 +175,13 @@ export class Explore extends Common {
             this.toggle(this.pageSidebar.ctaToggle, ctaToggle)
         } 
 
+        if(cta){
+            const ctas = [cta].flat()
+            ctas.forEach((cta)=>{
+                this.addCTAButton(cta)
+            })
+        }
+
         if(selectFilters){
             // Required. Must be true or false
             const { topic, contentType, funnelStage,  businessUnit, persona, industry} = selectFilters
@@ -204,12 +211,6 @@ export class Explore extends Common {
             cy.get(this.heroTitleInput).clear().type(heroTitle + "\n")
         }
 
-        if(cta){
-            const ctas = [cta].flat()
-            ctas.forEach((cta)=>{
-                this.addCTAButton(cta)
-            })
-        }
     }    
 
     setCustomUrl(slug, verify){
@@ -264,11 +265,9 @@ export class Explore extends Common {
     }
 
     addCTAButton(config){
-        let type = config.type
-        let ctaName = config.ctaName
-        let position = config.position
         // type should be either Hero, Body or Footer
         // position should be either Left, Center or Right
+        const {type, ctaName, position, verify} = config
         cy.contains('label', type).click()
         cy.get(this.popover).within(()=>{
             cy.get(this.dropdown.box).eq(0).click()
@@ -277,5 +276,10 @@ export class Explore extends Common {
             cy.get(this.dropdown.input).eq(1).type(position + "\n", {force: true})
             cy.contains('button', 'Update').click()
         })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.contains("label", type).siblings("span").should("contain", ctaName)     
+        } 
     }
 }
