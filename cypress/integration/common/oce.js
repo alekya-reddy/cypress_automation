@@ -1,18 +1,20 @@
 import { createAuthoringInstance } from '../../support/pageObject.js'
+import { constants } from '../../support/constants.js';
 
 //const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const authoring = createAuthoringInstance()
 
-const oauthClientId = "d9e1c003a74d47a0bc59a95432e123c4"
-const oauthClientSecret = "4e7e7bfb-13af-467b-a13f-a802ed74ef7b"
-const instanceUrl = "https://pathfactory-oce0002.cec.ocp.oraclecloud.com"
-const idcsUrl = "https://idcs-a9e0f119e3d04eefad8287b584b10354.identity.oraclecloud.com"
-const serviceInstanceBaseUrl = "https://ED6F58DFD652483CB93CC5E856918914.cec.ocp.oraclecloud.com"
+const oauthClientId = constants.orgs[authoring.common.org].oceOauthClientId
+const oauthClientSecret = constants.orgs[authoring.common.org].oceOauthClientSecret
+const instanceUrl = constants.orgs[authoring.common.org].oceInstanceUrl
+const idcsUrl = constants.orgs[authoring.common.org].oceidcsUrl
+const serviceInstanceBaseUrl = constants.orgs[authoring.common.org].oceServiceInstanceBaseUrl
 const recordSaved = "The record was saved successfully"
 const oceAcctNotVerified = "The OCE account is not verified."
 const cantbeBlank = "can't be blank"
 const  oceAcctVerified = "The OCE account is verified."
 const invalidAcct = "Given details could not be authenticated. Please check your credentials and try again."
+
 describe("oce configuration", () => {
     it("Valid the oce configuration when oce Account is toggled on in Client HQs settings ", () => {
         authoring.common.login()
