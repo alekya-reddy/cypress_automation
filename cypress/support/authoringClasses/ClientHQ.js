@@ -10,6 +10,7 @@ export class ClientHQ extends Common {
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
         this.virtualEventToggle = '[data-qa-hook="enableVirtualEvents"]';
         this.micrositesToggle = "[data-qa-hook='enableMicrosites']";
+        this.oceToggle = "[data-qa-hook='enableOce']";
     }
 
     visit(){
