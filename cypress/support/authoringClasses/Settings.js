@@ -14,7 +14,16 @@ export class Settings extends Common {
                 enableForIP: "Enable Cookie Consent for web visitors with an originating IP from selected countries",
                 custom: "Enable Custom Cookie Consent"
             }
-        }
+        };
+        this.oceAccount = {
+            pageUrl: `${this.settingsRoute}/oce-account`,
+            pageTitle: "OCE Account",
+            oce_oauthClientId: '#oauthClientId',
+            oce_oauthClientSecret: '#oauthClientSecret',
+            oce_instanceUrl: '#instanceUrl',
+            oce_idcsUrl: '#idcsUrl',
+            oce_serviceInstanceBaseUrl: '#serviceInstanceBaseUrl'
+        };
     }
 
     visitCookieConsent(){
@@ -31,5 +40,8 @@ export class Settings extends Common {
         cy.contains(this.messages.recordSaved).should('exist')
     }
 
+    visitoceAccount(){
+        cy.visit(this.oceAccount.pageUrl);
+    }
 }
 
