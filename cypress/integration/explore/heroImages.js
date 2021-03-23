@@ -7,6 +7,11 @@ const contents = authoring.common.env.orgs["automation-explore"].resources
 const webContent = contents["Website Common Resource"]
 const youtubeContent = contents["Youtube Shared Resource"]
 
+const heroBackgroundImageSrc = '/stock/sm/car-road-snow-winter.jpg'
+const brandImageSrc = '/stock/sm/animal-dog-pet-cute.jpg'
+const personalizedImageSrc = '/stock/sm/animal-dog-pet-puppy.jpg'
+const partnerImageSrc = 'stock/sm/animal-dog-pet-labrador.jpg'
+
 const target = {
     name: 'sharedTarget',
     contents: [webContent.title, youtubeContent.title]
@@ -60,7 +65,8 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.explore.setAppearance(explore.appearance)
 
         cy.get(authoring.explore.heroImages.backgroundImage).should('exist')
-        cy.get(authoring.explore.heroImages.brandImage).should('not.exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
+        cy.get(authoring.explore.heroImages.brandImage).should('not.exist') // if element doesn't exist it means that image as well as image present within that locator
         cy.get(authoring.explore.heroImages.partnerImage).should('not.exist')
         cy.get(authoring.explore.heroImages.personalizedImage).should('not.exist')
 
@@ -71,6 +77,7 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
             cy.get(consumption.explore.hero.heroBackground).should('have.css', 'background-color', backgroundColor)
         })
         cy.get(consumption.explore.hero.fixedHeroImage).should('exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.brandImage).should('not.exist')
         cy.get(consumption.explore.hero.partnerImage).should('not.exist')
         cy.get(consumption.explore.hero.personalizedImage).should('not.exist')
@@ -87,7 +94,9 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.explore.goToExplorePage(explore.name)
 
         cy.get(authoring.explore.heroImages.backgroundImage).should('exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.brandImage).should('exist')
+        cy.get(`div[src*='${brandImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.partnerImage).should('not.exist')
         cy.get(authoring.explore.heroImages.personalizedImage).should('not.exist')
 
@@ -95,7 +104,9 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         cy.visit(explore.url)
 
         cy.get(consumption.explore.hero.fixedHeroImage).should('exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.brandImage).should('exist')
+        cy.get(`div[style*='${brandImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.partnerImage).should('not.exist')
         cy.get(consumption.explore.hero.personalizedImage).should('not.exist')
 
@@ -111,16 +122,22 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.explore.goToExplorePage(explore.name)
 
         cy.get(authoring.explore.heroImages.backgroundImage).should('exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.brandImage).should('exist')
+        cy.get(`div[src*='${brandImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.partnerImage).should('exist')
+        cy.get(`div[src*='${partnerImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.personalizedImage).should('not.exist')
 
         // check consumption
         cy.visit(explore.url)
 
         cy.get(consumption.explore.hero.fixedHeroImage).should('exist')
+        cy.get(`img[src*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.brandImage).should('exist')
+        cy.get(`div[style*='${brandImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.partnerImage).should('exist')
+        cy.get(`div[style*='${partnerImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.personalizedImage).should('not.exist')
 
         // verify Personalized Hero Image + FILL Cover Image
@@ -136,9 +153,13 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.explore.goToExplorePage(explore.name)
 
         cy.get(authoring.explore.heroImages.backgroundImage).should('exist')
+        cy.get(`div[style*='${heroBackgroundImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.brandImage).should('exist')
+        cy.get(`div[src*='${brandImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.partnerImage).should('exist')
+        cy.get(`div[src*='${partnerImageSrc}']`).should('exist')
         cy.get(authoring.explore.heroImages.personalizedImage).should('exist')
+        cy.get(`div[src*='${personalizedImageSrc}']`).should('exist')
 
         // check consumption
         cy.visit(explore.url)
@@ -146,8 +167,11 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         cy.get(consumption.explore.hero.fixedHeroImage).should('not.exist')
         cy.get(consumption.explore.hero.fillHeroImage).should('exist')
         cy.get(consumption.explore.hero.brandImage).should('exist')
+        cy.get(`div[style*='${brandImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.partnerImage).should('exist')
+        cy.get(`div[style*='${partnerImageSrc}']`).should('exist')
         cy.get(consumption.explore.hero.personalizedImage).should('exist')
+        cy.get(`div[style*='${personalizedImageSrc}']`).should('exist')
 
     })
 })
