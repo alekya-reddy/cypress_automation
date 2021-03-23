@@ -89,6 +89,9 @@ export class Configurations extends Common {
             },
             microsites: { 
                 hideNavigation: "div[data-qa-hook='checkbox']"
+            },
+            explore: {
+                heroBackgroundColorPicker: "#heroBackgroundColor > div > span"
             }
         };
         this.languages = {
