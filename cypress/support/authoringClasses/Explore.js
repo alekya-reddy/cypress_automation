@@ -47,6 +47,12 @@ export class Explore extends Common {
         this.heroCTA = '#qa-cta-button-hero',
         this.bodyCTA = '#qa-cta-button-body',
         this.footerCTA = '#qa-cta-button-footer'
+        this.heroImages = {
+            backgroundImage: '#hero-background-image',
+            brandImage: '#hero-brand-image',
+            partnerImage: '#hero-partner-image',
+            personalizedImage: '#hero-personalized-image'
+        }
     }
 
     visit(){

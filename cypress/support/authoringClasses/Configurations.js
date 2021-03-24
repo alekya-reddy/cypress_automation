@@ -98,7 +98,8 @@ export class Configurations extends Common {
                 heroSubtitleStyle: "label[for='heroSubtitleFont']",
                 heroSubtitleFontFamily: "#heroSubtitleFontFamily",
                 heroSubtitleFontWeight: "#heroSubtitleFontWeight",
-                heroSubtitleFontColor: "#heroSubtitleColor"
+                heroSubtitleFontColor: "#heroSubtitleColor",
+                heroBackgroundColorPicker: "#heroBackgroundColor > div > span"
             }
         };
         this.languages = {
