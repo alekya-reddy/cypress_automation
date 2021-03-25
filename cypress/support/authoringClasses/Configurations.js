@@ -91,6 +91,14 @@ export class Configurations extends Common {
                 hideNavigation: "div[data-qa-hook='checkbox']"
             },
             explore: {
+                heroTitleStyle: "label[for='heroTitleFont']",
+                heroTitleFontFamily: "#heroTitleFontFamily",
+                heroTitleFontWeight: "#heroTitleFontWeight",
+                heroTitleColor: "#heroTitleColor",
+                heroSubtitleStyle: "label[for='heroSubtitleFont']",
+                heroSubtitleFontFamily: "#heroSubtitleFontFamily",
+                heroSubtitleFontWeight: "#heroSubtitleFontWeight",
+                heroSubtitleFontColor: "#heroSubtitleColor",
                 heroBackgroundColorPicker: "#heroBackgroundColor > div > span"
             }
         };
@@ -865,6 +873,7 @@ export class Configurations extends Common {
 
     configureExploreAppearance(options){
         const { appearance, externalCodes, verify } = options
+        const { heroTitleFontFamily, heroTitleBoldFont, heroTitleFontSize, heroTitleFontColor, heroSubtitleFontFamily, heroSubtitleFontSize, heroSubtitleBoldFont, heroSubtitleFontColor } = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
@@ -872,6 +881,58 @@ export class Configurations extends Common {
 
         if (externalCodes) {
             this.addAppearanceExternalCode(externalCodes, verify)
+        }
+
+        if (heroTitleFontFamily) {
+            cy.get(this.appearances.explore.heroTitleFontFamily).within(() => {
+                cy.get(this.dropdown.input).type(heroTitleFontFamily + "\n", {force: true})
+            })
+        }
+
+        if(heroTitleBoldFont == true || heroTitleBoldFont == false){
+            cy.get(this.appearances.explore.heroTitleFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(heroTitleBoldFont && !fontWeightClass.includes("containerActive") || !heroTitleBoldFont && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.explore.heroTitleFontWeight).click()
+                }
+            })
+        }
+
+        if(heroTitleFontSize){
+            const size = {small: "#heroTitleFontSizeSmall", medium: "#heroTitleFontSizeMedium", large: "#heroTitleFontSizeLarge"}
+            cy.get(this.appearances.explore.heroTitleStyle).parent().within(() => {
+                cy.get(size[heroTitleFontSize]).click()
+            })
+        }
+
+        if(heroTitleFontColor){
+            const { r, g, b, a } = heroTitleFontColor
+            this.pickColor({button: this.appearances.explore.heroTitleColor, r: r, g: g, b: b, a: a})
+        }
+
+        if (heroSubtitleFontFamily) {
+            cy.get(this.appearances.explore.heroSubtitleFontFamily).within(() => {
+                cy.get(this.dropdown.input).type(heroSubtitleFontFamily + "\n", {force: true})
+            })
+        }
+
+        if(heroSubtitleBoldFont == true || heroSubtitleBoldFont == false){
+            cy.get(this.appearances.explore.heroSubtitleFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(heroSubtitleBoldFont && !fontWeightClass.includes("containerActive") || !heroSubtitleBoldFont && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.explore.heroSubtitleFontWeight).click()
+                }
+            })
+        }
+
+        if(heroSubtitleFontSize){
+            const size = {small: "#heroSubtitleFontSizeSmall", medium: "#heroSubtitleFontSizeMedium", large: "#heroSubtitleFontSizeLarge"}
+            cy.get(this.appearances.explore.heroSubtitleStyle).parent().within(() => {
+                cy.get(size[heroSubtitleFontSize]).click()
+            })
+        }
+
+        if(heroSubtitleFontColor){
+            const { r, g, b, a } = heroSubtitleFontColor
+            this.pickColor({button: this.appearances.explore.heroSubtitleFontColor, r: r, g: g, b: b, a: a})
         }
 
         cy.contains("button", "Save Explore Settings").click()

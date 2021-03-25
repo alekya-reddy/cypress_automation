@@ -41,6 +41,9 @@ export class Explore extends Common {
         }
         this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
         this.heroTitleInput = 'input[name="headerTitle"]',
+        this.heroSubtitleLocatorDefault = 'h3[data-qa-hook="header-subtitle-default"]',
+        this.heroSubtitleLocator = 'div[data-qa-hook^="header-subtitle-show"]'
+        this.heroSubtitleInput = 'input[name="headerSubtitle"]'
         this.heroCTA = '#qa-cta-button-hero',
         this.bodyCTA = '#qa-cta-button-body',
         this.footerCTA = '#qa-cta-button-footer'
