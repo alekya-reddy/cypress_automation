@@ -1,4 +1,3 @@
-
 export class Common {
     constructor(env, org, tld, userName, password, baseUrl){
         this.userName = userName;
@@ -42,7 +41,8 @@ export class Common {
             cellName: "div[data-qa-hook='table-cell-name']",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']",
-            internalTitleCell: "div[data-qa-hook='table-cell-internal-title']"
+            internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
+            addedByCell: 'div[data-qa-hook="table-cell-created-by"] > span'
         };
         this.antTable = {
             cell: ".ant-table-cell",
@@ -62,6 +62,7 @@ export class Common {
             input: ".Select-input > input", // The text input of dropdown boxes
             selectedValue: ".Select-value", // The parent container of the label of the selected value
             option: function(option){ return `div[aria-label="${option}"]` }, // The options in the dropdown menu
+            clearValue: 'span[title="Clear value"] > span'
         };
         this.rcColorPicker = {
             container: ".rc-color-picker",
@@ -101,8 +102,20 @@ export class Common {
             selectedVisitorGroup: 'span[class="ant-select-selection-item-content"]',
             vex_microsite_removeVisitorGroup: 'span[class="ant-select-selection-item-remove"]'
         }
+        this.folder = {
+            folderName: function(folderName){ 
+                const folderName2 = folderName.replace(/\s+/g, '-').toLowerCase(); 
+                cy.log("New " + folderName2)
+                return `div[id^="folder-${folderName2}"]`
+            },
+            expandAllIcon: 'i[title="Expand all"]',
+            collapseAllIcon: 'i[title="Collapse all"]',
+            folderCount: function(folderName){ 
+                folderName = folderName.replace(/\s+/g, '-').toLowerCase(); 
+                return parseInt(cy.get(`div[id^="folder-${folderName}"] > div`).eql(0))
+            }
+        }
     }
-
     visitHomeUrl(){
         cy.visit(this.baseUrl)
     }
@@ -284,5 +297,34 @@ export class Common {
             }
         })
         cy.get(this.lpColorPicker.bar).eq(position).click() // clicking this bar again closes the color picker
+    }
+
+    clickIcon(name){
+        cy.get(`i[title="${name}"]`).click()
+    }
+
+    removeAllTracksFromFolder(folder){
+        cy.get(this.folder.expandAllIcon).click({force:true})
+        for (var i = 0; i < folder.length; i++){
+            cy.log(folder[i])
+            cy.ifElementExists(this.folder.folderName(folder[i]), 1500, () => {
+                cy.get(this.folder.folderName(folder[i])).click()
+                for (var j = 0; j < this.folder[i].folderCount; j++){
+                    cy.wait(100)
+                    cy.get(this.table.addedByCell).eq(0).click()
+                    // change next line with if/else
+                    cy.ifElementExists(this.pageTitleBar, 'Explore Pages' , 1500, () => {
+                        this.clickIcon('Edit Explore Page')
+                        cy.contains(this.dropdown.box, folder[i]).within(() => {
+                            cy.get(this.dropdown.clearValue).click()
+                        })
+                        cy.contains("button", "Save Explore Page").click()
+                    })
+
+                }
+            })
+            
+        }
+
     }
 }
