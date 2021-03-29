@@ -140,7 +140,7 @@ export class VexCX extends CommonCX {
     expectWebex(link){
         cy.waitForIframeToLoad(this.webex.iframe, this.webex.meetingControls, 20000)
         cy.getIframeBody(this.webex.iframe).within(()=>{
-            cy.get(this.webex.video, {timeout: 10000}).should('exist')
+            cy.get(this.webex.video, {timeout: 30000}).should('exist')
             cy.get(this.webex.meetingControls, {timeout: 10000}).should('exist')
             link ? cy.contains(this.webex.meetingInfo, link, {timeout: 10000}).should('exist') : null
         })

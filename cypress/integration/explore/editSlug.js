@@ -26,7 +26,7 @@ const explore = {
 describe("Explore - Edit Slug", () => {
 
     it("Set up if not already done", ()=>{
-        cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
+        cy.request({url: explore.url + explore.slug, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.explore.visit()

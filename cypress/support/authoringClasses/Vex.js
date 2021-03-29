@@ -52,8 +52,11 @@ export class Vex extends Common {
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
-        this.startTimeInput = "input[name='startTime']";
-        this.endTimeInput = "input[name='endTime']";
+        this.startTimeInput = 'input[name="startTime"]';
+        this.endTimeInput = 'input[name="endTime"]';
+        this.startTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.startTime']`} ;
+        this.endTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.endTime']`} ;
+        this.timeZoneEditSelect = function(position) {return `select[name="sessionTimes.${position}.timeZone"]`};
         this.timeZonePicker = 'div[class="ant-row ant-form-item"]:contains("Time Zone")';
         this.liveTypePicker = 'div[class="ant-row ant-form-item"]:contains("Live Content Type")'; 
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
@@ -667,25 +670,21 @@ export class Vex extends Common {
         const video = config.video
 
         if(typeof start == 'string'){
-            cy.get(this.startTimeInput).click().clear().type(start + '\n')
+            cy.get(this.startTimeEditInput(0)).click().clear().type(start + '\n')
         } else if (start) {
             start.pickerNum = 0
             this.pickDate(start)
         }
         if(typeof end == 'string'){
-            cy.get(this.endTimeInput).click().clear().type(end + '\n')
+            cy.get(this.endTimeEditInput(0)).click().clear().type(end + '\n')
         } else if (end) {
             end.pickerNum = 1
             this.pickDate(end)
         }
         if (timeZone){
-            cy.ifNoElementWithExactTextExists("span", timeZone, 500, ()=>{
-                cy.get(this.timeZonePicker).click().within(()=>{
-                    cy.get("input").clear().type(timeZone)
-                })
-                cy.get(this.antDropSelect.options(timeZone)).click({force: true})
-            })
+            cy.get(this.timeZoneEditSelect(0)).select(timeZone)
         }
+        
         if(type){
             cy.get(this.liveTypePicker).click()
             cy.get(this.antDropdownContainer).within(()=>{

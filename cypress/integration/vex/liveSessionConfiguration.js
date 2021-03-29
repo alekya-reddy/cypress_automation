@@ -271,8 +271,8 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.liveRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
         cy.containsExact('legend', 'On Demand Session').should('exist')
         cy.containsExact('legend', 'Live Session').should('not.exist')
-        cy.get(authoring.vex.startTimeInput).should('not.exist')
-        cy.get(authoring.vex.endTimeInput).should('not.exist')
+        cy.get(authoring.vex.startTimeEditInput(0)).should('not.exist')
+        cy.get(authoring.vex.endTimeEditInput(0)).should('not.exist')
         cy.get(authoring.vex.timeZonePicker).should('not.exist')
         cy.get(authoring.vex.liveTypePicker).should('not.exist')
 
@@ -287,8 +287,8 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(authoring.vex.onDemandRadio).parent().should('not.have.class', 'ant-radio ant-radio-checked')
         cy.containsExact('legend', 'On Demand Session').should('exist') // On demand config should always be visible 
         cy.containsExact('legend', 'Live Session').should('exist')
-        cy.get(authoring.vex.startTimeInput).should('exist')
-        cy.get(authoring.vex.endTimeInput).should('exist')
+        cy.get(authoring.vex.startTimeEditInput(0)).should('exist')
+        cy.get(authoring.vex.endTimeEditInput(0)).should('exist')
         cy.get(authoring.vex.timeZonePicker).should('exist')
         cy.get(authoring.vex.liveTypePicker).should('exist')
 

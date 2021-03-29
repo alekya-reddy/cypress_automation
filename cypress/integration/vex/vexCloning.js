@@ -268,8 +268,8 @@ const verifySession = (session, howCloned) => {
     }
 
     if(session.live){
-        cy.get(authoring.vex.startTimeInput).should("have.value", session.live.start)
-        cy.get(authoring.vex.endTimeInput).should("have.value", session.live.end)
+        cy.get(authoring.vex.startTimeEditInput(0)).should("have.value", session.live.start)
+        cy.get(authoring.vex.endTimeEditInput(0)).should("have.value", session.live.end)
         cy.contains("span", session.live.timeZone).should("exist")
         cy.contains(authoring.vex.antRow, "Live Content Type").within(()=>{
             cy.contains("span", session.live.type).should("exist")
