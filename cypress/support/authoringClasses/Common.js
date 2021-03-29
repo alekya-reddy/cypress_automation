@@ -99,7 +99,8 @@ export class Common {
             track_removeVisitorGroup: 'span[class="Select-value-icon"]',
             trackProtectionArea: '.visitorGroupMultiSelect',
             selectedVisitorGroup: 'span[class="ant-select-selection-item-content"]',
-            vex_microsite_removeVisitorGroup: 'span[class="ant-select-selection-item-remove"]'
+            vex_microsite_removeVisitorGroup: 'span[class="ant-select-selection-item-remove"]',
+            selectPlaceholder: 'span[class="ant-select-selection-placeholder"]'
         }
     }
 

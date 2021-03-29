@@ -41,8 +41,8 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.goToSessionConfig(liveSession)
         cy.get(authoring.vex.liveRadio).should("have.attr", "checked")
         cy.get(authoring.vex.onDemandRadio).should("not.have.attr", "checked")
-        cy.get(authoring.vex.startTimeInput).should("have.attr", "title", start)
-        cy.get(authoring.vex.endTimeInput).should("have.attr", "title", end)
+        cy.get(authoring.vex.startTimeEditInput(0)).should("have.attr", "title", start)
+        cy.get(authoring.vex.endTimeEditInput(0)).should("have.attr", "title", end)
 
         // Go back and add on-demand session using the modal (on-demand session is the default value selected)
         authoring.vex.visit()
@@ -60,6 +60,6 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.goToSessionConfig(onDemandSession)
         cy.get(authoring.vex.liveRadio).should("not.have.attr", "checked")
         cy.get(authoring.vex.onDemandRadio).should("have.attr", "checked")
-        cy.get(authoring.vex.startTimeInput).should('not.exist')
+        cy.get(authoring.vex.startTimeEditInput(0)).should('not.exist')
     })
 })

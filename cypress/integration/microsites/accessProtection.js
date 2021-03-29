@@ -132,7 +132,9 @@ describe("Microsites - Access Protection", () => {
         cy.contains(authoring.common.accessProtection.trackProtectionArea, "Disallow Groups").within(()=>{
             cy.get(authoring.microsites.antDropSelect.selector).click()
             cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            // if placeholder exists that means that value wasn't selected
+            cy.get(authoring.common.accessProtection.selectPlaceholder).should('exist')
             cy.get(authoring.microsites.antDropSelect.selector).click()
         })
         //When a selected group is removed from the Allowed Groups list, then that group should be shown in the drop down list of Allowed and Disallowed groups
@@ -170,7 +172,9 @@ describe("Microsites - Access Protection", () => {
         cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
             cy.get(authoring.microsites.antDropSelect.selector).click()
             cy.get(authoring.microsites.antDropSelect.selector).type(gmailAPGroup + "\n")
-            cy.get(authoring.common.accessProtection.selectedVisitorGroup).should('have.not.contain', gmailAPGroup)
+            cy.get(authoring.microsites.antDropSelect.selector).click()
+            // if placeholder exists that means that value wasn't selected
+            cy.get(authoring.common.accessProtection.selectPlaceholder).should('exist')
         })
         //Select All Visitors in the Allowed Groups list and "gmailAPGroup" is already selected above in Disallowed Groups list
         cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
