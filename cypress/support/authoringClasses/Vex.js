@@ -682,15 +682,9 @@ export class Vex extends Common {
             this.pickDate(end)
         }
         if (timeZone){
-            // cy.ifNoElementWithExactTextExists("span", timeZone, 500, ()=>{
-
-                cy.get(this.timeZoneEditSelect(0)).select(timeZone)
-                // cy.get(this.timeZonePicker).click().within(()=>{
-                //     cy.get("input").clear().type(timeZone)
-                // })
-                // cy.get(this.antDropSelect.options(timeZone)).click({force: true})
-            // })
+            cy.get(this.timeZoneEditSelect(0)).select(timeZone)
         }
+        
         if(type){
             cy.get(this.liveTypePicker).click()
             cy.get(this.antDropdownContainer).within(()=>{
