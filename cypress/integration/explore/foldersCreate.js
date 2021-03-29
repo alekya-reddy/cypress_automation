@@ -47,7 +47,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         authoring.common.login()
         authoring.explore.visit()
         // Remove tracks from folders and delete folders if already exists
-        authoring.common.removeAllTracksFromFolder(['Test'])
+        authoring.common.removeAllTracksFromFolder(['Test dfh'])
 
    
     })

@@ -103,10 +103,8 @@ export class Common {
             vex_microsite_removeVisitorGroup: 'span[class="ant-select-selection-item-remove"]'
         }
         this.folder = {
-            folderName: function(folderName){ 
-                const folderName2 = folderName.replace(/\s+/g, '-').toLowerCase(); 
-                cy.log("New " + folderName2)
-                return `div[id^="folder-${folderName2}"]`
+            folderSelector: function(folderName) {
+                return `div[id^="folder-${folderName.replace(/\s+/g, '-').toLowerCase()}"]`
             },
             expandAllIcon: 'i[title="Expand all"]',
             collapseAllIcon: 'i[title="Collapse all"]',
@@ -303,25 +301,32 @@ export class Common {
         cy.get(`i[title="${name}"]`).click()
     }
 
-    removeAllTracksFromFolder(folder){
+    removeAllTracksFromFolder(folders){
         cy.get(this.folder.expandAllIcon).click({force:true})
-        for (var i = 0; i < folder.length; i++){
-            cy.log(folder[i])
-            cy.ifElementExists(this.folder.folderName(folder[i]), 1500, () => {
-                cy.get(this.folder.folderName(folder[i])).click()
-                for (var j = 0; j < this.folder[i].folderCount; j++){
-                    cy.wait(100)
-                    cy.get(this.table.addedByCell).eq(0).click()
-                    // change next line with if/else
-                    cy.ifElementExists(this.pageTitleBar, 'Explore Pages' , 1500, () => {
-                        this.clickIcon('Edit Explore Page')
-                        cy.contains(this.dropdown.box, folder[i]).within(() => {
-                            cy.get(this.dropdown.clearValue).click()
-                        })
-                        cy.contains("button", "Save Explore Page").click()
-                    })
 
-                }
+        for (var i = 0; i < folders.length; i++){
+            const folder = folders[i];
+            console.log(`Folder: ${folder}`);
+            cy.log(folder)
+
+            // const folderName2 = folder.replace(/\s+/g, '-').toLowerCase();
+            const folderSelector = this.folder.folderSelector(folder);
+
+            cy.ifElementExists(folderSelector, 1500, () => {
+                cy.get(folderSelector).click()
+                // for (var j = 0; j < folder.folderCount; j++){
+                //     cy.wait(100)
+                //     cy.get(this.table.addedByCell).eq(0).click()
+                //     // change next line with if/else
+                //     cy.ifElementExists(this.pageTitleBar, 'Explore Pages' , 1500, () => {
+                //         this.clickIcon('Edit Explore Page')
+                //         cy.contains(this.dropdown.box, folder[i]).within(() => {
+                //             cy.get(this.dropdown.clearValue).click()
+                //         })
+                //         cy.contains("button", "Save Explore Page").click()
+                //     })
+
+                // }
             })
             
         }
