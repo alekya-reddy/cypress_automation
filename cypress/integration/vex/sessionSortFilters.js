@@ -213,14 +213,14 @@ describe("VEX - Session searching, sorting and filters", ()=>{
         cy.viewport(2000, 1000) // Need to expland viewport or else the urls will get truncated in the DOM
         cy.get(authoring.vex.sessionUrlCell).eq(0).should("contain", sessions.publicOnDemand.url)
         cy.get(authoring.vex.sessionUrlCell).eq(1).should("contain", sessions.publicLive.url)
-        cy.get(authoring.vex.sessionUrlCell).eq(2).should("contain", sessions.privateLive.url)
-        cy.get(authoring.vex.sessionUrlCell).eq(3).should("contain", sessions.hawaii1.url)
+        cy.get(authoring.vex.sessionUrlCell).eq(2).should("contain", sessions.hawaii1.url)
+        cy.get(authoring.vex.sessionUrlCell).eq(3).should("contain", sessions.privateLive.url)
         cy.get(authoring.vex.sessionUrlCell).eq(4).should("contain", sessions.hawaii2.url)
         authoring.vex.toggleSortByDate("descend")
         cy.get(authoring.vex.sessionUrlCell).eq(4).should("contain", sessions.publicOnDemand.url)
         cy.get(authoring.vex.sessionUrlCell).eq(3).should("contain", sessions.publicLive.url)
-        cy.get(authoring.vex.sessionUrlCell).eq(2).should("contain", sessions.privateLive.url)
-        cy.get(authoring.vex.sessionUrlCell).eq(1).should("contain", sessions.hawaii1.url)
+        cy.get(authoring.vex.sessionUrlCell).eq(2).should("contain", sessions.hawaii1.url)
+        cy.get(authoring.vex.sessionUrlCell).eq(1).should("contain", sessions.privateLive.url)
         cy.get(authoring.vex.sessionUrlCell).eq(0).should("contain", sessions.hawaii2.url)
 
         // Not going to test the sort by created date - not very important 
