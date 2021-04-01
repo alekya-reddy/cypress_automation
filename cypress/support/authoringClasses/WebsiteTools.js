@@ -7,6 +7,15 @@ export class WebsiteTools extends Common {
         this.pageSidebarLocator = "[data-qa-hook='page-sidebar']";
         this.webdomainLinkLocator = `${this.pageSidebarLocator} > a`;
         this.webdomainInactiveMessage = "[data-qa-hook='page-body'] > span > p";
+        this.addProperty = "#domain-card-add";
+        this.enterDomainName = "#domain-card-add-input";
+        this.antModal = ".ant-modal-content";
+        this.domainCard = "div[id^='domain-card-']";
+        this.websitePath = "input[id='websitePath']";
+        this.enterselectOption = function(option){ return `input[id="${option}"]` };
+        this.promoterList = "div[name='promoterList']";
+        this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
+        this.websiteurlPath = function(option){ return `td[id="${option}"]` };
     }
 
     visit(){
