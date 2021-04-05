@@ -170,6 +170,30 @@ export const constants = {
                     slug: "sharedresource"
                 }
             }
+        },
+        'automation-wt': {
+            name: 'automation-wt',
+            subdomain: 'automation-wt',
+            adminUser: 'cy-admin',
+            adminUserPassword: 'Cypress1234',
+            get defaultUser() {
+                return this.adminUser;
+            },
+            get defaultUserPassword(){
+                return this.adminUserPassword;
+            },
+            resources: {
+                "Website Common Resource": {
+                    title: "Website Common Resource",
+                    source: "https://en.wikipedia.org/wiki/OpenAI",
+                    slug: "openai"
+                },
+                "Youtube Shared Resource": {
+                    title: "Youtube Shared Resource",
+                    source: "https://www.youtube.com/watch?v=ap-BkkrRg-o",
+                    slug: "youtube"
+                }
+            }
         }
     }
 }

@@ -10,6 +10,8 @@ export class WebsiteToolsCX extends CommonCX {
             relatedContent: (contents) => {this.spoofRecommendedContent("recommendationType=yml", "recommended", contents)},
             recentlyVisited: (contents) => {this.spoofRecommendedContent("recommendationType=recently_visited", "recently_visited", contents)}
         };
+        this.guidecta = "#qa-guide-view-more";
+        this.qaModal = "#qa-modal";
     }
 
     modifyIframeBlockingCode(){
