@@ -247,7 +247,7 @@ export class Explore extends Common {
         })
 
         if(verify !== false){
-            cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
+            cy.get(this.pageSidebar.customUrlLabel, {timeout: 10000}).siblings("span").should("contain", slug)
         }
     }
 

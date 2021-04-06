@@ -113,7 +113,10 @@ export class Common {
                 return `#folder-${folderName.replace(/\s+/g, '-').toLowerCase()} >  div:nth-child(2) > div:nth-child(1)`
             },
             addFolderButton: '#create-new-button',
-            folderNameInput: '#folderName'
+            folderNameInput: '#folderName',
+            folderToggle: function(folderName){ 
+                return `#folder-toggle-${folderName.replace(/\s+/g, '-').toLowerCase()} > i`
+            }
         }
     }
     visitHomeUrl(){
@@ -304,11 +307,7 @@ export class Common {
     }
 
     removeAllTracksFromFolder(folders) {
-        cy.get(this.folder.folderSelector('Root'))
-        .triggerHover()
-        .get(this.folder.expandAllIcon)
-        .click({force:true})
-
+        cy.get(this.folder.expandAllIcon).click({force:true})
         folders.forEach(folder => {
             const folderSelector = this.folder.folderSelector(folder)
             cy.ifElementExists(folderSelector, 1500, () => {
@@ -321,7 +320,6 @@ export class Common {
                 cy.do(() => {
                     for (var j = 0; j < parseInt(folderCount); j++){
                         cy.get(this.table.addedByCell).eq(0).click()
-                        // change next line with if/else
                         if (cy.contains(this.pageTitleBar, 'Explore Pages')) {
                             this.clickIcon('Edit Explore Page')
                             cy.contains(this.dropdown.box, folder).within(() => {
@@ -340,19 +338,18 @@ export class Common {
     }
 
     deleteFolder(folders) {
-        cy.get(this.folder.folderSelector('Root')).click()
-        //cy.get(this.folder.expandAllIcon).invoke('show').click()
-        //cy.get(this.folder.expandAllIcon).should('be.visible')
         cy.get(this.folder.expandAllIcon).click({force:true})
         folders.forEach(folder => {
             const folderSelector = this.folder.folderSelector(folder)
             cy.ifElementExists(folderSelector, 1500, () => {
-                cy.get(folderSelector).click()
-                this.clickIcon('Delete Folder')
+                cy.get(folderSelector).click().within(() => {
+                    this.clickIcon('Delete Folder')
+                })
                 cy.get(this.modal).within(() => {
                     cy.contains("button", "Yes").click()
                 })
             })
+            cy.get(folderSelector).should("not.exist")
         })
     }
 }
