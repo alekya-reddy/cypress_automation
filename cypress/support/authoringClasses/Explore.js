@@ -69,6 +69,7 @@ export class Explore extends Common {
         const name = options.name
         const experienceType = options.experienceType
         const trackName = options.trackName
+        const parentFolder = options.parentFolder
 
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.contains("button", "Create Explore Page").click()
@@ -77,6 +78,11 @@ export class Explore extends Common {
             cy.contains(this.experienceType, experienceType).click()
             cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
             cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(trackName + "\n")
+
+            if (parentFolder) {
+                cy.get(this.createExploreModal.dropdownSelect).eq(1).click()
+                cy.get(this.createExploreModal.dropdownSelectField).eq(1).type(parentFolder + "\n")
+            }
         
             cy.contains("button", "Create Explore Page").click()
         })
@@ -88,13 +94,24 @@ export class Explore extends Common {
         const name = options.name
         const experienceType = options.experienceType
         const trackName = options.trackName
+        const parentFolder = options.parentFolder
 
         cy.get(this.editExplorePageIcon).click()
         cy.contains(this.modal, "Edit Explore Page").within(()=>{
-            cy.get(this.createExploreModal.nameInput).clear().type(name)
-            cy.contains(this.experienceType, experienceType).click()
-            cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
-            cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(trackName + "\n")
+            if (name) {
+                cy.get(this.createExploreModal.nameInput).clear().type(name)
+            }
+            if (experienceType) {
+                cy.contains(this.experienceType, experienceType).click()
+            }
+            if (trackName) {
+                cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
+                cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(trackName + "\n")
+            }
+            if (parentFolder) {
+                cy.get(this.createExploreModal.dropdownSelect).eq(1).click()
+                cy.get(this.createExploreModal.dropdownSelectField).eq(1).type(parentFolder + "\n")
+            }
         
             cy.contains("button", "Save Explore Page").click()
         })
@@ -230,7 +247,7 @@ export class Explore extends Common {
         })
 
         if(verify !== false){
-            cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
+            cy.get(this.pageSidebar.customUrlLabel, {timeout: 10000}).siblings("span").should("contain", slug)
         }
     }
 
