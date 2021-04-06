@@ -31,3 +31,27 @@ workflows:
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
+  nightly-staging:
+    triggers:
+      - schedule:
+        cron: "30 14 * * 2"
+        filters:
+          branches:
+            only:
+              - master
+    jobs:
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/vex/*"
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/microsites/*"
+      - cypress/run:
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/common/*,\
+                cypress/integration/explore/*,\
+                cypress/integration/recommend/*,\
+                cypress/integration/target/*"
