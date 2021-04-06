@@ -34,7 +34,7 @@ workflows:
   nightly-staging:
     triggers:
       - schedule:
-          cron: "35 17 * * 2"
+          cron: "0 18 * * 2"
           filters:
             branches:
               only:
