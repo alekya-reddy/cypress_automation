@@ -6,39 +6,38 @@ executors:
     docker:
       - image: "cypress/browsers:node14.7.0-chrome84"
 workflows:
-  build:
+  staging-tues-thurs:
+    triggers:
+      - schedule:
+          cron: "0 5 * * 2,4"
+          filters:
+            branches:
+              only:
+                - develop
     jobs:
-      - hold:
-          type: approval
       - cypress/run:
-          requires:
-            - hold
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
       - cypress/run:
-          requires:
-            - hold
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
       - cypress/run:
-          requires:
-            - hold
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/common/*,\
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
-  nightly-staging:
+  qa-sat-mon:
     triggers:
       - schedule:
-          cron: "0 18 * * 2"
+          cron: "0 5 * * 1,6"
           filters:
             branches:
               only:
-                - master
+                - qa
     jobs:
       - cypress/run:
           executor: latest-chrome
