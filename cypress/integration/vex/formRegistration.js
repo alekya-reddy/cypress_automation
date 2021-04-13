@@ -17,14 +17,14 @@ const deleteForm = {
 const standardForm = {
     name: 'Standard Form Short',
     uniqueLocator: "#email",
-    expect: () => {cy.get("#email").should("exist")},
+    expect: () => {cy.get("#email", {timeout: 1000}).should("exist")},
     fill: () => {consumption.vex.fillStandardForm(visitor)}
 }
 
 const standardFormLong = {
     name: "Standard Form Long Shared Resource",
     uniqueLocator: "#employeeCount",
-    expect: () => {cy.get("#employeeCount").should("exist")},
+    expect: () => {cy.get("#employeeCount", {timeout: 1000}).should("exist")},
     fill: () => {consumption.vex.fillStandardForm({...visitor, first_name: "jo", last_name: "schmo"})}
 }
 
