@@ -214,7 +214,7 @@ describe("Vex - Rocket Chat Configuration", ()=>{
         cy.visit(sessions.liveZoom.url)
         consumption.vex.expectRocketChat()
         cy.getIframeBody(consumption.vex.rocketChat.iframe).within(()=>{
-            cy.contains("This room is read only").should("exist")
+            cy.contains("This room is read only", {timeout: 10000}).should("exist")
         })
         cy.go("back")
 

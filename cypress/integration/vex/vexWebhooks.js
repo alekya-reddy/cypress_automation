@@ -220,8 +220,8 @@ const formWebhookEvent = {
     job_title: "Emperor",
     phone: "1234",
     employee_count: "100",
-    country: "Swadia",
-    state: "Caprica",
+    country: "United States of America",
+    state: "Washington",
     zipcode: "M4T2T1",
     checkbox: "true",
     opt_in: 'true',
@@ -370,7 +370,7 @@ describe("VEX - Form Webhook", ()=>{
             cy.get(`a[href="/${event.slug}/${webexSession.slug}"]`).click() // Visit the webex session
             cy.waitForIframeToLoad("iframe", "div[class='meeting-controls']", 20000)
             cy.getIframeBody("iframe").within(()=>{
-                cy.get(`h2:contains('${webexSession.live.webexLink}')`, {timeout: 20000}).should('exist')
+                cy.get(`h2:contains('${webexSession.live.webexLink}')`, {timeout: 40000}).should('exist')
                 cy.get("div[class='meeting-controls']").should('exist')
             })
             cy.wait(5000)

@@ -159,11 +159,11 @@ export class CommonCX {
         }
 
         if(country){
-            cy.get(this.standardForm.country).clear().type(country)
+            cy.get(this.standardForm.country).clear().type(`${country}\n`)
         }
 
         if(state){
-            cy.get(this.standardForm.state).clear().type(state)
+            cy.get(this.standardForm.state).clear().type(`${state}\n`)
         }
 
         if(zipcode){
