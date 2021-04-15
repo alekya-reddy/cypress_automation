@@ -57,6 +57,8 @@ export class Vex extends Common {
         this.startTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.startTime']`} ;
         this.endTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.endTime']`} ;
         this.timeZoneEditSelect = function(position) {return `select[name="sessionTimes.${position}.timeZone"]`};
+        this.sessionTimeRow = function(position) {return `div[id="sessionTimes_${position}"]`};
+        this.currentTime = '.ant-picker-now-btn'
         this.timeZonePicker = 'div[class="ant-row ant-form-item"]:contains("Time Zone")';
         this.liveTypePicker = 'div[class="ant-row ant-form-item"]:contains("Live Content Type")'; 
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
