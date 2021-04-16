@@ -57,7 +57,8 @@ export class Microsites extends Common {
             targetRadio: "input[value='target']",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             carouselArrow: ".pf-microsite-carousel-arrow",
-            landingPageLayout: "select[id*='landingPageLayout']"
+            landingPageLayout: "select[id*='landingPageLayout']",
+            openCard: "select[id*='cardLink']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -580,6 +581,7 @@ export class Microsites extends Common {
         const businessUnitFilter = config.businessUnitFilter
         const card = config.card
         const layout = config.layout
+        const openContentTrack = config.openContentTrack
         const verify = config.verify // Do not verify if using HEX color for any color pickers
         const searchConfiguration = config.searchConfiguration
         
@@ -613,6 +615,12 @@ export class Microsites extends Common {
             // Values should be "Carousel" or "Grid"
             cy.get(this.landingPages.landingPageLayout).select(layout)
         }
+
+        if(openContentTrack){
+            // values should be "Redirect in the same window" or "Overlay on the same window" or "Open in a new tab"
+            cy.get(this.landingPages.openCard).select(openContentTrack)
+        }
+
 
         if(name){
             cy.get("input[name*='name']").clear().type(name)
