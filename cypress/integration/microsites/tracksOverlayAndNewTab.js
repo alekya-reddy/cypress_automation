@@ -84,8 +84,6 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
                 authoring.microsites.addMicrosite(microsite.name)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
-                
-                // cy.visit("https://automation-microsites.pathfactory-development.com/authoring/content-library/microsite/19494")
                 authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
 
