@@ -150,6 +150,18 @@ describe("Microsites - External Code", () => {
         cy.get(micrositeExternalCode.locator).should("exist") // Comes from microsite setup
         cy.get(`div:contains("${micrositeAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // Comes from microsite appearance. Make sure no duplicate from Explore.
         cy.get(`div:contains("${micrositeSetupExternalCode.name}")`).should("exist") // Comes from microsite setup
+
+        // check that external code that was applied to microsite has a tag that redirects to that microsite
+        authoring.configurations.visit.externalCode()
+        cy.contains(authoring.common.table.cellName, micrositeExternalCode.name, {timeout: 5000}).click()
+        cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.contains("Not added to any Recommend Tracks").should("exist")
+            cy.contains("Not added to any Target Tracks").should("exist")
+            cy.contains("Not added to any Explore Pages").should("exist")
+            cy.contains("Not added to any Appearance Configurations").should("exist")
+            cy.containsExact("div", microsite.name).parent().click({force: true})    
+        })
+        cy.containsExact(authoring.common.pageTitleLocator, microsite.name, {timeout: 5000})
     })
 
     it("Verify on consumption that external codes from microsite, target and recommend are working", () => {

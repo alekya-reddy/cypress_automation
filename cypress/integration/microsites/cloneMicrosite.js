@@ -190,7 +190,6 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", ()=>{
     it("Clone everything within the microsite", ()=>{
         authoring.common.login()
         authoring.microsites.visit()
-        authoring.microsites.removeMicrosite(clonedAllMicrosite.name)
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.cloneMicrosite({
             name: clonedAllMicrosite.name,
@@ -235,6 +234,29 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", ()=>{
         cy.get(consumption.microsites.navigation.header).should("exist").within(() => {
             cy.contains("a", "navigation_clone_Microsite.js").eq(0).should("exist")
             cy.get("a").eq(1).should("have.attr", "href", "www.google.com")
+        })
+
+        // check that external code that was applied to the cloned microsite has a tag that redirects to that microsite
+        authoring.configurations.visit.externalCode()
+        cy.contains(authoring.common.table.cellName, microsite.externalCode, {timeout: 5000}).click()
+        cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.contains("Not added to any Recommend Tracks").should("exist")
+            cy.contains("Not added to any Target Tracks").should("exist")
+            cy.contains("Not added to any Explore Pages").should("exist")
+            cy.contains("Not added to any Appearance Configurations").should("exist")
+            cy.containsExact("div", clonedAllMicrosite.name).parent().click({force: true})    
+        })
+        cy.containsExact(authoring.common.pageTitleLocator, clonedAllMicrosite.name, {timeout: 5000})
+
+        // delete cloned microsite
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(clonedAllMicrosite.name)
+
+        // check that it's not there anymore
+        authoring.configurations.visit.externalCode()
+        cy.contains(authoring.common.table.cellName, microsite.externalCode, {timeout: 5000}).click()
+        cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.containsExact("div", clonedAllMicrosite.name).should("not.exist")
         })
     })
 
