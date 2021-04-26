@@ -17,6 +17,7 @@ const explorePage = {
     name: 'cloneExplore.js',
     experienceType: 'Target',
     trackName: target.name,
+    externalCode: "cloneExplore.js",
     slug: 'cloneexplore-js',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
@@ -34,10 +35,14 @@ const cloneExplorePage = {
 
 describe("Explore - Clone Explore", () => {
 
-    it("Delete Explore Page if exist", () => {
-        authoring.common.login()
-        authoring.explore.visit()
-        authoring.explore.deleteExplore(cloneExplorePage.name)
+    it("Delete Cloned Explore Page if exist", () => {
+        cy.request({url: cloneExplorePage.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 200){ 
+                authoring.common.login()
+                authoring.explore.visit()
+                authoring.explore.deleteExplore(cloneExplorePage.name)
+            }
+        })
     })
 
     it("Clone Explore page - Validation", () => {
@@ -172,6 +177,29 @@ describe("Explore - Clone Explore", () => {
         // explore page is shown
         cy.do(() => {
             cy.get(consumption.explore.hero.heroTitle).should('have.text', appearance.heroTitle)
+        })
+
+        // check that external code that was applied to the cloned explore has a tag that redirects to that explore page
+        authoring.configurations.visit.externalCode()
+        cy.contains(authoring.common.table.cellName, explorePage.externalCode, {timeout: 5000}).click()
+        cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.contains("Not added to any Recommend Tracks").should("exist")
+            cy.contains("Not added to any Target Tracks").should("exist")
+            cy.contains("Not added to any Microsites").should("exist")
+            cy.contains("Not added to any Appearance Configurations").should("exist")
+            cy.containsExact("div", cloneExplorePage.name).parent().click({force: true})    
+        })
+        cy.containsExact(authoring.common.pageTitleLocator, cloneExplorePage.name, {timeout: 5000})
+
+        // delete cloned explore page
+        authoring.explore.visit()
+        authoring.explore.deleteExplore(cloneExplorePage.name)
+
+        // check that explore tag not in External Codes list anymore
+        authoring.configurations.visit.externalCode()
+        cy.contains(authoring.common.table.cellName, explorePage.externalCode, {timeout: 5000}).click()
+        cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.containsExact("div", cloneExplorePage.name).should("not.exist")
         })
     })
 })

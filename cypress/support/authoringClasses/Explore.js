@@ -25,6 +25,7 @@ export class Explore extends Common {
             customUrlLabel: "label:contains('URL Slug')",
             publicTitleLabel: "label:contains('Public Title')",
             appearanceLabel: "label:contains('Appearance')",
+            externalCodeLabel: "label:contains('External Code')",
             ctaToggle: 'div[data-qa-hook="ctaSection"]',
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
@@ -157,7 +158,7 @@ export class Explore extends Common {
     }
 
     configureExplore(options){
-        const { name, slug, appearance, publicTitle, verify } = options
+        const { name, slug, appearance, publicTitle, externalCode, verify } = options
         // These toggle options should have values of "on" or "off"
         const { header, headerTitle, searchFunction, filters, ctaToggle, cta, selectFilters } = options
 
@@ -179,6 +180,10 @@ export class Explore extends Common {
 
         if(publicTitle){
             this.setPublicTitle(publicTitle)
+        }
+
+        if(externalCode){
+            this.addExternalCode(externalCode)
         }
 
         if(header){
@@ -263,6 +268,46 @@ export class Explore extends Common {
             cy.get(this.popover).should("not.exist")
             cy.get(this.pageSidebar.appearanceLabel).siblings("span").should("contain", appearance)
 
+        }
+    }
+
+    addExternalCode(list, verify){
+        const codes = [list].flat()
+
+        cy.get(this.pageSidebar.externalCodeLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            codes.forEach( code => {
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(code)).click()
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            codes.forEach( code => {
+                cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("contain", code)
+            })
+        }
+    }
+
+    removeExternalCode(list, verify){
+        const codes = [list].flat()
+        cy.get(this.pageSidebar.externalCodeLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            codes.forEach( code => {
+                cy.ifElementWithExactTextExists("span", code, 1000, ()=>{
+                    cy.containsExact("span", code).parent().siblings("span").click()
+                })
+            })
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            codes.forEach( code => {
+                cy.get(this.pageSidebar.externalCodeLabel).siblings("span").should("not.contain", code)
+            })
         }
     }
 

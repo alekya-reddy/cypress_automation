@@ -128,6 +128,7 @@ export class Configurations extends Common {
         this.accessProtection = {};
         this.segments = {};
         this.routes = {};
+        this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
     }
 
     /*********************************************************************************/
