@@ -38,7 +38,7 @@ export class Common {
         this.scrollableTable = 'div[class*="table-body-container"]';
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
-            cellName: "div[data-qa-hook='table-cell-name']",
+            cellName: "div[data-qa-hook='table-cell-name'] > span",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
@@ -133,6 +133,7 @@ export class Common {
     }
 
     login(user = this.userName, password = this.password) {
+        cy.viewport(1450, 1024)
         cy.visit(this.baseUrl + "/users/sign_in")
 
         const clearCookiesAndReload = () => {
