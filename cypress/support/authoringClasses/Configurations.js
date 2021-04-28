@@ -408,7 +408,7 @@ export class Configurations extends Common {
 
     deleteForm(name){
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, () => {
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()
             cy.contains("button", "Delete Form").click()

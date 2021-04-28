@@ -22,7 +22,7 @@ const explorePage = {
     experienceType: 'Target',
     trackName: target.name,
     parentFolder: 'AutomationFolderOne',
-    slug: 'testfolderscreate-js',
+    slug: 'create-new-folder-js',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
