@@ -32,7 +32,9 @@ export class ContentLibrary extends Common{
             scoreThreshold: "div[data-qa-hook='preview-section-engagement-score']",
             thresholdInput: "input[name='engagementThreshold']",
             seoTitle: "#content-sidebar-seo-title",
-            seoTitleInput: "textarea[name='seoTitle']"
+            seoTitleInput: "textarea[name='seoTitle']",
+            previewTargetTracks: "div[data-qa-hook='preview-section-target-tracks']",
+            experienceTagsLocator: "span[class^='ExperienceTags']"
         };
         this.advancedEditComponent = {
             publicTitleInput: "#title",
@@ -171,15 +173,7 @@ export class ContentLibrary extends Common{
         }
 
         if(seoTitle){
-            cy.angryClick({
-                clickElement: this.sidebarComponent.seoTitle,
-                checkElement: this.sidebarComponent.seoTitleInput
-            })
-            cy.get(this.sidebarComponent.seoTitle).within(()=>{
-                cy.get(this.sidebarComponent.seoTitleInput).clear().type(seoTitle)
-                cy.contains("button", "Save").click()
-                if(verify !== false){ cy.contains(seoTitle).should("exist") }
-            })
+            this.addSEOTitle(seoTitle)
         }
 
         if(contentType){
@@ -375,6 +369,27 @@ export class ContentLibrary extends Common{
                 if(verify !== false){ cy.contains(`Visitors given a score of ${score} when content viewed for ${threshold}s`).should("exist") }
             })
         }
+    }
+    addSEOTitle(seoTitle, verify){
+        cy.angryClick({
+            clickElement: this.sidebarComponent.seoTitle,
+            checkElement: this.sidebarComponent.seoTitleInput
+        })
+        cy.get(this.sidebarComponent.seoTitle).within(()=>{
+            cy.get(this.sidebarComponent.seoTitleInput).clear().type(seoTitle)
+            cy.contains("button", "Save").click()
+            if(verify !== false){ cy.contains(seoTitle).should("exist") }
+        })
+    }
+    removeSEOTitle(){
+        cy.angryClick({
+            clickElement: this.sidebarComponent.seoTitle,
+            checkElement: this.sidebarComponent.seoTitleInput
+        })
+        cy.get(this.sidebarComponent.seoTitle).within(()=>{
+            cy.get(this.sidebarComponent.seoTitleInput).clear()
+            cy.contains("button", "Save").click()
+        })
     }
 
 }
