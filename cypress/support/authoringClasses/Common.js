@@ -36,6 +36,7 @@ export class Common {
         this.antSelectItem = "span[class='ant-select-selection-item']";
         this.thumbnailSelector = "#thumbnail-selector";
         this.scrollableTable = 'div[class*="table-body-container"]';
+        this.pageSidebar = "div[data-qa-hook='page-sidebar']";
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",
