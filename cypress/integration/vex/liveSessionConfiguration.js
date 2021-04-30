@@ -224,6 +224,50 @@ const sessions = [
         expect: 'vimeo'
     }
 ]
+const sessions_simulive = [
+    {
+        name: 'Live content current with simulive video',
+        slug: 'live-content-current-with-simulive-video',
+        get url(){ return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'now',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            zoomNum: false,
+            zoomAuth: false,
+            video: 'Wistia - Used in Cypress automation for VEX testing',
+            status: 'live',
+            isSimulive: true
+        },
+        video: false,
+        contents: false,
+        expect: 'simulive'
+    },
+    {
+        name: 'Live content after end with simulive video',
+        slug: 'live-content-after-end-with-simulive-video',
+        get url(){ return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            zoomNum: false,
+            zoomAuth: false,
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            status: 'ended',
+            isSimulive: true
+        },
+        video: false,
+        contents: false,
+        expect: 'simulive'
+    }
+]
 
 const contentSource = authoring.common.env.orgs['automation-vex'].resources
 
@@ -435,4 +479,44 @@ describe('VEX - Virtual Event Live Sessions', function() {
         cy.get(consumption.vex.zoomIframe).should('exist')
     })
 
+    it("Setup to test session with Simulive video enabled for a live session", () => {
+        authoring.common.login();
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionList()
+        authoring.vex.removeSession(sessions_simulive[0].name)
+        authoring.vex.addSession(sessions_simulive[0].name)
+        authoring.vex.configureSession(sessions_simulive[0])
+    })
+
+    it('Go to consumption, visit the simulive video mode enabled for a live session, and verify that we see the expected behavior', function(){
+        cy.pause()
+        cy.visit(event.url + "/?lb_email=bobman%40gmail.com") // visit with lb_email query string so don't have to fuss around with registration form
+        cy.contains(consumption.vex.sessionCardTitle, sessions_simulive[0].name). should('exist').click()
+        cy.url().should('eq', sessions_simulive[0].url)
+        if (sessions_simulive[0].expect == 'simulive'){
+            consumption.vex.expectSimulive()
+        }
+    })
+
+    it("Setup to test session with Simulive video enabled and the live session ended", () => {
+        authoring.common.login();
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionList()
+        authoring.vex.removeSession(sessions_simulive[1].name)
+        authoring.vex.addSession(sessions_simulive[1].name)
+        authoring.vex.configureSession(sessions_simulive[1])
+    })
+
+    it('Go to consumption, visit the simulive video mode enabled session, and verify that we see the expected behavior', function(){
+        cy.visit(event.url + "/?lb_email=bobman%40gmail.com") // visit with lb_email query string so don't have to fuss around with registration form
+        cy.contains(consumption.vex.sessionCardTitle, sessions_simulive[1].name).should('exist').click()
+        cy.url().should('eq', sessions_simulive[1].url)
+        if (sessions_simulive[1].expect == 'simulive'){
+            cy.wait(3000)
+            cy.contains("This live video has ended")
+            consumption.vex.expectSimulive()
+        }
+    })
 })
