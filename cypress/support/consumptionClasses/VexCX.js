@@ -40,6 +40,14 @@ export class VexCX extends CommonCX {
             getCurrentTime: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
             paused: function(state){ cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) }
         };
+        this.simuliveVideo = {
+            vexCustomControl:'div[class*="vex-session-custom-controls"]',
+            pause: 'i[class*="fa-pause"]',
+            volume: 'i[class*="fa-volume-down"]',
+            liveStatus: 'div[class^="sc-jTNWrH"]',
+            videoProgressBar: 'div[class^="sc-eBXEvq"]',
+            fullScreenMode: 'i[class^="sc-eMrnwU"]'
+        };
         this.vimeo = {
             // Playing around on the dev console on regular browser, I'm blocked from accessing iframe due to cross-frame issue. I'm amazed I can bypass that through Cypess
             iframe: 'iframe[src*="vimeo"]',
@@ -114,6 +122,16 @@ export class VexCX extends CommonCX {
         cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 20000)
         cy.getIframeBody(this.youtube.iframe).within(()=>{
             cy.get(this.youtube.videoPlayer).should('exist')
+        })
+    }
+
+    expectSimulive(){
+        cy.get(this.simuliveVideo.vexCustomControl).within(()=>{
+            cy.get(this.simuliveVideo.pause).should('exist')
+            cy.get(this.simuliveVideo.volume).should('exist')
+            cy.get(this.simuliveVideo.liveStatus).should('exist')
+            cy.get(this.simuliveVideo.videoProgressBar).should('exist')
+            cy.get(this.simuliveVideo.fullScreenMode).should('exist')
         })
     }
 

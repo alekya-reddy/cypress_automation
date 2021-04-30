@@ -73,7 +73,8 @@ export class Vex extends Common {
         this.topicsTag = ".ant-select-selection-item";
         this.removeTopicTagButton = ".ant-select-selection-item-remove";
         this.removeButton = "button:contains('Remove')";
-        this.removeonDemandVideo='#remove-on-demand-video'
+        this.removeonDemandVideo='#remove-on-demand-video';
+        this.isSimulive='input[name="videoSimulive"]';
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
             headerTitleInput: "input[name='headerTitle']",
@@ -670,8 +671,12 @@ export class Vex extends Common {
         const zoomPW = config.zoomPW 
         const webexLink = config.webexLink
         const video = config.video
+        const isSimulive = config.isSimulive
 
-        if(typeof start == 'string'){
+        if (start=='now') {
+            cy.get(this.startTimeEditInput(0)).click().clear()
+            cy.get(this.currentTime).click()
+        } else if(typeof start == 'string'){
             cy.get(this.startTimeEditInput(0)).click().clear().type(start + '\n')
         } else if (start) {
             start.pickerNum = 0
@@ -711,6 +716,13 @@ export class Vex extends Common {
         }
         if(video){
             this.pickLiveContentVideo(video)
+        }
+        if(isSimulive){
+            cy.get(this.isSimulive).parent().invoke("attr", "class").then((simulivecheckBox)=>{
+                if(!simulivecheckBox.includes("ant-checkbox-checked")){
+                    cy.get(this.isSimulive).click()
+                }
+            })
         }
     }
 
