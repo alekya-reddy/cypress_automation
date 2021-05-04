@@ -24,6 +24,54 @@ export class Settings extends Common {
             oce_idcsUrl: '#idcsUrl',
             oce_serviceInstanceBaseUrl: '#serviceInstanceBaseUrl'
         };
+        this.clientHQ = {
+            pageUrl: `${this.baseUrl}/authoring/content-library/settings/organization-management`,
+            pageTitle: "Client HQs"
+        };
+        this.settings = {
+            pageUrl: `${this.settingsRoute}/settings`,
+            pageTitle: "Settings",
+        };
+        this.analytics = {
+            pageUrl: `${this.settingsRoute}/analytics`,
+            pageTitle: "Analytics",
+        };
+        this.eloquaAccount = {
+            pageUrl: `${this.settingsRoute}/eloqua-account`,
+            pageTitle: "Eloqua Account",
+        };
+        this.apiConfigurations = {
+            pageUrl: `${this.settingsRoute}/api-configurations`,
+            pageTitle: "API Configurations",
+        };
+        this.salesforce = {
+            pageUrl:  `${this.settingsRoute}/crm-integrations`,
+            pageTitle: "Salesforce",
+        };
+        this.sso = {
+            pageUrl:  `${this.settingsRoute}/single-sign-on`,
+            pageTitle: "Single Sign On",
+        };
+        this.salesToolsConfiguration = {
+            pageUrl:  `${this.settingsRoute}/sales-configuration`,
+            pageTitle: "Sales Tools Configuration",
+        };
+        this.sixsense = {
+            pageUrl:  `${this.settingsRoute}/six-sense`,
+            pageTitle: "6sense",
+        };
+        this.customQueryStrings = {
+            pageUrl:  `${this.settingsRoute}/custom-query-strings`,
+            pageTitle: "Custom Query Strings",
+        };
+        this.accessProtection = {
+            pageUrl:  `${this.settingsRoute}/access-protection-settings`,
+            pageTitle: "Access Protection",
+        };
+        this.searchEngineDirective = {
+            pageUrl:  `${this.settingsRoute}/search-engine-directive`,
+            pageTitle: "Search Engine Directive",
+        };
     }
 
     visitCookieConsent(){

@@ -4,6 +4,9 @@ export class WebsiteTools extends Common {
     constructor(env, org, tld, userName, password, baseUrl){
         super(env, org, tld, userName, password, baseUrl);
         this.websiteToolsUrl = `${this.baseUrl}/authoring/content-library/website-tools`;
+        this.websiteToolsContentConfigurationsUrl = `${this.baseUrl}/authoring/content-library/content-configurations`;
+        this.pageTitle = "Website Properties";
+        this.contentConfigurationsTitle = "Content Configurations";
         this.pageSidebarLocator = "[data-qa-hook='page-sidebar']";
         this.webdomainLinkLocator = `${this.pageSidebarLocator} > a`;
         this.webdomainInactiveMessage = "[data-qa-hook='page-body'] > span > p";

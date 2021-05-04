@@ -11,6 +11,15 @@ export class Configurations extends Common {
             appearances: `${this.configRoute}/appearance`,
             languages:`${this.configRoute}/language`,
             forms: `${this.configRoute}/forms`,
+            images: `${this.configRoute}/images/content`,
+            accessProtection: `${this.configRoute}/access-protection/email-and-domain`,
+            contentTags: `${this.configRoute}/tags/topics`,
+            linksAndSharings: `${this.configRoute}/sharing`,
+            ctas: `${this.configRoute}/ctas`,
+            visitorActivities: `${this.configRoute}/visitor-activities`,
+            segments: `${this.configRoute}/segments`,
+            routes: `${this.configRoute}/routes`,
+            trackLabels: `${this.configRoute}/labels`
         };
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
@@ -19,6 +28,15 @@ export class Configurations extends Common {
             appearances: "Appearances Configuration",
             languages: "Languages Configuration",
             forms: "Form Configuration",
+            images: "Image Library and Branding",
+            accessProtection: "Access Protection",
+            contentTags: "Content Tags Configuration",
+            linksAndSharings: "Links & Sharing Configuration",
+            ctas: "CTA Configuration",
+            visitorActivities: "Visitor Activities Configuration",
+            segments: "Segments",
+            routes: "Routes",
+            trackLabels: "Labels Configuration"
         };
         this.visit = {
             webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
@@ -32,6 +50,10 @@ export class Configurations extends Common {
             name: "#name",
             url: "#url",
         };
+        this.addAccessProtectionGroupModal = {
+            name: "#add-group-name-input",
+            decription: "#add-group-description-input"
+        }
         this.webhookPreview = {
             enableToggle: "div[data-qa-hook='enabled']",
             name: "div[data-qa-hook='preview-section-webhook-name']",
@@ -129,6 +151,10 @@ export class Configurations extends Common {
         this.segments = {};
         this.routes = {};
         this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
+        this.antModal = ".ant-modal-content";
+        this.contentTags = {
+            nameImput: "#name"
+        }
     }
 
     /*********************************************************************************/
@@ -269,7 +295,7 @@ export class Configurations extends Common {
             })
             cy.ifNoElementWithExactTextExists(this.modal, "Delete External Code?", 10000, ()=>{}) // This just smart-waits for modal to disappear
             cy.ifNoElementWithExactTextExists(this.table.cellName, code, 10000, ()=>{}) // This just smart-waits for widget to disappear
-            cy.containsExact(this.table.cellName, code).should("not.exist")
+            cy.contains(this.table.cellName, code).should("not.exist")
         })
     }
 
@@ -1046,6 +1072,62 @@ export class Configurations extends Common {
         })    
         
         cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+    }
+
+    /*********************************************************************************/
+    /**************************** ACCESS PROTECTION **********************************/
+    /*********************************************************************************/
+
+    addAccessProtectionGroup(name, description){
+        cy.get("#group-card-add").click()
+        cy.get(this.antModal).within(() => {
+            cy.get(this.addAccessProtectionGroupModal.name).clear().type(name)
+            if(description) {
+                cy.get(this.addAccessProtectionGroupModal.description).clear().type(description)
+            }
+            cy.contains("button", "Add Group").click()
+        })
+    }
+
+    deleteAccessProtectionGroup(name){
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.get(this.pageSidebar).within(sidebar => {
+            if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('OK')").click()
+                })
+            }
+            cy.containsExact("div", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /******************************* CONTENT TAGS*************************************/
+    /*********************************************************************************/
+
+    addTopicTag(name){
+        cy.contains("button", "Add Topic").click()
+        cy.get(this.contentTags.nameImput).clear().type(name)
+        cy.get(this.contentTags.nameImput).parent().within(() => {
+            cy.contains("button", "Add").click()
+        })
+        cy.contains("span", name).should("exist")
+    }
+
+    deleteTopicTag(name){
+        cy.contains("span", name).parent().within(()=>{
+            cy.get(this.deleteIcon).click()
+        })
+        cy.get(this.popover).within(()=>{
+            cy.contains("button", "Delete").click()
+        })
+        cy.contains("span", name).should("not.exist")
     }
 
 }

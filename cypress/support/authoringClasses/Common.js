@@ -165,6 +165,10 @@ export class Common {
         cy.url().should('include', '/authoring')
     }
 
+    logout(){
+        cy.visit(this.baseUrl + "/logout")
+    }
+
     toggle(toggleLocator, on_off){
         // We have at least 3 different kinds of toggles in our app
         cy.get(toggleLocator, {timeout: 20000}).invoke("text").then((toggleText)=>{

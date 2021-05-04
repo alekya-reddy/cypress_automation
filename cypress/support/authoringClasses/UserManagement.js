@@ -15,9 +15,10 @@ export class UserManagement extends Common {
         this.generalSettings = {
             imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
             contentTagsCreateEditView: "#content_tags-create-edit-delete",
-            contentTagsView: "content_tags-view"
+            contentTagsView: "#content_tags-view"
         }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
+        this.pageTitle = "User Management"
 
     }
 

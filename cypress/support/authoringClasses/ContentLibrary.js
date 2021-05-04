@@ -4,7 +4,9 @@ export class ContentLibrary extends Common{
     constructor(env, org, tld, userName, password, baseUrl){
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/content`;
+        this.contentInsightsUrl = `${this.baseUrl}/authoring/content-library/content/insights`;
         this.pageTitle = 'Content Library';
+        this.contentInsightsTitle = "Content Library Insights";
         this.sidebarComponent = {
             publicTitle: "#content-sidebar-title",
             publicTitleInput: "textarea[name='title']",

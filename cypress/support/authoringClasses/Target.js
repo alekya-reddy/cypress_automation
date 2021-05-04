@@ -5,6 +5,7 @@ export class Target extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/target`;
         this.pageTitle = "Target Tracks";
+        this.targetAnalyticsTitle = "Target Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.createTrackModal = {
             nameInput: "input[name='name']"

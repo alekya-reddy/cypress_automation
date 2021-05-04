@@ -5,6 +5,7 @@ export class Recommend extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/recommend`;
         this.pageTitle = "Recommend Tracks";
+        this.recommendAnalyticsTitle = "Recommend Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.createTrackModal = {
             nameInput: "input[name='name']"
