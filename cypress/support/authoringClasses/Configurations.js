@@ -144,9 +144,15 @@ export class Configurations extends Common {
             nameInput: "#name",
             delete: "i[title='Delete form']",
         };
-        this.ctas = {};
+        this.ctas = {
+            nameInput: "#name",
+            delete: "i[title='Delete CTA']",
+            ctaType: 'input[name="ctaType"]',
+            ctaLabel: "#label",
+            destinationLinkInput: "#destinationUrl",
+            destinationEmailInput: "#mailto"
+        };
         this.imageLibrary = {};
-        this.contentTags = {};
         this.accessProtection = {};
         this.segments = {};
         this.routes = {};
@@ -155,6 +161,10 @@ export class Configurations extends Common {
         this.contentTags = {
             nameImput: "#name"
         }
+        this.linksAndSharing = {
+            nameInput: "#name"
+        }
+        this.dropdownMenuNav = ".dropdown-menu-nav"
     }
 
     /*********************************************************************************/
@@ -1074,6 +1084,26 @@ export class Configurations extends Common {
         cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
     }
 
+    deleteLanguage(name, verify){
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.get(this.pageSidebar).within(sidebar => {
+            if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('Delete Language')").click()
+                })
+            }
+            if (verify !== false) {
+                cy.containsExact("div", name).should("not.exist")
+            }
+        })
+    }
+
     /*********************************************************************************/
     /**************************** ACCESS PROTECTION **********************************/
     /*********************************************************************************/
@@ -1128,6 +1158,81 @@ export class Configurations extends Common {
             cy.contains("button", "Delete").click()
         })
         cy.contains("span", name).should("not.exist")
+    }
+
+
+    /*********************************************************************************/
+    /*********************************** CTAs ****************************************/
+    /*********************************************************************************/
+    addCTA(options){
+        const {name, label, ctaType, destination} = options
+        this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
+        cy.contains("button", "Add CTA").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.ctas.nameInput).clear().type(name)
+            cy.get(this.ctas.ctaLabel).clear().type(label)
+            cy.get(this.ctas.ctaType).parent().contains(ctaType).click()
+            if (ctaType == "Form"){
+                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+            }
+            else if (ctaType == "Link"){
+                cy.get(this.ctas.destinationLinkInput).type(destination)
+            }
+            else {
+                cy.get(this.ctas.destinationEmailInput).type(destination)
+            }
+            cy.contains("button", "Save").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
+    }
+
+    deleteCTA(name){
+        this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+            cy.containsExact(this.table.cellName, name).click()
+            cy.get(this.ctas.delete).click({force:true})
+            cy.contains("button", "Delete CTA").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("not.exist")
+    }
+
+
+    /*********************************************************************************/
+    /******************************* Links&Sharing ***********************************/
+    /*********************************************************************************/
+
+    addLinksAndSharing(name) {
+        cy.get(this.pageSidebar).within(() => {
+            cy.contains("div", "+ Add Configuration").click()
+        })
+        cy.get(this.modal).within(() => {
+            cy.get(this.linksAndSharing.nameInput).type(name)
+            cy.contains("button", "Add Configuration").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.get(this.pageSidebar).within(() => {
+            cy.containsExact("div", name).should("exist")
+        })
+    }
+
+    deleteLinksAndSharing(name) {
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.get(this.pageSidebar).within(sidebar => {
+            if (cy.containsExact("div", name, {timeout: 3000})) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('Delete Configuration')").click()
+                })
+            }
+            cy.containsExact("div", name).should("not.exist")
+        })
     }
 
 }

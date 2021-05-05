@@ -1,7 +1,6 @@
 import { createAuthoringInstance } from '../../support/pageObject.js'
 import { constants } from '../../support/constants.js';
 
-//const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const authoring = createAuthoringInstance()
 
 const user = 
@@ -52,33 +51,33 @@ describe('General Settings User Role', function() {
             // configurations
             cy.get("#configurations").should("exist")
             cy.get("#configurations").click()
+            cy.get(authoring.configurations.dropdownMenuNav).within(() => {
+                cy.contains("div", "General").should("exist")
 
-            cy.contains("div", "General").should("exist")
+                cy.contains("a", "Image Library").should("exist")
+                cy.contains("a", "External Code").should("exist")
+                cy.contains("a", "Access Protection").should("exist")
+                cy.contains("a", "Content Tags").should("exist")
 
-            cy.contains("a", "Image Library").should("exist")
-            cy.contains("a", "External Code").should("exist")
-            cy.contains("a", "Access Protection").should("exist")
-            cy.contains("a", "Content Tags").should("exist")
+                cy.contains("div", "User Experience").should("not.exist")
+                cy.contains("a", "Appearances").should("not.exist")
+                cy.contains("a", "Languages").should("not.exist")
+                cy.contains("a", "Links & Sharing").should("not.exist")
+                cy.contains("a", "Forms").should("not.exist")
+                cy.contains("a", "CTAs").should("not.exist")
 
-            cy.contains("div", "User Experience").should("not.exist")
-            cy.contains("a", "Appearances").should("not.exist")
-            cy.contains("a", "Languages").should("not.exist")
-            cy.contains("a", "Links & Sharing").should("not.exist")
-            cy.contains("a", "Forms").should("not.exist")
-            cy.contains("a", "CTAs").should("not.exist")
+                cy.contains("div", "Data Configuration").should("not.exist")
+                cy.contains("a", "Webhooks").should("not.exist")
+                cy.contains("a", "Visitor Activities").should("not.exist")
 
-            cy.contains("div", "Data Configuration").should("not.exist")
-            cy.contains("a", "Webhooks").should("not.exist")
-            cy.contains("a", "Visitor Activities").should("not.exist")
+                cy.contains("div", "Campaign Tools").should("not.exist")
+                cy.contains("a", "Segments").should("not.exist")
+                cy.contains("a", "Routes").should("not.exist")
+                cy.contains("a", "Track Labels").should("not.exist")
 
-            cy.contains("div", "Campaign Tools").should("not.exist")
-            cy.contains("a", "Segments").should("not.exist")
-            cy.contains("a", "Routes").should("not.exist")
-            cy.contains("a", "Track Labels").should("not.exist")
-
-            cy.contains("div", "Virtual Events").should("not.exist")
-            cy.contains("a", "Widgets").should("not.exist")
-
+                cy.contains("div", "Virtual Events").should("not.exist")
+                cy.contains("a", "Widgets").should("not.exist")
+            })
             // settings
             cy.get("#settings").should("exist")
             cy.get("#settings").click()
@@ -238,9 +237,9 @@ describe('General Settings User Role', function() {
             // // Campaign Tools
 
             // Segments
-            // cy.visit(authoring.configurations.pageUrls.segments)
-            // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.segments).should("not.exist") -- BUG
-            // cy.contains("div", "You don't have permission to view this page.")
+            cy.visit(authoring.configurations.pageUrls.segments)
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.segments).should("not.exist")
+            cy.contains("div", "You don't have permission to view this page.")
            
             // Routes
             cy.visit(authoring.configurations.pageUrls.routes)

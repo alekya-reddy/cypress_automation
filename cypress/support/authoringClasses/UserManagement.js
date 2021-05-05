@@ -19,6 +19,7 @@ export class UserManagement extends Common {
         }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
         this.pageTitle = "User Management"
+        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete"
 
     }
 
@@ -45,7 +46,7 @@ export class UserManagement extends Common {
         cy.visit(this.userRoles.pageURL)
         cy.wait(2000)
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
-        cy.ifNoElementWithExactTextExists("div", userRole, 5000, ()=>{
+        cy.ifNoElementWithExactTextExists("div", userRole, 10000, ()=>{
             this.clickAddUserRole()
             cy.contains(this.modal, "Add User Role").within(()=>{
                 cy.get(this.userRoles.roleName).clear().type(userRole)        
@@ -61,7 +62,7 @@ export class UserManagement extends Common {
     }
 
     configureUserRole(options) {
-        const{roleName, imageLibExtCodeAccProtectionAccess, contentTagsCreateEditView} = options
+        const{roleName, imageLibExtCodeAccProtectionAccess, contentTagsCreateEditView , userExperienceSettingsCreateEditView} = options
 
         this.clickUserRole(roleName)
         
@@ -77,6 +78,14 @@ export class UserManagement extends Common {
             cy.get(this.generalSettings.contentTagsCreateEditView).invoke("attr", "class").then(checkboxClass => {
                 if(contentTagsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.contentTagsCreateEditView).click()
+                }       
+            })
+        }
+   
+        if(userExperienceSettingsCreateEditView == true || userExperienceSettingsCreateEditView == false){
+            cy.get(this.userExperienceSettingsCreateEditView).invoke("attr", "class").then(checkboxClass => {
+                if(userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.userExperienceSettingsCreateEditView).click()
                 }       
             })
         }
@@ -111,7 +120,7 @@ export class UserManagement extends Common {
         const roles = [list].flat()
         // select user
         cy.get(this.pageBody).within(() => {
-            cy.contains("span", userName).click()
+            cy.contains("span", userName, {timeout: 5000}).click()
         })
         // remove all existing roles
         cy.get(this.userRolePreview).within(()=>{
