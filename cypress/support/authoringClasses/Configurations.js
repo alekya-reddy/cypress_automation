@@ -154,15 +154,32 @@ export class Configurations extends Common {
         };
         this.imageLibrary = {};
         this.accessProtection = {};
-        this.segments = {};
-        this.routes = {};
+        this.segments = {
+            nameInput: "#name",
+            editSegmentPreview: `div[data-qa-hook="segment-edit-card"]`,
+            deleteIcon: `i[title="Delete Segment"]`
+        };
+        this.routes = {
+            nameInput: "#name",
+            fallbackType: `input[name="fallbackDestinationType"]`,
+            fallbackUrl: "#fallbackExternalUrl",
+            deleteIcon: `i[title="Delete Route"]`
+        };
         this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
         this.antModal = ".ant-modal-content";
         this.contentTags = {
-            nameImput: "#name"
+            nameInput: "#name"
         }
         this.linksAndSharing = {
             nameInput: "#name"
+        }
+        this.trackLabels = {
+            nameInput: "#name"
+        }
+        this.visitorActivity = {
+            nameInput: "#name",
+            scoreInput: `input[name="engagementScore"]`,
+            deleteIcon: `i[class*="trash"]`
         }
         this.dropdownMenuNav = ".dropdown-menu-nav"
     }
@@ -185,7 +202,9 @@ export class Configurations extends Common {
                 cy.contains("button", "Add Webhook").click()
                 cy.get(this.modal).within(()=>{
                     cy.get(this.addWebhookModal.name).clear().type(name)
-                    cy.get(this.addWebhookModal.url).clear().type(url)
+                    if(url){           
+                        cy.get(this.addWebhookModal.url).clear().type(url)
+                    }
                     cy.get(this.dropdown.box).click()
                     cy.get(this.dropdown.option(type)).click()
                     cy.contains("button", "Add Webhook").click()
@@ -261,7 +280,7 @@ export class Configurations extends Common {
     }
 
     /*********************************************************************************/
-    /********************************* External code *********************************/
+    /********************************* EXTERNAL CODE *********************************/
     /*********************************************************************************/
     addExternalCode(config){
         const { name, code, interceptCode } = config
@@ -1143,21 +1162,23 @@ export class Configurations extends Common {
 
     addTopicTag(name){
         cy.contains("button", "Add Topic").click()
-        cy.get(this.contentTags.nameImput).clear().type(name)
-        cy.get(this.contentTags.nameImput).parent().within(() => {
+        cy.get(this.contentTags.nameInput).clear().type(name)
+        cy.get(this.contentTags.nameInput).parent().within(() => {
             cy.contains("button", "Add").click()
         })
         cy.contains("span", name).should("exist")
     }
 
     deleteTopicTag(name){
-        cy.contains("span", name).parent().within(()=>{
-            cy.get(this.deleteIcon).click()
+        cy.ifElementWithExactTextExists("span", name, 4000, () => {
+            cy.contains("span", name).parent().within(()=>{
+                cy.get(this.deleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+            cy.contains("span", name).should("not.exist")
         })
-        cy.get(this.popover).within(()=>{
-            cy.contains("button", "Delete").click()
-        })
-        cy.contains("span", name).should("not.exist")
     }
 
 
@@ -1200,7 +1221,7 @@ export class Configurations extends Common {
 
 
     /*********************************************************************************/
-    /******************************* Links&Sharing ***********************************/
+    /******************************* LINKS&SHARING ***********************************/
     /*********************************************************************************/
 
     addLinksAndSharing(name) {
@@ -1232,6 +1253,125 @@ export class Configurations extends Common {
                 })
             }
             cy.containsExact("div", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /****************************** VISITOR ACTIVITY *********************************/
+    /*********************************************************************************/
+
+    addVisitorActivity(options){
+        const {name, type, score} = options
+        cy.contains("button", "Add Activity").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.visitorActivity.nameInput).clear().type(name)
+            cy.get(this.dropdown.input).type(type + "\n", {force: true})
+            cy.get(this.visitorActivity.scoreInput).clear().type(score)
+            cy.contains("button", "Add Activity Definition").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
+    }
+
+    deleteVisitorActivity(name){
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+            cy.containsExact(this.table.cellName, name).click()
+            cy.get(this.visitorActivity.deleteIcon).click({force:true})
+            cy.contains("button", "Delete Activity").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("not.exist")
+    }
+
+
+
+    /*********************************************************************************/
+    /********************************** SEGMENTS *************************************/
+    /*********************************************************************************/
+
+    addSegment(name){
+        cy.contains("button", "Create Segment").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.segments.nameInput).clear().type(name)
+            cy.contains("button", "Create Segment").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.get(this.segments.editSegmentPreview).within(() => {
+            cy.contains("button", "Save").click()
+        })
+        cy.containsExact("p", name).should("exist")
+    }
+
+    deleteSegment(name){
+        cy.ifElementWithExactTextExists("p", name, 4000, () => {
+            cy.contains("p", name).siblings("div").within(() => {
+                cy.get(this.segments.deleteIcon).click()
+            })
+            cy.get(this.modal).within(()=>{
+                cy.contains("button", "Remove Segment").click()
+            })
+            cy.contains("p", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /*********************************** ROUTES **************************************/
+    /*********************************************************************************/
+
+    addRoute(options) {
+        const {name, type, destination} = options
+        cy.contains("button", "Create Route").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.routes.nameInput).clear().type(name)
+            cy.get(this.routes.fallbackType).parent().contains(type).click()
+            if (type == "URL"){
+                cy.get(this.routes.fallbackUrl).type(destination)
+            }
+            else {
+                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+            }
+            cy.contains("button", "Create Route").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.contains("h4", name).should("exist") 
+    }
+
+    deleteRoute(name){
+        cy.ifElementWithExactTextExists("h4", name, 4000, () => {
+            cy.contains("h4", name).siblings("span").within(() => {
+                cy.get(this.routes.deleteIcon).click()
+            })
+            cy.get(this.modal).within(()=>{
+                cy.contains("button", "Remove Route").click()
+            })
+            cy.contains("h4", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /******************************** TRACK LABELS ***********************************/
+    /*********************************************************************************/
+
+    addTrackLabel(name) {
+        cy.ifNoElementWithExactTextExists("span", name, 2000, ()=>{
+            cy.contains("button", "Add Label").click()
+            cy.get(this.trackLabels.nameInput).clear().type(name)
+            cy.get(this.trackLabels.nameInput).parent().within(() => {
+                cy.contains("button", "Add").click()
+            })
+        })
+        cy.contains("span", name).should("exist")
+    }
+
+    deleteTrackLabel(name){
+        cy.ifElementWithExactTextExists("span", name, 4000, () => {
+            cy.contains("span", name).parent().within(()=>{
+                cy.get(this.deleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+            cy.contains("span", name).should("not.exist")
         })
     }
 

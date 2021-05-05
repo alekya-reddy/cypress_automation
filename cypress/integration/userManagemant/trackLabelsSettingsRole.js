@@ -5,29 +5,18 @@ const authoring = createAuthoringInstance()
 
 const user = {
     role: 'qa-multiuser',
-    roleDescription: "User should only have access to Data Configuration Settings",
+    roleDescription: "User should only have access to Track Labels Settings",
     userName: constants.orgs[authoring.common.org].multiUser,
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
 const role = {
-    roleName: "Data Configuration Settings Role.Js",
-    dataConfigurationSettings: true
-}
-
-const webhook = {
-    name: "Data Config Settings JS",
-    type: "Visitor Activity"
-}
-
-const visitorActivity = {
-    name: "Data Config Settings JS",
-    type: "Engagement Score",
-    score: "2"
+    roleName: "Track Labels Settings Role.Js",
+    trackLabelsCRUD: true
 }
 
 
-describe('User Experience Settings User Role', function() {
+describe('Track Labels Settings User Role', function() {
     it(user.roleDescription, function(){
         authoring.common.login()
         if (Cypress.env('TEST_ENV') !== 'prod') {
@@ -45,7 +34,6 @@ describe('User Experience Settings User Role', function() {
 
             // module navigation
             cy.get("#content-library").should("not.exist")
-            cy.get("#campaign-tools").should("not.exist")
             cy.get("#campaign-tools").should("not.exist")
             cy.get("#target").should("not.exist")
             cy.get("#recommend").should("not.exist")
@@ -74,14 +62,14 @@ describe('User Experience Settings User Role', function() {
                 cy.contains("a", "Forms").should("not.exist")
                 cy.contains("a", "CTAs").should("not.exist")
     
-                cy.contains("div", "Data Configuration").should("exist")
-                cy.contains("a", "Webhooks").should("exist")
-                cy.contains("a", "Visitor Activities").should("exist")
+                cy.contains("div", "Data Configuration").should("not.exist")
+                cy.contains("a", "Webhooks").should("not.exist")
+                cy.contains("a", "Visitor Activities").should("not.exist")
     
-                cy.contains("div", "Campaign Tools").should("not.exist")
+                cy.contains("div", "Campaign Tools").should("exist")
                 cy.contains("a", "Segments").should("not.exist")
                 cy.contains("a", "Routes").should("not.exist")
-                cy.contains("a", "Track Labels").should("not.exist")
+                cy.contains("a", "Track Labels").should("exist")
     
                 cy.contains("div", "Virtual Events").should("not.exist")
                 cy.contains("a", "Widgets").should("not.exist")
@@ -183,7 +171,7 @@ describe('User Experience Settings User Role', function() {
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.contentTags).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
 
-                       // // User Experience
+            // // User Experience
             // Appearance
             cy.visit(authoring.configurations.pageUrls.appearances)
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
@@ -209,23 +197,20 @@ describe('User Experience Settings User Role', function() {
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
 
-            // // Data Configuration -- HAVE ACCESS
+            // // Data Configuration
             // Webhooks
             cy.visit(authoring.configurations.pageUrls.webhooks)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("exist")
-            authoring.configurations.deleteWebhook([webhook.name])
-            authoring.configurations.addWebhook(webhook)
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("not.exist")
+            cy.contains("div", "You don't have permission to view this page.")
              
 
             // Visitor Activity
             cy.visit(authoring.configurations.pageUrls.visitorActivities)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("exist")
-            authoring.configurations.deleteVisitorActivity(visitorActivity.name)
-            authoring.configurations.addVisitorActivity(visitorActivity)
-        
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("not.exist")
+            cy.contains("div", "You don't have permission to view this page.")
+           
 
             // // Campaign Tools
-
             // Segments
             cy.visit(authoring.configurations.pageUrls.segments)
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.segments).should("not.exist")
@@ -236,11 +221,11 @@ describe('User Experience Settings User Role', function() {
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.routes).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
          
-            // Track Labels
+            // Track Labels  -- HAVE ACCESS
             cy.visit(authoring.configurations.pageUrls.trackLabels)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.trackLabels).should("not.exist")
-            cy.contains("div", "You don't have permission to view this page.")
-         
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.trackLabels).should("exist")
+            authoring.configurations.addTrackLabel("TrackLabelSettingsJS")
+            authoring.configurations.deleteTrackLabel("TrackLabelSettingsJS")
 
             // // Virtual Events
             // Widgets
@@ -327,6 +312,25 @@ describe('User Experience Settings User Role', function() {
             cy.visit(authoring.userManagement.userRoles.pageURL)
             cy.contains(authoring.common.pageTitleLocator, authoring.userManagement.pageTitle).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
+
+            // TEST View permission for Track Labels
+            authoring.common.logout()
+            authoring.common.login()
+            cy.visit(authoring.userManagement.userRoles.pageURL)
+            authoring.userManagement.clickUserRole(role.roleName)
+            cy.get(authoring.userManagement.campaignTools.trackLabelsCRUD, {timeout: 4000}).click()
+            cy.get(authoring.userManagement.campaignTools.trackLabelsView, {timeout: 4000}).click()
+
+            cy.contains("button", "Save").click()
+            cy.get("body").should("contain", "The record was saved successfully.", {timeout: 4000})
+
+            authoring.common.logout()
+            authoring.common.login(user.userName, user.password)
+
+            cy.visit(authoring.configurations.pageUrls.trackLabels)
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.trackLabels).should("exist")
+            cy.contains("div", "You don't have permission to view this page.").should("not.exist")
+            cy.contains("button", "Add Label").should("not.exist")      
 
             // CHECK PA
             // PA Campains Tools 

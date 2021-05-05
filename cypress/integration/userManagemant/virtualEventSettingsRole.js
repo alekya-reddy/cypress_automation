@@ -5,25 +5,14 @@ const authoring = createAuthoringInstance()
 
 const user = {
     role: 'qa-multiuser',
-    roleDescription: "User should only have access to Data Configuration Settings",
+    roleDescription: "User should only have access to Virtual Event Settings",
     userName: constants.orgs[authoring.common.org].multiUser,
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
 const role = {
-    roleName: "Data Configuration Settings Role.Js",
-    dataConfigurationSettings: true
-}
-
-const webhook = {
-    name: "Data Config Settings JS",
-    type: "Visitor Activity"
-}
-
-const visitorActivity = {
-    name: "Data Config Settings JS",
-    type: "Engagement Score",
-    score: "2"
+    roleName: "Virtual Event Settings Role.Js",
+    vexSettingsCRUD: true
 }
 
 
@@ -74,17 +63,17 @@ describe('User Experience Settings User Role', function() {
                 cy.contains("a", "Forms").should("not.exist")
                 cy.contains("a", "CTAs").should("not.exist")
     
-                cy.contains("div", "Data Configuration").should("exist")
-                cy.contains("a", "Webhooks").should("exist")
-                cy.contains("a", "Visitor Activities").should("exist")
+                cy.contains("div", "Data Configuration").should("not.exist")
+                cy.contains("a", "Webhooks").should("not.exist")
+                cy.contains("a", "Visitor Activities").should("not.exist")
     
                 cy.contains("div", "Campaign Tools").should("not.exist")
                 cy.contains("a", "Segments").should("not.exist")
                 cy.contains("a", "Routes").should("not.exist")
                 cy.contains("a", "Track Labels").should("not.exist")
     
-                cy.contains("div", "Virtual Events").should("not.exist")
-                cy.contains("a", "Widgets").should("not.exist")
+                cy.contains("div", "Virtual Events").should("exist")
+                cy.contains("a", "Widgets").should("exist")
     
             })
 
@@ -183,7 +172,7 @@ describe('User Experience Settings User Role', function() {
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.contentTags).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
 
-                       // // User Experience
+            // // User Experience
             // Appearance
             cy.visit(authoring.configurations.pageUrls.appearances)
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
@@ -209,20 +198,17 @@ describe('User Experience Settings User Role', function() {
             cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("not.exist")
             cy.contains("div", "You don't have permission to view this page.")
 
-            // // Data Configuration -- HAVE ACCESS
+            // // Data Configuration
             // Webhooks
             cy.visit(authoring.configurations.pageUrls.webhooks)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("exist")
-            authoring.configurations.deleteWebhook([webhook.name])
-            authoring.configurations.addWebhook(webhook)
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("not.exist")
+            cy.contains("div", "You don't have permission to view this page.")
              
 
             // Visitor Activity
             cy.visit(authoring.configurations.pageUrls.visitorActivities)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("exist")
-            authoring.configurations.deleteVisitorActivity(visitorActivity.name)
-            authoring.configurations.addVisitorActivity(visitorActivity)
-        
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("not.exist")
+            cy.contains("div", "You don't have permission to view this page.")
 
             // // Campaign Tools
 
@@ -245,8 +231,10 @@ describe('User Experience Settings User Role', function() {
             // // Virtual Events
             // Widgets
             cy.visit(authoring.configurations.pageUrls.widgets)
-            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.widgets).should("not.exist")
-            cy.contains("div", "You don't have permission to view this page.")
+            cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.widgets).should("exist")
+            authoring.configurations.deleteWidgets(["vexSettingsJS"])
+            authoring.configurations.addWidget({name: "vexSettingsJS"})
+            authoring.configurations.deleteWidgets(["vexSettingsJS"])
    
             // // SETTINGS
 
