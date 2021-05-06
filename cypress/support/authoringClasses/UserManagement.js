@@ -24,12 +24,18 @@ export class UserManagement extends Common {
         this.pageTitle = "User Management"
         this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete"
         this.campaignTools = {
+            campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
             campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
             trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
             trackLabelsView: "#campaign_tools_track_labels-view" 
         }
         this.vex = {
-            vexSettingsCRUD: "#virtual_event_settings-create-edit-delete"
+            vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
+            vexModuleCRUD: "#virtual_events_module_access-create-edit-delete"
+        }
+        this.contentLibrary = {
+            contentLibraryInsightsView: "#content_library_insights-view",
+            contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete"
         }
 
     }
@@ -82,7 +88,11 @@ export class UserManagement extends Common {
             trackLabelsView,
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
-            vexSettingsCRUD
+            vexSettingsCRUD,
+            vexModuleCRUD,
+            campaignToolsModuleCRUD,
+            contentLibraryInsightsView,
+            contentLibraryFeatureAccessCRUD
         } = options
 
         this.clickUserRole(roleName)
@@ -147,6 +157,37 @@ export class UserManagement extends Common {
             cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.vex.vexSettingsCRUD).click()
+                }       
+            })
+        }
+        if(vexModuleCRUD == true || vexModuleCRUD == false){
+            cy.get(this.vex.vexModuleCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(vexModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.vex.vexModuleCRUD).click()
+                }       
+            })
+        }
+
+        if(campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false){
+            cy.get(this.campaignTools.campaignToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignToolsModuleCRUD).click()
+                }       
+            })
+        }
+
+        if(contentLibraryInsightsView == true || contentLibraryInsightsView == false){
+            cy.get(this.contentLibrary.contentLibraryInsightsView).invoke("attr", "class").then(checkboxClass => {
+                if(contentLibraryInsightsView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryInsightsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentLibrary.contentLibraryInsightsView).click()
+                }       
+            })
+        }
+
+        if(contentLibraryFeatureAccessCRUD == true || contentLibraryFeatureAccessCRUD == false){
+            cy.get(this.contentLibrary.contentLibraryFeatureAccessCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(contentLibraryFeatureAccessCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryFeatureAccessCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentLibrary.contentLibraryFeatureAccessCRUD).click()
                 }       
             })
         }

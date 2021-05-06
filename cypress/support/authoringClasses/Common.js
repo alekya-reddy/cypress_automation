@@ -40,6 +40,7 @@ export class Common {
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",
+            experienceCellName: "div[data-qa-hook='table-cell-name']",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",

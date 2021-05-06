@@ -5,29 +5,132 @@ const authoring = createAuthoringInstance()
 
 const user = {
     role: 'qa-multiuser',
-    roleDescription: "User should only have access to Data Configuration Settings",
+    roleDescription: "User should only have access to Campaign Tools Module",
     userName: constants.orgs[authoring.common.org].multiUser,
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
 const role = {
-    roleName: "Data Configuration Settings Role.Js",
-    dataConfigurationSettings: true
+    roleName: "Campaign Tools Module Role.Js",
+    campaignToolsModuleCRUD: true
 }
 
-const webhook = {
-    name: "Data Config Settings JS",
-    type: "Visitor Activity"
+const target = {
+    name: 'campaign Tools Module.js',
+    language: "English",
+    appearance: "Default",
+    slug: 'tcampaigntoolsmodulejs',
+    externalCode: "External Code 1 - Shared Resource",
+    contents:[
+        "Website Shared Resource",
+    ],
+    sidebar: "on",
+    formsStrategy: "on",
+    formsStrategyOptions: {
+        trackRule: {
+            form: "Standard",
+            timeOnTrack: '0',
+            showToUnknown: "on",
+            showToKnown: "off",
+            dismissable: "off"
+        }
+    },
+    accessProtection: {
+        type: "None",
+        groups: ["None"]
+    }
 }
 
-const visitorActivity = {
-    name: "Data Config Settings JS",
-    type: "Engagement Score",
-    score: "2"
+const recommend = {
+    name: 'campaign Tools Module.js',
+    language: "English",
+    appearance: "Default",
+    slug: 'rcampaigntoolsmodulejs',
+    externalCode: "External Code 1 - Shared Resource",
+    contents:[
+        "Website Shared Resource",
+    ],
+    topicSidebar: "on",
+    formsStrategy: "on",
+    formsStrategyOptions: {
+        trackRule: {
+            form: "Standard",
+            timeOnTrack: '0',
+            showToUnknown: "on",
+            showToKnown: "off",
+            dismissable: "off"
+        }
+    },
+    accessProtection: {
+        type: "None",
+        groups: ["None"]
+    }
+}
+
+const explore = {
+    name: 'campaign Tools Module.js',
+    experienceType: 'Target',
+    trackName: "T2 authoring cx",
+    slug: 'campaigntoolsmodulejs',
+    externalCode: "External Code 1 - Shared Resource",
+    appearance: "Default",
+    publicTitle: "Public Title",
+    filters: "on",
+    get url(){
+        return `${authoring.common.baseUrl}/l/${this.slug}`
+    }
+};
+
+const microsite = {
+    name: 'campaign Tools Module.js',
+    slug: 'mcampaigntoolsmodulejs',
+    appearance: 'Default',
+    externalCode: "External Code 1 - Shared Resource",
+    accessProtection: {
+        type: "None",
+        groups: ""
+    },
+    disallowGroups: "Default",
+    searchEngineDirective: "No Index, Follow",
+    cookieConsent: true,
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
+const landingPage = {
+    name: "Main Page",
+    slug: "main-page",
+    get url(){
+        return `${microsite.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    setHome: true,
+    blocks: [
+        {
+            id: "HTML block",
+            type: "HTML",
+            content: `<h1>{{company.name | default: default text}}</h1><h2>{{visitor.email}}</h2>`,
+            className: "landingpageblock",
+        }
+    ]
+}
+
+const navigations = [ 
+    {
+        label: "campaigntoolsmodulejs.js",
+        type: "Link",
+        source: "www.google.com"
+    }
+]
+
+const website = {
+    url: "https://google.com/governance",
+    enabled: "on"
 }
 
 
-describe('User Experience Settings User Role', function() {
+describe('Campaign Tools Module User Role', function() {
     it(user.roleDescription, function(){
         authoring.common.login()
         // create user role if do not exist
@@ -44,48 +147,19 @@ describe('User Experience Settings User Role', function() {
 
         // module navigation
         cy.get("#content-library").should("not.exist")
-        cy.get("#campaign-tools").should("not.exist")
-        cy.get("#campaign-tools").should("not.exist")
-        cy.get("#target").should("not.exist")
-        cy.get("#recommend").should("not.exist")
-        cy.get("#explore").should("not.exist")
-        cy.get("#microsite").should("not.exist")
-        cy.get("#website").should("not.exist")
+        cy.get("#campaign-tools").should("exist")
+        cy.get("#campaign-tools").click()
+        cy.get("#target").should("exist")
+        cy.get("#recommend").should("exist")
+        cy.get("#explore").should("exist")
+        cy.get("#microsite").should("exist")
+        cy.get("#website").should("exist")
         cy.get("#virtual-events").should("not.exist")
         cy.get("#website-tools").should("not.exist")
         cy.get("#content-configurations").should("not.exist")
 
         // configurations
-        cy.get("#configurations").should("exist")
-        cy.get("#configurations").click()
-
-        cy.get(authoring.configurations.dropdownMenuNav).within(() => {
-            cy.contains("div", "General").should("not.exist")
-            cy.contains("a", "Image Library").should("not.exist")
-            cy.contains("a", "External Code").should("not.exist")
-            cy.contains("a", "Access Protection").should("not.exist")
-            cy.contains("a", "Content Tags").should("not.exist")
-
-            cy.contains("div", "User Experience").should("not.exist")
-            cy.contains("a", "Appearances").should("not.exist")
-            cy.contains("a", "Languages").should("not.exist")
-            cy.contains("a", "Links & Sharing").should("not.exist")
-            cy.contains("a", "Forms").should("not.exist")
-            cy.contains("a", "CTAs").should("not.exist")
-
-            cy.contains("div", "Data Configuration").should("exist")
-            cy.contains("a", "Webhooks").should("exist")
-            cy.contains("a", "Visitor Activities").should("exist")
-
-            cy.contains("div", "Campaign Tools").should("not.exist")
-            cy.contains("a", "Segments").should("not.exist")
-            cy.contains("a", "Routes").should("not.exist")
-            cy.contains("a", "Track Labels").should("not.exist")
-
-            cy.contains("div", "Virtual Events").should("not.exist")
-            cy.contains("a", "Widgets").should("not.exist")
-
-        })
+        cy.get("#configurations").should("not.exist")
 
         // settings
         cy.get("#settings").should("exist")
@@ -108,40 +182,61 @@ describe('User Experience Settings User Role', function() {
         cy.contains(authoring.common.pageTitleLocator, authoring.contentLibrary.contentInsightsTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-        // Target
+        // Target -- HAVE ACCESS
         cy.visit(authoring.target.pageUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.target.pageTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.contains(authoring.common.pageTitleLocator, authoring.target.pageTitle).should("exist")
+        authoring.target.deleteTrack(target.name)
+        authoring.target.addTrack(target)
+        authoring.target.configure(target)
+        authoring.target.deleteTrack(target.name)
 
         // Target Analytics
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/target/analytics?showExcludedVisitors=false&knownVisitorsOnly=false&startDate=03/21/2021&endDate=04/20/2021`)
         cy.contains(authoring.common.pageTitleLocator, authoring.target.targetAnalyticsTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-        // Recommend
+        // Recommend -- HAVE ACCESS
         cy.visit(authoring.recommend.pageUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.recommend.pageTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.contains(authoring.common.pageTitleLocator, authoring.recommend.pageTitle).should("exist")
+        authoring.recommend.deleteTrack(recommend.name)
+        authoring.recommend.addTrack(recommend)
+        authoring.recommend.configure(recommend)
+        authoring.recommend.deleteTrack(recommend.name)
 
         // Recommend Analytics
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/recommend/analytics?showExcludedVisitors=false&knownVisitorsOnly=false&startDate=03/21/2021&endDate=04/20/2021`)
         cy.contains(authoring.common.pageTitleLocator, authoring.target.recommendAnalyticsTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-        // Explore
+        // Explore -- HAVE ACCESS
         cy.visit(authoring.explore.pageUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.explore.pageTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.contains(authoring.common.pageTitleLocator, authoring.explore.pageTitle).should("exist")
+        authoring.explore.deleteExplore(explore.name)
+        authoring.explore.addExplore(explore)
+        authoring.explore.configureExplore(explore)
+        authoring.explore.deleteExplore(explore.name)
 
-        // Microsites
+        // Microsites -- HAVE ACCESS
         cy.visit(authoring.microsites.pageUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.microsites.pageTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.contains(authoring.common.pageTitleLocator, authoring.microsites.pageTitle).should("exist")
+        authoring.microsites.removeMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.setup(microsite)
+        // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.
+        authoring.microsites.addLandingPages(landingPage.name)
+        authoring.microsites.configureLandingPage(landingPage)
+        navigations.forEach((navigation) => {
+            authoring.microsites.addNavItem(navigation)
+        })
+        authoring.microsites.removeMicrosite(microsite.name)
 
-        // Website
+        // Website -- HAVE ACCESS
         cy.visit(authoring.website.pageUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
+        authoring.website.deleteWebsite(website.url)
+        authoring.website.addWebsite(website.url)
+        authoring.website.configureWebsite(website)
+        authoring.website.deleteWebsite(website.url)
 
         // Website Analytics
         cy.visit(authoring.website.websiteAnalyticsUrl)
@@ -182,7 +277,7 @@ describe('User Experience Settings User Role', function() {
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.contentTags).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-                    // // User Experience
+        // // User Experience
         // Appearance
         cy.visit(authoring.configurations.pageUrls.appearances)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
@@ -208,20 +303,17 @@ describe('User Experience Settings User Role', function() {
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-        // // Data Configuration -- HAVE ACCESS
+        // // Data Configuration
         // Webhooks
         cy.visit(authoring.configurations.pageUrls.webhooks)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("exist")
-        authoring.configurations.deleteWebhook([webhook.name])
-        authoring.configurations.addWebhook(webhook)
+        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.webhooks).should("not.exist")
+        cy.contains("div", "You don't have permission to view this page.")
             
 
         // Visitor Activity
         cy.visit(authoring.configurations.pageUrls.visitorActivities)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("exist")
-        authoring.configurations.deleteVisitorActivity(visitorActivity.name)
-        authoring.configurations.addVisitorActivity(visitorActivity)
-    
+        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.visitorActivities).should("not.exist")
+        cy.contains("div", "You don't have permission to view this page.")
 
         // // Campaign Tools
 
@@ -331,8 +423,8 @@ describe('User Experience Settings User Role', function() {
         // PA Campains Tools 
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools`)
         cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
-        // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools/visitors`)
-        // cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
+        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools/visitors`)
+        cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
         // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools/accounts`)
         // cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools/content`)
