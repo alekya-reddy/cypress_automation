@@ -16,20 +16,28 @@ workflows:
                 - develop
     jobs:
       - cypress/run:
+          name: VEX
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
       - cypress/run:
+          name: Microsites
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
       - cypress/run:
+          name: Target Recommend Explore Common
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/common/*,\
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
+      - cypress/run:
+          name: Governance
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/userManagement/*"             
   qa-sat-mon:
     triggers:
       - schedule:
@@ -40,17 +48,25 @@ workflows:
                 - qa
     jobs:
       - cypress/run:
+          name: VEX
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
       - cypress/run:
+          name: Microsites
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
       - cypress/run:
+          name: Target Recommend Explore Common
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/common/*,\
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
+      - cypress/run:
+          name: Governance
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/userManagement/*"   
