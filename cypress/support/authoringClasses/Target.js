@@ -31,6 +31,9 @@ export class Target extends Common {
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
             exitOverride: "[data-qa-hook='Exit overrides']"
         };
+        this.pagePreview = {
+            contentTitleOverrideLabel: "label:contains('Content Title Override')"
+        };
         this.popoverElements = {
             customUrlInput: "#customUrl",
             endPromoterLinkInput: "#link"
@@ -70,7 +73,7 @@ export class Target extends Common {
 
     goToTrack(name){
         cy.get(this.pageSearch).clear().type(name)
-        cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
+        cy.containsExact(this.table.experienceCellName, name,  {timeout:2000}).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
 
@@ -466,6 +469,25 @@ export class Target extends Common {
         if(verify !== false){
             cy.contains(this.modal, "Add Track Rule").should("not.exist")
         }
+    }
+    addContentTitleOverride(title, verify){
+        cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get("#titleOverride").clear().type(title)
+            cy.contains("button", "Update").click()
+        })
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    removeContentTitleOverride(){
+        cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get("#titleOverride").clear()
+            cy.contains("button", "Update").click()
+        })
     }
 }
 
