@@ -29,6 +29,7 @@ export class Common {
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';
         this.deleteIcon = 'i[title="delete"]';
+        this.anotherDeleteIcon = 'i[title="Delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
         this.clearValueIcon = ".Select-clear";
@@ -36,9 +37,11 @@ export class Common {
         this.antSelectItem = "span[class='ant-select-selection-item']";
         this.thumbnailSelector = "#thumbnail-selector";
         this.scrollableTable = 'div[class*="table-body-container"]';
+        this.pageSidebar = "div[data-qa-hook='page-sidebar']";
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
-            cellName: "div[data-qa-hook='table-cell-name']",
+            cellName: "div[data-qa-hook='table-cell-name'] > span",
+            experienceCellName: "div[data-qa-hook='table-cell-name']",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
@@ -162,6 +165,10 @@ export class Common {
         cy.get(this.passwordInputLocator).type(password)
         cy.get(this.submitButtonLocator).click()
         cy.url().should('include', '/authoring')
+    }
+
+    logout(){
+        cy.visit(this.baseUrl + "/logout")
     }
 
     toggle(toggleLocator, on_off){

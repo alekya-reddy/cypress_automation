@@ -62,7 +62,7 @@ export class Explore extends Common {
 
     goToExplorePage(name){
         cy.get(this.pageSearch).clear().type(name)
-        cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+        cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
 
@@ -134,11 +134,11 @@ export class Explore extends Common {
     }
 
     deleteExplore(name){
+        this.goToPage(this.pageTitle, this.pageUrl)
         cy.get(this.pageSearch).clear().type(name)
-
         cy.get("body").then($body => {
             if ($body.find(`a[title='${name}']`).length > 0) {
-                cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+                cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
                 cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
         
                 cy.get(this.deleteExplorePageIcon).click()
@@ -148,7 +148,7 @@ export class Explore extends Common {
                 // verify that explore doesn't exist anymore
                 cy.contains(this.modal, "Do you want to delete this Explore Page?").should("not.exist")
                 cy.get(this.pageSearch).clear().type(name)
-                cy.containsExact(this.table.cellName, name).should("not.exist")
+                cy.containsExact(this.table.experienceCellName, name).should("not.exist")
                 cy.get(this.pageSearch).clear() // clear search field
                 
             } else {

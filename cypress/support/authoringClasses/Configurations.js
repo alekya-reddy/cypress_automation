@@ -11,6 +11,15 @@ export class Configurations extends Common {
             appearances: `${this.configRoute}/appearance`,
             languages:`${this.configRoute}/language`,
             forms: `${this.configRoute}/forms`,
+            images: `${this.configRoute}/images/content`,
+            accessProtection: `${this.configRoute}/access-protection/email-and-domain`,
+            contentTags: `${this.configRoute}/tags/topics`,
+            linksAndSharings: `${this.configRoute}/sharing`,
+            ctas: `${this.configRoute}/ctas`,
+            visitorActivities: `${this.configRoute}/visitor-activities`,
+            segments: `${this.configRoute}/segments`,
+            routes: `${this.configRoute}/routes`,
+            trackLabels: `${this.configRoute}/labels`
         };
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
@@ -19,6 +28,15 @@ export class Configurations extends Common {
             appearances: "Appearances Configuration",
             languages: "Languages Configuration",
             forms: "Form Configuration",
+            images: "Image Library and Branding",
+            accessProtection: "Access Protection",
+            contentTags: "Content Tags Configuration",
+            linksAndSharings: "Links & Sharing Configuration",
+            ctas: "CTA Configuration",
+            visitorActivities: "Visitor Activities Configuration",
+            segments: "Segments",
+            routes: "Routes",
+            trackLabels: "Labels Configuration"
         };
         this.visit = {
             webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
@@ -32,6 +50,10 @@ export class Configurations extends Common {
             name: "#name",
             url: "#url",
         };
+        this.addAccessProtectionGroupModal = {
+            name: "#add-group-name-input",
+            decription: "#add-group-description-input"
+        }
         this.webhookPreview = {
             enableToggle: "div[data-qa-hook='enabled']",
             name: "div[data-qa-hook='preview-section-webhook-name']",
@@ -122,13 +144,44 @@ export class Configurations extends Common {
             nameInput: "#name",
             delete: "i[title='Delete form']",
         };
-        this.ctas = {};
+        this.ctas = {
+            nameInput: "#name",
+            delete: "i[title='Delete CTA']",
+            ctaType: 'input[name="ctaType"]',
+            ctaLabel: "#label",
+            destinationLinkInput: "#destinationUrl",
+            destinationEmailInput: "#mailto"
+        };
         this.imageLibrary = {};
-        this.contentTags = {};
         this.accessProtection = {};
-        this.segments = {};
-        this.routes = {};
+        this.segments = {
+            nameInput: "#name",
+            editSegmentPreview: `div[data-qa-hook="segment-edit-card"]`,
+            deleteIcon: `i[title="Delete Segment"]`
+        };
+        this.routes = {
+            nameInput: "#name",
+            fallbackType: `input[name="fallbackDestinationType"]`,
+            fallbackUrl: "#fallbackExternalUrl",
+            deleteIcon: `i[title="Delete Route"]`
+        };
         this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
+        this.antModal = ".ant-modal-content";
+        this.contentTags = {
+            nameInput: "#name"
+        }
+        this.linksAndSharing = {
+            nameInput: "#name"
+        }
+        this.trackLabels = {
+            nameInput: "#name"
+        }
+        this.visitorActivity = {
+            nameInput: "#name",
+            scoreInput: `input[name="engagementScore"]`,
+            deleteIcon: `i[class*="trash"]`
+        }
+        this.dropdownMenuNav = ".dropdown-menu-nav"
     }
 
     /*********************************************************************************/
@@ -149,12 +202,14 @@ export class Configurations extends Common {
                 cy.contains("button", "Add Webhook").click()
                 cy.get(this.modal).within(()=>{
                     cy.get(this.addWebhookModal.name).clear().type(name)
-                    cy.get(this.addWebhookModal.url).clear().type(url)
+                    if(url){           
+                        cy.get(this.addWebhookModal.url).clear().type(url)
+                    }
                     cy.get(this.dropdown.box).click()
                     cy.get(this.dropdown.option(type)).click()
                     cy.contains("button", "Add Webhook").click()
                 })
-                cy.get(this.modal).should("not.exist")
+                cy.get(this.modal, {timeout: 6000}).should("not.exist")
             }
         })
         cy.contains(this.table.cellName, name).should("exist")
@@ -225,7 +280,7 @@ export class Configurations extends Common {
     }
 
     /*********************************************************************************/
-    /********************************* External code *********************************/
+    /********************************* EXTERNAL CODE *********************************/
     /*********************************************************************************/
     addExternalCode(config){
         const { name, code, interceptCode } = config
@@ -269,7 +324,7 @@ export class Configurations extends Common {
             })
             cy.ifNoElementWithExactTextExists(this.modal, "Delete External Code?", 10000, ()=>{}) // This just smart-waits for modal to disappear
             cy.ifNoElementWithExactTextExists(this.table.cellName, code, 10000, ()=>{}) // This just smart-waits for widget to disappear
-            cy.containsExact(this.table.cellName, code).should("not.exist")
+            cy.contains(this.table.cellName, code).should("not.exist")
         })
     }
 
@@ -1046,6 +1101,278 @@ export class Configurations extends Common {
         })    
         
         cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+    }
+
+    deleteLanguage(name, verify){
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.get(this.pageSidebar).within(sidebar => {
+            if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('Delete Language')").click()
+                })
+            }
+            if (verify !== false) {
+                cy.containsExact("div", name).should("not.exist")
+            }
+        })
+    }
+
+    /*********************************************************************************/
+    /**************************** ACCESS PROTECTION **********************************/
+    /*********************************************************************************/
+
+    addAccessProtectionGroup(name, description){
+        cy.get("#group-card-add").click()
+        cy.get(this.antModal).within(() => {
+            cy.get(this.addAccessProtectionGroupModal.name).clear().type(name)
+            if(description) {
+                cy.get(this.addAccessProtectionGroupModal.description).clear().type(description)
+            }
+            cy.contains("button", "Add Group").click()
+        })
+    }
+
+    deleteAccessProtectionGroup(name){
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.get(this.pageSidebar).within(sidebar => {
+            if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('OK')").click()
+                })
+            }
+            cy.containsExact("div", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /******************************* CONTENT TAGS*************************************/
+    /*********************************************************************************/
+
+    addTopicTag(name){
+        cy.contains("button", "Add Topic").click()
+        cy.get(this.contentTags.nameInput).clear().type(name)
+        cy.get(this.contentTags.nameInput).parent().within(() => {
+            cy.contains("button", "Add").click()
+        })
+        cy.contains("span", name).should("exist")
+    }
+
+    deleteTopicTag(name){
+        cy.ifElementWithExactTextExists("span", name, 4000, () => {
+            cy.contains("span", name).parent().within(()=>{
+                cy.get(this.deleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+            cy.contains("span", name).should("not.exist")
+        })
+    }
+
+
+    /*********************************************************************************/
+    /*********************************** CTAs ****************************************/
+    /*********************************************************************************/
+    addCTA(options){
+        const {name, label, ctaType, destination} = options
+        this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
+        cy.contains("button", "Add CTA").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.ctas.nameInput).clear().type(name)
+            cy.get(this.ctas.ctaLabel).clear().type(label)
+            cy.get(this.ctas.ctaType).parent().contains(ctaType).click()
+            if (ctaType == "Form"){
+                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+            }
+            else if (ctaType == "Link"){
+                cy.get(this.ctas.destinationLinkInput).type(destination)
+            }
+            else {
+                cy.get(this.ctas.destinationEmailInput).type(destination)
+            }
+            cy.contains("button", "Save").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
+    }
+
+    deleteCTA(name){
+        this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+            cy.containsExact(this.table.cellName, name).click()
+            cy.get(this.ctas.delete).click({force:true})
+            cy.contains("button", "Delete CTA").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("not.exist")
+    }
+
+
+    /*********************************************************************************/
+    /******************************* LINKS&SHARING ***********************************/
+    /*********************************************************************************/
+
+    addLinksAndSharing(name) {
+        cy.get(this.pageSidebar).within(() => {
+            cy.contains("div", "+ Add Configuration").click()
+        })
+        cy.get(this.modal).within(() => {
+            cy.get(this.linksAndSharing.nameInput).type(name)
+            cy.contains("button", "Add Configuration").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.get(this.pageSidebar).within(() => {
+            cy.containsExact("div", name).should("exist")
+        })
+    }
+
+    deleteLinksAndSharing(name) {
+        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.ifElementWithExactTextExists("div", name, 4000, () => {
+            if (cy.containsExact("div", name, {timeout: 3000})) {
+                cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.get(this.deleteIcon).click({force: true})
+                })
+                cy.do(() => {
+                    // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
+                    // Also, Cypress.$() is synchronous with rest of javascript and not queued like the cy commands,
+                    // hence the need to put it inside a cy.do()
+                    Cypress.$("button:contains('Delete Configuration')").click()
+                })
+            } 
+        })
+        cy.containsExact("div", name).should("not.exist")
+    }
+
+    /*********************************************************************************/
+    /****************************** VISITOR ACTIVITY *********************************/
+    /*********************************************************************************/
+
+    addVisitorActivity(options){
+        const {name, type, score} = options
+        cy.contains("button", "Add Activity").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.visitorActivity.nameInput).clear().type(name)
+            cy.get(this.dropdown.input).type(type + "\n", {force: true})
+            cy.get(this.visitorActivity.scoreInput).clear().type(score)
+            cy.contains("button", "Add Activity Definition").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("exist")
+    }
+
+    deleteVisitorActivity(name){
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+            cy.containsExact(this.table.cellName, name).click()
+            cy.get(this.visitorActivity.deleteIcon).click({force:true})
+            cy.contains("button", "Delete Activity").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.containsExact(this.table.cellName, name).should("not.exist")
+    }
+
+
+
+    /*********************************************************************************/
+    /********************************** SEGMENTS *************************************/
+    /*********************************************************************************/
+
+    addSegment(name){
+        cy.contains("button", "Create Segment").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.segments.nameInput).clear().type(name)
+            cy.contains("button", "Create Segment").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.get(this.segments.editSegmentPreview).within(() => {
+            cy.contains("button", "Save").click()
+        })
+        cy.containsExact("p", name).should("exist")
+    }
+
+    deleteSegment(name){
+        cy.ifElementWithExactTextExists("p", name, 4000, () => {
+            cy.contains("p", name).siblings("div").within(() => {
+                cy.get(this.segments.deleteIcon).click()
+            })
+            cy.get(this.modal).within(()=>{
+                cy.contains("button", "Remove Segment").click()
+            })
+            cy.contains("p", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /*********************************** ROUTES **************************************/
+    /*********************************************************************************/
+
+    addRoute(options) {
+        const {name, type, destination} = options
+        cy.contains("button", "Create Route").click()
+        cy.get(this.modal).within(()=>{
+            cy.get(this.routes.nameInput).clear().type(name)
+            cy.get(this.routes.fallbackType).parent().contains(type).click()
+            if (type == "URL"){
+                cy.get(this.routes.fallbackUrl).type(destination)
+            }
+            else {
+                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+            }
+            cy.contains("button", "Create Route").click()
+        })
+        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.contains("h4", name).should("exist") 
+    }
+
+    deleteRoute(name){
+        cy.ifElementWithExactTextExists("h4", name, 4000, () => {
+            cy.contains("h4", name).siblings("span").within(() => {
+                cy.get(this.routes.deleteIcon).click()
+            })
+            cy.get(this.modal).within(()=>{
+                cy.contains("button", "Remove Route").click()
+            })
+            cy.contains("h4", name).should("not.exist")
+        })
+    }
+
+    /*********************************************************************************/
+    /******************************** TRACK LABELS ***********************************/
+    /*********************************************************************************/
+
+    addTrackLabel(name) {
+        cy.ifNoElementWithExactTextExists("span", name, 2000, ()=>{
+            cy.contains("button", "Add Label").click()
+            cy.get(this.trackLabels.nameInput).clear().type(name)
+            cy.get(this.trackLabels.nameInput).parent().within(() => {
+                cy.contains("button", "Add").click()
+            })
+        })
+        cy.contains("span", name).should("exist")
+    }
+
+    deleteTrackLabel(name){
+        cy.ifElementWithExactTextExists("span", name, 4000, () => {
+            cy.contains("span", name).parent().within(()=>{
+                cy.get(this.deleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+            cy.contains("span", name).should("not.exist")
+        })
     }
 
 }

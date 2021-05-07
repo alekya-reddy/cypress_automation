@@ -5,6 +5,7 @@ export class Recommend extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/recommend`;
         this.pageTitle = "Recommend Tracks";
+        this.recommendAnalyticsTitle = "Recommend Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.createTrackModal = {
             nameInput: "input[name='name']"
@@ -14,6 +15,7 @@ export class Recommend extends Common {
             customUrlLabel: "label:contains('Custom URL')",
             externalCodeLabel: "label:contains('External Code')",
             appearanceLabel: "label:contains('Appearance')",
+            accessProtectionLabel: "label:contains('Access Protection')",
             accessProtectionGroup: "#trackProtectionGroups",
             sidebarToggle: "[data-qa-hook='sidebar']",
             topicSidebarToggle: "[data-qa-hook='topicSidebar']",
@@ -63,15 +65,15 @@ export class Recommend extends Common {
 
     goToTrack(name){
         cy.get(this.pageSearch).clear().type(name)
-        cy.containsExact(this.table.cellName, name).should("exist").within(() => {cy.get("a").click()})
+        cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
 
     deleteTrack(name, verify){
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.get(this.pageSearch, {timeout: 20000}).clear().type(name)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, () => {
-            cy.containsExact(this.table.cellName, name).should("exist").within(() => { 
+        cy.ifElementWithExactTextExists(this.table.experienceCellName, name, 2000, () => {
+            cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => { 
                 cy.get("a").click()
             })
             cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
@@ -82,7 +84,7 @@ export class Recommend extends Common {
         if(verify !== false){
             cy.contains(this.pageTitleLocator, this.pageTitle, {timeout: 20000}).should("exist")
             cy.get(this.pageSearch).clear().type(name)
-            cy.containsExact(this.table.cellName, name).should("not.exist")
+            cy.containsExact(this.table.experienceCellName, name).should("not.exist")
             cy.get(this.clearSearchIcon).click()
         }
     }
@@ -235,8 +237,10 @@ export class Recommend extends Common {
             cy.get(this.accessProtection.protectionTypeLabel).siblings(this.dropdown.box).click()
             cy.get(this.dropdown.option(type)).click()
             groups.forEach( group => {
-                cy.get(this.accessProtection.APGroupLabel).siblings(this.dropdown.box).click()
-                cy.get(this.dropdown.option(group)).click()
+                if(group !== "None") {
+                    cy.get(this.accessProtection.APGroupLabel).siblings(this.dropdown.box).click()
+                    cy.get(this.dropdown.option(group)).click()
+                }
             })
             cy.contains("button", "Update").click()
         })
@@ -244,7 +248,9 @@ export class Recommend extends Common {
         if(verify !== false){
             cy.get(this.popover).should("not.exist")
             groups.forEach( group => {
-                cy.contains(this.pageSidebar.accessProtectionGroup, group).should("exist")
+                if(group !== "None"){
+                    cy.contains(this.pageSidebar.accessProtectionGroup, group).should("exist")
+                }
             })
         }
     }

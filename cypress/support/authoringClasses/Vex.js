@@ -1866,4 +1866,12 @@ export class Vex extends Common {
         }
     }
 
+    goToAnalytics(){
+        cy.url().then((url)=>{
+            if(!url.includes("/analytics")){
+                cy.containsExact("a", "Analytics", {timeout: 20000}).click()
+            }
+        })
+    }
+
 }
