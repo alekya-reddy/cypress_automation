@@ -37,6 +37,10 @@ export class UserManagement extends Common {
             contentLibraryInsightsView: "#content_library_insights-view",
             contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete"
         }
+        this.administrativeControls = {
+            organizationSettingsCRUD: "#org_settings-create-edit-delete",
+            userManagementCRUD: "#user_management-create-edit-delete"
+        }
 
     }
 
@@ -92,7 +96,9 @@ export class UserManagement extends Common {
             vexModuleCRUD,
             campaignToolsModuleCRUD,
             contentLibraryInsightsView,
-            contentLibraryFeatureAccessCRUD
+            contentLibraryFeatureAccessCRUD,
+            userManagementCRUD,
+            organizationSettingsCRUD
         } = options
 
         this.clickUserRole(roleName)
@@ -192,6 +198,22 @@ export class UserManagement extends Common {
             })
         }
 
+        if(userManagementCRUD == true || userManagementCRUD == false){
+            cy.get(this.administrativeControls.userManagementCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(userManagementCRUD && checkboxClass.includes("checkbox-container--unchecked") || !userManagementCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.administrativeControls.userManagementCRUD).click()
+                }       
+            })
+        }
+
+        if(organizationSettingsCRUD == true || organizationSettingsCRUD == false){
+            cy.get(this.administrativeControls.organizationSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(organizationSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !organizationSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.administrativeControls.organizationSettingsCRUD).click()
+                }       
+            })
+        }
+
         cy.contains("button", "Save").click()
         cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})
     }
@@ -201,7 +223,6 @@ export class UserManagement extends Common {
         cy.visit(this.userRoles.pageURL)
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
         cy.get(this.pageSidebar).within(sidebar => {
-            cy.log(sidebar.find(`div:contains("${userRole}")`).length)
             if (sidebar.find(`div:contains("${userRole}")`).length > 0, {timeout: 5000}) {
                 cy.containsExact("div", userRole).siblings("div").within(() => {
                     cy.get(this.userRoles.deleteRoleIcon).click({force: true})
@@ -209,12 +230,10 @@ export class UserManagement extends Common {
                 cy.do(() => {
                     Cypress.$("button:contains('Delete Role')").click()
                 })
-                
-                if (verify !== false) {
-                    cy.containsExact("div", userRole).should("not.exist")
-                }
             }
-
+            if (verify !== false) {
+                cy.containsExact("div", userRole).should("not.exist")
+            }
         })
     }
 

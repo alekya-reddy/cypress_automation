@@ -43,6 +43,8 @@ export class Settings extends Common {
         this.apiConfigurations = {
             pageUrl: `${this.settingsRoute}/api-configurations`,
             pageTitle: "API Configurations",
+            nameInput: "#name",
+            apiCellName: `td[data-qa-hook="api-key-name"]`
         };
         this.salesforce = {
             pageUrl:  `${this.settingsRoute}/crm-integrations`,
@@ -63,6 +65,8 @@ export class Settings extends Common {
         this.customQueryStrings = {
             pageUrl:  `${this.settingsRoute}/custom-query-strings`,
             pageTitle: "Custom Query Strings",
+            nameInput: "#name",
+            valueInput: "#queryStrings"
         };
         this.accessProtection = {
             pageUrl:  `${this.settingsRoute}/access-protection-settings`,
@@ -78,6 +82,10 @@ export class Settings extends Common {
         cy.visit(this.cookieConsent.pageUrl);
     }
 
+    visitoceAccount(){
+        cy.visit(this.oceAccount.pageUrl);
+    }
+
     configureCookieConsent(config){
         let option = config.option 
 
@@ -88,8 +96,49 @@ export class Settings extends Common {
         cy.contains(this.messages.recordSaved).should('exist')
     }
 
-    visitoceAccount(){
-        cy.visit(this.oceAccount.pageUrl);
+    addAPIConfigurations(name) {
+        cy.contains("button", "Generate Key").click()
+        cy.get(this.modal).within(() => {
+            cy.get(this.apiConfigurations.nameInput).clear().type(name)
+            cy.contains("button", "Generate API Key").click()
+        })
+        cy.contains(this.apiConfigurations.apiCellName, name).should("exist")
     }
+
+    deleteAPIConfigurations(name) {
+        cy.ifElementWithExactTextExists(this.apiConfigurations.apiCellName, name, 4000, () => {
+            cy.contains(this.apiConfigurations.apiCellName, name).parent().within(()=>{
+                cy.get(this.anotherDeleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+        })
+        cy.contains(this.apiConfigurations.apiCellName, name).should("not.exist")
+    }
+
+
+    addQueryString(options) {
+        const {name, value} = options
+        cy.contains("button", "Query String").click()
+        cy.get(this.customQueryStrings.nameInput).clear().type(name)
+        cy.get(this.customQueryStrings.valueInput).clear().type(value)
+        cy.contains("button", "Save").click()
+
+        cy.contains("div", name).should("exist")
+    }
+
+    deleteQueryString(name) {
+        cy.ifElementWithExactTextExists("div", name, 4000, () => {
+            cy.contains("div", name).parent().within(() => {
+                cy.get(this.deleteIcon).click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.contains("button", "Delete").click()
+            })
+        })
+        cy.contains("div", name).should("not.exist")
+    }
+
 }
 

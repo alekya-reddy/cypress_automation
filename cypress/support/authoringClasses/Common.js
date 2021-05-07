@@ -29,6 +29,7 @@ export class Common {
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';
         this.deleteIcon = 'i[title="delete"]';
+        this.anotherDeleteIcon = 'i[title="Delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
         this.clearValueIcon = ".Select-clear";
