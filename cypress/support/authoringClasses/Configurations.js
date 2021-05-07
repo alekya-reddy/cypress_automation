@@ -209,7 +209,7 @@ export class Configurations extends Common {
                     cy.get(this.dropdown.option(type)).click()
                     cy.contains("button", "Add Webhook").click()
                 })
-                cy.get(this.modal).should("not.exist")
+                cy.get(this.modal, {timeout: 6000}).should("not.exist")
             }
         })
         cy.contains(this.table.cellName, name).should("exist")
@@ -1240,7 +1240,7 @@ export class Configurations extends Common {
 
     deleteLinksAndSharing(name) {
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
-        cy.get(this.pageSidebar).within(sidebar => {
+        cy.ifElementWithExactTextExists("div", name, 4000, () => {
             if (cy.containsExact("div", name, {timeout: 3000})) {
                 cy.containsExact("div", name).siblings("div").within(() => {
                     cy.get(this.deleteIcon).click({force: true})
@@ -1251,9 +1251,9 @@ export class Configurations extends Common {
                     // hence the need to put it inside a cy.do()
                     Cypress.$("button:contains('Delete Configuration')").click()
                 })
-            }
-            cy.containsExact("div", name).should("not.exist")
+            } 
         })
+        cy.containsExact("div", name).should("not.exist")
     }
 
     /*********************************************************************************/
