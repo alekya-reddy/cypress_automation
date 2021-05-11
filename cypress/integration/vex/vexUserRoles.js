@@ -92,11 +92,4 @@ describe('VEX - User roles', function() {
             }
         })
     })
-
-    it('After hook to turn off VEX', function(){
-        if (Cypress.env('TEST_ENV') !== 'prod') {
-            authoring.common.login()
-            authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off')
-        }
-    })
 })

@@ -7,10 +7,26 @@ export class ClientHQ extends Common {
         this.pageTitle = "Client HQs";
         this.domainPreview = '[data-qa-hook="preview-section-default-tld"]';
         this.domainInput = '#defaultTld';
-        this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
+        this.targetToggle = `[data-qa-hook="enableTarget"]`
+        this.recommendToggle = `[data-qa-hook="enableRecommend"]`
+        this.formsStrategyToggle = `[data-qa-hook="enableFormsStrategy"]`
+        this.targetExploreToggle = `[data-qa-hook="enableTargetLandingExperiences"]`
+        this.recommendExploreToggle = `[data-qa-hook="enableRecommendLandingExperiences"]`
+        this.topicSidebarToggle = `[data-qa-hook="enableTopicSidebar"]`
+        this.contentTrackLabelsToggle = `[data-qa-hook="enableContentTrackLabels"]`
+        this.segmentsToggle = `[data-qa-hook="enableSegments"]`
+        this.routesToggle = `[data-qa-hook="enableRoutes"]`
         this.virtualEventToggle = '[data-qa-hook="enableVirtualEvents"]';
         this.micrositesToggle = "[data-qa-hook='enableMicrosites']";
-        this.oceToggle = "[data-qa-hook='enableOce']";
+        this.queryStringPassThroughToggle = `[data-qa-hook="enableQueryStringPassThrough"]`
+        this.publicAPIToggle = `[data-qa-hook="enablePublicApi"]`
+        this.crmIntegrationToggle = `[data-qa-hook="enableCrmIntegration"]`
+        this.accountAnalyticsToggle = `[data-qa-hook="enableAccountAnalytics"]`
+        this.sixSenseToggle = `[data-qa-hook="enableSixSense"]`
+        this.websiteJourneyTrackingToggle = `[data-qa-hook="enableWebsiteVisitorTracking"]`
+        this.websiteToolsV2Toggle = `[data-qa-hook="enableWebsiteToolsV2"]`
+        this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
+    
     }
 
     visit(){

@@ -27,6 +27,8 @@ describe('Microsites - Client HQs', function() {
             cy.get(authoring.configurations.appearances.secondaryNav).within(() => {
                 cy.get('a[href$="microsite-builder"]').should('not.exist');
             })
+            authoring.clientHQ.visit()
+            authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'on');
         }
     })
 })
