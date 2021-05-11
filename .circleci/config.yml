@@ -33,6 +33,15 @@ workflows:
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
+  staging-governance-tues-thurs:
+    triggers:
+      - schedule:
+          cron: "0 3 * * 2,4"
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
       - cypress/run:
           name: Governance
           executor: latest-chrome
@@ -65,8 +74,17 @@ workflows:
                 cypress/integration/explore/*,\
                 cypress/integration/recommend/*,\
                 cypress/integration/target/*"
+  qa-governance-sat-mon:
+    triggers:
+      - schedule:
+          cron: "0 3 * * 1,6"
+          filters:
+            branches:
+              only:
+                - qa
+    jobs:
       - cypress/run:
           name: Governance
           executor: latest-chrome
           browser: chrome
-          spec: "cypress/integration/userManagement/*"   
+          spec: "cypress/integration/userManagement/*"          
