@@ -93,11 +93,4 @@ describe("Microsites - User Roles", () => {
             }
         })
     })
-
-    it('After hook to turn off Microsites', function(){
-        if (Cypress.env('TEST_ENV') !== 'prod') {
-            authoring.common.login()
-            authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'off')
-        }
-    })
 })

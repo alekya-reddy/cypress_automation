@@ -84,7 +84,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         })
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '1')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.contains(authoring.common.table.cellName, explorePage.name).should('exist')
+        cy.contains(authoring.common.table.experienceCellName, explorePage.name, {timeout: 20000}).should('exist')
         cy.contains(authoring.common.table.folderCell, parentFolderName[0]).should('exist')
 
         // add existing explore page to the same folder and verify filtering
@@ -97,8 +97,8 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         })
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '2')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.containsExact(authoring.common.table.cellName, explorePage.name).should('exist')
-        cy.containsExact(authoring.common.table.cellName, existingExplorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('exist')
         cy.contains(authoring.common.table.folderCell, parentFolderName[0]).should('exist')
         
         // search explore page in root folder, click on folder name and make sure it goes to right folder
@@ -106,8 +106,8 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         cy.get(authoring.explore.pageSearch).clear().type(existingExplorePage.name)
         cy.contains(authoring.common.table.folderCell, parentFolderName[0], {timeout: 1000}).should('exist')
         cy.contains(`${authoring.common.table.folderCell} > a`, parentFolderName[0]).click({force:true})
-        cy.containsExact(authoring.common.table.cellName, explorePage.name).should('exist')
-        cy.containsExact(authoring.common.table.cellName, existingExplorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('exist')
 
         // create a child folder, add a page and verify filtering
         cy.get(authoring.common.folder.addFolderButton).click()
@@ -138,19 +138,19 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '1')
         cy.get(authoring.common.folder.folderCount(childFolderName[0])).should('have.text', '1')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.containsExact(authoring.common.table.cellName, explorePage.name).should('not.exist')
-        cy.containsExact(authoring.common.table.cellName, existingExplorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('not.exist')
+        cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('exist')
         cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
-        cy.containsExact(authoring.common.table.cellName, explorePage.name).should('exist')
-        cy.containsExact(authoring.common.table.cellName, existingExplorePage.name).should('not.exist')
+        cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('not.exist')
 
         // search page in root folder and click on folder name in list view and make sure it goes to right folder
         cy.get(authoring.common.folder.folderSelector('Root')).click()
         cy.get(authoring.common.pageSearch).clear().type(explorePage.name)
         cy.contains(authoring.common.table.folderCell, childFolderName[0]).should('exist')
         cy.contains(`${authoring.common.table.folderCell} > a`, childFolderName[0]).click({force:true})
-        cy.containsExact(authoring.common.table.cellName, explorePage.name, {timeout: 1000}).should('exist')
-        cy.containsExact(authoring.common.table.cellName, existingExplorePage.name).should('not.exist')
+        cy.containsExact(authoring.common.table.experienceCellName, explorePage.name, {timeout: 1000}).should('exist')
+        cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('not.exist')
 
         // create a duplicate folder on the same level
         cy.get(authoring.common.folder.folderSelector('Root')).click()

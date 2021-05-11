@@ -52,13 +52,13 @@ describe("oce configuration", () => {
         cy.contains("button", "Save").click()
         cy.contains(recordSaved).should('exist')
         cy.contains(oceAcctVerified).should('exist')
-        //Verify that Turning off oce Account toggle from Client HQs settings disables 
-        authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'off');
     })
     it('When oce Account is toggled off, you should see pemission denied message when oce Account is navigated', function() {
         authoring.common.login()
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.oceToggle, 'off');
         authoring.settings.visitoceAccount()
         cy.contains("You don't have permission to view this page.").should('exist');
+        authoring.clientHQ.visit()
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.oceToggle, 'on');
     })
 })
