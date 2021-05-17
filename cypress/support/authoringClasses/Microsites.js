@@ -586,8 +586,10 @@ export class Microsites extends Common {
         const searchConfiguration = config.searchConfiguration
         
         cy.waitFor({element: this.landingPages.addBlockButton, to: "exist", wait: 10000})
-        cy.get(this.landingPages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
+        cy.wait(2000)
+        cy.get(this.landingPages.addBlockButton).eq(0).click({force: true}) 
 
+        // Always pick first one and add to top 
         if(type == "html"){
             cy.get(this.landingPages.addHTMLButton + ":visible").eq(0).click({force: true})
         } else if (type == "track"){
