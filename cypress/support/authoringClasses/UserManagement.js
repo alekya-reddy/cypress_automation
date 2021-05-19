@@ -33,6 +33,9 @@ export class UserManagement extends Common {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
             vexModuleCRUD: "#virtual_events_module_access-create-edit-delete"
         }
+        this.websiteTools = {
+            websiteToolsModuleCRUD: "#website_tools_module_access-create-edit-delete"
+        }
         this.contentLibrary = {
             contentLibraryInsightsView: "#content_library_insights-view",
             contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete"
@@ -94,6 +97,7 @@ export class UserManagement extends Common {
             campaignToolsSettingsCRUD,
             vexSettingsCRUD,
             vexModuleCRUD,
+            websiteToolsModuleCRUD,
             campaignToolsModuleCRUD,
             contentLibraryInsightsView,
             contentLibraryFeatureAccessCRUD,
@@ -170,6 +174,14 @@ export class UserManagement extends Common {
             cy.get(this.vex.vexModuleCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.vex.vexModuleCRUD).click()
+                }       
+            })
+        }
+
+        if(websiteToolsModuleCRUD == true || websiteToolsModuleCRUD == false){
+            cy.get(this.websiteTools.websiteToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.websiteTools.websiteToolsModuleCRUD).click()
                 }       
             })
         }
