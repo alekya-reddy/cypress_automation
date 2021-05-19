@@ -4,8 +4,8 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'})
 
 const event = {
-    name: "vexSerDir.js",
-    slug: "vexserdirSEO-js",
+    name: "vexSearchDirective.js",
+    slug: "vexSearchDirective-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
@@ -13,7 +13,7 @@ const event = {
 
 
 const headerAppearance = {
-    appearance: "SEOAppearance.js",
+    appearance: "vexSearchDirective.js",
     thumbnail: {
         category: "Stock Images",
         url: "/stock/sm/animal-dog-pet-cute.jpg",
@@ -22,7 +22,7 @@ const headerAppearance = {
 }
 
 const vexAppearanceSettings = {
-    appearance: "SEOAppearance.js",
+    appearance: "vexSearchDirective.js",
     headerTitleFontFamily: "Overpass",
     headerTitleBoldFont: true,
     backgroundColor: {r: 10, g: 200, b: 155, a: 0.5},
@@ -42,11 +42,11 @@ const vexAppearanceSettings = {
 }
 
 const appearance = {
-    appearance: "SEOAppearance.js",
+    appearance: "vexSearchDirective.js",
 }
 
 const newAppearanceSetting = {
-    name:"SEOAppearance.js", 
+    name:"vexSearchDirective.js", 
     primaryColor: {r: 106, g: 171, b: 233, a: 100},
     titleAppearanceFont: "Overpass",
     titleAppearancecolor: {r: 255, g: 255, b: 255, a: 100},
@@ -85,24 +85,40 @@ const landingPage = {
     ]}
 
 
-describe("VEX- main setup", () => {
-    it("Add VEX Apperance ,clean-up VEX, configure VEX main setup area", ()=>{
+describe("VEX- Search Engine Directive and SEO configurations Validations", () => {
+
+    it("Set up Appearance and VEX if doesn't exist", ()=>{
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){
+                authoring.common.login()
+                authoring.configurations.deleteAppearance(newAppearanceSetting.name)
+                authoring.configurations.addNewAppearance(newAppearanceSetting)
+                authoring.configurations.configureHeaderAppearance(headerAppearance)
+                authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
+                authoring.vex.visit();
+                authoring.vex.deleteVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.configureEvent(event)
+                authoring.vex.configureAppearance(appearance)
+                authoring.vex.addSession(publicSession.name)
+                authoring.vex.configureSession(publicSession)
+                authoring.vex.backToEvent(event.name)
+                authoring.vex.addSessionGroup(sessionGroupA.name)
+                authoring.vex.addToGroup(sessionGroupA)
+                authoring.vex.addLandingPages(landingPage.name)
+                authoring.vex.editLandingPage(landingPage)
+                authoring.vex.setToHomePage(landingPage.name)
+                authoring.vex.goToPageEditor(landingPage.name)
+                authoring.vex.addAdvancedBlock(landingPage.blocks[0])
+                cy.contains('button', 'Save').click(); 
+            }
+        }) 
+    }) 
+    it("VEX : Search Engine fields and SEO configurations validation in consumption page", ()=>{
         authoring.common.login()
-        //Clean up Appearance
-        authoring.configurations.deleteAppearance(newAppearanceSetting.name)
-        authoring.configurations.addNewAppearance(newAppearanceSetting)
-        authoring.configurations.configureHeaderAppearance(headerAppearance)
-        authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
-
-        // Set up the VEX test environment and clean-Up
-        authoring.vex.visit();
-        authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
-       cy.get(authoring.vex.eventSlugInput).clear().type(event.slug);
-        
         // Validations for search Engine Directive drop down field values
-
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.vex.antSelector).click()
         })
@@ -116,19 +132,6 @@ describe("VEX- main setup", () => {
         cy.get(authoring.common.antDropSelect.options("Canonical URL of VEX")).click()
         cy.get(`span[title='${"Canonical URL of VEX"}']`).should('exist')
         cy.contains('button', 'Save').click()
-        cy.pause()
-        authoring.vex.configureAppearance(appearance)
-        authoring.vex.addSession(publicSession.name)
-        authoring.vex.configureSession(publicSession)
-        authoring.vex.backToEvent(event.name)
-        authoring.vex.addSessionGroup(sessionGroupA.name)
-        authoring.vex.addToGroup(sessionGroupA)
-        authoring.vex.addLandingPages(landingPage.name)
-        authoring.vex.editLandingPage(landingPage)
-        authoring.vex.setToHomePage(landingPage.name)
-        authoring.vex.goToPageEditor(landingPage.name)
-        authoring.vex.addAdvancedBlock(landingPage.blocks[0])
-        cy.contains('button', 'Save').click();
         cy.visit(event.url)
         // Verifying canonical URL of VEX
         cy.get('link[rel="canonical"]').should("have.attr", "href", event.url);

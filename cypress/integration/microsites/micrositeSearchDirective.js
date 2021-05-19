@@ -4,16 +4,16 @@ const authoring = createAuthoringInstance({org: "automation-microsites", tld: "l
 const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
 
 const microsite = {
-    name: "micrositeSerDir.js",
-    slug: "micrositeSerDir-js",
+    name: "micrositeSearchDirective.js",
+    slug: "micrositesearchDirective-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    appearance: "SEOAppearance.js"
+    appearance: "micrositeSearchDirective.js"
 }
 
 const newAppearanceSetting = {
-    name:"SEOAppearance.js", 
+    name:"micrositeSearchDirective.js", 
     primaryColor: {r: 106, g: 171, b: 233, a: 100},
     titleAppearanceFont: "Overpass",
     titleAppearancecolor: {r: 255, g: 255, b: 255, a: 100},
@@ -22,7 +22,7 @@ const newAppearanceSetting = {
 }
 
 const headerAppearance = {
-    appearance: "SEOAppearance.js",
+    appearance: "micrositeSearchDirective.js",
     thumbnail: {
         category: "Stock Images",
         url: "/stock/sm/animal-dog-pet-cute.jpg",
@@ -58,24 +58,30 @@ const landingPage = {
         },
     ]}
 
-describe("Microsites - main setup", () => {
-    it("Add microsite, configure main setup area, clean-up microsite", ()=>{
+describe("Microsites - Search Engine Directive and SEO configurations Validations", () => {
+
+    it("Set up Appearance and Microsites if doesn't exist", ()=>{
+        cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){
+                authoring.common.login()
+                authoring.configurations.deleteAppearance(newAppearanceSetting.name)
+                authoring.configurations.addNewAppearance(newAppearanceSetting)
+                authoring.configurations.configureHeaderAppearance(headerAppearance)
+                authoring.microsites.removeMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite.name)  
+                authoring.microsites.setup(microsite)
+                authoring.microsites.addTracks({target: target.name})
+                authoring.microsites.tabToLandingPages()
+                authoring.microsites.addLandingPages(landingPage.name)
+                authoring.microsites.configureLandingPage(landingPage)
+                
+            }
+        }) 
+    }) 
+    it("Microsite : Search Engine fields and SEO configurations validation in consumption page", ()=>{
         authoring.common.login()
-        
-        // Set up Appearance to check the SEO configuration, og and twitter fields for Microsite Landing page
-        // Clean up Appearance
-        authoring.configurations.deleteAppearance(newAppearanceSetting.name)
-        authoring.configurations.addNewAppearance(newAppearanceSetting)
-        authoring.configurations.configureHeaderAppearance(headerAppearance)
-        // Set up the microsite test environment and clean-Up
-        authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
-        cy.get(authoring.microsites.setupPage.slugInput).clear().type(microsite.slug)
-        cy.get(authoring.microsites.setupPage.slugInput).clear().type(microsite.slug)
-        cy.contains(authoring.microsites.antRow,'Appearance').within(()=>{
-            cy.get(authoring.microsites.setupPage.appearanceInput).clear({force: true}).type(microsite.appearance +'\n', {force: true})   
-        })
         // Validations for search Engine Directive drop down field values
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.vex.antSelector).click()
@@ -85,15 +91,10 @@ describe("Microsites - main setup", () => {
         cy.get(`div[label='${"Index, No follow"}']`).should('exist')
         cy.get(`div[label='${"No Index, Follow"}']`).should('exist')
         cy.get(`div[label='${"No Index, No Follow"}']`).should('exist')
-
         // When a canonical URL of Microiste is selected for the microsite, should show the respective URL of the microsite home page/landing page or the microsite track URL in the page source.
         cy.get(authoring.common.antDropSelect.options("Canonical URL of Microsite")).click()
         cy.get(`span[title='${"Canonical URL of Microsite"}']`).should('exist')
         cy.contains('button', 'Save').click()
-        authoring.microsites.addTracks({target: target.name})
-        authoring.microsites.tabToLandingPages()
-        authoring.microsites.addLandingPages(landingPage.name)
-        authoring.microsites.configureLandingPage(landingPage)
         cy.visit(landingPage.url)
         // Verifying canonical URL of microsite
         cy.get('link[rel="canonical"]').should("have.attr", "href", landingPage.url);
@@ -109,7 +110,6 @@ describe("Microsites - main setup", () => {
         cy.get(authoring.common.antDropSelect.options("No Index, Follow")).click()
         cy.get(`span[title='${"No Index, Follow"}']`).should('exist')
         cy.contains('button', 'Save').click()
-        authoring.microsites.tabToLandingPages()
         cy.visit(landingPage.url)
         cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, follow");
 
@@ -123,7 +123,6 @@ describe("Microsites - main setup", () => {
         cy.get(authoring.common.antDropSelect.options("No Index, No Follow")).click()
         cy.get(`span[title='${"No Index, No Follow"}']`).should('exist')
         cy.contains('button', 'Save').click()
-        authoring.microsites.tabToLandingPages()
         cy.visit(landingPage.url)
         cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, nofollow");
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-microsites");
