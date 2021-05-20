@@ -11,6 +11,9 @@ const microsite = {
     },
     appearance: "micrositeSearchDirective.js"
 }
+const microsite1 = {
+    name: "micrositeSearchDirective1.js",
+}
 
 const newAppearanceSetting = {
     name:"micrositeSearchDirective.js", 
@@ -139,5 +142,21 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.get('meta[name="twitter:creator"]').should("have.attr", "content", "www_twitter_com"); 
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.name);
 
+    })
+    // ##https://lookbookhq.atlassian.net/browse/DEV-12556 (Taking any one field and validating)
+    // Not adding this microsite(microsite1)creation in common method because whatever search engine value admin sets will only reflect in new microsite not the existing/already created ones.
+    it('Microsite: Allow admins to set default search engine directive setting', () => {
+        authoring.common.login()
+        cy.visit(authoring.settings.searchEngineDirective.pageUrl)
+        cy.get(authoring.common.dropdown.box).eq(2).click()
+        cy.get(authoring.common.dropdown.option("Index, Follow")).click()
+        cy.contains("button", "Save").click()
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(microsite1.name)
+        authoring.microsites.addMicrosite(microsite1.name) 
+        authoring.microsites.goToMicrositeConfig(microsite1.name)
+        cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
+            cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")
+        }) 
     })
 })
