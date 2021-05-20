@@ -216,6 +216,7 @@ export class Vex extends Common {
     goToEventConfig(event){
         cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).parent().parent().parent().within(() => {
             cy.get(this.configureButton).click()
+            cy.wait(2000) //Event Setup page loading wait
         })
     }
 

@@ -10,6 +10,9 @@ const event = {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
+const event1 = {
+    name: "vexSearchDirective1.js"
+}
 
 
 const headerAppearance = {
@@ -19,26 +22,6 @@ const headerAppearance = {
         url: "/stock/sm/animal-dog-pet-cute.jpg",
     }
    
-}
-
-const vexAppearanceSettings = {
-    appearance: "vexSearchDirective.js",
-    headerTitleFontFamily: "Overpass",
-    headerTitleBoldFont: true,
-    backgroundColor: {r: 10, g: 200, b: 155, a: 0.5},
-    headerBackgroundColor: {r: 145, g: 214, b: 224, a: 1},
-    headerTitleFontSize: "large",
-    headerTitleFontColor: {r: 200, g: 50, b: 9, a: 0.25},
-    bodyFontFamily: "Roboto",
-    bodyBoldFont: false,
-    bodyFontSize: "medium",
-    bodyFontColor: {r: 111, g: 22, b: 3, a: 0.35},
-    activeFontFamily: "Verdana",
-    activeBoldFont: true,
-    activeFontSize: "small",
-    activeFontColor: {r: 255, g: 11, b: 1, a: 1},
-    hideNavigation: false,
-    layout: "Carousel"
 }
 
 const appearance = {
@@ -94,7 +77,6 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
                 authoring.configurations.deleteAppearance(newAppearanceSetting.name)
                 authoring.configurations.addNewAppearance(newAppearanceSetting)
                 authoring.configurations.configureHeaderAppearance(headerAppearance)
-                authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
                 authoring.vex.visit();
                 authoring.vex.deleteVirtualEvent(event.name)
                 authoring.vex.addVirtualEvent(event.name)
@@ -157,6 +139,24 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.get(consumption.vex.supplementalContent).children("li").eq(0).click()
         //NOTE: In automation, "noindex, nofollow" doesn't display for supplemental content. But if you manually/ explicitily do 'View page source' it does return "noindex, nofollow".
         //cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, nofollow");
+    })
+
+    // ##https://lookbookhq.atlassian.net/browse/DEV-12556
+    // Not adding this VEX (event1)creation in common method because whatever search engine value admin sets will only reflect in new microsite not the existing/already created ones.
+    it('VEX: Allow admins to set default search engine directive setting', () => {
+        authoring.common.login()
+        cy.visit(authoring.settings.searchEngineDirective.pageUrl)
+        cy.get(authoring.common.dropdown.box).eq(2).click()
+        cy.get(authoring.common.dropdown.option("Index, Follow")).click()
+        cy.contains("button", "Save").click()
+        authoring.vex.visit() 
+        authoring.vex.deleteVirtualEvent(event1.name)
+        authoring.vex.addVirtualEvent(event1.name)
+        authoring.vex.goToEventConfig(event1.name)
+        cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
+            cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")
+        }) 
+   
 
     })
 })
