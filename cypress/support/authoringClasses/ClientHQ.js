@@ -25,8 +25,8 @@ export class ClientHQ extends Common {
         this.sixSenseToggle = `[data-qa-hook="enableSixSense"]`
         this.websiteJourneyTrackingToggle = `[data-qa-hook="enableWebsiteVisitorTracking"]`
         this.websiteToolsV2Toggle = `[data-qa-hook="enableWebsiteToolsV2"]`
-        this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]';
-    
+        this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]'
+        this.oceToggle = '[data-qa-hook="enableOce"]'
     }
 
     visit(){
