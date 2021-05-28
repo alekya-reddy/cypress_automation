@@ -40,7 +40,7 @@ const event = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    language: "English",
+    language: "ExternalLanguage.js",
     form: {name: "externalCodeVex.js"}
 }
 
@@ -60,6 +60,7 @@ describe("VEX - External Code", () => {
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
+                authoring.configurations.addNewLanguage({name: event.language, code: "elg"})
                 authoring.configurations.deleteAppearance(vexAppearance.name)
                 authoring.configurations.addNewAppearance(vexAppearance)
                 authoring.configurations.configureVEXAppearance(vexAppearance)
@@ -101,12 +102,12 @@ describe("VEX - External Code", () => {
         cy.get(`div:contains("${vexAppearanceExternalCode.name}")`).should("exist").should("have.length", 1) // make sure no duplicates
         cy.get(`div:contains("${vexAppearanceExternalCode2.name}")`).should("exist")
         cy.get(`div:contains("${event.language}")`).should("exist")
-        cy.get(`div:contains("${"en"}")`).should("exist")
+        cy.get(`div:contains("${"elg"}")`).should("exist")
         cy.get(consumption.vex.vexHeader).should("have.attr", "event", "event")
         cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 10000)
         cy.getIframeBody(consumption.common.customFormIframe).within(()=>{
             cy.contains("p", event.language ).should("exist")
-            cy.contains("p", "en" ).should("exist")
+            cy.contains("p", "elg" ).should("exist")
         })
         
 

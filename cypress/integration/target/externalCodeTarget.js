@@ -15,7 +15,7 @@ const target = {
     slug: "target-ec",
     contents: [webContent.title],
     externalCode: targetLanguageName.name,
-    language: "English",
+    language: "ExternalLanguage.js",
     formsStrategy: "on",
     formsStrategyOptions: {
         trackRule: {
@@ -40,6 +40,7 @@ describe("Target - Language External Code and Forms", () => {
                 testSpecificCodes.forEach(code => {
                     authoring.configurations.addExternalCode(code)
                 })
+                authoring.configurations.addNewLanguage({name: target.language, code: "elg"})
                 authoring.target.deleteTrack(target.name)
                 authoring.target.addTrack(target)
                 authoring.target.configure(target)
@@ -59,11 +60,11 @@ describe("Target - Language External Code and Forms", () => {
         // check consumption
         cy.visit(target.url)
         cy.get(`div:contains("${target.language}")`).should("exist")
-        cy.get(`div:contains("${"en"}")`).should("exist")
+        cy.get(`div:contains("${"elg"}")`).should("exist")
         cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 10000)
         cy.getIframeBody(consumption.common.customFormIframe).within(()=>{
             cy.contains("p", target.language ).should("exist")
-            cy.contains("p", "en" ).should("exist")
+            cy.contains("p", "elg" ).should("exist")
         })
     })
 

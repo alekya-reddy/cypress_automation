@@ -15,7 +15,7 @@ const recommend = {
     slug: "recommend-ec",
     contents: [webContent.title],
     externalCode: recommendLanguageName.name,
-    language: "English",
+    language: "ExternalLanguage.js",
     formsStrategyOptions: {
         trackRule: {
             form: "recommend-externalcode.js",
@@ -39,6 +39,7 @@ describe("Recommend - Language External Code and Forms", () => {
                 testSpecificCodes.forEach(code => {
                     authoring.configurations.addExternalCode(code)
                 })
+                authoring.configurations.addNewLanguage({name: recommend.language, code: "elg"})
                 authoring.recommend.deleteTrack(recommend.name)
                 authoring.recommend.addTrack(recommend)
                 authoring.recommend.configure(recommend)
@@ -57,11 +58,11 @@ describe("Recommend - Language External Code and Forms", () => {
         // check consumption
         cy.visit(recommend.url)
         cy.get(`div:contains("${recommend.language}")`).should("exist")
-        cy.get(`div:contains("${"en"}")`).should("exist")
+        cy.get(`div:contains("${"elg"}")`).should("exist")
         cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 10000)
         cy.getIframeBody(consumption.common.customFormIframe).within(()=>{
             cy.contains("p", recommend.language ).should("exist")
-            cy.contains("p", "en" ).should("exist")
+            cy.contains("p", "elg" ).should("exist")
         })
     })
 
