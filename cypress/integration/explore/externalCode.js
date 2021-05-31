@@ -50,7 +50,7 @@ const explore = {
 
 describe("Explore - External Code", () => {
     it("Setup if not already done", ()=>{
-        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+        cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.configurations.deleteExternalCode(testSpecificCodes.map(code => code.name))
