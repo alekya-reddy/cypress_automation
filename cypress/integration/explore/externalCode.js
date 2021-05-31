@@ -21,12 +21,16 @@ const exploreExternalCode = {name: "explore externalCode.js", interceptCode: cod
 const anotherExternalCode = {name: "External Code 1 - Shared Resource", interceptCode: `<div id="ec-shared-1">External Code 1 - Shared Resource</div>`, locator: "#ec-shared-1"}
 // A harmless global external code that won't break any tests if left on permanently - it just console.logs a message
 const globalExternalCode = {name: "External Code 3 - Shared Resource", interceptCode: `<script id="global">console.log("Global External Code")</script>`, locator: "#global"}
+const targetLanguageName = {name: "Target External Language Name ", interceptCode: `<div id="vex_test3-ec">{{language.name}}</div>`}
+const targetLanguageCode = {name: "Target External Language Code", interceptCode: `<div id="vex_test4-ec">{{language.code}}</div>`}
+const testSpecificCodes = [targetLanguageName, targetLanguageCode, exploreExternalCode, anotherExternalCode]
 const contents = authoring.common.env.orgs["automation-microsites"].resources
 const webContent = contents["Website Common Resource"]
 
 const target = {
     name: "target externalCode.js",
     slug: "target-ec",
+    language: "ExternalLanguage.js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
@@ -49,8 +53,11 @@ describe("Explore - External Code", () => {
         cy.request({url: explore.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
-                authoring.configurations.deleteExternalCode(exploreExternalCode.name)
-                authoring.configurations.addExternalCode(exploreExternalCode)
+                authoring.configurations.deleteExternalCode(testSpecificCodes.map(code => code.name))
+                testSpecificCodes.forEach(code => {
+                    authoring.configurations.addExternalCode(code)
+                })
+                authoring.configurations.addNewLanguage({name: target.language, code: "elg"})
                 authoring.target.deleteTrack(target.name)
                 authoring.target.addTrack(target)
                 authoring.target.configure(target)
@@ -64,8 +71,9 @@ describe("Explore - External Code", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
+        //authoring.explore.configureExplore(explore)
         
-        const exploreCodes = [exploreExternalCode.name, anotherExternalCode.name]
+        const exploreCodes = [exploreExternalCode.name, anotherExternalCode.name, targetLanguageName.name, targetLanguageCode.name]
         authoring.explore.removeExternalCode(exploreCodes) // This is just a clean up step
         authoring.explore.addExternalCode(exploreCodes) // Includes verification
 
@@ -101,5 +109,7 @@ describe("Explore - External Code", () => {
         cy.visit(explore.url)
         cy.get(globalExternalCode.locator).should("exist") // From global external code
         cy.get(exploreExternalCode.locator).should("exist")
+        cy.get(`div:contains("${target.language}")`).should("exist")
+        cy.get(`div:contains("${"elg"}")`).should("exist")
     })
 })
