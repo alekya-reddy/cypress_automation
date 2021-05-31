@@ -18,7 +18,7 @@ const sessions = {
         get url(){
             return `${event.url}/${this.slug}`
         },
-        topics: "General Use",
+        //topics: "General Use",
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'

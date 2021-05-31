@@ -22,6 +22,8 @@ export class Microsites extends Common {
             slugInput: "input[name='customUrl']",
             appearanceInput: "input[class='ant-select-selection-search-input']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
+            contentTypeCheckbox: "input[name='config.displayContentType']",
+            topicTagsCheckbox: "input[name='config.displayContentTopics']",
             accessProtectionGroup: ".ant-select-selection-item",
             removeAccessProtectionGroup: ".ant-select-selection-item-remove",
             disallowGroups: ".ant-select-selection-item"
@@ -132,7 +134,7 @@ export class Microsites extends Common {
 
     setup(options){
 
-        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, disallowGroups, verify} = options
+        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, disallowGroups,contentType,topicTags, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -169,6 +171,22 @@ export class Microsites extends Common {
                     cy.get(this.setupPage.cookieConsentCheckbox).click()
                 }
             }) 
+        }
+
+        if(contentType == false || contentType == true){
+            cy.get(this.setupPage.contentTypeCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                if( (contentType == false && attr.includes("ant-checkbox-checked")) || (contentType == true && !attr.includes("ant-checkbox-checked")) ){
+                    cy.get(this.setupPage.contentTypeCheckbox).click()
+                }
+            })
+        }
+
+        if(topicTags == false || topicTags == true){
+            cy.get(this.setupPage.topicTagsCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                if( (topicTags == false && attr.includes("ant-checkbox-checked")) || (topicTags == true && !attr.includes("ant-checkbox-checked")) ){
+                    cy.get(this.setupPage.topicTagsCheckbox).click()
+                }
+            })
         }
 
         cy.contains('button', 'Save').click()
