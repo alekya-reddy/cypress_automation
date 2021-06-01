@@ -12,6 +12,7 @@ export class Recommend extends Common {
         };
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
+            languageLabel: "label:contains('Language')",
             customUrlLabel: "label:contains('Custom URL')",
             externalCodeLabel: "label:contains('External Code')",
             appearanceLabel: "label:contains('Appearance')",
@@ -89,8 +90,23 @@ export class Recommend extends Common {
         }
     }
 
+    setLanguage(language, verify){
+        cy.get(this.pageSidebar.languageLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(language)).click()
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.languageLabel).siblings("span").should("contain", language)
+
+        }
+    } 
+
     configure(options){
-        const { name, slug, appearance, externalCode, accessProtection, contents, verify } = options
+        const { name, slug, language, appearance, externalCode, accessProtection, contents, verify } = options
         // These toggle options should have values of "on" or "off"
         const { sidebar, topicSidebar, exit, formsStrategy, cookieConsent, cookieMessage, header } = options
         // These options will require certain toggles to be "on"
@@ -116,6 +132,10 @@ export class Recommend extends Common {
 
         if(accessProtection){
             this.addAccessProtection(accessProtection, verify)
+        }
+
+        if(language){
+            this.setLanguage(language, verify)
         }
 
         if(contents){

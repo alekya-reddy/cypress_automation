@@ -89,7 +89,7 @@ Cypress.Commands.add("ifElementExists", (locator, waitTime, callBack, container 
 })
 
 Cypress.Commands.add("containsExact", (locator, exact_text_to_match, config = {})=>{
-    let timeout = config.timeout || 1000
+    let timeout = config.timeout || 7000
     let escapedTextToMatch = exact_text_to_match.replace(/(\W)/g, '\\$1')
     let text_regex = new RegExp(`^${escapedTextToMatch}$`)
     cy.contains(locator, text_regex, {timeout: timeout})
