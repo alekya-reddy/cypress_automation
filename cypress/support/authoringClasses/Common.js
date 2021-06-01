@@ -93,6 +93,7 @@ export class Common {
         this.antDropdown = ".ant-dropdown";
         this.antPopover = ".ant-popover";
         this.antRow = ".ant-row";
+        this.antTabs=".ant-tabs-nav-list .ant-tabs-tab-btn";
         this.checkboxContainer = 'div[data-qa-hook="checkbox"]';
         this.accessProtection = {
             protectionTypeLabel: "label[for='protectionType']",

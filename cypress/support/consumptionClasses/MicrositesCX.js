@@ -1,7 +1,7 @@
 import { CommonCX } from "./CommonCX";
 
 export class MicrositesCX extends CommonCX {
-    constructor(env, org, tld, baseUrl){
+    constructor(env, org, tld, baseUrl) {
         super(env, org, tld, baseUrl);
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
@@ -23,9 +23,11 @@ export class MicrositesCX extends CommonCX {
             menuWithSubmenu: ".rc-menu-submenu-title",
             cookieSettings: "#pf-microsite-cookie-consent-button"
         };
+        this.blocks = "[data-react-beautiful-dnd-draggable='0']"
+        this.addBlockButtons = "button[class*='AddBlockButton']";
     }
 
-    clickContent(options){
+    clickContent(options) {
         const { track, content } = options
 
         cy.contains("h4", track).siblings(this.grid).within(() => {
@@ -33,23 +35,23 @@ export class MicrositesCX extends CommonCX {
         })
     }
 
-    verifyFilterConfiguration(filterName, filterLocator, filterSettings){
-        const { overrideLabel, textColor, backgroundColor} = filterSettings
-        if(overrideLabel){
+    verifyFilterConfiguration(filterName, filterLocator, filterSettings) {
+        const { overrideLabel, textColor, backgroundColor } = filterSettings
+        if (overrideLabel) {
             cy.containsExact(filterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
         }
-        else{
+        else {
             cy.containsExact(filterLocator + " > span:nth-child(1)", filterName).should("exist")
         }
-        if(textColor){
+        if (textColor) {
             cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
         }
-        if(backgroundColor){
+        if (backgroundColor) {
             cy.get(filterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
         }
     }
 
-    verifyLandingPageBlock(config){
+    verifyLandingPageBlock(config) {
         // This should be the same config object as the one passed into authoring method 'addAdvancedBlock'
         const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
         const typography = config.typography // this has sub options color, textAlign // color: {r, g, b} is the only format that will be checked - hex not checked 
@@ -73,152 +75,172 @@ export class MicrositesCX extends CommonCX {
         const contents = config.contents
         const layout = config.layout
 
-        if(className && !track){
+        if (className && !track) {
             let locator = `.${className}`
 
-            if(typography && typography.textAlign){
+            if (typography && typography.textAlign) {
                 cy.get(locator).should("have.css", "text-align", typography.textAlign)
             }
-            if(typography && typography.color && !typography.color.hex){
+            if (typography && typography.color && !typography.color.hex) {
                 cy.get(locator).should("have.css", "color", `rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
             }
-            if(typography && typography.fontSize){
+            if (typography && typography.fontSize) {
                 cy.get(locator).should("have.css", "font-size", typography.fontSize)
             }
-            if(background && background.color && !background.color.hex){
+            if (background && background.color && !background.color.hex) {
                 cy.get(locator).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
-            if(background && background.image.url){
+            if (background && background.image.url) {
                 cy.get(locator).invoke("css", "background-image").should("contain", background.image.url)
             }
-            if(background && background.position){
-                let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
+            if (background && background.position) {
+                let positionTranslator = { top: "0%", center: "50%", bottom: "100%" }
                 cy.get(locator).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
             }
-            if(background && background.size){
+            if (background && background.size) {
                 cy.get(locator).should("have.css", "background-size", background.size)
             }
-            if(spacing){
+            if (spacing) {
                 cy.get(locator).should("have.css", "padding", spacing)
             }
-            if(checkContent && checkContent.text){
-                checkContent.text.forEach((text)=>{
+            if (checkContent && checkContent.text) {
+                checkContent.text.forEach((text) => {
                     cy.contains(locator, text).should("exist")
                 })
             }
-            if(checkContent && checkContent.locators){
-                checkContent.locators.forEach((checkLocator)=>{
-                    cy.get(locator).within(()=>{
+            if (checkContent && checkContent.locators) {
+                checkContent.locators.forEach((checkLocator) => {
+                    cy.get(locator).within(() => {
                         cy.get(checkLocator).should("exist")
                     })
                 })
             }
         }
-        
-        if(type == "track" || type == "featured"){
-            const trackName = titleOverride || track || name
-            cy.containsExact("h4", trackName, {timeout: 10000}).should("exist")
 
-            if(heading){
-                if(heading.color && !heading.color.hex){
+        if (type == "track" || type == "featured") {
+            const trackName = titleOverride || track || name
+            cy.containsExact("h4", trackName, { timeout: 10000 }).should("exist")
+
+            if (heading) {
+                if (heading.color && !heading.color.hex) {
                     cy.containsExact("h4", trackName).should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
                 }
-                if(heading.textAlign){
+                if (heading.textAlign) {
                     cy.containsExact("h4", trackName).should("have.css", 'text-align', heading.textAlign)
                 }
             }
-            if(expectContents){
-                expectContents.forEach((content)=>{
+            if (expectContents) {
+                expectContents.forEach((content) => {
                     cy.containsExact("h4", trackName).parent().within(() => {
                         cy.contains(this.gridCard, content).should('exist')
                     })
                 })
             }
-            if(background && background.color && !background.color.hex){
+            if (background && background.color && !background.color.hex) {
                 cy.containsExact("h4", trackName).parent().should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
-            if(background && background.image.url){
+            if (background && background.image.url) {
                 cy.containsExact("h4", trackName).parent().invoke("css", "background-image").should("contain", background.image.url)
             }
-            if(background && background.position){
-                let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
+            if (background && background.position) {
+                let positionTranslator = { top: "0%", center: "50%", bottom: "100%" }
                 cy.containsExact("h4", trackName).parent().should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
             }
-            if(background && background.size){
+            if (background && background.size) {
                 cy.containsExact("h4", trackName).parent().should("have.css", "background-size", background.size)
             }
-            if(spacing){
+            if (spacing) {
                 cy.containsExact("h4", trackName).parent().should("have.css", "padding", spacing)
             }
-            if(card){
-                const { color, textAlign, fontSize} = card
-                if(color){
+            if (card) {
+                const { color, textAlign, fontSize } = card
+                if (color) {
                     cy.containsExact("h4", trackName).parent().within(() => {
                         cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
                     })
                 }
-                if(textAlign){
+                if (textAlign) {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "text-align", textAlign)
                 }
-                if(fontSize){
+                if (fontSize) {
                     cy.get(this.cardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
             cy.containsExact("h4", trackName).parent().within(() => {
-                if(topicFilter) {
+                if (topicFilter) {
                     this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
                 }
-                if(contentTypeFilter) {
+                if (contentTypeFilter) {
                     this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
                 }
-                if(funnelStageFilter) {
+                if (funnelStageFilter) {
                     this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
                 }
-                if(industryFilter) {
+                if (industryFilter) {
                     this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
                 }
-                if(personaFilter) {
+                if (personaFilter) {
                     this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
                 }
-                if(businessUnitFilter) {
+                if (businessUnitFilter) {
                     this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
                 }
-                if(searchConfiguration) {
+                if (searchConfiguration) {
                     const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
                     const searchButtonText = searchButtonTitle || "Search"
-                  
+
                     cy.contains("button", searchButtonText).should("exist")
 
-                    if(buttonTextColor){
+                    if (buttonTextColor) {
                         cy.contains("button", searchButtonText).should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
                     }
 
-                    if(buttonBackgroundAndBorderColor){
+                    if (buttonBackgroundAndBorderColor) {
                         cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                         cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
-                    if(inputTextColor){
+                    if (inputTextColor) {
                         cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
 
-                if(contents){
+                if (contents) {
                     contents.forEach(content => {
                         cy.contains(this.cardTitle, content.name).should("exist")
                     })
                 }
 
-                if(layout){
+                if (layout) {
                     const existOrNot = layout == "Carousel" ? "exist" : "not.exist"
                     cy.get(this.arrowRight).should(existOrNot)
                 }
             })
         }
     }
-    searchMicrositeCard(searchTerm){
+    searchMicrositeCard(searchTerm) {
         // Must be within session group block before using this function
         cy.get("input").clear().type(searchTerm)
         cy.contains("button", "Search").click()
+    }
+
+    addingBlock(block) {
+        cy.get(this.blocks, { timeout: 10000 }).first().click()
+        cy.get(this.addBlockButtons, { timeout: 10000 }).first().click()
+        cy.contains("button", block, { timeout: 10000 }).should('be.visible').click()
+    }
+
+    verifySearchAndFiltersAvailibility(options) {
+        options.forEach(option => {
+            if (option.toggle) {
+                if (option.label != "Search") {
+                    cy.contains("option", "Filter by " + option.label, { timeout: 10000 }).should('be.visible')
+                }
+                if (option.label == "Search") {
+                    cy.get("input[placeholder='Search']", { timeout: 10000 }).should('be.visible')
+                    cy.contains("button", "Search", { timeout: 10000 }).should('be.visible')
+                }
+            }
+        })
     }
 }
