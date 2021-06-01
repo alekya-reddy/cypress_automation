@@ -135,7 +135,9 @@ export class Vex extends Common {
             classNameInput: "input[name*='className']",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
-            searchToggle: "input[name*='virtualEventEnableSearch']",
+            searchConfigurationLabel: "label[for*='searchConfiguration']",
+            searchToggle: "input[name*='searchConfiguration.enable']",
+            filtersConfigurationLabel: "label[for*='filtersConfiguration']",
             topicFilterToggle: "input[name*='virtualEventEnableTopicFilter']",
             sessionCardTitle: ".pf-event-session-card-title > div",
             carouselArrow: ".pf-microsite-carousel-arrow",
@@ -1463,10 +1465,12 @@ export class Vex extends Common {
         }
 
         if(enableSearch){
+            cy.get(this.searchConfigurationLabel).click()
             cy.get(this.pages.searchToggle).click()
         }
 
         if(enableTopicFilter){
+            cy.get(this.pages.filtersConfigurationLabel).click()
             cy.get(this.pages.topicFilterToggle).click()
         }
 
