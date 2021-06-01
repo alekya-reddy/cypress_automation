@@ -89,7 +89,7 @@ describe("Microsite - Content Type and Topic Tags", () => {
             cy.contains(contentType).should("exist")
             cy.contains(topicTags).should("exist")
         })
-        cy.contains(authoring.microsites.landingPages.trackRow, tracks.targetContentTypeTopicTags.name).within(() => {
+        cy.contains(authoring.microsites.landingPages.trackRow, tracks.recommendContentTypeTopicTags.name).within(() => {
             cy.contains(contentType).should("exist")
             cy.contains(topicTags).should("exist")
         })
@@ -117,7 +117,7 @@ describe("Microsite - Content Type and Topic Tags", () => {
             cy.contains(contentType).should("not.exist")
             cy.contains(topicTags).should("not.exist")
         })
-        cy.contains(authoring.microsites.landingPages.trackRow, tracks.targetContentTypeTopicTags.name).within(() => {
+        cy.contains(authoring.microsites.landingPages.trackRow, tracks.recommendContentTypeTopicTags.name).within(() => {
             cy.contains(contentType).should("not.exist")
             cy.contains(topicTags).should("not.exist")
         })
