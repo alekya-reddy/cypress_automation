@@ -1130,8 +1130,7 @@ export class Microsites extends Common {
             if (option.toggle == false || option.toggle == true) {
                 cy.get(this.searchAndFilter.switchToggle).parent().invoke('attr', 'class').then((attr) => {
                     if ((option.toggle == false && attr.includes("ant-switch-checked")) || (option.toggle == true && !attr.includes("ant-switch-checked"))) {
-                        cy.get(this.searchAndFilter.switchToggle).click()
-                        cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
+                        cy.get(this.searchAndFilter.switchToggle).click() 
                     }
                 })
             }

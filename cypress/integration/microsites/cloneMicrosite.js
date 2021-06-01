@@ -192,8 +192,9 @@ const searchAndFilterOptions =
 
     ]
 
-const searchAndFilters = ["Search", "Topic", "Business Unit", "Persona", "Industry", "Content Type", "Funnel Stage", "Language"]
-
+    const block={
+        name:"Featured Content"
+    }
 
 const verifyMicrositeSetup = (microsite) => {
     cy.get(authoring.microsites.setupPage.nameInput).should("have.value", clonedAllMicrosite.name)
@@ -326,7 +327,7 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", () => 
         authoring.microsites.goToPageEditor(landingPage.name)
 
         //Verify Search and Filter options available
-        consumption.microsites.addingBlock();
+        consumption.microsites.addingBlock(block.name);
         consumption.microsites.verifySearchAndFiltersAvailibility(searchAndFilterOptions);
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
@@ -568,7 +569,7 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", () => 
         authoring.microsites.goToPageEditor(landingPage.name)
         cy.get(authoring.microsites.landingPages.micrositeCardTitle).should("not.exist")
 
-        consumption.microsites.addingBlock();
+        consumption.microsites.addingBlock(block.name)
         consumption.microsites.verifySearchAndFiltersAvailibility(searchAndFilterOptions);
     })
 
