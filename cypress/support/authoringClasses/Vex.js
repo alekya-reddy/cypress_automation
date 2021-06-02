@@ -140,6 +140,7 @@ export class Vex extends Common {
             filtersConfigurationLabel: "label[for*='filtersConfiguration']",
             topicFilterToggle: "input[name*='virtualEventEnableTopicFilter']",
             sessionCardTitle: ".pf-event-session-card-title > div",
+            sessionCardTitleName: ".pf-event-session-card-title>div:nth-of-type(1)",
             carouselArrow: ".pf-microsite-carousel-arrow",
         };
         this.navigation = {
