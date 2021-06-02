@@ -19,6 +19,7 @@ export class Common {
         this.editPencil = 'i[class*="fa-pencil"]';
         this.popover = "div[data-qa-hook='popover']";
         this.modal = 'div[data-qa-hook="modal"]';
+        this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal"; 
         this.antModalRoot = ".ant-modal-root";
@@ -362,4 +363,22 @@ export class Common {
             cy.get(folderSelector).should("not.exist")
         })
     }
+
+    setLanguage(language, verify){
+        cy.get(this.pageSidebar.languageLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(language)).click()
+            cy.contains("button", "Update").click()
+        })
+        cy.get(this.confirmationModal).within(() => {
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.languageLabel).siblings("span").should("contain", language)
+
+        }
+    } 
 }

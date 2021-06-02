@@ -90,21 +90,6 @@ export class Recommend extends Common {
         }
     }
 
-    setLanguage(language, verify){
-        cy.get(this.pageSidebar.languageLabel).siblings("span").click()
-        cy.get(this.popover).within(()=>{
-            cy.get(this.dropdown.box).click()
-            cy.get(this.dropdown.option(language)).click()
-            cy.contains("button", "Update").click()
-        })
-
-        if(verify !== false){
-            cy.get(this.popover).should("not.exist")
-            cy.get(this.pageSidebar.languageLabel).siblings("span").should("contain", language)
-
-        }
-    } 
-
     configure(options){
         const { name, slug, language, appearance, externalCode, accessProtection, contents, verify } = options
         // These toggle options should have values of "on" or "off"
