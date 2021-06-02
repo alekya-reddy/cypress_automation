@@ -261,6 +261,7 @@ describe("VEX - Landing Page Editor", ()=>{
 
         // Visit it on consumption 
         cy.visit(testLandingPage.url)
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[4])
@@ -319,6 +320,7 @@ describe("VEX - Landing Page Editor", ()=>{
 
         // Verify landing page is home page on consumption
         cy.visit(event.url)
+        consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[4])
