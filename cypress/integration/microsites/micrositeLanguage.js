@@ -18,7 +18,7 @@ const language = {
 
 const customMicrositeLanguage = {
     name: language.name,
-    search: 'Search',
+    search: 'Custom Search',
     searchInputFieldPlaceholder : "Microsite Search Input",
     filterByContentTypeTitle: "Microsite ContentType",
     filterByLanguageTitle: "Microsite Language",
@@ -120,7 +120,6 @@ describe("Microsites - Language Configuration for Microsite", () => {
                 authoring.microsites.addTracks({target: target.name})
                 authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);
                 authoring.microsites.saveSearchAndFiltersSettings();
-                authoring.microsites.tabToLandingPages()
                 authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
                 
