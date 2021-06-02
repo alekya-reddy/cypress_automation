@@ -502,7 +502,7 @@ export class Configurations extends Common {
 
     clickAppearanceTab(tab){
         cy.get(this.appearances.secondaryNav).within(() => {
-            cy.containsExact("a", tab, {timeout: 10000}).click()
+            cy.containsExact("a", tab, {timeout: 10000}).click({force: true})
         })
     }
 
@@ -1029,7 +1029,7 @@ export class Configurations extends Common {
     
     clickLanguageTab(tab){
         cy.get(this.languages.secondaryNav).within(() => {
-            cy.containsExact("a", tab, {timeout: 10000}).click()
+            cy.containsExact("a", tab, {timeout: 10000}).click({force: true})
         })    
     }
 
