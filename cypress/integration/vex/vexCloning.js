@@ -108,10 +108,10 @@ const appearance = {
     appearance: "vexCloning.js",
     heroImage: {
         category: 'Stock Images',
-        url: '/stock/sm/animal-dog-pet-cute.jpg',
+        url: '/sky-earth-space-working',
         selectImageText: "Add Image"
     },
-    heroHeight: "200px",
+    heroHeight: "250px",
     headerTitle: 'Vex Appearance Title',
     headerSubtitle: 'Vex Appearance Subtitle',
     contentTitle: "VEX Content Title",
@@ -298,8 +298,8 @@ const verifySession = (session, howCloned) => {
 }
 
 const verifyAppearance = (appearance) => {
-    cy.containsExact("span", appearance.appearance, {timeout: 20000}).should("exist")
-    cy.get(`img[src*="${appearance.heroImage.url}"]`).should("exist")
+    cy.containsExact("span", appearance.appearance, {timeout: 20000}).should("exist")   
+    cy.get(`img[src*="${appearance.heroImage.url}"]`,{timeout: 20000}).should("exist")
     cy.get(authoring.vex.appearance.heroHeightInput).should("have.value", appearance.heroHeight)
     cy.get(authoring.vex.appearance.headerTitle).should('contain', appearance.headerTitle)
     cy.get(authoring.vex.appearance.headerSubtitle).should('contain', appearance.headerSubtitle)
@@ -372,7 +372,7 @@ const verifyLandingPage = (page, exceptBlocks = [], howCloned) => {
             }
 
             if(block.sessionGroup){
-                cy.contains(authoring.vex.pages.sessionGroupRow, block.sessionGroup).should("not.exist")
+                cy.contains(authoring.vex.pages.sessionGroupRow, block.sessionGroup).should("not.exist")  
             }
             
         }
@@ -396,6 +396,47 @@ const verifyNavItem = (nav, exceptions = []) => {
         })
     } 
 }
+
+const searchAndFilterOptions =
+    [
+        {
+            label: "Search",
+            toggle: true
+        },
+        {
+            label: "Topic",
+            toggle: true
+        },
+        {
+            label: "Business Unit",
+            toggle: true
+        },
+        {
+            label: "Persona",
+            toggle: true
+        },
+        {
+            label: "Industry",
+            toggle: true
+        },
+        {
+            label: "Availability",
+            toggle: true
+        },
+        {
+            label: "Funnel Stage",
+            toggle: true
+        },
+        {
+            label: "Language",
+            toggle: true
+        }
+    ]
+
+    const block={
+        name:"Session Group",
+        sessionOption:"All Sessions"
+    }
 
 // Note that event's black list is not cloned since this list is only for a specific event as a last resort to kick someone out 
 // Note that a session's rocket chat settings are also not cloned since doing so would result in 2 separate sessions sharing the same chat 
@@ -426,9 +467,14 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
                 navigation.forEach((navItem)=>{
                     authoring.vex.addNavItem(navItem)
                 })
+                
                 // The following makes the text nav item a sublink of the public session nav item 
                 authoring.vex.attachSubNav({subject: navigation[4].label, target: navigation[0].label}) // First step puts text above public session
                 authoring.vex.attachSubNav({subject: navigation[4].label, target: navigation[0].label}) // Second step makes text sublink of public session
+
+                //Add Search and Filter options
+                authoring.vex.addSearchAndFilterOptions(searchAndFilterOptions);
+                authoring.vex.saveSearchAndFiltersSettings();
             }
         })
     })
@@ -445,7 +491,8 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             sessionGroups: true,
             appearance: true,
             landingPages: true,
-            navigation: true
+            navigation: true,
+            searchAndFilter: true
         })
 
         verifyEventSetup(event)
@@ -491,6 +538,21 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         verifySession(sessions.onDemand, "cloned session") 
         authoring.vex.backToEvent(event.cloneName)
 
+         // Verify cloned Search & Filter tab
+         authoring.microsites.tabToSearchAndFilter() 
+         cy.wait(5000)
+ 
+         authoring.microsites.verifySearchAndFilterOptions(searchAndFilterOptions);
+
+         authoring.vex.goToLandingPage()
+         authoring.vex.goToPageEditor(landingPage.name)
+       
+        //Verify Search and Filter options available
+        authoring.vex.addingBasicBlock(block);
+        authoring.vex.verifySearchAndFiltersAvailibility(searchAndFilterOptions);
+
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
         // Clone landing page (via clone button)
         authoring.vex.goToLandingPage()
         authoring.vex.cloneLandingPage({
@@ -498,6 +560,7 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             template: landingPage.name,
             name: landingPage.cloneName
         })
+
         verifyLandingPage(landingPage, exceptBlocks, "cloned landing page") 
         authoring.vex.deleteLandingPages(landingPage.cloneName)
 
@@ -513,9 +576,9 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             template: landingPage.name, // We are cloning the landing page of the original event 
             name: landingPage.cloneName
         })
-        // If you clone landing page from another event, the session group blocks will no longer contain the session groups
+        //If you clone landing page from another event, the session group blocks will no longer contain the session groups
         let exceptBlocks2 = ["Public Group Block", "Private Group Block", "Empty Group Block"] 
-        verifyLandingPage(landingPage, exceptBlocks2, "cloned landing page")
+        verifyLandingPage(landingPage, exceptBlocks2, "cloned landing page") 
     })
 
     it("Clone only select parts of the event by adding new event and choosing clone-from option", ()=>{
@@ -560,6 +623,74 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             const exceptions = ["Public Session", "Private Session", "Text"] 
             verifyNavItem(nav, exceptions)
         })
+    })
+
+    it("Clone only select parts of the event by adding new event and choosing clone-from option", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.deleteVirtualEvent(event.cloneName)
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.cloneEvent({
+            name: event.cloneName,
+            eventSetup: true,
+            sessions: true,
+            sessionGroups: true,
+            appearance: false,
+            landingPages: true,
+            navigation: false,
+            searchAndFilter: true
+        })
+
+        verifyEventSetup(event)
+
+        Object.values(sessions).forEach(session => {
+            authoring.vex.goToSessionConfig(session.name)
+            verifySession(session, "cloned event")
+            authoring.vex.backToEvent(event.cloneName)
+        })
+
+        authoring.vex.goToAppearance()
+        verifyAppearance(appearance)
+
+        authoring.vex.goToSessionGroup()
+        verifySessionGroup(sessionGroups.publicGroup)
+        verifySessionGroup(sessionGroups.privateGroup)
+        cy.contains(authoring.vex.groupRow, sessionGroups.emptyGroup.name).should("not.exist") // empty session groups don't get cloned 
+        
+        authoring.vex.goToLandingPage()
+        // Since empty session group not cloned, it won't appear in the landing page
+        let exceptBlocks = ["Empty Group Block"]
+        verifyLandingPage(landingPage, exceptBlocks, "cloned event") 
+
+        // Clone session via add session. Note: Not checking that all the template options are pulling from correct source
+        authoring.vex.cloneSession({
+            name: sessions.webex.cloneName,
+            template: sessions.webex.name
+        })
+        verifySession(sessions.webex, "cloned session")
+
+        // Clone session from within original session 
+        authoring.vex.backToEvent(event.cloneName)
+        authoring.vex.goToSessionConfig(sessions.onDemand.name)
+        verifySession(sessions.onDemand) // This just forces it to wait for supplemental content to load, which tends to cause modals to close, causing test flakiness
+        authoring.vex.cloneSession({
+            name: sessions.onDemand.cloneName
+        })
+        verifySession(sessions.onDemand, "cloned session") 
+        authoring.vex.backToEvent(event.cloneName)
+
+         // Verify cloned Search & Filter tab
+         authoring.microsites.tabToSearchAndFilter() 
+         cy.wait(2000)
+ 
+         authoring.microsites.verifySearchAndFilterOptions(searchAndFilterOptions);
+
+         authoring.vex.goToLandingPage()
+         authoring.vex.goToPageEditor(landingPage.name)
+       
+        //Verify Search and Filter options available
+        authoring.vex.addingBasicBlock(block);
+        authoring.vex.verifySearchAndFiltersAvailibility(searchAndFilterOptions);
     })
 
 })
