@@ -364,7 +364,7 @@ export class Common {
         })
     }
 
-    setLanguage(language, verify){
+    setTrackLanguage(language, verify){
         cy.get(this.pageSidebar.languageLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
             cy.get(this.dropdown.box).click()

@@ -120,7 +120,7 @@ export class Recommend extends Common {
         }
 
         if(language){
-            this.setLanguage(language, verify)
+            this.setTrackLanguage(language, verify)
         }
 
         if(contents){

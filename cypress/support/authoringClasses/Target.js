@@ -140,7 +140,7 @@ export class Target extends Common {
         }
 
         if(language){
-            this.setLanguage(language, verify)
+            this.setTrackLanguage(language, verify)
         }
 
         if(externalCode){
