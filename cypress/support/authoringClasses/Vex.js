@@ -166,7 +166,8 @@ export class Vex extends Common {
             sessionGroups: "input[value='Session groups']",
             appearance: "input[value='Appearance settings']",
             landingPages: "input[value='Landing pages']",
-            navigation: "input[value='Navigation']"
+            navigation: "input[value='Navigation']",
+            searchAndFilter: "input[value='Search & Filter']"
         };
         this.widgets={
             addButton: "#show-add-widgets-modal-button",
@@ -176,10 +177,20 @@ export class Vex extends Common {
             listItem: ".ant-list-item",
             nameInput: "input[name='widget-name']"
         };
+        this.searchAndFilter = {
+            switchToggle: ".ant-tabs-tabpane.ant-tabs-tabpane-active .ant-switch-handle",
+            swicthInnerLabel: ".ant-tabs-tabpane.ant-tabs-tabpane-active span.ant-switch-inner",
+            allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
+            rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
+            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected"
+        };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups='div[id="vex-allow-visitor-groups_list"]';
         this.DisallowGroups='div[id="vex-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
+        this.blocks = "div[data-react-beautiful-dnd-draggable='0']"
+        this.addBlockButtons = "button[class*='AddBlockButton']";
+        this.icnPencil="div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
     }
 
     visit(){
@@ -1782,7 +1793,7 @@ export class Vex extends Common {
             this.selectCloneOptions(config)
             cy.contains("button", "Clone this Virtual Event").click()
             if(verify !== false){
-                cy.contains(this.antModal, "Clone this Virtual Event").should("not.be.visible")
+                cy.contains(this.antModal, "Clone this Virtual Event",{timeout: 20000}).should("not.be.visible")
                 cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
             }
         }
@@ -1876,6 +1887,61 @@ export class Vex extends Common {
         cy.url().then((url)=>{
             if(!url.includes("/analytics")){
                 cy.containsExact("a", "Analytics", {timeout: 20000}).click()
+            }
+        })
+    }
+
+    addSearchAndFilterOptions(options) {
+        //Enabling ,Search filters
+        this.tabToSearchAndFilter()
+        options.forEach(option => {
+            cy.contains(this.antTabs, option.label).should("be.visible").click();
+            if (option.toggle == false || option.toggle == true) {
+                cy.get(this.searchAndFilter.switchToggle).parent().invoke('attr', 'class').then((attr) => {
+                    if ((option.toggle == false && attr.includes("ant-switch-checked")) || (option.toggle == true && !attr.includes("ant-switch-checked"))) {
+                        cy.get(this.searchAndFilter.switchToggle).click() 
+                    }
+                })
+            }
+            if (option.label != "Search") {
+                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
+            }
+        })
+    }
+
+    saveSearchAndFiltersSettings() {
+        cy.contains("button", "Save All Settings").should('be.visible').click();
+        cy.contains("span", "The record was saved successfully.").should('be.visible')
+    }
+
+    tabToSearchAndFilter() {
+        cy.url().then((url) => {
+            if (!url.includes("/search-filter")) {
+                cy.containsExact("a", "Search & Filter", { timeout: 10000 }).click()
+            }
+        })
+    }
+
+    addingBasicBlock(block) {
+        cy.get(this.blocks, { timeout: 10000 }).first().click()
+        cy.get(this.addBlockButtons, { timeout: 10000 }).first().click()
+        cy.contains("button", block.name, { timeout: 10000 }).should('be.visible').click()
+        cy.get(this.icnPencil,{ timeout: 10000 }).should('be.visible').first().click()
+        cy.get("select[id*='virtualEventGroupId']").select(block.sessionOption)
+        cy.contains("button", "Confirm").click()
+    }
+
+    verifySearchAndFiltersAvailibility(options) {
+        options.forEach(option => {
+            if (option.toggle) {
+                if (option.label != "Search") {
+                    cy.contains("option", "Filter by " + option.label, { timeout: 10000 }).should('be.visible')
+                }
+                if (option.label == "Search") {
+                    cy.get("input[placeholder='Search']", { timeout: 10000 }).should('be.visible')
+                    cy.contains("button", "Search", { timeout: 10000 }).should('be.visible')
+                }
             }
         })
     }
