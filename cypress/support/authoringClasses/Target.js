@@ -140,7 +140,7 @@ export class Target extends Common {
         }
 
         if(language){
-            this.setLanguage(language, verify)
+            this.setTrackLanguage(language, verify)
         }
 
         if(externalCode){
@@ -272,21 +272,6 @@ export class Target extends Common {
         if(verify !== false){
             cy.get(this.popover).should("not.exist")
             cy.get(this.pageSidebar.appearanceLabel).siblings("span").should("contain", appearance)
-
-        }
-    }
-
-    setLanguage(language, verify){
-        cy.get(this.pageSidebar.languageLabel).siblings("span").click()
-        cy.get(this.popover).within(()=>{
-            cy.get(this.dropdown.box).click()
-            cy.get(this.dropdown.option(language)).click()
-            cy.contains("button", "Update").click()
-        })
-
-        if(verify !== false){
-            cy.get(this.popover).should("not.exist")
-            cy.get(this.pageSidebar.languageLabel).siblings("span").should("contain", language)
 
         }
     } 
