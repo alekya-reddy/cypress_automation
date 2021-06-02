@@ -4,6 +4,7 @@ export class Microsites extends Common {
     constructor(env, org, tld, userName, password, baseUrl) {
         super(env, org, tld, userName, password, baseUrl);
         this.pageUrl = `${this.baseUrl}/authoring/content-library/microsite`;
+        this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
         this.micrositesPage = {
             card: this.antCard.container,
@@ -142,9 +143,17 @@ export class Microsites extends Common {
         cy.containsExact("a", "Microsite Setup", { timeout: 20000 }).click()
     }
 
+    setLanguage(language){
+        cy.contains(this.antRow, "Language").within(()=>{
+            cy.get(this.antSelector).click()
+        })
+        cy.get(this.antDropSelect.options(language)).click()
+        cy.get(`span[title='${language}']`).should('exist')
+    }
+
     setup(options) {
 
-        const { name, slug, externalCode, newName, appearance, cookieConsent, accessProtection, disallowGroups,contentType,topicTags, verify} = options
+        const { name, slug, externalCode, newName, appearance, language, cookieConsent, accessProtection, disallowGroups,contentType,topicTags, verify} = options
 
         this.goToMicrositeConfig(name)
 
@@ -161,6 +170,10 @@ export class Microsites extends Common {
                 cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance + '\n', { force: true })
             })
             cy.get(`span[title='${appearance}']`).should("exist")
+        }
+
+        if(language){
+            this.setLanguage(language)
         }
 
         if (externalCode) {

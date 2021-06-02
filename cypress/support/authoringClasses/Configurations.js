@@ -137,6 +137,19 @@ export class Configurations extends Common {
                 businessUnitInput: "#filterByBusinessUnitTitle",
                 personaInput: "#filterByPersonaTitle",
                 industryTitleInput: "#filterByIndustryTitle",
+            },
+            micrositeBuilder: {
+                searchButtonTitle: "#searchButtonTitle",
+                searchInputFieldPlaceholder : "#searchInputFieldPlaceholder",
+                filterByContentTypeTitle: "#filterByContentTypeTitle",
+                filterByLanguageTitle: "#filterByLanguageTitle",
+                filterByFunnelStageTitle: "#filterByFunnelStageTitle",
+                filterByBusinessUnitTitle: "#filterByBusinessUnitTitle",
+                filterByPersonaTitle: "#filterByPersonaTitle",
+                filterByIndustryTitle: "#filterByIndustryTitle",
+                filterByTopicTitle: "#filterByTopicTitle",
+                noResultsMessage: "#noResultsMessage",
+        
             }
 
         };
