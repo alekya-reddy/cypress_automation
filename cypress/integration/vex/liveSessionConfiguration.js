@@ -485,7 +485,6 @@ describe('VEX - Virtual Event Live Sessions', function() {
         authoring.vex.configureSession(sessions_simulive[0])
     })
     it('Go to consumption, visit the simulive video mode enabled for a live session, and verify that we see the expected behavior', function(){
-        cy.pause()
         cy.visit(event.url + "/?lb_email=bobman%40gmail.com") // visit with lb_email query string so don't have to fuss around with registration form
         cy.contains(consumption.vex.sessionCardTitle, sessions_simulive[0].name). should('exist').click()
         cy.url().should('eq', sessions_simulive[0].url)
