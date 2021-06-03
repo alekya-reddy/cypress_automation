@@ -18,7 +18,7 @@ const language = {
 
 const customMicrositeLanguage = {
     name: language.name,
-    search: 'Custom Search',
+    search: 'Microsite Search',
     searchInputFieldPlaceholder : "Microsite Search Input",
     filterByContentTypeTitle: "Microsite ContentType",
     filterByLanguageTitle: "Microsite Language",

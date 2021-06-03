@@ -42,11 +42,11 @@ export class VexCX extends CommonCX {
         };
         this.simuliveVideo = {
             vexCustomControl:'div[class*="vex-session-custom-controls"]',
-            pause: 'i[class*="fa-pause"]',
-            volume: 'i[class*="fa-volume-down"]',
-            liveStatus: 'div[class^="sc-jTNWrH"]',
-            videoProgressBar: 'div[class^="sc-eBXEvq"]',
-            fullScreenMode: 'i[class^="sc-eMrnwU"]'
+            pause: '#vex-simulive-play-pause',
+            volume: '#vex-simulive-volume-control',
+            liveStatus: '#vex-simulive-live-status',
+            videoProgressBar: '#vex-simulive-seek-container',
+            fullScreenMode: '#vex-simulive-full-screen'
         };
         this.vimeo = {
             // Playing around on the dev console on regular browser, I'm blocked from accessing iframe due to cross-frame issue. I'm amazed I can bypass that through Cypess
