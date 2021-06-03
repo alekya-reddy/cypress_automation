@@ -150,8 +150,18 @@ export class Configurations extends Common {
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
         
+            },
+            vex: {
+                searchButtonTitle: "#searchButtonTitle",
+                searchInputFieldPlaceholder : "#searchInputFieldPlaceholder",
+                filterByAvailabilityTitle: "#filterByAvailabilityTitle",
+                filterByLanguageTitle: "#filterByLanguageTitle",
+                filterByFunnelStageTitle: "#filterByFunnelStageTitle",
+                filterByBusinessUnitTitle: "#filterByBusinessUnitTitle",
+                filterByPersonaTitle: "#filterByPersonaTitle",
+                filterByIndustryTitle: "#filterByIndustryTitle",
+                filterByTopicTitle: "#filterByTopicTitle",
             }
-
         };
         this.forms = {
             nameInput: "#name",
