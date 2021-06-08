@@ -172,7 +172,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
         cy.contains("div", customMicrositeLanguage.filterByIndustryTitle).should("exist")
         cy.contains("div", customMicrositeLanguage.filterByTopicTitle).should("exist")
         cy.contains("div", customMicrositeLanguage.search).should("exist")
-        cy.get('input').should("have.attr", "placeholder", customMicrositeLanguage.searchInputFieldPlaceholder) 
+        cy.get('input:visible').should("have.attr", "placeholder", customMicrositeLanguage.searchInputFieldPlaceholder) 
 
     })
 
@@ -209,7 +209,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
         cy.contains("div", defaultMicrositeLanguage.filterByIndustryTitle).should("exist")
         cy.contains("div", defaultMicrositeLanguage.filterByTopicTitle).should("exist")
         cy.contains("div", defaultMicrositeLanguage.search).should("exist")
-        cy.get('input').should("have.attr", "placeholder", defaultMicrositeLanguage.searchInputFieldPlaceholder) 
+        cy.get('input:visible').should("have.attr", "placeholder", defaultMicrositeLanguage.searchInputFieldPlaceholder) 
 
     })
 })
