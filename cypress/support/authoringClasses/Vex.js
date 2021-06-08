@@ -1701,9 +1701,11 @@ export class Vex extends Common {
         this.goToAppearance()
 
         if(appearance){
-            cy.get("span[class='ant-select-selection-search']").click
-            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
-        }
+            cy.get("span[class='ant-select-selection-item']",{timeout: 10000}).should('be.visible').click({force: true})
+            // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.get(`div[label="${appearance}"]`,{timeout: 10000}).click()
+            cy.contains('button:visible', "Save").click() 
+         }
 
         if(heroImage){
             this.selectThumbnail(heroImage)
@@ -1781,7 +1783,8 @@ export class Vex extends Common {
                 cy.contains("button", "Add Virtual Event").click()
             })
             if(verify !== false){
-                cy.contains(this.antModal, "Add Virtual Event").should('not.be.visible')
+                cy.wait(3000);
+                cy.contains(this.antModal, "Add Virtual Event",{timeout: 10000}).should('not.be.visible')
                 cy.containsExact(this.eventCardTitle, name, {timeout: 10000}).should('exist')
                 this.goToEventConfig(name)
             }
@@ -1924,8 +1927,9 @@ export class Vex extends Common {
     }
 
     addingBasicBlock(block) {
-        cy.get(this.blocks, { timeout: 10000 }).first().click()
-        cy.get(this.addBlockButtons, { timeout: 10000 }).first().click()
+        cy.wait(5000);
+        cy.get(this.blocks, { timeout: 10000 }).first().should('be.visible').click()
+        cy.get(this.addBlockButtons, { timeout: 10000 }).first().should('be.visible').click()
         cy.contains("button", block.name, { timeout: 10000 }).should('be.visible').click()
         cy.get(this.icnPencil,{ timeout: 10000 }).should('be.visible').first().click()
         cy.get("select[id*='virtualEventGroupId']").select(block.sessionOption)

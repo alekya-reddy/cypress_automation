@@ -229,6 +229,7 @@ const verifyEventSetup = (event) => {
 }
 
 const verifySession = (session, howCloned) => {
+    cy.wait(3000);
     if(howCloned == "cloned event"){
         cy.get(authoring.vex.sessionNameInput).should("have.value", session.name)
     } else if (howCloned == "cloned session"){
@@ -552,7 +553,8 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         authoring.vex.verifySearchAndFiltersAvailibility(searchAndFilterOptions);
 
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToEventConfig(event.cloneName)
+
         // Clone landing page (via clone button)
         authoring.vex.goToLandingPage()
         authoring.vex.cloneLandingPage({
@@ -560,10 +562,9 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             template: landingPage.name,
             name: landingPage.cloneName
         })
-
         verifyLandingPage(landingPage, exceptBlocks, "cloned landing page") 
         authoring.vex.deleteLandingPages(landingPage.cloneName)
-
+       
         // Clone landing page (via add page button)
         // The dropdown list pulls from all landing pages in the organization. 
         // As such, we will have 2 landing pages of the same name - 1 from original event, 1 from cloned event. 
@@ -648,9 +649,6 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             verifySession(session, "cloned event")
             authoring.vex.backToEvent(event.cloneName)
         })
-
-        authoring.vex.goToAppearance()
-        verifyAppearance(appearance)
 
         authoring.vex.goToSessionGroup()
         verifySessionGroup(sessionGroups.publicGroup)
