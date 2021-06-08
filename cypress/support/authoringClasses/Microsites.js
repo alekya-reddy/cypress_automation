@@ -81,7 +81,9 @@ export class Microsites extends Common {
             swicthInnerLabel: ".ant-tabs-tabpane.ant-tabs-tabpane-active span.ant-switch-inner",
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
-            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected"
+            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
+             listOption: "div[class*='ant-transfer sc-kocBos']",
+            itemsList: "ul[class*='ant-transfer-list-content']"
         };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
@@ -1230,9 +1232,18 @@ export class Microsites extends Common {
             cy.contains(this.antTabs, option.label).should("be.visible").click()
             cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
             if (option.label != "Search") {
-                cy.get(this.searchAndFilter.rightItemsHeaderLabel).first().invoke('text').then(text => {
-                    expect(text).to.include(0);
-                })
+                if(cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).length > 1){
+                    cy.get(this.searchAndFilter.listOption).eq(1).find(this.searchAndFilter.itemsList).find('li').invoke('attr','title').then(text => {
+                        expect(text).to.not.equal(null)
+                    })
+                }
+                else
+                {
+                    cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).find('li').invoke('attr','title').then(text => {
+                        expect(text).to.not.equal(null)
+                    })
+                }
+                
             }
         })
     }
