@@ -31,6 +31,8 @@ export class VexCX extends CommonCX {
         this.supplementalTitle = ".pf-event-session-content > div:nth-child(1)";
         this.filterByTopicValue= "#qa-virtual-topic-filter-topic > span";
         this.sessionTime = ".css-1uk98e1";
+        this.searchInputLocator = 'input[type="search"]';
+        this.searchButton='#vex_search_button';
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',

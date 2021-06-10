@@ -149,6 +149,7 @@ export class Configurations extends Common {
                 filterByIndustryTitle: "#filterByIndustryTitle",
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
+                saveSettings: "#save-microsite-builder-settings"
         
             },
             vex: {
@@ -161,6 +162,9 @@ export class Configurations extends Common {
                 filterByPersonaTitle: "#filterByPersonaTitle",
                 filterByIndustryTitle: "#filterByIndustryTitle",
                 filterByTopicTitle: "#filterByTopicTitle",
+                noResultsMessage: "#noResultsMessage",
+                saveSettings: "#save-virtual-event-settings"
+        
             }
         };
         this.forms = {

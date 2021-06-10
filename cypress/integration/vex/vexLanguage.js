@@ -1,6 +1,7 @@
-import { createAuthoringInstance } from '../../support/pageObject.js'
+import { createAuthoringInstance ,createConsumptionInstance} from '../../support/pageObject.js'
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' })
 
 const event = {
     name: 'vexLanguage.js',
@@ -227,11 +228,20 @@ describe("VEX - Language Settings", ()=>{
         cy.contains("div", customVEXLanguage.search).should("exist")
         cy.get('input:visible').should("have.attr", "placeholder", customVEXLanguage.searchInputFieldPlaceholder)
     })
-    it("Verify default VEX Language fields in VEX landing page and consumption ", () => {
+    it("Verify default VEX Language fields in VEX landing page and consumption and no results message", () => {
         authoring.common.login()
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(lang3.name)
         authoring.configurations.resetLanguageSetting({name: lang3.name, tab: 'Virtual Event'})
+        cy.get(authoring.configurations.languages.vex.noResultsMessage).should('exist')
+        cy.get(authoring.configurations.languages.vex.noResultsMessage).invoke('attr', 'value').as('text');
+         cy.get('@text').then(text => {
+            cy.get(authoring.configurations.languages.vex.noResultsMessage).clear().type(text+" Edited");
+        })
+        cy.wait(2000)
+        cy.get(authoring.configurations.languages.vex.saveSettings).click()
+        cy.contains(authoring.configurations.messages.recordSaved, {timeout: 10000}).should("exist")
+        cy.get(authoring.configurations.languages.vex.noResultsMessage).invoke('attr', 'value').as('text');
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event1.name)
         authoring.vex.goToLandingPage()
@@ -259,5 +269,12 @@ describe("VEX - Language Settings", ()=>{
         cy.contains("div", defaultVEXLanguage.filterByTopicTitle).should("exist")
         cy.contains("div", defaultVEXLanguage.search).should("exist")
         cy.get('input:visible').should("have.attr", "placeholder", defaultVEXLanguage.searchInputFieldPlaceholder)
+
+        //Validate no results message which is set at language configuration in consumption page
+        cy.get(consumption.vex.searchInputLocator).clear().type("Sample text");
+        cy.get(consumption.vex.searchButton).click();
+        cy.get('@text').then(text => {
+            cy.contains('div', text, { timeout: 10000 }).should("exist");
+        })
     })
 })

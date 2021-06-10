@@ -24,7 +24,8 @@ export class MicrositesCX extends CommonCX {
             cookieSettings: "#pf-microsite-cookie-consent-button"
         };
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
-        this.addBlockButtons = "button[class*='AddBlockButton']";
+        this.addBlockButtons = "button[class*='AddBlockButton']"
+        this.searchButton='#microsite_search_button'
     }
 
     clickContent(options) {
