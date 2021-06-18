@@ -139,7 +139,7 @@ describe("VEX - External Code", () => {
 
         // Go back to the appearance and delete one external code from appearances
         authoring.configurations.visit.appearances()
-        authoring.configurations.goToCampaignAppearance(vexAppearance.name, "Virtual Event")
+        authoring.configurations.goToCampaignAppearance(vexAppearance.name, "virtual-event")
         authoring.configurations.removeAppearanceExternalCode(vexAppearanceExternalCode.name)
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)

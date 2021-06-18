@@ -131,7 +131,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
         authoring.common.login()
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
-        authoring.configurations.clickLanguageTab("Microsite Builder")
+        authoring.configurations.gotoLanguageTab("microsite-builder")
         cy.get(authoring.configurations.languages.micrositeBuilder.searchButtonTitle).clear().type(customMicrositeLanguage.search)
         cy.get(authoring.configurations.languages.micrositeBuilder.searchInputFieldPlaceholder).clear().type(customMicrositeLanguage.searchInputFieldPlaceholder)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByContentTypeTitle).clear().type(customMicrositeLanguage.filterByContentTypeTitle)
@@ -180,7 +180,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
         authoring.common.login()
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
-        authoring.configurations.resetLanguageSetting({ name: language.name, tab: 'Microsite Builder' })
+        authoring.configurations.resetLanguageSetting({ name: language.name, tab: 'microsite-builder' })
         cy.get(authoring.configurations.languages.micrositeBuilder.noResultsMessage).should('exist')
         cy.get(authoring.configurations.languages.micrositeBuilder.noResultsMessage).invoke('attr', 'value').as('text');
          cy.get('@text').then(text => {

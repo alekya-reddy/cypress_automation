@@ -96,7 +96,7 @@ describe("Explore - language setting", () => {
         // Error validation on language customization settings page 
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
-        authoring.configurations.clickLanguageTab("Explore")
+        authoring.configurations.gotoLanguageTab("explore")
         cy.get(authoring.configurations.languages.explore.searchInput).clear()
         cy.get(authoring.configurations.languages.explore.searchPlaceholderInput).clear()
         cy.get(authoring.configurations.languages.explore.contentTypeInput).clear()
@@ -172,7 +172,7 @@ describe("Explore - language setting", () => {
 
         // Reset language settings and verify the defaults values on preview and consumption page 
         authoring.configurations.visit.languages()
-        authoring.configurations.resetLanguageSetting({name: language.name, tab: 'Explore'})
+        authoring.configurations.resetLanguageSetting({name: language.name, tab: 'explore'})
         // Verify Default language custumization on explore preview page 
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name) 

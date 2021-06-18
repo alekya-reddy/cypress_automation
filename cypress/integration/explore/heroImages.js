@@ -48,7 +48,7 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         cy.viewport(1450, 1024)
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
-        authoring.configurations.clickAppearanceTab("Explore")
+        authoring.configurations.gotoAppearanceTab("explore")
         cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
         cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Cover Image" + "\n")
         cy.contains('label', 'Fixed').click()
@@ -85,7 +85,7 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         // verify Branded Hero Image
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
-        authoring.configurations.clickAppearanceTab("Explore")
+        authoring.configurations.gotoAppearanceTab("explore")
         cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
         cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Branded" + "\n")
         cy.contains("button", "Save Explore Settings").click()
@@ -113,7 +113,7 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         // verify Partner Hero Image
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
-        authoring.configurations.clickAppearanceTab("Explore")
+        authoring.configurations.gotoAppearanceTab("explore")
         cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
         cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Partnership" + "\n")
         cy.contains("button", "Save Explore Settings").click()
@@ -143,7 +143,7 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         // verify Personalized Hero Image + FILL Cover Image
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
-        authoring.configurations.clickAppearanceTab("Explore")
+        authoring.configurations.gotoAppearanceTab("explore")
         cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
         cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Personalized" + "\n")
         cy.contains('label', 'Fill').click()
