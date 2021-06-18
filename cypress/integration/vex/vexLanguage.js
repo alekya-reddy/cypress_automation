@@ -187,7 +187,7 @@ describe("VEX - Language Settings", ()=>{
         authoring.common.login()
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(lang3.name)
-        authoring.configurations.clickLanguageTab("Virtual Event")
+        authoring.configurations.gotoLanguageTab("virtual-event")
         cy.get(authoring.configurations.languages.vex.searchButtonTitle).clear().type(customVEXLanguage.search)
         cy.get(authoring.configurations.languages.vex.searchInputFieldPlaceholder).clear().type(customVEXLanguage.searchInputFieldPlaceholder)
         cy.get(authoring.configurations.languages.vex.filterByAvailabilityTitle).clear().type(customVEXLanguage.filterByAvailabilityTitle)
@@ -232,7 +232,7 @@ describe("VEX - Language Settings", ()=>{
         authoring.common.login()
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(lang3.name)
-        authoring.configurations.resetLanguageSetting({name: lang3.name, tab: 'Virtual Event'})
+        authoring.configurations.resetLanguageSetting({name: lang3.name, tab: 'virtual-event'})
         cy.get(authoring.configurations.languages.vex.noResultsMessage).should('exist')
         cy.get(authoring.configurations.languages.vex.noResultsMessage).invoke('attr', 'value').as('text');
          cy.get('@text').then(text => {

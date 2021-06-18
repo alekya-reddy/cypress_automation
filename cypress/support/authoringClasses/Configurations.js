@@ -514,16 +514,22 @@ export class Configurations extends Common {
         })
     }
 
-    clickAppearanceTab(tab){
-        cy.get(this.appearances.secondaryNav).within(() => {
-            cy.containsExact("a", tab, {timeout: 10000}).click({force: true})
+    gotoAppearanceTab(tabUrl){
+        // we need to pass in the url of the tab  
+        cy.url().then((url) => {
+            if (!url.includes("/"+tabUrl)) {
+                const segements = url.split('/')
+                segements[segements.length - 1] = "" + tabUrl
+                var newurl = segements.join("/") 
+                cy.visit(newurl, { timeout: 30000 })
+            }
         })
-    }
+    } 
 
     goToCampaignAppearance(appearance, campaignName){
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
-        this.clickAppearanceTab(campaignName)
+        this.gotoAppearanceTab(campaignName)
     }
 
     deleteAppearance(name, verify){
@@ -634,7 +640,7 @@ export class Configurations extends Common {
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
-        this.clickAppearanceTab("Header")
+        this.gotoAppearanceTab("header")
 
         if (dynamicLogo) {
             // dynamicLogo must either be "on" or "off"
@@ -659,7 +665,7 @@ export class Configurations extends Common {
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
 
-        this.goToCampaignAppearance(appearance, "Virtual Event")
+        this.goToCampaignAppearance(appearance, "virtual-event")
 
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
@@ -906,7 +912,7 @@ export class Configurations extends Common {
     
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
-        this.clickAppearanceTab("Microsite Builder")
+        this.gotoAppearanceTab("microsite-builder")
 
         if(hideNavigation == true || hideNavigation == false){
             cy.get(this.appearances.microsites.hideNavigation).invoke("attr", "class").then(checkboxClass => {
@@ -960,7 +966,7 @@ export class Configurations extends Common {
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
-        this.clickAppearanceTab("Explore")
+        this.gotoAppearanceTab("explore")
 
         if (externalCodes) {
             this.addAppearanceExternalCode(externalCodes, verify)
@@ -1041,10 +1047,16 @@ export class Configurations extends Common {
         })
     }
     
-    clickLanguageTab(tab){
-        cy.get(this.languages.secondaryNav).within(() => {
-            cy.containsExact("a", tab, {timeout: 10000}).click({force: true})
-        })    
+    gotoLanguageTab(tabUrl){
+        // we need to pass in the url of the tab 
+        cy.url().then((url) => {
+            if (!url.includes("/"+tabUrl)) {
+                const segements = url.split('/')
+                segements[segements.length - 1] = "" + tabUrl
+                var newurl = segements.join("/") 
+                cy.visit(newurl, { timeout: 20000 })
+            }
+        })
     }
 
     addNewLanguage(options){
@@ -1076,7 +1088,7 @@ export class Configurations extends Common {
 
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         this.clicklanguage(name)
-        this.clickLanguageTab("Explore")
+        this.gotoLanguageTab("explore")
 
         if (featuredLabel) {
             cy.get(this.languages.explore.featuredLabelInput).clear().type(featuredLabel)
@@ -1121,7 +1133,7 @@ export class Configurations extends Common {
         const{name, tab} = options
 
         this.clicklanguage(name)
-        this.clickLanguageTab(tab)
+        this.gotoLanguageTab(tab)
         cy.contains("button", "Reset Settings").click()
         cy.contains(this.modal, "Are you sure?").within(()=>{
             cy.contains("button", "Yes").click()
