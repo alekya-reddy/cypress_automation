@@ -10,7 +10,7 @@ export class Vex extends Common {
         this.shareIcon = 'i[title="Share URL"]';
         this.addEventButton = "button:contains('Add Virtual Event')";
         this.eventCardLocator = '[class*="card-list-item"]';
-        this.eventCardTitle = '[class*="ant-card-head-title"]';
+        this.eventCardTitle = 'td[class*="ant-table-cell"]';
         this.specificEventCardLocator = function(event){ return `[class*="card-list-item"]:contains('${event}')` };
         this.moreActionsButton = "button:contains('More Actions')";
         this.configureButton = "button:contains('Configure')";
@@ -209,29 +209,27 @@ export class Vex extends Common {
 
         if (verify !== false){
             cy.get(this.antModal).should('not.be.visible')
-            cy.containsExact(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
+            cy.contains(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
         }
     }
 
-    deleteVirtualEvent(eventName){
+    deleteVirtualEvent(eventName){  
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
-            cy.containsExact(this.eventCardTitle, eventName).parent().parent().parent().within(() => {
-                cy.get(this.moreActionsButton).click()
-            })
-            cy.get(this.removeDropdownButton).click()
-            cy.get(this.antModal).within(()=>{
+             cy.contains(this.eventCardTitle, eventName,{ timeout: 20000 }).should('exist')
+             cy.get(`button[id='delete-${eventName}']`).should('exist').click()
+             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
+               })
             })
-        })
         cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
+    
     }
 
     goToEventConfig(event){
-        cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).parent().parent().parent().within(() => {
-            cy.get(this.configureButton).click()
-            cy.wait(2000) //Event Setup page loading wait
-        })
+       // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
+        cy.contains(this.eventCardTitle, event,{ timeout: 20000 }).should('exist')
+        cy.get(`a[id='configure-${event}']`).should('exist').click()
     }
 
     configureEvent(config){
@@ -1703,6 +1701,7 @@ export class Vex extends Common {
         if(appearance){
             cy.get("span[class='ant-select-selection-item']",{timeout: 10000}).should('be.visible').click({force: true})
             // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.wait(1000)
             cy.get(`div[label="${appearance}"]`,{timeout: 10000}).click()
             cy.contains('button:visible', "Save").click() 
          }

@@ -18,7 +18,7 @@ const language = {
 
 const customMicrositeLanguage = {
     name: language.name,
-    search: 'Microsite Search',
+    search: "Microsite Search",
     searchInputFieldPlaceholder: "Microsite Search Input",
     filterByContentTypeTitle: "Microsite ContentType",
     filterByLanguageTitle: "Microsite Language",
@@ -132,7 +132,8 @@ describe("Microsites - Language Configuration for Microsite", () => {
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
         authoring.configurations.gotoLanguageTab("microsite-builder")
-        cy.get(authoring.configurations.languages.micrositeBuilder.searchButtonTitle).clear().type(customMicrositeLanguage.search)
+        cy.wait(2000)
+        cy.get(authoring.configurations.languages.micrositeBuilder.searchButtonTitle).type(customMicrositeLanguage.search)
         cy.get(authoring.configurations.languages.micrositeBuilder.searchInputFieldPlaceholder).clear().type(customMicrositeLanguage.searchInputFieldPlaceholder)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByContentTypeTitle).clear().type(customMicrositeLanguage.filterByContentTypeTitle)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByLanguageTitle).clear().type(customMicrositeLanguage.filterByLanguageTitle)

@@ -46,7 +46,7 @@ export class CommonCX {
         this.ctaButton = "#qa-cta-button";
         this.overlay = {
             modal: "#lookbook-overlay-mask",
-            close: "#lookbook-overlay-close",
+            close: "#lookbook-overlay-close span",
             iframe: ".lookbook-overlay-content",
         };
         this.backToHomePageButton = 'i[title="See All"]';

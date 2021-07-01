@@ -71,14 +71,6 @@ describe('VEX - Virtual Event', function() {
         // Verify can remove session 
         authoring.vex.removeSession(sessions[2].name) // Already contains assertion that session successfully removed 
 
-        // Return to home vex page and verify the card has correct event name, url, and number of sessions 
-        authoring.vex.visit();
-        cy.containsExact(authoring.vex.eventCardTitle, event.newName, {timeout: 15000}).parent().parent().parent().within(() => {
-            cy.get(authoring.vex.eventCardTitle).should('have.contain', event.newName)
-            cy.contains(authoring.vex.antDescriptionsContent, event.slug).should('exist')
-            cy.containsExact(authoring.vex.antDescriptionsContent, `${sessions.length - 1}`)
-        })
-
         // Add another event and check the validation for event slug 
         authoring.vex.deleteVirtualEvent(event2.name)
         authoring.vex.addVirtualEvent(event2.name)
