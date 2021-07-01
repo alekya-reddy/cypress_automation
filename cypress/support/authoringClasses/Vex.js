@@ -142,6 +142,10 @@ export class Vex extends Common {
             sessionCardTitle: ".pf-event-session-card-title > div",
             sessionCardTitleName: ".pf-event-session-card-title>div:nth-of-type(1)",
             carouselArrow: ".pf-microsite-carousel-arrow",
+            sessionCard: ".pf-event-session-card",
+            Filter_Topic: "#vex_topics",
+            searchFilter: "#vex_search_button",
+            searchInputField: "#vex_search_input"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1906,8 +1910,8 @@ export class Vex extends Common {
                 })
             }
             if (option.label != "Search") {
-                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
-                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
+                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click({force:true});
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({force:true});
             }
         })
     }

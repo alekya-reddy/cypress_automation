@@ -6,7 +6,6 @@ const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'look
 const event = {
     name: 'vexAppearance.js',
     slug: 'vexappearance-js',
-    form: 'Standard Form Short', // The form button color is set to blue rgb(0,0,255)
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
@@ -32,12 +31,35 @@ const vexAppearanceSettings = {
     bodyBoldFont: false,
     bodyFontSize: "medium",
     bodyFontColor: {r: 111, g: 22, b: 3, a: 0.35},
+    sessionDescriptionFontFamily:"Tahoma",
+    sessionDescriptionFontWeight: false,
+    sessionDescriptionFontSize: "large",
+    sessionDescriptionFontColor: {r: 19, g: 197, b: 116, a: 1},
     activeFontFamily: "Verdana",
     activeBoldFont: true,
     activeFontSize: "small",
     activeFontColor: {r: 255, g: 11, b: 1, a: 1},
     hideNavigation: false,
-    layout: "Carousel"
+    layout: "Carousel",
+    landingPageCardRadius: "15",
+    landingPageSearchFilterRadius: "10",
+    landingPageSearchFilterFontFamily: "Verdana",
+    landingPageSearchFilterColor: {r: 16, g: 106, b: 223, a: 0.5},
+    landingPageSearchFilterBackgroundColor: {r: 131, g: 63, b: 120, a: 1},
+    landingPageSearchFilterFontSize: "small",
+    landingPageSearchFieldFontFamily: "Tahoma",
+    landingPageSearchFieldColor: {r: 201, g: 53, b: 28, a: 0.5},
+    landingPageSearchFieldBackgroundColor: {r: 49, g: 175, b: 34, a: 1},
+    landingPageSearchFieldFontSize: "medium",
+    landingPageHeadingStyleFontFamily: "Courier",
+    landingPageHeadingStyleColor: {r: 103, g: 30, b: 195, a: 1},
+    landingPageHeadingStyleFontSize: "large",
+    landingPageCarouselArrowsColor: {r: 13, g: 104, b: 49, a: 0.5},
+    landingPageCarouselArrowsBackgroundColor: {r: 167, g: 158, b: 67, a: 1},
+    landingPageNoResultsMsgFontFamily: "Arial",
+    landingPageNoResultsMsgColor: {r: 209, g: 194, b: 114, a: 0.5},
+    landingPageNoResultsMsgFontSize: "large",
+    verify: true
 }
 
 const colorConfigToCSS = (colorConfig) => {
@@ -47,12 +69,15 @@ const colorConfigToCSS = (colorConfig) => {
 }
 
 const fontSizeToCSS = {small: "13px", medium: "15px", large: "27px"}
+const fontSizeToCSS_LandPage = {small: "13px", medium: "15px", large: "17px"}
+const fontSizeToCSS_LandPg_Heading = {small: "21px", medium: "24px", large: "27px"}
 
 const fontWeightToCSS = (bold) => { return bold ? "700" : "400" }
 
 const navItem = {
     label: "Text",
-    type: "Text"
+    type: "Text",
+    verify: false
 }
 
 const session = {
@@ -82,15 +107,15 @@ const landingPage2 = {
         return `${event.url}/${this.slug}`
     },
     visibility: 'Public',
+    setHome: true,
     blocks: [
         {
             type: "Session Group",
             sessionGroup: sessionGroup,
+            verify: false
         },
     ]
 }
-
-// Test the appearance set up area. For now, this test is deliberately sparse because this area will likely change a lot soon 
 describe('VEX - Virtual Event', function() {
     it('Configure appearance on authoring side then verify on consumption', function() {
         cy.viewport(1500, 1000)
@@ -101,7 +126,7 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.configurations.appearances.vex.headerBackgroundColorPreview).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.headerBackgroundColor))
         cy.get(authoring.configurations.appearances.vex.headerTitleFontPreview)
             .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.headerTitleFontColor))
-            .should("have.css", "font-family", vexAppearanceSettings.headerTitleFontFamily)  
+            .should("have.css", "font-family", vexAppearanceSettings.headerTitleFontFamily)
             .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.headerTitleFontSize])
             .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.headerTitleBoldFont))
         cy.get(authoring.configurations.appearances.vex.bodySessionTitleFontPreview)
@@ -118,7 +143,37 @@ describe('VEX - Virtual Event', function() {
             .should("have.css", "font-family", vexAppearanceSettings.activeFontFamily)
             .should("have.css", "font-size", fontSizeToCSS[vexAppearanceSettings.activeFontSize])
             .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.activeBoldFont))
-        authoring.vex.visit() 
+        cy.get(authoring.configurations.appearances.vex.sessionDescriptionPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.sessionDescriptionFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.sessionDescriptionFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.sessionDescriptionFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.sessionDescriptionFontWeight))
+        cy.get(authoring.configurations.appearances.vex.searchFilterStylePreview)
+            .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterBackgroundColor))
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterColor))
+            .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFilterFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFilterFontSize])
+        cy.get(authoring.configurations.appearances.vex.searchFieldInputPreview)
+            .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldBackgroundColor))
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldColor))
+            .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFieldFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFieldFontSize])
+        cy.get(authoring.configurations.appearances.vex.headingStylePreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageHeadingStyleColor))
+            .should("have.css", "font-family", vexAppearanceSettings.landingPageHeadingStyleFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPg_Heading[vexAppearanceSettings.landingPageHeadingStyleFontSize])
+        cy.get(authoring.configurations.appearances.vex.carouselArrowsPreview)
+            .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsBackgroundColor))
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsColor))
+        cy.get(authoring.configurations.appearances.vex.noResultsMsgPreview)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageNoResultsMsgColor))
+            .should("have.css", "font-family", vexAppearanceSettings.landingPageNoResultsMsgFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageNoResultsMsgFontSize])
+        cy.get(authoring.configurations.appearances.vex.cardRadiusPreview)
+            .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
+        cy.get(authoring.configurations.appearances.vex.searchFieldInputPreview)
+            .should("have.css", "border-radius", vexAppearanceSettings.landingPageSearchFilterRadius+"px")
+        authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
         cy.contains('a', 'Appearance Setup').click()
@@ -129,68 +184,88 @@ describe('VEX - Virtual Event', function() {
 
         // Delete any navigation items that might have been left from previous run
         authoring.vex.deleteAllNavItems()
-        authoring.vex.goToLandingPage()
-        authoring.vex.unsetHomePage(landingPage)
 
         // Verify landing page blocks will now have carousel by default
         authoring.vex.deleteLandingPages(landingPage2.name)
         authoring.vex.addLandingPages(landingPage2.name)
         authoring.vex.configureLandingPage(landingPage2)
         authoring.vex.goToPageEditor(landingPage2.name)
-        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup).within(() => {
-            cy.get(authoring.vex.pages.carouselArrow).should("exist")
+        //Verify that the virtual event appearance settings are applied correctly in landing page
+        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup,{ timeout: 10000 }).within(() => {
+            cy.get(authoring.vex.pages.sessionCard)
+              .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
+            cy.get(authoring.vex.pages.Filter_Topic)
+              .should("have.css", "border-radius", vexAppearanceSettings.landingPageSearchFilterRadius+"px")
+            cy.get(authoring.vex.pages.searchFilter)
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterBackgroundColor))
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFilterFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFilterFontSize])
+            cy.get(authoring.vex.pages.searchInputField)
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldBackgroundColor))
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFieldFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFieldFontSize])
+            cy.get(`h4:contains("${sessionGroup}")`)
+              .should("exist")
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageHeadingStyleColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageHeadingStyleFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPg_Heading[vexAppearanceSettings.landingPageHeadingStyleFontSize])
+            cy.get(authoring.vex.pages.carouselArrow)
+              .should("exist")
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsBackgroundColor))
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsColor))
         })
 
-        // Switch appearance settings to grid by default
-        authoring.configurations.visit.appearances()
-        authoring.configurations.configureVEXAppearance({
-            appearance: "vexAppearance.js",
-            layout: "Grid"
-        })
-
-        // Verify landing page blocks will have grid by default
-        authoring.vex.visit() 
-        authoring.vex.goToEventConfig(event.name)
-        authoring.vex.deleteLandingPages(landingPage2.name)
-        authoring.vex.addLandingPages(landingPage2.name)
-        authoring.vex.configureLandingPage(landingPage2)
-        authoring.vex.goToPageEditor(landingPage2.name)
-        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup).within(() => {
-            cy.get(authoring.vex.pages.carouselArrow).should("not.exist")
-        })
-        cy.go("back")
-
-        // Go to consumption side and verify settings got applied 
+        //Go to consumption side and verify VEX appearance settings got applied
         cy.visit(event.url)
-
-        // Check the text fields
-        cy.contains(consumption.vex.eventHeroTitle, appearance.headerTitle, {timeout: 20000}).should('exist')
-        cy.contains(consumption.vex.eventHeroSubtitle, appearance.headerSubtitle).should('exist')
-        cy.contains(consumption.vex.eventContentTitle, appearance.contentTitle).should('exist')
-        cy.contains(consumption.vex.eventContentDescription, appearance.contentDescription).should('exist')
-
         // Check the header appearance settings 
         cy.get(consumption.vex.vexHeader).should("have.css", "background-color", "rgb(255, 0, 0)").within(()=>{
             cy.get("img[src*='/stock/sm/animal-dog-pet-cute.jpg']").should('exist')
             cy.contains('a', event.name).should("have.css", "font-family", "Tahoma")
         })
-
-        // Check the explore appearance settings (controls the hero and event container)
-        cy.get(consumption.vex.vexHeroContainer).should("have.css", "background-color", "rgb(0, 255, 0)")
-            .invoke("css", "background-image").should("have.contain", "/stock/sm/animal-dog-pet-cute.jpg")
-        cy.get(consumption.vex.vexEventContainer).eq(1).parent().should("have.css", "background-color", "rgb(0, 0, 255)")
-
-        // Check the form submit button color (controlled on the form configuration itself)
-        cy.contains("button", "Submit").should("have.css", "background-color", "rgb(0, 0, 255)")
-
-        // Check the general appearance settings (controls the form appearance)
-        cy.get(consumption.vex.vexFormTitle).should("have.css", "color", "rgb(255, 0, 255)").should("have.css", "font-family", "Overpass")
-        cy.get(consumption.vex.vexFormDescription).should("have.css", "color", "rgb(0, 255, 255)").should("have.css", "font-family", "Overpass")
-
+        cy.contains(consumption.vex.sessionGroup, sessionGroup,{ timeout: 10000 }).within(() => {
+            cy.get(consumption.vex.sessionCard)
+              .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
+            cy.get(consumption.vex.FilterByTopic)
+              .should("have.css", "border-radius", vexAppearanceSettings.landingPageSearchFilterRadius+"px")
+            cy.get(consumption.vex.searchFilter)
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterBackgroundColor))
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFilterFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFilterFontSize])
+            cy.get(consumption.vex.searchInputField)
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldBackgroundColor))
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFieldColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageSearchFieldFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageSearchFieldFontSize])
+            cy.get(`h2:contains("${sessionGroup}")`)
+              .should("exist")
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageHeadingStyleColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageHeadingStyleFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPg_Heading[vexAppearanceSettings.landingPageHeadingStyleFontSize])
+            cy.get(consumption.vex.carouselArrow_bgColor)
+              .should("exist")
+              .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsBackgroundColor))
+            cy.get(consumption.vex.carouselArrow_color)
+              .should("exist")
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageCarouselArrowsColor))
+            cy.get(consumption.vex.searchInputField).type("abcd" +"\n",{force: true})
+        })
+        cy.get(consumption.vex.noResultsMsg)
+              .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.landingPageNoResultsMsgColor))
+              .should("have.css", "font-family", vexAppearanceSettings.landingPageNoResultsMsgFontFamily)
+              .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.landingPageNoResultsMsgFontSize])
+        cy.get(consumption.vex.searchInputField).clear()
         // Go to session and check the vex appearance settings (event session sidebar, and body)
-        cy.contains("a", "Youtube").click()
+        cy.contains("a", "Youtube",{ timeout: 10000 }).click()
         consumption.vex.fillStandardForm({email: "getOutOfMyWay@gmail.com"}) // Settings (other than the blue button) not applied to form on session page... not sure if this is intended?
         cy.get(consumption.vex.jukeBoxApp + ">div", {timeout: 20000}).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.backgroundColor))
+        cy.get(consumption.vex.sessionDescriptionStyle)
+            .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.sessionDescriptionFontColor))
+            .should("have.css", "font-family", vexAppearanceSettings.sessionDescriptionFontFamily)
+            .should("have.css", "font-size", fontSizeToCSS_LandPage[vexAppearanceSettings.sessionDescriptionFontSize])
+            .should("have.css", "font-weight", fontWeightToCSS(vexAppearanceSettings.sessionDescriptionFontWeight))
         cy.get(consumption.vex.supplementalContent).children("li").eq(0)
             .should("have.css", "color", colorConfigToCSS(vexAppearanceSettings.bodyFontColor))
             .should("have.css", "font-family", vexAppearanceSettings.bodyFontFamily)
@@ -211,21 +286,16 @@ describe('VEX - Virtual Event', function() {
         cy.go("back")
         cy.go("back")
         cy.go("back")
+        cy.go("back")
         authoring.vex.addNavItem(navItem)
-        authoring.vex.goToLandingPage()
-        authoring.vex.setToHomePage(landingPage)
         cy.wait(1500)
 
         // Go back to consumption and verify the appearance settings of the navigation header 
         cy.visit(event.url)
         cy.get(consumption.vex.vexHeader).should("have.css", "background-color", "rgb(255, 0, 0)").within(()=>{
+            cy.get("img[src*='/stock/sm/animal-dog-pet-cute.jpg']").should('exist')
             cy.get(consumption.vex.vexHeaderMenuItem).should("have.css", "font-family", "Tahoma")
-        })
-
-        // Verify the session group search input appearance (controlled in explore appearance settings)
-        cy.contains(consumption.vex.sessionGroup, sessionGroup).within(() => {
-            cy.get("input").should("have.css", "color", "rgb(0, 0, 100)").should("have.css", "background-color", "rgb(0, 100, 0)")
-            cy.contains("button", "Search").should("have.css", "color", "rgb(0, 100, 0)").should("have.css", "background-color", "rgb(100, 0, 0)")
+            cy.contains('div', navItem.label).should("exist")
         })
 
         // Turn off navigation header in the vex appearance settings
@@ -240,5 +310,28 @@ describe('VEX - Virtual Event', function() {
         cy.get(consumption.vex.vexHeader).should("not.exist")
         cy.visit(session.url)
         cy.get(consumption.vex.vexHeader).should("not.exist")
+
+        // Switch appearance settings to grid by default
+        authoring.configurations.visit.appearances()
+        authoring.configurations.configureVEXAppearance({
+            appearance: "vexAppearance.js",
+            layout: "Grid"
+        })
+        // Verify landing page blocks will have grid by default
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.configureLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+        cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup, {timeout: 10000}).within(() => {
+            cy.get(authoring.vex.pages.carouselArrow).should("not.exist")
+        })
+        //Go to consumption side and verify carousal arrow is not present
+        cy.visit(event.url)
+        cy.contains(consumption.vex.sessionGroup, sessionGroup,{ timeout: 10000 }).within(() => {
+            cy.get(consumption.vex.carouselArrow_bgColor).should("not.exist")
+            cy.get(consumption.vex.carouselArrow_color).should("not.exist")
+        })
     })
 })
