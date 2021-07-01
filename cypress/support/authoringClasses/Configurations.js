@@ -558,8 +558,8 @@ export class Configurations extends Common {
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
-        
-        cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
+        cy.wait(3000)
+       cy.ifNoElementWithExactTextExists("div", name, 5000, ()=>{
             this.clickAddAppearance() 
 
             if(name){
@@ -1131,12 +1131,15 @@ export class Configurations extends Common {
 
     resetLanguageSetting(options){
         const{name, tab} = options
-
         this.clicklanguage(name)
         this.gotoLanguageTab(tab)
-        cy.contains("button", "Reset Settings").click()
-        cy.contains(this.modal, "Are you sure?").within(()=>{
-            cy.contains("button", "Yes").click()
+        cy.wait(5000)
+        cy.get("#reset-settings",{timeout:10000}).should("be.visible").click()
+        cy.wait(2000)
+        cy.contains(this.modal, "Are you sure?",{timeout:10000}).within(()=>{
+            cy.wait(2000)
+            cy.contains("button", "Yes",{timeout:10000}).should("be.visible").click()
+            cy.wait(2000)
         })    
         
         cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")

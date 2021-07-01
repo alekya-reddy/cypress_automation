@@ -89,6 +89,7 @@ describe("VEX - External Code", () => {
         authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(landingPage.name)
 
+        
         // Check that all external codes are present in Landing Page editor
         cy.get(globalExternalCode.locator).should("exist") // Comes from global external code
         cy.get(eventExternalCode.locator).should("exist")

@@ -5,7 +5,7 @@ const consumption = createConsumptionInstance({org: 'automation-microsites', tld
 
 const microsite = {
     name: "micrositeSearchDirective.js",
-    slug: "micrositesearchDirective-js",
+    slug: "micrositesearchdirective-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
@@ -97,7 +97,8 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         // When a canonical URL of Microiste is selected for the microsite, should show the respective URL of the microsite home page/landing page or the microsite track URL in the page source.
         cy.get(authoring.common.antDropSelect.options("Canonical URL of Microsite")).click()
         cy.get(`span[title='${"Canonical URL of Microsite"}']`).should('exist')
-        cy.contains('button', 'Save').click()
+        cy.contains('button', 'Save').click({force:true})
+        cy.wait(2000)
         cy.visit(landingPage.url)
         // Verifying canonical URL of microsite
         cy.get('link[rel="canonical"]').should("have.attr", "href", landingPage.url);
@@ -125,8 +126,10 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         })
         cy.get(authoring.common.antDropSelect.options("No Index, No Follow")).click()
         cy.get(`span[title='${"No Index, No Follow"}']`).should('exist')
+        cy.wait(4000)
         cy.contains('button', 'Save').click()
         cy.visit(landingPage.url)
+        cy.wait(4000)
         cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, nofollow");
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-microsites");
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 

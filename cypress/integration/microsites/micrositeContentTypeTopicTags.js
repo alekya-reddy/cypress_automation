@@ -64,6 +64,7 @@ describe("Microsite - Content Type and Topic Tags", () => {
                 authoring.recommend.configure(tracks.recommendContentTypeTopicTags)
                 authoring.target.addTrack(tracks.targetContentTypeTopicTags)
                 authoring.target.configure(tracks.targetContentTypeTopicTags)
+                
                 authoring.microsites.addMicrosite(microsite.name)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({recommend: tracks.recommendContentTypeTopicTags.name, target: tracks.targetContentTypeTopicTags.name})

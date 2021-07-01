@@ -82,8 +82,8 @@ export class Microsites extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
-             listOption: "div[class*='ant-transfer sc-kocBos']",
-            itemsList: "ul[class*='ant-transfer-list-content']"
+             listOption: "li[class*='ant-transfer-list-content-item']",
+            itemsList: "span[class*='ant-transfer-list-content-item']"
         };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
@@ -117,23 +117,21 @@ export class Microsites extends Common {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 2000, () => {
-            cy.containsExact(this.micrositesPage.cardTitle, microsite).parents(this.micrositesPage.card).within(() => {
-                cy.contains("button", "More Actions").click()
-            })
-            cy.contains("li", "Remove").should("exist").click()
-            cy.contains(this.antModal, "Are you sure want to remove this record?").within(() => {
-                cy.contains('Yes').click()
-            })
-        })
+        cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')
+        cy.get(`button[id='delete-${microsite}']`).should('exist').click()
+        cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
+            cy.contains('Yes').click()
+           })
+       })
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
+        
     }
 
     goToMicrositeConfig(microsite, verify) {
         cy.get(this.pageTitleLocator).invoke('text').then((text) => {
             if (text !== microsite) {
-                cy.containsExact(this.micrositesPage.cardTitle, microsite, { timeout: 20000 }).should('exist').parents(this.micrositesPage.card).within(() => {
-                    cy.contains("button", "Configure").click()
-                })
+                cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')
+                cy.get(`a[id='configure-${microsite}']`).should('exist').click()
             }
         })
         if (verify !== false) {
@@ -1233,13 +1231,13 @@ export class Microsites extends Common {
             cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
             if (option.label != "Search") {
                 if(cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).length > 1){
-                    cy.get(this.searchAndFilter.listOption).eq(1).find(this.searchAndFilter.itemsList).find('li').invoke('attr','title').then(text => {
+                    cy.get(this.searchAndFilter.listOption).eq(1).invoke('attr','title').then(text => {
                         expect(text).to.not.equal(null)
                     })
                 }
                 else
                 {
-                    cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).find('li').invoke('attr','title').then(text => {
+                    cy.get(this.searchAndFilter.listOption).invoke('attr','title').then(text => {
                         expect(text).to.not.equal(null)
                     })
                 }

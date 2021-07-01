@@ -188,6 +188,7 @@ describe("VEX - Language Settings", ()=>{
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(lang3.name)
         authoring.configurations.gotoLanguageTab("virtual-event")
+        cy.wait(3000)
         cy.get(authoring.configurations.languages.vex.searchButtonTitle).clear().type(customVEXLanguage.search)
         cy.get(authoring.configurations.languages.vex.searchInputFieldPlaceholder).clear().type(customVEXLanguage.searchInputFieldPlaceholder)
         cy.get(authoring.configurations.languages.vex.filterByAvailabilityTitle).clear().type(customVEXLanguage.filterByAvailabilityTitle)
