@@ -74,7 +74,8 @@ describe('VEX - Virtual Event', function() {
 
         // Refresh and verify new session settings have been saved 
         cy.reload();
-        cy.get(authoring.vex.sessionNameInput).should('have.value', session.newName);
+
+        cy.get(authoring.vex.sessionNameInput,{timeout:20000}).should('have.value', session.newName);
         cy.get(authoring.vex.sessionSlugInput).should('have.value', session.slug);
         cy.get(authoring.vex.sessionDescription.editor).should('contain', session.description);
         cy.get(authoring.vex.publicRadio).parent().should('have.class', 'ant-radio ant-radio-checked'); 

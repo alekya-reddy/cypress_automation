@@ -165,7 +165,7 @@ const landingPage = {
 }
 
 const defaultLandingPage = {
-    name: "landing Page Home Page",
+    name: "Home Page",
     slug: "landing-page-home-pa",
     get url(){
         return `${microsite.url}/${this.slug}`
@@ -182,7 +182,7 @@ describe("Microsites - Landing page setup", () => {
 
         // Every new microsite has a default landing page with these settings: 
         authoring.microsites.tabToLandingPages()
-        cy.containsExact(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 10000}).should("exist")
+        cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 10000}).should("exist")
         .parents(authoring.microsites.antTable.row).within(() => {
             cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
             cy.contains("button", "Remove").should("not.exist") // Any landing page that is set to home page cannot be removed 

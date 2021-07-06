@@ -370,6 +370,7 @@ export class Microsites extends Common {
             })
             target.forEach((track) => {
                 cy.get('input[class="ant-select-selection-search-input"]').type(track + "\n")
+                cy.wait(3000)
             })
         }
 
@@ -522,8 +523,11 @@ export class Microsites extends Common {
         const verify = config.verify
 
         this.tabToLandingPages()
-        cy.containsExact(this.table.antCell, name).siblings("td:contains('Edit')").within(() => {
-            cy.contains("button", "Edit").click()
+        // cy.containsExact(this.table.antCell, name).siblings("td:contains('Edit')").within(() => {
+        //     cy.contains("button", "Edit").click()
+        // })
+        cy.contains('td', name).siblings("td").within(() => {
+            cy.contains("span", "Edit").click()
         })
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
             if (newName) {
@@ -546,21 +550,21 @@ export class Microsites extends Common {
                 cy.containsExact(this.table.antCell, checkName).should('exist')
             }
             if (visibility == 'public') {
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('exist')
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Public')").should('exist')
+                cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Private')").should('exist')
             }
             if (slug) {
-                cy.containsExact(this.table.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')
+                cy.containsExact("td", checkName).siblings(`td:contains('${slug}')`).should('exist')
             }
         }
     }
 
     setToHomePage(page) {
         cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
-            cy.contains("button", "Set as Home Page").click()
+            cy.contains("button", "Set as Home Page").click({force:true})
         })
     }
 
@@ -627,7 +631,7 @@ export class Microsites extends Common {
         const searchConfiguration = config.searchConfiguration
 
         cy.waitFor({ element: this.landingPages.addBlockButton, to: "exist", wait: 10000 })
-        cy.wait(2000)
+        cy.wait(5000)
         cy.get(this.landingPages.addBlockButton).eq(0).click({ force: true }) // Always pick first one and add to top 
         if (type == "html") {
             cy.get(this.landingPages.addHTMLButton + ":visible").eq(0).click({ force: true })

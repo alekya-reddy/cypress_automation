@@ -69,6 +69,7 @@ describe('VEX - Virtual Event', function() {
             cy.get('body').should('contain', slug.expect)
             slug.expect !== successfulSaveMessage ? cy.contains(genericErrorMessage).should('exist') : null ;
             cy.reload()
+            cy.wait(5000)
             if(slug.expect == successfulSaveMessage){
                 cy.get(authoring.vex.sessionSlugInput).should('have.value', slug.value);
             } else {

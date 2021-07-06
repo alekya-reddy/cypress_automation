@@ -51,7 +51,7 @@ export class Common {
         };
         this.antTable = {
             cell: ".ant-table-cell",
-            row: ".ant-table-row"
+            row: "tr[class*='ant-table-row']"
         };
         this.antCard = {
             container: ".ant-card",

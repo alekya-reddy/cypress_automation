@@ -26,7 +26,7 @@ export class Vex extends Common {
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
         this.searchSessionIcon = 'svg[data-icon="search"]';
-        this.searchSessionInput = "#search-session-name";
+        this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.sessionName = function(sessionName){ 
@@ -250,7 +250,7 @@ export class Vex extends Common {
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
 
-        slug ? cy.get(this.eventSlugInput).clear().type(slug) : null;
+        slug ? cy.get(this.eventSlugInput,{timeout:20000}).clear().type(slug) : null;
 
         if(externalID){
             cy.get(this.externalIDInput).clear().type(externalID)
@@ -310,6 +310,7 @@ export class Vex extends Common {
     }
 
     setLanguage(language){
+        cy.wait(5000)
         cy.contains(this.antRow, "Language").within(()=>{
             cy.get(this.antSelector).click()
         })
@@ -320,7 +321,7 @@ export class Vex extends Common {
     configureForm(form){
         const name = form.name
         const save = form.save == false ? false : true 
-
+        cy.wait(5000)
         cy.contains(this.antRow, "Attendee Registration Form").within(()=>{
             cy.get("input").clear({force: true}).type(name, {force: true})
         })
@@ -1209,6 +1210,7 @@ export class Vex extends Common {
             cy.contains("button", "Submit").click()
         })
         if(verify){
+            cy.wait(5000)
             cy.containsExact("span", email.toLowerCase()).should('not.exist')
             cy.containsExact("span", newEmail.toLowerCase()).should("exist")
         }
@@ -1321,7 +1323,7 @@ export class Vex extends Common {
     setToHomePage(page){
         cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
             cy.ifElementWithExactTextExists("button", "Set as Home Page", 1500, () => {
-                cy.contains("button", "Set as Home Page").click()
+                cy.contains("button", "Set as Home Page").click({force: true})
             })
         })
     }
@@ -1329,7 +1331,7 @@ export class Vex extends Common {
     unsetHomePage(page){
         cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
             cy.ifElementWithExactTextExists("button", "Unset", 1500, () => {
-                cy.contains("button", "Unset").click()
+                cy.contains("button", "Unset").click({force: true})
             })
         })
     }
@@ -1475,7 +1477,9 @@ export class Vex extends Common {
         }
 
         if(enableSearch){
-            cy.get(this.searchConfigurationLabel).click()
+            cy.wait(5000)
+            // cy.get(this.pages.searchConfigurationLabel).click()
+            cy.contains('div','Search Configuration').click()
             cy.get(this.pages.searchToggle).click()
         }
 
@@ -1770,7 +1774,7 @@ export class Vex extends Common {
             })
             cy.contains(this.antModal, "Add Virtual Event").within(()=>{
                 cy.get(this.eventNameInput).clear().type(name)
-                cy.get(this.antSelector).click()
+                cy.get(this.antSelector).eq(0).click()
             })
             cy.mouseWheel({
                 scroller: this.antDropDownScroller,

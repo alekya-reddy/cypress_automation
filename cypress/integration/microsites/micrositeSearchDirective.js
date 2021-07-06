@@ -113,8 +113,11 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         })
         cy.get(authoring.common.antDropSelect.options("No Index, Follow")).click()
         cy.get(`span[title='${"No Index, Follow"}']`).should('exist')
+        cy.wait(3000)
         cy.contains('button', 'Save').click()
+        cy.wait(3000)
         cy.visit(landingPage.url)
+        cy.wait(3000)
         cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, follow");
 
          // Set field value to "No Index, Follow" and verify in consumption page
@@ -129,8 +132,8 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.wait(4000)
         cy.contains('button', 'Save').click()
         cy.visit(landingPage.url)
-        cy.wait(4000)
-        cy.get('meta[name="robots"]').should("have.attr", "content", "noindex, nofollow");
+        cy.wait(5000)
+        cy.get('meta[name="robots"]',{timeout:20000}).should("have.attr", "content", "noindex, nofollow");
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-microsites");
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
         cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 

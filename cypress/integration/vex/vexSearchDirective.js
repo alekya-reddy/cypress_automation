@@ -100,6 +100,7 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         authoring.common.login()
         authoring.vex.visit() 
         authoring.vex.goToEventConfig(event.name)
+        cy.wait(5000)
         // Validations for search Engine Directive drop down field values
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.vex.antSelector).click()
@@ -115,19 +116,20 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.get(`span[title='${"Canonical URL of VEX"}']`).should('exist')
         cy.contains('button', 'Save').click()
         cy.visit(event.url)
+        cy.wait(7000)
         // Verifying canonical URL of VEX
         cy.get('link[rel="canonical"]').should("have.attr", "href", event.url);
         //VEX landing page: include SEO configuration, og and twitter fields [We can verify SEO configurations with any SED values]
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-vex");
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
         cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
-        cy.get('meta[property="og:description"]').should("have.attr", "content", landingPage.name); 
-        cy.get('meta[property="twitter:description"]').should("have.attr", "content", landingPage.name);
+        cy.get('meta[property="og:description"]').should("have.attr", "content", "Virtual Event"); 
+        cy.get('meta[property="twitter:description"]').should("have.attr", "content", "Virtual Event");
         cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 
         cy.get('meta[property="og:image:width"]').should("have.attr", "content", "576");  
         cy.get('meta[property="og:type"]').should("have.attr", "content", "website");  
         cy.get('meta[property="og:title"]').should("have.attr", "content", landingPage.name);  
-        cy.get('meta[name="description"]').should("have.attr", "content", landingPage.name); 
+        cy.get('meta[name="description"]').should("have.attr", "content", "Virtual Event"); 
         cy.get('meta[name="twitter:site"]').should("have.attr", "content", "www_twitter_com"); 
         cy.get('meta[name="twitter:creator"]').should("have.attr", "content", "www_twitter_com"); 
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.name);
@@ -153,6 +155,7 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1.name)
         authoring.vex.goToEventConfig(event1.name)
+        cy.wait(5000)
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")
         }) 

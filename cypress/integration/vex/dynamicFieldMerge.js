@@ -130,6 +130,7 @@ describe("VEX - Dynamic Field Merge", () => {
         // Verify that if there is no known visitor, the email field would be blank
         cy.clearCookies()
         cy.visit(event.url)
+        cy.wait(5000)
         cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text", {timeout: 20000}).should('exist')            
     })    
 })    

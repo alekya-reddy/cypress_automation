@@ -164,10 +164,12 @@ describe("VEX - Cookie Consent", ()=>{
         authoring.settings.configureCookieConsent({option: authoring.settings.cookieConsent.options.enableForAll})
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
+        cy.wait(5000)
         cy.get(authoring.vex.cookieConsentCheckbox).should("exist")
 
         // Confirm cookie consent exists on VEX on consumption side 
         cy.visit(event.url)
+        cy.wait(5000)
         cy.get(consumption.vex.header.cookieSettings).should('exist')
         cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist')
         consumption.vex.checkSessionCookie(5000)

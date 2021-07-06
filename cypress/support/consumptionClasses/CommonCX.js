@@ -35,7 +35,7 @@ export class CommonCX {
         };
         this.header = {
             locator: "#qa-header",
-            cookieSettings: "#pf-event-cookie-consent-button",
+            cookieSettings: "#qa-cookie-consent",
             facebookIcon: "#facebook-link"
         };
         this.cookieSettings = {

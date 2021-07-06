@@ -12,8 +12,9 @@ describe('Microsites - Client HQs', function() {
             //When Microsites is toggled on, you should see Microsites appearance settings tab
             authoring.configurations.visit.appearances(); 
             cy.get(authoring.configurations.appearances.secondaryNav, {timeout: 10000}).within(() => {
-                cy.get('a[href$="microsite-builder"]').should('exist');
+                cy.contains('div','Campaign Tools').click() 
             })
+            cy.get('a[href$="microsite-builder"]').should('exist');
         }
     })
     it('When Microsites is toggled off, you should see pemission denied message when microsite builder is navigated', function() {

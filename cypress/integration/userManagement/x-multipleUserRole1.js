@@ -192,7 +192,7 @@ describe('Content Library + VEX + General Settings Access', function() {
         cy.visit(authoring.website.websiteAnalyticsUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
-
+    
         // VEX
         cy.visit(authoring.vex.vexUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.vex.virtualEventHomeTitle).should("exist")
@@ -206,7 +206,7 @@ describe('Content Library + VEX + General Settings Access', function() {
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.configureLandingPage(landingPage)
         authoring.vex.deleteVirtualEvent(event.name)
-
+        
         // Website Tools
         cy.visit(authoring.websiteTools.websiteToolsUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.pageTitle).should("not.exist")
