@@ -523,9 +523,6 @@ export class Microsites extends Common {
         const verify = config.verify
 
         this.tabToLandingPages()
-        // cy.containsExact(this.table.antCell, name).siblings("td:contains('Edit')").within(() => {
-        //     cy.contains("button", "Edit").click()
-        // })
         cy.contains('td', name).siblings("td").within(() => {
             cy.contains("span", "Edit").click()
         })

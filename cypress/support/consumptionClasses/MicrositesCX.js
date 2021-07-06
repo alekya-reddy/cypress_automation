@@ -120,7 +120,6 @@ export class MicrositesCX extends CommonCX {
 
         if (type == "track" || type == "featured") {
             const trackName = titleOverride || track || name
-            //cy.containsExact("h4", trackName, { timeout: 10000 }).should("exist")
             cy.wait(5000)
             cy.contains("h4", trackName, { timeout: 10000 }).should("exist")
 

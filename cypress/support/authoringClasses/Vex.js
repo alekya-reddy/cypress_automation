@@ -1478,7 +1478,6 @@ export class Vex extends Common {
 
         if(enableSearch){
             cy.wait(5000)
-            // cy.get(this.pages.searchConfigurationLabel).click()
             cy.contains('div','Search Configuration').click()
             cy.get(this.pages.searchToggle).click()
         }
