@@ -115,7 +115,8 @@ describe('VEX - Virtual Event Registration', function() {
         // The same form should show up on session pages
         sessions.forEach((session)=>{
             cy.visit(session.url)
-            cy.get('form').should('exist')
+            cy.wait(3000)
+            cy.get('form',{timout:20000}).should('exist')
             form1.expectedFormFieldLocators.forEach((locator)=>{
                 cy.get(locator).should('exist') 
             })

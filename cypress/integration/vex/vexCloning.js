@@ -216,6 +216,7 @@ const navigation = [
 ]
 
 const verifyEventSetup = (event) => {
+    cy.wait(5000)
     cy.get(authoring.vex.eventNameInput).should("have.value", event.cloneName)
     cy.get(authoring.vex.eventSlugInput).should("not.have.value", event.slug) // the slug should not be cloned
     cy.get(authoring.vex.startTimeInput).should("have.value", event.start)

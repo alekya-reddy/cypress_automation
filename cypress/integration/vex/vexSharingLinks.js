@@ -54,18 +54,9 @@ describe("VEX - Sharing links", ()=>{
         authoring.common.login()
         authoring.vex.visit()
 
-        // Check for sharing links on the event card 
-        cy.containsExact(authoring.vex.eventCardTitle, event.name, {timeout: 20000}).parents(authoring.vex.eventCardLocator).within(()=>{
-            cy.get(authoring.vex.shareIcon).should('exist').click()
-        })
-        cy.contains(authoring.vex.modal, "Share Link").within(()=>{
-            cy.contains(event.url).should("exist")
-        })
-        cy.get(authoring.vex.closeModal).click()
-        cy.contains(authoring.vex.modal).should("not.exist")
-
         // Check for sharing links on the event configuration page
         authoring.vex.goToEventConfig(event.name)
+        cy.wait(5000)
         cy.containsExact("span", event.url, {timeout: 20000}).parent().within(()=>{
             cy.get(authoring.vex.shareIcon).click()
         })
