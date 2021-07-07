@@ -101,13 +101,54 @@ export class Configurations extends Common {
                 activeSettings: "#activeItemAppearance",
                 activeFontWeight: "#activeItemFontWeight",
                 activeFontColor: "#activeItemColor",
+                sessionDescriptionSettings: "#sessionDescriptionAppearance",
+                sessionDescriptionFontWeight: "#sessionDescriptionFontWeight",
+                sessionDescriptionFontSize: "#sessionDescriptionFontWeight",
+                sessionDescriptionFontColor: "#sessionDescriptionColor",
                 hideNavigation: "div[data-qa-hook='checkbox']",
-                backgroundcolorPreview: "div[data-qa-hook='page-body'] > div > div > div > div:nth-child(1) > div:nth-child(2)",
+                backgroundcolorPreview: "div[data-qa-hook='page-body'] > div > div > form > div:nth-of-type(2) > div >div >div:nth-of-type(2)#vexPreview",
                 headerBackgroundColorPreview: "div[class='ant-col ant-col-14'] > div:nth-child(1)",
                 headerTitleFontPreview: "div[class='ant-col ant-col-14'] > div:nth-child(1) > div",
                 bodySessionTitleFontPreview: "div[class='ant-col ant-col-14'] > div:nth-child(3)",
                 bodySuppplementalContentFontPreview: "div[class='ant-col ant-col-10'] > div:nth-child(3)",
                 activeTitleFontPreview: "div[class='ant-col ant-col-10'] > div:nth-child(4)",
+                sessionDescriptionPreview: "#sessionDescription",
+                cardRadius: "input[name='cardCornerRadius']",
+                searchFilterRadius: "input[name='searchFiltersCornerRadius']",
+                searchFilterSettings: "#searchFiltersStyleFontFamily",
+                searchFilterFontFamily: "input[name='searchFiltersStyleFontFamily']",
+                searchFilterColor: "#searchFiltersStyleColor > div > div > div",
+                searchFilterBackgroundColor: "#searchFiltersStyleBackgroundColor > div > div > div",
+                searchFiltersStyleFontSizeSmall: "#searchFiltersStyleFontSizeSmall",
+                searchFiltersStyleFontSizeMedium: "#searchFiltersStyleFontSizeMedium",
+                searchFiltersStyleFontSizeLarge: "#searchFiltersStyleFontSizeLarge",
+                searchFieldSettings: "#searchFieldInputFontFamily",
+                searchFieldFontFamily: "input[name='searchFieldInputFontFamily']",
+                searchFieldColor:  "#searchFieldInputColor > div > div > div",
+                searchFieldBackgroundColor: "#searchFieldInputBackgroundColor > div > div > div",
+                searchFieldStyleFontSizeSmall: "#searchFieldInputFontSizeSmall",
+                searchFieldsStyleFontSizeMedium: "#searchFieldInputFontSizeMedium",
+                searchFieldStyleFontSizeLarge: "#searchFieldInputFontSizeLarge",
+                headingStyleSettings: "#defaultHeadingFontFamily",
+                headingStyleFontFamily: "input[name='defaultHeadingFontFamily']",
+                headingStyleColor: "#defaultHeadingColor",
+                defaultHeadingFontSizeSmall: "#defaultHeadingFontSizeSmall",
+                defaultHeadingFontSizeMedium: "#defaultHeadingFontSizeMedium",
+                defaultHeadingFontSizeLarge: "#defaultHeadingFontSizeLarge",
+                carouselArrowsColor: "#carouselArrowsStyleColor > div > div > div",
+                carouselArrowsBackgroundColor: "#carouselArrowsStyleBackgroundColor > div > div > div",
+                noResultMsgSettings: "#noResultsMessageFontFamily",
+                noResultsMsgFontFamily: "input[name='noResultsMessageFontFamily']",
+                noResultsMsgColor: "#noResultsMessageColor",
+                noResultsMessageFontSizeSmall: "#noResultsMessageFontSizeSmall",
+                noResultsMessageFontSizeMedium: "#noResultsMessageFontSizeMedium",
+                noResultsMessageFontSizeLarge: "#noResultsMessageFontSizeLarge",
+                searchFilterStylePreview: "#search-field-preview > div",
+                searchFieldInputPreview: "#search-field-preview > input",
+                headingStylePreview: "#landing-page-grid-preview > div",
+                carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
+                noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
+                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
             },
             microsites: { 
                 hideNavigation: "div[data-qa-hook='checkbox']"
@@ -664,25 +705,26 @@ export class Configurations extends Common {
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
+        const {sessionDescriptionFontFamily,sessionDescriptionFontWeight,sessionDescriptionFontSize,sessionDescriptionFontColor} = options
+        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
+        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
+        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
+        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
 
         this.goToCampaignAppearance(appearance, "virtual-event")
-
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
             this.pickColor({button: this.appearances.vex.backgroundColor, r: r, g: g, b: b, a: a})
         }
-
         if(headerBackgroundColor){
             const { r, g, b, a } = headerBackgroundColor
             this.pickColor({button: this.appearances.vex.headerBackgroundColor, r: r, g: g, b: b, a: a})
         }
-
         if(headerTitleFontFamily){
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
                 cy.get(this.dropdown.input).type(headerTitleFontFamily + "\n", {force: true})
             })
         }
-
         if(headerTitleBoldFont == true || headerTitleBoldFont == false){
             cy.get(this.appearances.vex.headerFontWeight).invoke("attr", "class").then(fontWeightClass => {
                 if(headerTitleBoldFont && !fontWeightClass.includes("containerActive") || !headerTitleBoldFont && fontWeightClass.includes("containerActive")){
@@ -690,25 +732,21 @@ export class Configurations extends Common {
                 }
             })
         }
-
         if(headerTitleFontSize){
             const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
                 cy.get(this.appearances[size[headerTitleFontSize]]).click()
             })
         }
-
         if(headerTitleFontColor){
             const { r, g, b, a } = headerTitleFontColor
             this.pickColor({button: this.appearances.vex.headerFontColor, r: r, g: g, b: b, a: a})
         }
-
         if(bodyFontFamily){
             cy.get(this.appearances.vex.bodySettings).within(() => {
                 cy.get(this.dropdown.input).type(bodyFontFamily + "\n", {force: true})
             })
         }
-
         if(bodyBoldFont == true || bodyBoldFont == false){
             cy.get(this.appearances.vex.bodyFontWeight).invoke("attr", "class").then(fontWeightClass => {
                 if(bodyBoldFont && !fontWeightClass.includes("containerActive") || !bodyBoldFont && fontWeightClass.includes("containerActive")){
@@ -716,14 +754,12 @@ export class Configurations extends Common {
                 }
             })
         }
-
         if(bodyFontSize){
             const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
             cy.get(this.appearances.vex.bodySettings).within(() => {
                 cy.get(this.appearances[size[bodyFontSize]]).click()
             })
         }
-
         if(bodyFontColor){
             const { r, g, b, a } = bodyFontColor
             this.pickColor({button: this.appearances.vex.bodyFontColor, r: r, g: g, b: b, a: a})
@@ -734,7 +770,6 @@ export class Configurations extends Common {
                 cy.get(this.dropdown.input).type(activeFontFamily + "\n", {force: true})
             })
         }
-
         if(activeBoldFont == true || activeBoldFont == false){
             cy.get(this.appearances.vex.activeFontWeight).invoke("attr", "class").then(fontWeightClass => {
                 if(activeBoldFont && !fontWeightClass.includes("containerActive") || !activeBoldFont && fontWeightClass.includes("containerActive")){
@@ -742,19 +777,38 @@ export class Configurations extends Common {
                 }
             })
         }
-
         if(activeFontSize){
             const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
             cy.get(this.appearances.vex.activeSettings).within(() => {
                 cy.get(this.appearances[size[activeFontSize]]).click()
             })
         }
-
         if(activeFontColor){
             const { r, g, b, a } = activeFontColor
             this.pickColor({button: this.appearances.vex.activeFontColor, r: r, g: g, b: b, a: a})
         }
-
+        if(sessionDescriptionFontFamily){
+            cy.get(this.appearances.vex.sessionDescriptionSettings).within(() => {
+                cy.get(this.dropdown.input).type(sessionDescriptionFontFamily + "\n", {force: true})
+            })
+        }
+        if(sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false){
+            cy.get(this.appearances.vex.sessionDescriptionFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(sessionDescriptionFontWeight && !fontWeightClass.includes("containerActive") || !sessionDescriptionFontWeight && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.vex.sessionDescriptionFontWeight).click()
+                }
+            })
+        }
+        if(sessionDescriptionFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.sessionDescriptionSettings).within(() => {
+                cy.get(this.appearances[size[sessionDescriptionFontSize]]).click()
+            })
+        }
+        if(sessionDescriptionFontColor){
+            const { r, g, b, a } = sessionDescriptionFontColor
+            this.pickColor({button: this.appearances.vex.sessionDescriptionFontColor, r: r, g: g, b: b, a: a})
+        }
         if(hideNavigation == true || hideNavigation == false){
             cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
                 if(hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")){
@@ -762,11 +816,9 @@ export class Configurations extends Common {
                 }
             })
         }
-
         if(externalCodes){
             this.addAppearanceExternalCode(externalCodes, verify)
         }
-
         if(layout){
             // Values should be "Grid" or "Carousel"
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
@@ -774,7 +826,88 @@ export class Configurations extends Common {
                 cy.get(this.dropdown.option(layout)).click()
             })
         }
-
+        if(landingPageCardRadius){
+            cy.get(this.appearances.vex.cardRadius).type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
+        }
+        if(landingPageSearchFilterRadius){
+            cy.get(this.appearances.vex.searchFilterRadius).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+        }
+        if(landingPageSearchFilterFontFamily){
+                cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
+                    cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageSearchFilterColor){
+            const { r, g, b, a } = landingPageSearchFilterColor
+            this.pickColor({button: this.appearances.vex.searchFilterColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFilterBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFilterBackgroundColor
+            this.pickColor({button: this.appearances.vex.searchFilterBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFilterFontSize){
+            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+            cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageSearchFilterFontSize]]).click()
+            })
+        }
+        if(landingPageSearchFieldFontFamily){
+            cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageSearchFieldColor){
+            const { r, g, b, a } = landingPageSearchFieldColor
+            this.pickColor({button: this.appearances.vex.searchFieldColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFieldBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFieldBackgroundColor
+            this.pickColor({button: this.appearances.vex.searchFieldBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFieldFontSize){
+            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+            cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageSearchFieldFontSize]]).click()
+            })
+        }
+        if(landingPageHeadingStyleFontFamily){
+            cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageHeadingStyleColor){
+            const { r, g, b, a } = landingPageHeadingStyleColor
+            this.pickColor({button: this.appearances.vex.headingStyleColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageHeadingStyleFontSize){
+            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+            cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageHeadingStyleFontSize]]).click()
+            })
+        }
+        if(landingPageCarouselArrowsColor){
+            const { r, g, b, a } = landingPageCarouselArrowsColor
+            this.pickColor({button: this.appearances.vex.carouselArrowsColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageCarouselArrowsBackgroundColor){
+            const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
+            this.pickColor({button: this.appearances.vex.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageNoResultsMsgFontFamily){
+            cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageNoResultsMsgColor){
+            const { r, g, b, a } = landingPageNoResultsMsgColor
+            this.pickColor({button: this.appearances.vex.noResultsMsgColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageNoResultsMsgFontSize){
+            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+            cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageNoResultsMsgFontSize]]).click()
+            })
+        }
         cy.contains("button", "Save Virtual Event Settings").click()
 
         if(verify !== false){
@@ -788,6 +921,11 @@ export class Configurations extends Common {
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
         const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
         const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
+        const {sessionDescriptionFontFamily,sessionDescriptionFontWeight,sessionDescriptionFontSize,sessionDescriptionFontColor} = options
+        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
+        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
+        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
+        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
 
         if(backgroundColor){
             const { r, g, b, a } = backgroundColor
@@ -882,7 +1020,6 @@ export class Configurations extends Common {
                 cy.get(this.appearances[size[activeFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-
         if(activeFontColor){
             const { r, g, b, a } = activeFontColor
             cy.get(this.appearances.vex.activeFontColor).within(() => {
@@ -892,17 +1029,161 @@ export class Configurations extends Common {
                 })
             })
         }
-
         if(hideNavigation == true || hideNavigation == false){
             cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
                 const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
                 expect(checkboxClass).to.include(checkOrUnchecked)
             })
         }
-
         if(layout){
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.contains("span", layout).should("exist")
+            })
+        }
+        if(sessionDescriptionFontFamily){
+            cy.get(this.appearances.vex.sessionDescriptionSettings).parent().within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", sessionDescriptionFontFamily)
+            })
+        }
+        if(sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false){
+            const containOrNotContain = sessionDescriptionFontWeight ? "contain" : "not.contain"
+            cy.get(this.appearances.vex.sessionDescriptionFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+        if(sessionDescriptionFontSize){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.vex.sessionDescriptionSettings).parent().within(() => {
+                cy.get(this.appearances[size[sessionDescriptionFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(sessionDescriptionFontColor){
+            const { r, g, b, a } = sessionDescriptionFontColor
+            cy.get(this.appearances.vex.sessionDescriptionFontColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(landingPageCardRadius){
+            cy.get(this.appearances.vex.cardRadius).invoke("attr", "value").should("contain", landingPageCardRadius)
+        }
+        if(landingPageSearchFilterRadius){
+            cy.get(this.appearances.vex.searchFilterRadius).invoke("attr", "value").should("contain", landingPageSearchFilterRadius)
+        }
+        if(landingPageSearchFilterFontFamily){
+            cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageSearchFilterFontFamily)
+            })
+        }
+        if(landingPageSearchFilterColor){
+            const { r, g, b, a } = landingPageSearchFilterColor
+            cy.get(this.appearances.vex.searchFilterColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const colorStyle = a == 1 ? `color: rgb(${r}, ${g}, ${b})` : `color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(colorStyle)
+                })
+            })
+        }
+        if(landingPageSearchFilterBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFilterBackgroundColor
+            cy.get(this.appearances.vex.searchFilterBackgroundColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(landingPageSearchFilterFontSize){
+            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+            cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageSearchFilterFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(landingPageSearchFieldFontFamily){
+            cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageSearchFieldFontFamily)
+            })
+        }
+        if(landingPageSearchFieldColor){
+            const { r, g, b, a } = landingPageSearchFieldColor
+            cy.get(this.appearances.vex.searchFieldColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const colorStyle = a == 1 ? `color: rgb(${r}, ${g}, ${b})` : `color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(colorStyle)
+                })
+            })
+        }
+        if(landingPageSearchFieldBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFieldBackgroundColor
+            cy.get(this.appearances.vex.searchFieldBackgroundColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(landingPageSearchFieldFontSize){
+            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+            cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageSearchFieldFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(landingPageHeadingStyleFontFamily){
+            cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageHeadingStyleFontFamily)
+            })
+        }
+        if(landingPageHeadingStyleColor){
+            const { r, g, b, a } = landingPageHeadingStyleColor
+            cy.get(this.appearances.vex.headingStyleColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const colorStyle = a == 1 ? `color: rgb(${r}, ${g}, ${b})` : `color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(colorStyle)
+                })
+            })
+        }
+        if(landingPageHeadingStyleFontSize){
+            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+            cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageHeadingStyleFontSize]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(landingPageCarouselArrowsColor){
+            const { r, g, b, a } = landingPageCarouselArrowsColor
+            cy.get(this.appearances.vex.carouselArrowsColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const colorStyle = a == 1 ? `color: rgb(${r}, ${g}, ${b})` : `color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(colorStyle)
+                })
+            })
+        }
+        if(landingPageCarouselArrowsBackgroundColor){
+            const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
+            cy.get(this.appearances.vex.carouselArrowsBackgroundColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(landingPageNoResultsMsgFontFamily){
+            cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageNoResultsMsgFontFamily)
+            })
+        }
+        if(landingPageNoResultsMsgColor){
+            const { r, g, b, a } = landingPageNoResultsMsgColor
+            cy.get(this.appearances.vex.noResultsMsgColor).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const colorStyle = a == 1 ? `color: rgb(${r}, ${g}, ${b})` : `color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(colorStyle)
+                })
+            })
+        }
+        if(landingPageNoResultsMsgFontSize){
+            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+            cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
+                cy.get(this.appearances.vex[size[landingPageNoResultsMsgFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
     } 
