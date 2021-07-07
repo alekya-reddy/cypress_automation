@@ -33,6 +33,14 @@ export class VexCX extends CommonCX {
         this.sessionTime = ".css-1uk98e1";
         this.searchInputLocator = 'input[type="search"]';
         this.searchButton='#vex_search_button';
+        this.carouselArrow_color = "#qa-arrow-right";
+        this.carouselArrow_bgColor = ".slick-next";
+        this.sessionCard = ".pf-event-session-card";
+        this.FilterByTopic = "#vex_topics";
+        this.searchFilter = "#vex_search_button";
+        this.searchInputField = "#vex_search_input";
+        this.sessionDescriptionStyle = "#jukebox-app>div>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)";
+        this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
