@@ -6,6 +6,7 @@ executors:
     docker:
       - image: "cypress/browsers:node14.7.0-chrome84"
     resource_class: xlarge
+    no_output_timeout: 30m
 workflows:
   staging-tues-thurs:
     triggers:
@@ -21,13 +22,11 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
-          no_output_timeout: 30m
       - cypress/run:
           name: Microsites
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
-          no_output_timeout: 30m
       - cypress/run:
           name: Target Recommend Explore Common
           executor: latest-chrome
@@ -36,7 +35,6 @@ workflows:
             cypress/integration/explore/*,\
             cypress/integration/recommend/*,\
             cypress/integration/target/*"
-          no_output_timeout: 30m
   staging-governance-tues-thurs:
     triggers:
       - schedule:
@@ -51,7 +49,6 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/userManagement/*"
-          no_output_timeout: 30m
   qa-sat-mon:
     triggers:
       - schedule:
@@ -66,13 +63,11 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/vex/*"
-          no_output_timeout: 30m
       - cypress/run:
           name: Microsites
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/microsites/*"
-          no_output_timeout: 30m
       - cypress/run:
           name: Target Recommend Explore Common
           executor: latest-chrome
@@ -81,7 +76,6 @@ workflows:
             cypress/integration/explore/*,\
             cypress/integration/recommend/*,\
             cypress/integration/target/*"
-          no_output_timeout: 30m
   qa-governance-sat-mon:
     triggers:
       - schedule:
@@ -96,4 +90,3 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/userManagement/*"
-          no_output_timeout: 30m
