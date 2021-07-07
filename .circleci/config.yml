@@ -6,7 +6,6 @@ executors:
     docker:
       - image: "cypress/browsers:node14.7.0-chrome84"
     resource_class: xlarge
-    no_output_timeout: 30m
 workflows:
   staging-tues-thurs:
     triggers:
