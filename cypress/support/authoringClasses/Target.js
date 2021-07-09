@@ -32,7 +32,9 @@ export class Target extends Common {
             exitOverride: "[data-qa-hook='Exit overrides']"
         };
         this.pagePreview = {
-            contentTitleOverrideLabel: "label:contains('Content Title Override')"
+            contentTitleOverrideLabel: "label:contains('Content Title Override')",
+            contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
+            itemDescription: "div[data-qa-hook='item-description']"
         };
         this.popoverElements = {
             customUrlInput: "#customUrl",
@@ -464,6 +466,18 @@ export class Target extends Common {
         if(verify !== false){
             cy.get(this.popover).should("not.exist")
             cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    addContentDescriptionOverride(Description, verify){
+        cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get("#descriptionOverride").clear().type(Description)
+            cy.contains("button", "Update").click()
+        })
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").should("contain", Description)
         }
     }
 

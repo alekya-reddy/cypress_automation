@@ -1,13 +1,15 @@
-import { createAuthoringInstance } from '../../support/pageObject.js';
+import { createAuthoringInstance ,createConsumptionInstance} from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
+const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
 
 const microsite = {
     name: "tracksSetup.js",
     slug: "trackssetup-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
-    }
+    },
+    showDescription: true
 }
 
 const target1 = {
@@ -25,7 +27,9 @@ const target2 = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    contents: ["Website Common Resource"]
+    contents: ["Website Common Resource"],
+    contentTitleOverRide: "Edited Title for Target track",
+    contentDescriptionOverRide: "Edited Description for Target track"
 }
 
 const recommend1 = {
@@ -44,7 +48,9 @@ const recommend2 = {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
     trackType: "recommend",
-    contents: ["Website Common Resource"]
+    contents: ["Website Common Resource"],
+    contentTitleOverRide: "Edited Title for Recommend track",
+    contentDescriptionOverRide: "Edited Description for Recommend track"
 }
 
 const landingPage = {
@@ -70,6 +76,36 @@ const landingPage = {
                     trackType: recommend2.trackType,
                     track: recommend2.name,
                     name: recommend2.contents[0]
+                },
+            ],
+        }
+    ]
+}
+
+const landingPage2 = {
+    name: "Main Page",
+    slug: "main-page",
+    get url(){
+        return `${microsite.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    stayInEditor:true,
+    blocks: [
+        {
+            id: "Target Block",
+            type: "track",
+            track: target2.name,
+            expectContents: target2.contents,
+        },
+        {
+            id: "Recommend Featured Content Block",
+            type: "featured",
+            name: "The Featured Content Block",
+            contents: [
+                {
+                    trackType: recommend2.trackType,
+                    track: recommend2.name,
+                    name: recommend2.contentTitleOverRide
                 },
             ],
         }
@@ -139,6 +175,83 @@ describe("Microsites - tracks setup", () => {
         authoring.microsites.removeTracks2({
             target: target1.name,
             recommend: recommend1.name
+        })
+    })
+
+    it("Verify Track level overrides of Title,Description", () => {
+        authoring.common.login()
+
+        // Delete tracks and microsite to reset test environment, then set them up again 
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.setup(microsite)
+        authoring.target.deleteTrack(target2.name)
+        authoring.target.addTrack(target2)
+        authoring.target.configure(target2)
+        cy.contains('strong', target2.contents[0]).should('be.visible').click()
+
+        cy.contains('label', 'Content Title Override').parent('div').within(() => {
+            cy.contains('span', 'None').should('exist')
+        })
+        cy.contains('label', 'Content Description Override').parent('div').within(() => {
+            cy.contains('span', 'None').should('exist')
+        })
+
+        //Overriding the title and Description for Target track
+        authoring.target.addContentTitleOverride(target2.contentTitleOverRide)
+        authoring.target.addContentDescriptionOverride(target2.contentDescriptionOverRide)
+
+        authoring.recommend.deleteTrack(recommend2.name)
+        authoring.recommend.addTrack(recommend2)
+        authoring.recommend.configure(recommend2)
+
+        cy.contains('span', recommend2.contents[0]).parent('div').should('be.visible').click()
+
+        cy.contains('label', 'Content Title Override').parent('div').within(() => {
+            cy.contains('span', 'None').should('exist')
+        })
+        cy.contains('label', 'Content Description Override').parent('div').within(() => {
+            cy.contains('span', 'None').should('exist')
+        })
+
+        //Overriding the title and Description for Target track
+        authoring.target.addContentTitleOverride(recommend2.contentTitleOverRide)
+        authoring.target.addContentDescriptionOverride(recommend2.contentDescriptionOverRide)
+
+        // Go to microsites and test adding tracks
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.addTracks({ target: [target2.name], recommend: [recommend2.name] })
+
+        // Add the tracks to a landing page block
+        authoring.microsites.addLandingPages(landingPage2.name)
+        authoring.microsites.configureLandingPage(landingPage2)
+
+        //Validating the Override Title and Description for asset cards authoring side
+        cy.get(authoring.microsites.assetCardContent).within(()=>{
+            cy.contains('div',target2.contentTitleOverRide).should('exist')
+            cy.contains('div',target2.contentDescriptionOverRide).should('exist')
+        })
+
+        cy.get(authoring.microsites.assetCardContent).within(()=>{
+            cy.contains('div',recommend2.contentTitleOverRide).should('exist')
+            cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
+        })
+        cy.go("back")
+        authoring.microsites.setToHomePage(landingPage2.name)
+
+        cy.visit(landingPage.url)
+
+        //Validating the Override Title and Description for asset cards on consumption
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',target2.contentTitleOverRide).should('exist')
+            cy.contains('div',target2.contentDescriptionOverRide).should('exist')
+        })
+
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',recommend2.contentTitleOverRide).should('exist')
+            cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
         })
     })
 })

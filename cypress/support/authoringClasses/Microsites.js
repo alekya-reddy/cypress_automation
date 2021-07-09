@@ -28,7 +28,8 @@ export class Microsites extends Common {
             topicTagsCheckbox: "input[name='config.displayContentTopics']",
             accessProtectionGroup: ".ant-select-selection-item",
             removeAccessProtectionGroup: ".ant-select-selection-item-remove",
-            disallowGroups: ".ant-select-selection-item"
+            disallowGroups: ".ant-select-selection-item",
+            showDescriptionCheckbox: "input[name='config.displayDescription']",
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
@@ -89,7 +90,7 @@ export class Microsites extends Common {
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
         this.DisallowGroups = 'div[id="microsite-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
-
+        this.assetCardContent="div[class*='pf-event-microsite-card-title']"
 
     }
 
@@ -116,7 +117,7 @@ export class Microsites extends Common {
     removeMicrosite(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
-        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 2000, () => {
+        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
         cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')
         cy.get(`button[id='delete-${microsite}']`).should('exist').click()
         cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
@@ -153,7 +154,7 @@ export class Microsites extends Common {
 
     setup(options) {
 
-        const { name, slug, externalCode, newName, appearance, language, cookieConsent, accessProtection, disallowGroups,contentType,topicTags, verify} = options
+        const { name, slug, externalCode, newName, appearance, language, cookieConsent, accessProtection, disallowGroups,contentType,topicTags, verify,showDescription} = options
 
         this.goToMicrositeConfig(name)
 
@@ -208,6 +209,14 @@ export class Microsites extends Common {
             cy.get(this.setupPage.topicTagsCheckbox).parent().invoke('attr', 'class').then((attr)=>{
                 if( (topicTags == false && attr.includes("ant-checkbox-checked")) || (topicTags == true && !attr.includes("ant-checkbox-checked")) ){
                     cy.get(this.setupPage.topicTagsCheckbox).click()
+                }
+            })
+        }
+
+        if(showDescription == false || showDescription == true){
+            cy.get(this.setupPage.showDescriptionCheckbox).parent().invoke('attr', 'class').then((attr)=>{
+                if( (showDescription == false && attr.includes("ant-checkbox-checked")) || (showDescription == true && !attr.includes("ant-checkbox-checked")) ){
+                    cy.get(this.setupPage.showDescriptionCheckbox).click()
                 }
             })
         }
@@ -1083,7 +1092,9 @@ export class Microsites extends Common {
                 }
                 cy.get(this.landingPages.blockContainer).eq(0).click() // This makes the add block button reappear
             })
+            cy.wait(2000)
             cy.contains("button", "Save").click()
+            cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
             if (!stayInEditor) {
                 cy.go("back")
             }
