@@ -199,8 +199,8 @@ describe("Microsites - tracks setup", () => {
         })
 
         //Overriding the title and Description for Target track
-        authoring.target.addContentTitleOverride(target2.contentTitleOverRide)
-        authoring.target.addContentDescriptionOverride(target2.contentDescriptionOverRide)
+        authoring.common.addContentTitleOverride(target2.contentTitleOverRide)
+        authoring.common.addContentDescriptionOverride(target2.contentDescriptionOverRide)
 
         authoring.recommend.deleteTrack(recommend2.name)
         authoring.recommend.addTrack(recommend2)
@@ -215,9 +215,9 @@ describe("Microsites - tracks setup", () => {
             cy.contains('span', 'None').should('exist')
         })
 
-        //Overriding the title and Description for Target track
-        authoring.target.addContentTitleOverride(recommend2.contentTitleOverRide)
-        authoring.target.addContentDescriptionOverride(recommend2.contentDescriptionOverRide)
+        //Overriding the title and Description for Recommend track
+        authoring.common.addContentTitleOverride(recommend2.contentTitleOverRide)
+        authoring.common.addContentDescriptionOverride(recommend2.contentDescriptionOverRide)
 
         // Go to microsites and test adding tracks
         authoring.microsites.visit()
