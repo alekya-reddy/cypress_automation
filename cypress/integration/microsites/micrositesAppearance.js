@@ -48,7 +48,7 @@ const recommend = {
 }
 
 const landingPage = {
-    name: "landing Page Home Page",
+    name: "Home Page",
     slug: "landing-page-home-pa",
     get url(){
         return `${microsite.url}/${this.slug}`
@@ -87,6 +87,11 @@ const gridCarouselLandingPage = {
     ]
 } 
 
+const editLandingPage = {
+    name: "Grid Carousel LP",
+    visibility: "public"
+} 
+
 const navigation = {
     landingPage: {
         label: "landingPage",
@@ -108,8 +113,16 @@ const navigation = {
     }
 }    
 
+const editCardConfiguration = {
+    heading: {
+        fontSize: "50px"
+    }
+} 
 describe("Microsites - Appeararnace", () => {
     it("Set up microsites with tracks, landing page, navigation and microsite appearance if doesn't exist", ()=>{
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(micrositeApp.name)
         cy.request({url: micrositeApp.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
@@ -206,6 +219,71 @@ describe("Microsites - Appeararnace", () => {
         cy.get(consumption.recommend.sidebarBackground).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor))             
     })    
 
-})       
+    it("Verify Font size over ride option availability at block level", ()=>{
+        // configure appearence in microsite setup and verify 
+        authoring.common.login()
+
+        authoring.configurations.configureMicrositesAppearance({
+            appearance: "micrositesAppearance.js",
+            hideNavigation: true,
+            layout: "Carousel"
+        })
+        
+        cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
+        cy.get('@fontSize').then(fontSize => {
+             cy.log(fontSize)
+        })
+
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(micrositeApp.name)
+        authoring.microsites.addMicrosite(micrositeApp.name)
+        authoring.microsites.setup(micrositeApp)
+        authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
+        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
+        authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+        authoring.microsites.editLandingPage(editLandingPage)
+        authoring.microsites.setToHomePage(gridCarouselLandingPage.name)
+        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+        cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
+        authoring.microsites.addAdvancedBlock(gridCarouselLandingPage.blocks[0])
+
+        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        // Verify on consumption page has default heading font size value
+        cy.visit(micrositeApp.url)
+
+        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+
+        //Navigate to builder page and override the heading font style
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+        authoring.microsites.editExistingCard(editCardConfiguration)
+
+        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+                expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
+        })
+
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        // Verify on consumption page has override heading font size value
+        cy.visit(micrositeApp.url)
+
+        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+            expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
+        })
+    })    
+})
 
       

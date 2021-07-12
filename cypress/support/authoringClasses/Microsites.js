@@ -547,7 +547,7 @@ export class Microsites extends Common {
                 cy.containsExact(this.table.antCell, checkName).should('exist')
             }
             if (visibility == 'public') {
-                cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                //cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
@@ -1245,6 +1245,26 @@ export class Microsites extends Common {
                 
             }
         })
+    }
+
+    editExistingCard(config) {
+        const heading = config.heading
+
+        cy.get(this.landingPages.trackRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.landingPages.editorMenu).within(() => {
+            cy.get(this.landingPages.menuBlock).eq(3).click()
+        })
+
+        if (heading) {
+            let fontSize = heading.fontSize 
+
+            cy.containsExact("div", "Heading").click()
+            if (fontSize) {
+                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        cy.contains("button", "Confirm").click()
     }
 
 }

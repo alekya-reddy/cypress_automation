@@ -151,7 +151,8 @@ export class Configurations extends Common {
                 cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
             },
             microsites: { 
-                hideNavigation: "div[data-qa-hook='checkbox']"
+                hideNavigation: "div[data-qa-hook='checkbox']",
+                heading:"#body-title-show"
             },
             explore: {
                 heroTitleStyle: "label[for='heroTitleFont']",
