@@ -50,7 +50,7 @@ export class Common {
             folderCell: "div[data-qa-hook='table-cell-folder-name']"
         };
         this.antTable = {
-            cell: ".ant-table-cell",
+            cell: "tbody td.ant-table-cell",
             row: "tr[class*='ant-table-row']"
         };
         this.antCard = {

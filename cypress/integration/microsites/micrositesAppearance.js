@@ -219,7 +219,7 @@ describe("Microsites - Appeararnace", () => {
         cy.get(consumption.recommend.sidebarBackground).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor))             
     })    
 
-    it("Verify Font size over ride option availability at block level", ()=>{
+    it("Verify Font size override option availability at block level", ()=>{
         // configure appearence in microsite setup and verify 
         authoring.common.login()
 
@@ -230,9 +230,6 @@ describe("Microsites - Appeararnace", () => {
         })
         
         cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
-        cy.get('@fontSize').then(fontSize => {
-             cy.log(fontSize)
-        })
 
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(micrositeApp.name)
@@ -264,7 +261,7 @@ describe("Microsites - Appeararnace", () => {
            })
         })
 
-        //Navigate to builder page and override the heading font style
+        //Navigate to builder page and verify overriden the heading font style
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
         authoring.microsites.tabToLandingPages()
@@ -277,7 +274,7 @@ describe("Microsites - Appeararnace", () => {
 
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
-        // Verify on consumption page has override heading font size value
+        // Verify consumption page has overriden heading font size value
         cy.visit(micrositeApp.url)
 
         cy.get('h4').invoke('css','font-size').then(builderFontSize=>{

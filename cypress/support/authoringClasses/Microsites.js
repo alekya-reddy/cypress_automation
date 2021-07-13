@@ -89,7 +89,7 @@ export class Microsites extends Common {
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
         this.DisallowGroups = 'div[id="microsite-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
-
+        this.cell= "tbody td.ant-table-cell"
 
     }
 
@@ -115,8 +115,8 @@ export class Microsites extends Common {
 
     removeMicrosite(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
-        cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
-        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 2000, () => {
+        cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist",wait:10000 })
+        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 5000, () => {
         cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')
         cy.get(`button[id='delete-${microsite}']`).should('exist').click()
         cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
@@ -566,7 +566,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page) {
-        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td:contains('Modify Page')`).within(() => {
+        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td`).within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -1067,6 +1067,7 @@ export class Microsites extends Common {
         }
 
         if (blocks) {
+            cy.wait(3000)
             this.goToPageEditor(name)
             blocks.forEach((block) => {
                 const featuredBlockType = block.type == "featured"

@@ -116,6 +116,17 @@ const landingPage2 = {
         },
     ]
 }
+
+const vexAppearanceSettings1 = {
+    appearance: "vexAppearance.js",
+    landingPageHeadingStyleFontSize: "large"
+}
+
+const editCardConfiguration = {
+    heading: {
+        fontSize: "50px"
+    }
+} 
 describe('VEX - Virtual Event', function() {
     it('Configure appearance on authoring side then verify on consumption', function() {
         cy.viewport(1500, 1000)
@@ -333,5 +344,51 @@ describe('VEX - Virtual Event', function() {
             cy.get(consumption.vex.carouselArrow_bgColor).should("not.exist")
             cy.get(consumption.vex.carouselArrow_color).should("not.exist")
         })
+    })
+
+    it('Verify Font size override option availability at block level', function() {
+        cy.viewport(1500, 1000)
+        authoring.common.login()
+        authoring.configurations.configureVEXAppearance(vexAppearanceSettings1)
+
+        cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
+       
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
+        cy.contains('a', 'Appearance Setup').click()
+        cy.containsExact('[class="ant-card-head"]', 'Event Appearance').should('exist')
+        cy.contains('a', 'Preview Event').should('have.attr', 'href', event.url)
+
+        authoring.vex.configureAppearance(appearance)
+
+        // Delete any navigation items that might have been left from previous run
+        authoring.vex.deleteAllNavItems()
+
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.configureLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+
+        cy.get('h4',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+
+        authoring.vex.editExistingCard(editCardConfiguration)
+        // Verify builder page has overriden heading font size value
+        cy.get('h4',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+            expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
+        })
+
+       cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+       // Verify consumption page has overriden heading font size value
+       cy.visit(event.url)
+
+       cy.get('h2',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+           expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
+       })
     })
 })

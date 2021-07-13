@@ -1956,4 +1956,24 @@ export class Vex extends Common {
         })
     }
 
+    editExistingCard(config) {
+        const heading = config.heading
+
+        cy.get(this.pages.sessionGroupRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.pages.editorMenu).within(() => {
+            cy.get(this.pages.menuBlock).eq(3).click()
+        })
+
+        if (heading) {
+            let fontSize = heading.fontSize 
+
+            cy.containsExact("div", "Heading").click()
+            if (fontSize) {
+                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        cy.contains("button", "Confirm").click()
+    }
+
 }
