@@ -124,6 +124,11 @@ export class Common {
                 return `#folder-toggle-${folderName.replace(/\s+/g, '-').toLowerCase()} > i`
             }
         }
+        this.pagePreview = {
+            contentTitleOverrideLabel: "label:contains('Content Title Override')",
+            contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
+            itemDescription: "div[data-qa-hook='item-description']"
+        };
     }
     visitHomeUrl(){
         cy.visit(this.baseUrl)
@@ -381,4 +386,28 @@ export class Common {
 
         }
     } 
+
+    addContentTitleOverride(title, verify){
+        cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get("#titleOverride").clear().type(title)
+            cy.contains("button", "Update").click()
+        })
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    addContentDescriptionOverride(Description, verify){
+        cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get("#descriptionOverride").clear().type(Description)
+            cy.contains("button", "Update").click()
+        })
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").should("contain", Description)
+        }
+    }
 }
