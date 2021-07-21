@@ -10,8 +10,8 @@ const microsite = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    contentType: "on",
-    topicTags: "on"
+    contentType: true,
+    topicTags: true
 }
 
 const tracks = {
