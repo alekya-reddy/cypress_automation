@@ -82,6 +82,8 @@ export const constants = {
             subdomain: 'automation-microsites',
             adminUser: 'cy-admin',
             adminUserPassword: 'Cypress1234',
+            authorUser: 'cy-author',
+		    authorUserPassword: 'Cypress1234',
             get defaultUser() {
                 return this.adminUser;
             },

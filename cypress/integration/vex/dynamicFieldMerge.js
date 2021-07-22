@@ -57,7 +57,7 @@ describe("VEX - Dynamic Field Merge", () => {
             if(response.status == 404){ 
                 cy.viewport(1500, 1000)
                 authoring.common.login()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 authoring.vex.configureAppearance(appearance)
                 authoring.vex.addLandingPages(landingPage.name)

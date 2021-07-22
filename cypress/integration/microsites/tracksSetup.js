@@ -119,7 +119,7 @@ describe("Microsites - tracks setup", () => {
         // Delete tracks and microsite to reset test environment, then set them up again 
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.target.deleteTrack(target2.name)
         authoring.target.addTrack(target2)
         authoring.target.configure(target2)
@@ -184,7 +184,7 @@ describe("Microsites - tracks setup", () => {
         // Delete tracks and microsite to reset test environment, then set them up again 
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.target.deleteTrack(target2.name)
         authoring.target.addTrack(target2)

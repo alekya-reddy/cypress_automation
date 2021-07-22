@@ -49,7 +49,7 @@ describe("VEX - Blacklist", ()=>{
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.vex.visit()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 authoring.vex.addSession(session.name)
                 authoring.vex.configureSession(session)

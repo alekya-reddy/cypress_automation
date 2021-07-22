@@ -81,7 +81,7 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
                 authoring.microsites.addLandingPages(landingPage.name)

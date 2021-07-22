@@ -29,6 +29,16 @@ export class Vex extends Common {
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
+        this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
+        this.addedbyButton =      "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.searchButton = 'input[name="page-search"]',
+        this.noEventFoundmsg = 'No virtual events found',
+        this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
+        this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
+        this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
+        this.trashIcon = 'i[title="Delete Virtual Event"]';
         this.sessionName = function(sessionName){ 
             let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
             return `td[title="${escapedName}"]`
@@ -48,6 +58,13 @@ export class Vex extends Common {
             toolbar: ".ql-toolbar",
             editor: ".ql-editor"
         };
+        this.createVEXModal = {
+            nameInput: "input[name='name']",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input',
+            dropdownfolder:"form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
+        };
+
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
@@ -201,21 +218,34 @@ export class Vex extends Common {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(eventName, verify){
+    addVirtualEvent(options,verify){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const childFolder  = options.childFolder
+
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(()=>{
             cy.get(this.addEventButton).click()
         })
         cy.contains(this.antModal, "Add Virtual Event").within(() => {
-            cy.get(this.eventNameInput).clear().type(eventName)
+            cy.get(this.eventNameInput).clear().type(name)
+
+            if (parentFolder) {
+                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(parentFolder+ "\n")
+            }
+            if (childFolder) {
+                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(childFolder + "\n")
+            }
+
             cy.contains('button', 'Add Virtual Event').click()
         })
 
         if (verify !== false){
             cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
+            cy.contains(this.eventCardTitle, name, {timeout: 10000}).should('exist')
         }
     }
+
 
     deleteVirtualEvent(eventName){  
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
@@ -229,6 +259,38 @@ export class Vex extends Common {
         cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
     
     }
+
+    deleteVirtualEventfromfolders(name){  
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
+          cy.get(this.pageSearch).clear().type(name)
+        cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
+             cy.contains(this.eventCardTitle, name,{ timeout: 20000 }).should('exist')
+             cy.get(`button[id='delete-${name}']`).should('exist').click()
+             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
+                cy.contains('Yes').click()
+               })
+        cy.get(this.pageSearch).clear()
+            })
+            
+        cy.containsExact(this.eventCardTitle, name).should('not.exist')
+    
+    }
+
+    deleteVirtualEventWithTrashIcon(eventName){  
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
+        cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
+             cy.contains(this.eventCardTitle, eventName,{ timeout: 20000 }).should('exist')
+             cy.get(this.eventClick).eq(0).click()
+             cy.get(this.trashIcon).should('exist').click()
+             cy.contains(this.modal, "Do you want to delete this Virtual Event?").within(() => {
+                 cy.wait(2000)
+                cy.contains('Yes').click()
+               })
+            })
+        cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
+    
+    }
+
 
     goToEventConfig(event){
        // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')

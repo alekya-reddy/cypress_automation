@@ -246,7 +246,7 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", () => 
 
             if (response.status == 404) {
                 authoring.common.login()
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({ target: target.name, recommend: recommend.name })
                 // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.

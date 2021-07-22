@@ -114,7 +114,7 @@ describe("Microsites - Appeararnace", () => {
             if(response.status == 404){
                 authoring.common.login()
                 authoring.configurations.addNewAppearance(newAppearanceSetting)
-                authoring.microsites.addMicrosite(micrositeApp.name)
+                authoring.microsites.addMicrosite(micrositeApp)
                 authoring.microsites.setup(micrositeApp)
                 authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
                 authoring.microsites.configureLandingPage(landingPage)

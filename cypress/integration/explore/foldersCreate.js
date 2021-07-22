@@ -95,6 +95,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
             cy.contains("Folder: AutomationFolderOne").should("exist")
             cy.contains("a", "AutomationFolderOne").click()
         })
+        cy.pause(20000)
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '2')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
         cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')

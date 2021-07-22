@@ -197,7 +197,7 @@ describe('Content Library + VEX + General Settings Access', function() {
         cy.visit(authoring.vex.vexUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.vex.virtualEventHomeTitle).should("exist")
         authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
         authoring.vex.configureAppearance(appearance)
         // check that usr doesn't have access to VEX Analytics

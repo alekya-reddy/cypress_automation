@@ -37,7 +37,7 @@ describe('VEX - Virtual Event', function() {
         // Add event (and delete it if previously added already)
         authoring.vex.visit();
         authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
 
         // Add session and configure sessions

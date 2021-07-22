@@ -93,7 +93,7 @@ describe("VEX - maximum session attendees configuration", ()=>{
     it("Verify max attendees functionality - max set to 1 - First and second visitors", ()=>{
         authoring.common.login()
         authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
         authoring.vex.addSession(sessions.onDemand.name)
 
