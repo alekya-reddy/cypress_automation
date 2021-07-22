@@ -41,6 +41,21 @@ export class VexCX extends CommonCX {
         this.searchInputField = "#vex_search_input";
         this.sessionDescriptionStyle = "#jukebox-app>div>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
+        this.checkbox = "div[class='p-checkbox-box']"
+        this.topicFilterLocator = "#vex_topics"
+        this.availabilityFilterLocator = '#vex_sessionTypes'
+        this.funnelStageFilterLocator = '#vex_funnelStages'
+        this.industryFilterLocator = '#vex_industries'
+        this.personaFilterLocator = '#vex_personas'
+        this.businessUnitFilterLocator = '#vex_businessUnits'
+        this.languageFilter='#vex_languages'
+        this.searchInputLocator = 'input[type="search"]'
+        this.searchButton = '#vex_search_button'
+        this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
+        this.filterSearchBox ='.p-multiselect-filter-container'
+        this.filterBoxheader='.p-multiselect-header'
+        this.selectAllFilterCheckbox='.p-checkbox-box'
+
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
             iframe: 'iframe[title="YouTube video player"]',
@@ -200,8 +215,14 @@ export class VexCX extends CommonCX {
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units, recommend using only pixels 
         const card = config.card
-        const enableSearch = config.enableSearch
-        const enableTopicFilter = config.enableTopicFilter
+        const topicFilter = config.topicFilter
+        const availabilityFilter  = config.availabilityFilter 
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
+        const languageFilter = config.languageFilter
+        const searchConfiguration = config.searchConfiguration
         const layout = config.layout
 
         if(className && !sessionGroup){
@@ -299,30 +320,72 @@ export class VexCX extends CommonCX {
                     cy.get(this.sessionCardTitle + "> div:nth-child(1)").should("have.css", "font-size", fontSize)
                 }
             }
-            if(enableSearch){
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("button", "Search").should("exist")
-                })
-            } else {
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("button", "Search").should("not.exist")
-                })
-            }
-            if(enableTopicFilter){
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("Filter By Topic").should("exist")
-                })
-            } else {
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("Filter By Topic").should("not.exist")
-                })
-            }
             if(layout){
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     const existOrNot = layout == "Carousel" ? "exist" : "not.exist"
                     cy.get(this.landingPage.arrowRight).should(existOrNot)
                 })
             }
+            cy.contains(blockLocator, sessionGroup).within(() => {
+                if (topicFilter) {
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                }
+                if (availabilityFilter) {
+                    this.verifyFilterConfiguration("Availability Type", this.availabilityFilterLocator, availabilityFilter)
+                }
+                if (funnelStageFilter) {
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                }
+                if (industryFilter) {
+                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                }
+                if (personaFilter) {
+                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                }
+                if (businessUnitFilter) {
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                }
+                if (languageFilter) {
+                    this.verifyFilterConfiguration("Language", this.languageFilter, languageFilter)
+                }
+                if (searchConfiguration) {
+                    const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
+                    const searchButtonText = searchButtonTitle || "Search"
+    
+                    cy.contains("button", searchButtonText).should("exist")
+    
+                    if (buttonTextColor) {
+                        cy.contains("button", searchButtonText).should("have.css", "color", `rgb(${buttonTextColor.r}, ${buttonTextColor.g}, ${buttonTextColor.b})`)
+                    }
+    
+                    if (buttonBackgroundAndBorderColor) {
+                        cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                    }
+    
+                    if (inputTextColor) {
+                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
+                    }
+                }
+            })
+        }
+
+        
+    }
+
+    verifyFilterConfiguration(filterName, filterLocator, filterSettings) {
+        const { overrideLabel, textColor, backgroundColor } = filterSettings
+        if (overrideLabel) {
+            cy.containsExact(filterLocator, overrideLabel).should("exist")
+        }
+        else {
+            cy.containsExact(filterLocator, filterName).should("exist")
+        }
+        if (textColor) {
+            cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
+        }
+        if (backgroundColor) {
+            cy.get(filterLocator).should("have.css", "background-color", `rgb(${backgroundColor.r}, ${backgroundColor.g}, ${backgroundColor.b})`)
         }
     }
 

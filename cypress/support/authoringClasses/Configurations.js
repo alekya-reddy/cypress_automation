@@ -1866,5 +1866,63 @@ export class Configurations extends Common {
         })
     }
 
+    configureLanguageOverride(config) {
+
+        const language = config.language
+        const searchButton = config.searchButton
+        const searchInput = config.searchInput
+        const availability =config.availability
+        const languageInput =config.languageInput
+        const funnelStages = config.funnelStages
+        const businessUnits = config.businessUnits
+        const personas = config.personas
+        const industry = config.industry
+        const topics = config.topics
+
+        this.visit.languages()
+        this.clicklanguage(language)
+        this.gotoLanguageTab("virtual-event")
+        cy.wait(5000) //Languages-Virtual Event Tab loading wait
+        if (searchButton) 
+        {
+            cy.get(this.languages.vex.searchButtonTitle).clear().type(searchButton)
+        }
+        if (searchInput) 
+        {
+            cy.get(this.languages.vex.searchInputFieldPlaceholder).clear().type(searchInput)
+        }
+        if (availability) 
+        {
+            cy.get(this.languages.vex.filterByAvailabilityTitle).clear().type(availability)
+        }
+        if (languageInput) 
+        {
+            cy.get(this.languages.vex.filterByLanguageTitle).clear().type(languageInput)
+        }
+        if (funnelStages) 
+        {
+            cy.get(this.languages.vex.filterByFunnelStageTitle).clear().type(funnelStages)
+        }
+        if (businessUnits) 
+        {
+            cy.get(this.languages.vex.filterByBusinessUnitTitle).clear().type(businessUnits)
+        }
+        if (personas) 
+        {
+            cy.get(this.languages.vex.filterByPersonaTitle).clear().type(personas)
+        }
+        if (industry) 
+        {
+            cy.get(this.languages.vex.filterByIndustryTitle).clear().type(industry)
+        }
+        if (topics) 
+        {
+            cy.get(this.languages.vex.filterByTopicTitle).clear().type(topics)
+        }
+        cy.contains("button", "Save Virtual Event Settings").click()
+        cy.contains(this.messages.recordSaved, {timeout: 1000}).should("exist")
+
+    }
+
 }
 
