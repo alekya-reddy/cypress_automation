@@ -200,6 +200,15 @@ export class Vex extends Common {
         this.blocks = "div[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']";
         this.icnPencil = "div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
+        this.topicFilterLocator = "#vex_topics"
+        this.availabilityFilterLocator = '#vex_sessionTypes'
+        this.funnelStageFilterLocator = '#vex_funnelStages'
+        this.industryFilterLocator = '#vex_industries'
+        this.personaFilterLocator = '#vex_personas'
+        this.businessUnitFilterLocator = '#vex_businessUnits'
+        this.languageFilter='#vex_languages'
+        this.searchInputText = '#vex_search_input'
+        this.searchButton = '#vex_search_button'
     }
 
     visit() {
@@ -1598,8 +1607,13 @@ export class Vex extends Common {
         const { enableToggle, overrideLabel, textColor, backgroundColor } = filterSettings
         cy.containsExact("div", "Filters Configuration").click()
         cy.containsExact("span", filterName).click()
-        if (enableToggle) {
-            cy.get("input[name*='.enable']").click()
+        if(enableToggle == true || enableToggle == false){
+            cy.get("input[name*='.enable']").parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
+                if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                    cy.get("input[name*='.enable']").click()
+
+                }
+            })
         }
         if (overrideLabel) {
             cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
@@ -1787,8 +1801,13 @@ export class Vex extends Common {
         if (searchConfiguration) {
             const { enableToggle, searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
             cy.containsExact("div", "Search Configuration").click()
-            if (enableToggle) {
-                cy.get("input[name*='searchConfiguration.enable']").click()
+
+            if(enableToggle == true || enableToggle == false){
+                cy.get("input[name*='searchConfiguration.enable']").parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
+                    if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                        cy.get("input[name*='searchConfiguration.enable']").click()
+                    }
+                })
             }
             if (searchButtonTitle) {
                 cy.get(this.pages.searchOverrideLabel).parent().within(() => {

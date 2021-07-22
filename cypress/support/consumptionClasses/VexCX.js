@@ -50,6 +50,7 @@ export class VexCX extends CommonCX {
         this.businessUnitFilterLocator = '#vex_businessUnits'
         this.languageFilter='#vex_languages'
         this.searchInputLocator = 'input[type="search"]'
+        this.searchButton = '#vex_search_button'
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
         this.filterSearchBox ='.p-multiselect-filter-container'
         this.filterBoxheader='.p-multiselect-header'
@@ -133,10 +134,6 @@ export class VexCX extends CommonCX {
             maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached.",
             blacklisted: "You are no longer eligible to access this event. Please contact your event administrator for more information"
         };
-    }
-
-    newMethod() {
-        return "div.p-multiselect-panel.p-component.multiselect-custom-panel.p-connected-overlay-enter-done";
     }
 
     expectZoom(){
