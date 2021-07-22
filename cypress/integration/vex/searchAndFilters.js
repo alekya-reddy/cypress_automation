@@ -187,8 +187,6 @@ const searchAndFilterOptions =
             authoring.common.login()
             authoring.vex.visit();
             authoring.vex.goToEventConfig(event.name)
-            //authoring.vex.removeSearchAndFilterValues(searchAndFilterOptions); //Removing the filters, as the default behaviour of serach and filters will be in Enable satete, as event set up is one time.
-           // authoring.vex.saveSearchAndFiltersSettings();
             //Verify Block level Search & Filter tab configurations 
             authoring.vex.goToLandingPage() 
             authoring.vex.deleteLandingPages(landingPage.name)
