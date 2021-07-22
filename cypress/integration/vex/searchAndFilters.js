@@ -10,6 +10,17 @@ const event = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
+    language: 'Vex-SearchAndFilter'
+}
+
+const language = {name: "Vex-SearchAndFilter", code: "VSF"}
+
+const languageOverrideForFilters = {
+    language: language.name,
+    searchButton: "VEX Search",
+    searchInput : "VEX Search Input",
+    availability: "VEX Availability",
+    topics: "VEX Topic",
 }
 
 const publicSession = [
@@ -166,6 +177,11 @@ const searchAndFilterOptions =
             cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
                 if(response.status == 404){
                     authoring.common.login()
+                    authoring.configurations.visit.languages()
+                    cy.wait(4000) //Using this wait because language sidebar takes time to display all the configured languages 
+                    authoring.configurations.deleteLanguage(language.name)
+                    authoring.configurations.addNewLanguage(language) 
+                    authoring.configurations.configureLanguageOverride(languageOverrideForFilters)
                     authoring.vex.visit();
                     authoring.vex.deleteVirtualEvent(event.name)
                     authoring.vex.addVirtualEvent(event.name)
@@ -211,8 +227,15 @@ const searchAndFilterOptions =
             authoring.vex.addAdvancedBlock(landingPage.blocks[1]) //Adding a new block(All Sessions)to verify the configurations
             cy.contains('button', 'Save').click(); 
             //Verify the Search & Filter tab configurations for VEX
+            //Verify if the default filter and search button, placeholder name  is pulled from the language configuration section if no label override is provided at the block level.[This functionality is separately covered in vexLanguage.js file]
             //Search and filter tab configurations in VEX Authoring Side
             cy.contains(authoring.vex.pages.sessionGroupRow, landingPage.blocks[1].sessionGroup).within(() => {  
+                //language override
+                cy.contains("option", languageOverrideForFilters.availability).should("exist")
+                cy.contains("option", languageOverrideForFilters.topics).should("exist")
+                cy.contains("button", languageOverrideForFilters.searchButton).should("exist")
+                cy.get('input').should("have.attr", "placeholder", languageOverrideForFilters.searchInput)
+                //filter configurations value
                 cy.get(authoring.vex.topicFilterLocator).should("exist")
                 cy.get(authoring.vex.availabilityFilterLocator).should("exist")
                 cy.get(authoring.vex.funnelStageFilterLocator).should("exist")
@@ -226,6 +249,12 @@ const searchAndFilterOptions =
             //Search and filter tab configurations in VEX Consumption Side
             cy.visit(event.url)
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
+                //language override
+                cy.contains("div", languageOverrideForFilters.availability).should("exist")
+                cy.contains("div", languageOverrideForFilters.topics).should("exist")
+                cy.contains("div", languageOverrideForFilters.searchButton).should("exist")
+                cy.get('input:visible').should("have.attr", "placeholder", languageOverrideForFilters.searchInput)
+                //filter configurations value
                 cy.get(consumption.vex.topicFilterLocator).should("exist")
                 cy.get(consumption.vex.availabilityFilterLocator).should("exist")
                 cy.get(consumption.vex.funnelStageFilterLocator).should("exist")
@@ -236,8 +265,6 @@ const searchAndFilterOptions =
                 cy.get(consumption.vex.searchInputLocator).should("exist")
                 cy.get(consumption.vex.searchButton).should("exist")  
             })
-            //Verify if the default filter and search button, placeholder name  is pulled from the language configuration section if no label override is provided at the block level.[Please refer vexLanguage.js file]
-
             //Verify content tags filter dropdown in VEX consumption, when there are no values configured in "Search & Filter Tab"
             //[Note : Filter dropdown should display with no value in this scenario]
             authoring.vex.visit();
