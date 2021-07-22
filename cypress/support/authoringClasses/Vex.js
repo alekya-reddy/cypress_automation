@@ -150,6 +150,7 @@ export class Vex extends Common {
             searchFilter: "#vex_search_button",
             searchInputField: "#vex_search_input",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
+            filterToggle: "input[name*='.enable']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1608,9 +1609,9 @@ export class Vex extends Common {
         cy.containsExact("div", "Filters Configuration").click()
         cy.containsExact("span", filterName).click()
         if(enableToggle == true || enableToggle == false){
-            cy.get("input[name*='.enable']").parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
+            cy.get(this.pages.filterToggle).parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
                 if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
-                    cy.get("input[name*='.enable']").click()
+                    cy.get(this.pages.filterToggle).click()
 
                 }
             })
