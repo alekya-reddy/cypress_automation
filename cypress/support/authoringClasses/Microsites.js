@@ -6,6 +6,16 @@ export class Microsites extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/microsite`;
         this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
+        this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
+        this.addedbyButton =      "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.searchButton = 'input[name="page-search"]',
+        this.noMicrositeFound = "No microsites found",
+        this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
+        this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
+        this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
+        this.trashIcon = 'i[title="Delete Microsite"]';
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
@@ -89,31 +99,53 @@ export class Microsites extends Common {
              listOption: "li[class*='ant-transfer-list-content-item']",
             itemsList: "span[class*='ant-transfer-list-content-item']"
         };
+
+        this.createMicrositeModal = {
+            nameInput: "input[name='name']",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input',
+            dropdownfolder:"form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
+        };
+
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
         this.DisallowGroups = 'div[id="microsite-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
         this.assetCardContent="div[class*='pf-event-microsite-card-title']"
+        
 
     }
+    
 
     visit() {
         cy.visit(this.pageUrl);
     }
 
-    addMicrosite(microsite, verify) {
+    addMicrosite(options,verify){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const childFolder  = options.childFolder
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.get(this.pageTitleBar).within(() => {
             cy.contains("button", "Add Microsite").click()
         })
         cy.contains(this.antModal, "Add Microsite").within(() => {
-            cy.get(this.micrositesPage.nameInput).clear().type(microsite)
+            cy.get(this.micrositesPage.nameInput).clear().type(name)
+        
+
+            if (parentFolder) {
+                cy.get(this.createMicrositeModal.dropdownfolder).click({force: true}).type(parentFolder+ "\n")
+            }
+            if (childFolder) {
+                cy.get(this.createMicrositeModal.dropdownfolder).click({force: true}).type(childFolder + "\n")
+            }
+
             cy.contains('button', 'Add Microsite').click()
         })
-        if (verify !== false) {
-            this.waitForAntModal({ title: "Add Microsite" })
-            cy.contains(this.antModal, "Add Microsite").should('not.be.visible')
-            cy.containsExact(this.micrositesPage.cardTitle, microsite, { timeout: 10000 }).should('exist')
+
+        if (verify !== false){
+            cy.get(this.antModal).should('not.be.visible')
+            cy.contains(this.eventCardTitle, name, {timeout: 10000}).should('exist')
         }
     }
 
@@ -129,6 +161,38 @@ export class Microsites extends Common {
        })
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
         
+    }
+
+    removeMicrositefromFolder(name){  
+        this.goToPage(this.pageTitle, this.pageUrl)
+          cy.get(this.pageSearch).clear().type(name)
+          cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
+          cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, name, 20000, () => {
+          cy.contains(this.micrositesPage.cardTitle,name,{ timeout: 20000 }).should('exist')
+          cy.get(`button[id='delete-${name}']`).should('exist').click()
+          cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
+              cy.contains('Yes').click()
+             })
+        cy.get(this.pageSearch).clear()
+            })
+            
+            cy.containsExact(this.micrositesPage.cardTitle, name).should('not.exist')
+     }
+
+     removeMicrositeWithTrashIcon(microsite){ 
+        this.goToPage(this.pageTitle, this.pageUrl)
+        cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
+        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
+        cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')  
+             cy.get(this.eventClick).eq(0).click()
+             cy.get(this.trashIcon).should('exist').click()
+             cy.contains(this.modal, "Do you want to delete this Microsite?").within(() => {
+                 cy.wait(2000)
+                cy.contains('Yes').click()
+               })
+            })
+        cy.containsExact(this.eventCardTitle, microsite).should('not.exist')
+    
     }
 
     goToMicrositeConfig(microsite, verify) {

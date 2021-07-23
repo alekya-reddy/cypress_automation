@@ -56,7 +56,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.deleteVirtualEvent(originalEvent.name)
 
         // Set up an event 
-        authoring.vex.addVirtualEvent(originalEvent.name)
+        authoring.vex.addVirtualEvent(originalEvent)
         authoring.vex.configureEvent(originalEvent)
 
         // Reset button should be disabled as there are no changes since last save 

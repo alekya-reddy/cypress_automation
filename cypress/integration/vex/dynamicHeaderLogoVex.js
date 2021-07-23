@@ -47,7 +47,7 @@ describe("VEX - Dynamic Header Logo", () => {
                 authoring.common.login()
                 authoring.configurations.addNewAppearance({name: headerAppearance.appearance})
                 authoring.configurations.configureHeaderAppearance(headerAppearance)
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 authoring.vex.configureAppearance(headerAppearance)
                 authoring.vex.addLandingPages(landingPage.name)

@@ -123,7 +123,7 @@ describe("Microsites - External Code", () => {
                 authoring.recommend.deleteTrack(recommend.name)
                 authoring.recommend.addTrack(recommend)
                 authoring.recommend.configure(recommend)
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({recommend: recommend.name, target: target.name})
                 authoring.microsites.addLandingPages(landingPage.name)

@@ -37,7 +37,7 @@ describe("Microsites - main setup", () => {
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.removeMicrosite(microsite2.name)
         authoring.microsites.removeMicrosite(newName)
-        authoring.microsites.addMicrosite(microsite1.name)
+        authoring.microsites.addMicrosite(microsite1)
         authoring.microsites.addMicrosite(microsite2.name)
         authoring.microsites.setup(microsite2)
 
@@ -46,7 +46,7 @@ describe("Microsites - main setup", () => {
 
         // Test add new microsite input validation
         authoring.microsites.visit()
-        authoring.microsites.addMicrosite(microsite2.name, false)
+        authoring.microsites.addMicrosite(microsite2, false)
         cy.contains(authoring.microsites.messages.duplicateEntry3).should("exist")
         cy.contains(authoring.microsites.antModal, "Add Microsite").within(() => { cy.contains("button", "Cancel").click() })
 

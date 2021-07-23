@@ -23,7 +23,7 @@ describe("VEX - Access Protection", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
 
         //When All Visitors is not selected in Allowed Groups list, other groups in the drop down are enabled for selection in the Allowed groups drop down

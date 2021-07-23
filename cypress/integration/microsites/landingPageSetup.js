@@ -176,7 +176,7 @@ describe("Microsites - Landing page setup", () => {
     it("Test landing page setup and landing page editor", () => {
         authoring.common.login()
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.microsites.addTracks({target: [target.name, filtersContent.name], recommend: recommend.name})
 

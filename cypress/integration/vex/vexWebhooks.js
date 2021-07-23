@@ -328,7 +328,7 @@ describe("VEX - Form Webhook", ()=>{
             cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
                 if(response.status == 404){
                     authoring.common.login()
-                    authoring.vex.addVirtualEvent(event.name)
+                    authoring.vex.addVirtualEvent(event)
                     authoring.vex.configureEvent(event)
                     authoring.vex.addSession(videoSession.name)
                     authoring.vex.addSession(webexSession.name)

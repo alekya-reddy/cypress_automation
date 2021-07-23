@@ -127,7 +127,7 @@ describe("VEX - Language Settings", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
 
         // Set the first language 
@@ -163,7 +163,7 @@ describe("VEX - Language Settings", ()=>{
                 authoring.configurations.addNewLanguage(lang3)
                 authoring.vex.visit()
                 authoring.vex.deleteVirtualEvent(event1.name)
-                authoring.vex.addVirtualEvent(event1.name)
+                authoring.vex.addVirtualEvent(event1)
                 authoring.vex.configureEvent(event1)
                 sessions.forEach((session)=>{
                     authoring.vex.addSession(session.name)

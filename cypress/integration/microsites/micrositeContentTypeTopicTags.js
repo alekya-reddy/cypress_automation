@@ -65,7 +65,7 @@ describe("Microsite - Content Type and Topic Tags", () => {
                 authoring.target.addTrack(tracks.targetContentTypeTopicTags)
                 authoring.target.configure(tracks.targetContentTypeTopicTags)
                 
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({recommend: tracks.recommendContentTypeTopicTags.name, target: tracks.targetContentTypeTopicTags.name})
                 authoring.microsites.addLandingPages(landingPage.name)
