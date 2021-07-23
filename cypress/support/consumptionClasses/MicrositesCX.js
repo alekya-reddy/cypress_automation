@@ -16,7 +16,13 @@ export class MicrositesCX extends CommonCX {
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
         this.arrowRight = "#qa-arrow-right"
-        this.arrowLeft = "#qa-arrow-left"
+        this.arrowLeft = "#qa-arrow-left";
+        this.FilterByTopic = "#microsite_topics";
+        this.searchFilter = "#microsite_search_button";
+        this.searchInputField = "#microsite_search_input";
+        this.carouselArrow_color = "#qa-arrow-right";
+        this.carouselArrow_bgColor = ".slick-next";
+        this.noResultsMsg = "#pf-microsite>div>div>div:nth-child(3)";
         this.navigation = {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",

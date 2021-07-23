@@ -73,7 +73,10 @@ export class Microsites extends Common {
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             carouselArrow: ".pf-microsite-carousel-arrow",
             landingPageLayout: "select[id*='landingPageLayout']",
-            openCard: "select[id*='cardLink']"
+            openCard: "select[id*='cardLink']",
+            Filter_Topic: "#microsite_topics",
+            searchFilter: "#microsite_search_button",
+            searchInputField: "#microsite_search_input"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -449,7 +452,7 @@ export class Microsites extends Common {
 
         cy.contains(this.antModal, "Assign Tracks").within(() => {
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
-            cy.contains("button", "Submit").click()
+            cy.contains("button", "Submit").click({force: true})
         })
 
         if (verify !== false) {

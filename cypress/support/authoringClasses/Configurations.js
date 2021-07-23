@@ -151,7 +151,52 @@ export class Configurations extends Common {
                 cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
             },
             microsites: { 
-                hideNavigation: "div[data-qa-hook='checkbox']"
+                hideNavigation: "div[data-qa-hook='checkbox']",
+                contentTypeTopicLabelsSettings: "#contentTypeLabelsStyleFontFamily",
+                contentTypeTopicLabelsFontFamily: "input[name='contentTypeLabelsStyleFontFamily']",
+                contentTypeTopicLabelsFontWeight: "#contentTypeLabelsStyleFontWeight",
+                contentTypeTopicLabelsFontStyle: "#contentTypeLabelsStyleFontStyle",
+                contentTypeTopicLabelsTextDecoration: "#contentTypeLabelsStyleTextDecoration",
+                contentTypeTopicLabelsFontStyle: "#contentTypeLabelsStyleFontStyle",
+                contentTypeTopicLabelsFontTextDecoration: "#contentTypeLabelsStyleTextDecoration",
+                contentTypeTopicLabelsColor: "#contentTypeLabelsStyleColor > div > div > div",
+                contentTypeTopicLabelsBackgroundColor: "#contentTypeLabelsStyleBackgroundColor > div > div > div",
+                cardRadius: "input[name='cardCornerRadius']",
+                searchFilterRadius: "input[name='searchFiltersCornerRadius']",
+                searchFilterSettings: "#searchFiltersStyleFontFamily",
+                searchFilterFontFamily: "input[name='searchFiltersStyleFontFamily']",
+                searchFilterColor: "#searchFiltersStyleColor > div > div > div",
+                searchFilterBackgroundColor: "#searchFiltersStyleBackgroundColor > div > div > div",
+                searchFiltersStyleFontSizeSmall: "#searchFiltersStyleFontSizeSmall",
+                searchFiltersStyleFontSizeMedium: "#searchFiltersStyleFontSizeMedium",
+                searchFiltersStyleFontSizeLarge: "#searchFiltersStyleFontSizeLarge",
+                searchFieldSettings: "#searchFieldInputFontFamily",
+                searchFieldFontFamily: "input[name='searchFieldInputFontFamily']",
+                searchFieldColor:  "#searchFieldInputColor > div > div > div",
+                searchFieldBackgroundColor: "#searchFieldInputBackgroundColor > div > div > div",
+                searchFieldStyleFontSizeSmall: "#searchFieldInputFontSizeSmall",
+                searchFieldsStyleFontSizeMedium: "#searchFieldInputFontSizeMedium",
+                searchFieldStyleFontSizeLarge: "#searchFieldInputFontSizeLarge",
+                headingStyleSettings: "#defaultHeadingFontFamily",
+                headingStyleFontFamily: "input[name='defaultHeadingFontFamily']",
+                headingStyleColor: "#defaultHeadingColor",
+                defaultHeadingFontSizeSmall: "#defaultHeadingFontSizeSmall",
+                defaultHeadingFontSizeMedium: "#defaultHeadingFontSizeMedium",
+                defaultHeadingFontSizeLarge: "#defaultHeadingFontSizeLarge",
+                carouselArrowsColor: "#carouselArrowsStyleColor > div > div > div",
+                carouselArrowsBackgroundColor: "#carouselArrowsStyleBackgroundColor > div > div > div",
+                noResultMsgSettings: "#noResultsMessageFontFamily",
+                noResultsMsgFontFamily: "input[name='noResultsMessageFontFamily']",
+                noResultsMsgColor: "#noResultsMessageColor",
+                noResultsMessageFontSizeSmall: "#noResultsMessageFontSizeSmall",
+                noResultsMessageFontSizeMedium: "#noResultsMessageFontSizeMedium",
+                noResultsMessageFontSizeLarge: "#noResultsMessageFontSizeLarge",
+                searchFilterStylePreview: "#search-field-preview > div",
+                searchFieldInputPreview: "#search-field-preview > input",
+                headingStylePreview: "#landing-page-grid-preview > div",
+                carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
+                noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
+                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
             },
             explore: {
                 heroTitleStyle: "label[for='heroTitleFont']",
@@ -1190,7 +1235,12 @@ export class Configurations extends Common {
 
     configureMicrositesAppearance(options){
         const {appearance, hideNavigation, externalCodes, layout, verify} = options
-    
+        const {contentTypeTopicLabelsFontFamily,contentTypeTopicLabelsFontWeight,contentTypeTopicLabelsFontStyle,contentTypeTopicLabelsTextDecoration,contentTypeTopicLabelsColor,contentTypeTopicLabelsBackgroundColor} = options
+        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
+        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
+        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
+        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
+
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
         this.gotoAppearanceTab("microsite-builder")
@@ -1212,6 +1262,124 @@ export class Configurations extends Common {
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.get(this.dropdown.box).click()
                 cy.get(this.dropdown.option(layout)).click()
+            })
+        }
+
+        if(contentTypeTopicLabelsFontFamily){
+                cy.get(this.appearances.microsites.contentTypeTopicLabelsSettings).parent().within(() => {
+                    cy.get(this.dropdown.input).type(contentTypeTopicLabelsFontFamily + "\n", {force: true})
+            })
+        }
+        if(contentTypeTopicLabelsFontWeight == true || contentTypeTopicLabelsFontWeight == false){
+            cy.get(this.appearances.microsites.contentTypeTopicLabelsFontWeight).invoke("attr", "class").then(fontWeightClass => {
+                if(contentTypeTopicLabelsFontWeight && !fontWeightClass.includes("containerActive") || !contentTypeTopicLabelsFontWeight && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.microsites.contentTypeTopicLabelsFontWeight).click()
+                }
+            })
+        }
+        if(contentTypeTopicLabelsFontStyle == true || contentTypeTopicLabelsFontStyle == false){
+            cy.get(this.appearances.microsites.contentTypeTopicLabelsFontStyle).invoke("attr", "value").then(fonStyleValue => {
+                if(contentTypeTopicLabelsFontStyle && !fonStyleValue.includes("italic") || !contentTypeTopicLabelsFontStyle && fonStyleValue.includes("italic")){
+                    cy.get(this.appearances.microsites.contentTypeTopicLabelsFontStyle).click()
+                }
+            })
+        }
+        if(contentTypeTopicLabelsTextDecoration == true || contentTypeTopicLabelsTextDecoration == false){
+            cy.get(this.appearances.microsites.contentTypeTopicLabelsTextDecoration).invoke("attr", "value").then(fonStyleValue => {
+                if(contentTypeTopicLabelsTextDecoration && !fonStyleValue.includes("underline") || !contentTypeTopicLabelsTextDecoration && fonStyleValue.includes("underline")){
+                    cy.get(this.appearances.microsites.contentTypeTopicLabelsTextDecoration).click()
+                }
+            })
+        }
+        if(contentTypeTopicLabelsColor){
+            const { r, g, b, a } = contentTypeTopicLabelsColor
+            this.pickColor({button: this.appearances.microsites.contentTypeTopicLabelsColor, r: r, g: g, b: b, a: a})
+        }
+        if(contentTypeTopicLabelsBackgroundColor){
+            const { r, g, b, a } = contentTypeTopicLabelsBackgroundColor
+            this.pickColor({button: this.appearances.microsites.contentTypeTopicLabelsBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageCardRadius){
+            cy.get(this.appearances.microsites.cardRadius).type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
+        }
+        cy.wait(1000)
+        if(landingPageSearchFilterRadius){
+            cy.get(this.appearances.microsites.searchFilterRadius).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+        }
+        if(landingPageSearchFilterFontFamily){
+                cy.get(this.appearances.microsites.searchFilterSettings).parent().within(() => {
+                    cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageSearchFilterColor){
+            const { r, g, b, a } = landingPageSearchFilterColor
+            this.pickColor({button: this.appearances.microsites.searchFilterColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFilterBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFilterBackgroundColor
+            this.pickColor({button: this.appearances.microsites.searchFilterBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFilterFontSize){
+            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+            cy.get(this.appearances.microsites.searchFilterSettings).parent().within(() => {
+                cy.get(this.appearances.microsites[size[landingPageSearchFilterFontSize]]).click()
+            })
+        }
+        if(landingPageSearchFieldFontFamily){
+            cy.get(this.appearances.microsites.searchFieldSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageSearchFieldColor){
+            const { r, g, b, a } = landingPageSearchFieldColor
+            this.pickColor({button: this.appearances.microsites.searchFieldColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFieldBackgroundColor){
+            const { r, g, b, a } = landingPageSearchFieldBackgroundColor
+            this.pickColor({button: this.appearances.microsites.searchFieldBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageSearchFieldFontSize){
+            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+            cy.get(this.appearances.microsites.searchFieldSettings).parent().within(() => {
+                cy.get(this.appearances.microsites[size[landingPageSearchFieldFontSize]]).click()
+            })
+        }
+        if(landingPageHeadingStyleFontFamily){
+            cy.get(this.appearances.microsites.headingStyleSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageHeadingStyleColor){
+            const { r, g, b, a } = landingPageHeadingStyleColor
+            this.pickColor({button: this.appearances.microsites.headingStyleColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageHeadingStyleFontSize){
+            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+            cy.get(this.appearances.microsites.headingStyleSettings).parent().within(() => {
+                cy.get(this.appearances.microsites[size[landingPageHeadingStyleFontSize]]).click()
+            })
+        }
+        if(landingPageCarouselArrowsColor){
+            const { r, g, b, a } = landingPageCarouselArrowsColor
+            this.pickColor({button: this.appearances.microsites.carouselArrowsColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageCarouselArrowsBackgroundColor){
+            const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
+            this.pickColor({button: this.appearances.microsites.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageNoResultsMsgFontFamily){
+            cy.get(this.appearances.microsites.noResultMsgSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", {force: true})
+            })
+        }
+        if(landingPageNoResultsMsgColor){
+            const { r, g, b, a } = landingPageNoResultsMsgColor
+            this.pickColor({button: this.appearances.microsites.noResultsMsgColor, r: r, g: g, b: b, a: a})
+        }
+        if(landingPageNoResultsMsgFontSize){
+            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+            cy.get(this.appearances.microsites.noResultMsgSettings).parent().within(() => {
+                cy.get(this.appearances.microsites[size[landingPageNoResultsMsgFontSize]]).click()
             })
         }
 
@@ -1696,6 +1864,64 @@ export class Configurations extends Common {
             })
             cy.contains("span", name).should("not.exist")
         })
+    }
+
+    configureLanguageOverride(config) {
+
+        const language = config.language
+        const searchButton = config.searchButton
+        const searchInput = config.searchInput
+        const availability =config.availability
+        const languageInput =config.languageInput
+        const funnelStages = config.funnelStages
+        const businessUnits = config.businessUnits
+        const personas = config.personas
+        const industry = config.industry
+        const topics = config.topics
+
+        this.visit.languages()
+        this.clicklanguage(language)
+        this.gotoLanguageTab("virtual-event")
+        cy.wait(5000) //Languages-Virtual Event Tab loading wait
+        if (searchButton) 
+        {
+            cy.get(this.languages.vex.searchButtonTitle).clear().type(searchButton)
+        }
+        if (searchInput) 
+        {
+            cy.get(this.languages.vex.searchInputFieldPlaceholder).clear().type(searchInput)
+        }
+        if (availability) 
+        {
+            cy.get(this.languages.vex.filterByAvailabilityTitle).clear().type(availability)
+        }
+        if (languageInput) 
+        {
+            cy.get(this.languages.vex.filterByLanguageTitle).clear().type(languageInput)
+        }
+        if (funnelStages) 
+        {
+            cy.get(this.languages.vex.filterByFunnelStageTitle).clear().type(funnelStages)
+        }
+        if (businessUnits) 
+        {
+            cy.get(this.languages.vex.filterByBusinessUnitTitle).clear().type(businessUnits)
+        }
+        if (personas) 
+        {
+            cy.get(this.languages.vex.filterByPersonaTitle).clear().type(personas)
+        }
+        if (industry) 
+        {
+            cy.get(this.languages.vex.filterByIndustryTitle).clear().type(industry)
+        }
+        if (topics) 
+        {
+            cy.get(this.languages.vex.filterByTopicTitle).clear().type(topics)
+        }
+        cy.contains("button", "Save Virtual Event Settings").click()
+        cy.contains(this.messages.recordSaved, {timeout: 1000}).should("exist")
+
     }
 
 }
