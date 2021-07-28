@@ -184,7 +184,6 @@ describe("Microsites - Appeararnace", () => {
                 authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
                 authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);
                 authoring.microsites.saveSearchAndFiltersSettings();
-                authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
                 Object.values(navigation).forEach((navItem) => {
                    authoring.microsites.addNavItem(navItem)   
@@ -224,7 +223,9 @@ describe("Microsites - Appeararnace", () => {
             .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageCardRadius+"px")
         cy.get(authoring.configurations.appearances.microsites.searchFieldInputPreview)
             .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageSearchFilterRadius+"px")
-
+        
+        cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
+        
         //Verify that the microsite appearance settings are applied correctly in the landing page
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
@@ -233,6 +234,13 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.configureLandingPage(gridCarouselLandingPage)
         authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
         cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
+
+        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+      
         cy.contains(authoring.microsites.landingPages.trackRow, target.name,{ timeout: 10000 }).within(() => {
             cy.get(authoring.microsites.landingPages.micrositeCard)
               .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageCardRadius+"px")
@@ -271,6 +279,7 @@ describe("Microsites - Appeararnace", () => {
               .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.contentTypeTopicLabelsBackgroundColor))
               .should("have.css", "font-family", micrositeAppearanceSettings.contentTypeTopicLabelsFontFamily)
         })
+
         //Verify that the microsite appearance settings are applied correctly on consumption
         cy.visit(gridCarouselLandingPage.url)
         cy.contains("h4", target.name).parent().within(() => {
@@ -283,6 +292,13 @@ describe("Microsites - Appeararnace", () => {
               .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFilterColor))
               .should("have.css", "font-family", micrositeAppearanceSettings.landingPageSearchFilterFontFamily)
               .should("have.css", "font-size", fontSizeToCSS_LandPage[micrositeAppearanceSettings.landingPageSearchFilterFontSize])
+
+              cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+                cy.get('@fontSize').then(fontSize => {
+                    expect(fontSize).to.equal(builderFontSize);
+               })
+            })
+            
             cy.get(consumption.microsites.searchInputField)
               .should("have.css", "background-color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFieldBackgroundColor))
               .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFieldColor))
@@ -314,6 +330,7 @@ describe("Microsites - Appeararnace", () => {
               .should("have.css", "font-family", micrositeAppearanceSettings.contentTypeTopicLabelsFontFamily)
             cy.get(consumption.microsites.searchInputField).type("abcd" +"\n",{force: true})
         })
+
         cy.get(consumption.microsites.noResultsMsg)
               .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.landingPageNoResultsMsgColor))
               .should("have.css", "font-family", micrositeAppearanceSettings.landingPageNoResultsMsgFontFamily)
@@ -373,55 +390,17 @@ describe("Microsites - Appeararnace", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.recommend.label).click()
         cy.get(consumption.recommend.sidebarTitle).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor)) 
         cy.get(consumption.recommend.sidebarBackground).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor))             
-    })    
 
-    it("Verify Font size override option availability at block level", ()=>{
-        // configure appearence in microsite setup and verify 
-        authoring.common.login()
-
-        authoring.configurations.configureMicrositesAppearance({
-            appearance: "micrositesAppearance.js",
-            hideNavigation: true,
-            layout: "Carousel"
-        })
+        // Verify that landing page will have grid layout for blocks as applied above
+         authoring.microsites.visit()
+         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
+         authoring.microsites.removeLandingPages(gridCarouselLandingPage.name)
+         authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+         authoring.microsites.configureLandingPage(gridCarouselLandingPage)
+         authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+         cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
         
-        cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
-
-        authoring.microsites.visit()
-        authoring.microsites.removeMicrosite(micrositeApp.name)
-        authoring.microsites.addMicrosite(micrositeApp.name)
-        authoring.microsites.setup(micrositeApp)
-        authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
-        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
-        authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
-        authoring.microsites.editLandingPage(editLandingPage)
-        authoring.microsites.setToHomePage(gridCarouselLandingPage.name)
-        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
-        cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
-        authoring.microsites.addAdvancedBlock(gridCarouselLandingPage.blocks[0])
-
-        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
-            cy.get('@fontSize').then(fontSize => {
-                expect(fontSize).to.equal(builderFontSize);
-           })
-        })
-
-        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
-
-        // Verify on consumption page has default heading font size value
-        cy.visit(micrositeApp.url)
-
-        cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
-            cy.get('@fontSize').then(fontSize => {
-                expect(fontSize).to.equal(builderFontSize);
-           })
-        })
-
-        //Navigate to builder page and verify overriden the heading font style
-        authoring.microsites.visit()
-        authoring.microsites.goToMicrositeConfig(micrositeApp.name)
-        authoring.microsites.tabToLandingPages()
-        authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
+         //Override the heading font size at block level
         authoring.microsites.editExistingCard(editCardConfiguration)
 
         cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
@@ -430,12 +409,14 @@ describe("Microsites - Appeararnace", () => {
 
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
-        // Verify consumption page has overriden heading font size value
-        cy.visit(micrositeApp.url)
+        // verify on consumption that navigation header appears on top as applied above
+         cy.visit(gridCarouselLandingPage.url)
 
+        // Verify consumption page has overriden heading font size value
         cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
         })
+        
     })    
 })
 

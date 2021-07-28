@@ -132,6 +132,7 @@ describe('VEX - Virtual Event', function() {
         cy.viewport(1500, 1000)
         authoring.common.login()
         authoring.configurations.configureVEXAppearance(vexAppearanceSettings)
+
         // verify VEX appearance preview in setting to reflect updated settings
         cy.get(authoring.configurations.appearances.vex.backgroundcolorPreview).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.backgroundColor))
         cy.get(authoring.configurations.appearances.vex.headerBackgroundColorPreview).should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.headerBackgroundColor))
@@ -184,6 +185,9 @@ describe('VEX - Virtual Event', function() {
             .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
         cy.get(authoring.configurations.appearances.vex.searchFieldInputPreview)
             .should("have.css", "border-radius", vexAppearanceSettings.landingPageSearchFilterRadius+"px")
+
+        cy.get(authoring.configurations.appearances.vex.heading).invoke('attr','font-size').as('fontSize')
+
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
@@ -201,6 +205,13 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addLandingPages(landingPage2.name)
         authoring.vex.configureLandingPage(landingPage2)
         authoring.vex.goToPageEditor(landingPage2.name)
+
+        cy.get('h4',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+
         //Verify that the virtual event appearance settings are applied correctly in landing page
         cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup,{ timeout: 10000 }).within(() => {
             cy.get(authoring.vex.pages.sessionCard)
@@ -235,6 +246,13 @@ describe('VEX - Virtual Event', function() {
             cy.get("img[src*='/stock/sm/animal-dog-pet-cute.jpg']").should('exist')
             cy.contains('a', event.name).should("have.css", "font-family", "Tahoma")
         })
+
+        cy.get('h2',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+            cy.get('@fontSize').then(fontSize => {
+                expect(fontSize).to.equal(builderFontSize);
+           })
+        })
+    
         cy.contains(consumption.vex.sessionGroup, sessionGroup,{ timeout: 10000 }).within(() => {
             cy.get(consumption.vex.sessionCard)
               .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
@@ -335,60 +353,31 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addLandingPages(landingPage2.name)
         authoring.vex.configureLandingPage(landingPage2)
         authoring.vex.goToPageEditor(landingPage2.name)
+
         cy.contains(authoring.vex.pages.sessionGroupRow, sessionGroup, {timeout: 10000}).within(() => {
             cy.get(authoring.vex.pages.carouselArrow).should("not.exist")
         })
+
+         //Override the heading font size at block level
+         authoring.microsites.editExistingCard(editCardConfiguration)
+
+         cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
+                 expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
+         })
+ 
+         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
         //Go to consumption side and verify carousal arrow is not present
         cy.visit(event.url)
         cy.contains(consumption.vex.sessionGroup, sessionGroup,{ timeout: 10000 }).within(() => {
             cy.get(consumption.vex.carouselArrow_bgColor).should("not.exist")
             cy.get(consumption.vex.carouselArrow_color).should("not.exist")
         })
-    })
 
-    it('Verify Font size override option availability at block level', function() {
-        cy.viewport(1500, 1000)
-        authoring.common.login()
-        authoring.configurations.configureVEXAppearance(vexAppearanceSettings1)
-
-        cy.get(authoring.configurations.appearances.microsites.heading).invoke('attr','font-size').as('fontSize')
-       
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
-        cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
-        cy.contains('a', 'Appearance Setup').click()
-        cy.containsExact('[class="ant-card-head"]', 'Event Appearance').should('exist')
-        cy.contains('a', 'Preview Event').should('have.attr', 'href', event.url)
-
-        authoring.vex.configureAppearance(appearance)
-
-        // Delete any navigation items that might have been left from previous run
-        authoring.vex.deleteAllNavItems()
-
-        authoring.vex.deleteLandingPages(landingPage2.name)
-        authoring.vex.addLandingPages(landingPage2.name)
-        authoring.vex.configureLandingPage(landingPage2)
-        authoring.vex.goToPageEditor(landingPage2.name)
-
-        cy.get('h4',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
-            cy.get('@fontSize').then(fontSize => {
-                expect(fontSize).to.equal(builderFontSize);
-           })
-        })
-
-        authoring.vex.editExistingCard(editCardConfiguration)
-        // Verify builder page has overriden heading font size value
-        cy.get('h4',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
+        // Verify consumption page has overriden heading font size value
+        cy.get('h2').invoke('css','font-size').then(builderFontSize=>{
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
         })
-
-       cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
-
-       // Verify consumption page has overriden heading font size value
-       cy.visit(event.url)
-
-       cy.get('h2',{timeout:10000}).invoke('css','font-size').then(builderFontSize=>{
-           expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
-       })
     })
+
 })
