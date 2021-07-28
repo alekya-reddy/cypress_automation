@@ -25,7 +25,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
 
         // Setup
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.microsites.addLandingPages(landingPage.name)
         authoring.microsites.editLandingPage(landingPage)
@@ -46,7 +46,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
 
         // Verify deleted microsite is no longer accessible
         authoring.microsites.visit()
-        authoring.microsites.removeMicrosite(microsite.name)
+        authoring.microsites.removeMicrositeWithTrashIcon(microsite.name)
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)
         })

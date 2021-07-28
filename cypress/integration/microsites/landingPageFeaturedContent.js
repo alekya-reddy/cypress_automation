@@ -157,7 +157,7 @@ describe("Microsites - Landing page featured content block setup", () => {
     it("Test landing page featured content block settings", () => {
         authoring.common.login()
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.microsites.addTracks({target: [target.name, trackWithTopics.name], recommend: recommend.name})
         authoring.microsites.addLandingPages(landingPage.name)

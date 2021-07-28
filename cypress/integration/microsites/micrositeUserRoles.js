@@ -56,7 +56,7 @@ describe("Microsites - User Roles", () => {
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.micrositesToggle, 'on')
             authoring.microsites.removeMicrosite(microsite.name)
             authoring.microsites.removeMicrosite(microsite2.name)
-            authoring.microsites.addMicrosite(microsite.name)
+            authoring.microsites.addMicrosite(microsite)
         }
     })
 
@@ -83,7 +83,7 @@ describe("Microsites - User Roles", () => {
 
                 authoring.microsites.visit()
                 if(user.editPermission){
-                    authoring.microsites.addMicrosite(microsite2.name, false)
+                    authoring.microsites.addMicrosite(microsite2, false)
                     cy.contains(authoring.microsites.micrositesPage.cardTitle, microsite2.name, {timeout: 10000}).should('exist')
                     authoring.microsites.removeMicrosite(microsite2.name)
                 } else {

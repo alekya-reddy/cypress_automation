@@ -86,7 +86,7 @@ describe("Microsites - Form strategy", () => {
                 authoring.recommend.configure(tracks.recommend)
                 authoring.target.addTrack(tracks.target)
                 authoring.target.configure(tracks.target)
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({recommend: tracks.recommend.name, target: tracks.target.name})
                 authoring.microsites.addLandingPages(landingPage.name)

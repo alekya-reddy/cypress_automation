@@ -43,20 +43,20 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.addEventButton).should('exist');
 
         // Verify can add event
-        authoring.vex.addVirtualEvent(event.name) // Function already contains assertion that event was successfully created 
+        authoring.vex.addVirtualEvent(event) // Function already contains assertion that event was successfully created 
 
         // Verify that you cannot add an event with same name as existing one 
-        authoring.vex.addVirtualEvent(event.name, false)
+        authoring.vex.addVirtualEvent(event,false)
         cy.contains(authoring.vex.antModal, "has already been taken").should('exist')
         cy.contains('button', 'Cancel').click()
         cy.get(authoring.vex.antModal).should('not.be.visible')
         cy.containsExact(authoring.vex.eventCardTitle, event.name).should('have.length', 1)
 
         // Verify can delete an event 
-        authoring.vex.deleteVirtualEvent(event.name) // Already contains assertion that event successfully deleted 
+        authoring.vex.deleteVirtualEventWithTrashIcon(event.name)// Already contains assertion that event successfully deleted 
 
         // Verify can configure event 
-        authoring.vex.addVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
         cy.reload()
         cy.get(authoring.vex.eventNameInput).should('have.value', event.newName)
@@ -73,7 +73,7 @@ describe('VEX - Virtual Event', function() {
 
         // Add another event and check the validation for event slug 
         authoring.vex.deleteVirtualEvent(event2.name)
-        authoring.vex.addVirtualEvent(event2.name)
+        authoring.vex.addVirtualEvent(event2)
         authoring.vex.goToEventConfig(event2.name)
         cy.get(authoring.vex.eventSlugInput, {timeout: 10000}).clear().type(event.slug)
         cy.contains("button", "Save").click()

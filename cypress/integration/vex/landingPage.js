@@ -160,7 +160,7 @@ describe("VEX - Landing Page Editor", ()=>{
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.vex.visit()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 const sessions = [publicSession, privateSession, carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
                 sessions.forEach((session)=>{

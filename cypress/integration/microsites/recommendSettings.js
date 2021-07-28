@@ -73,7 +73,7 @@ describe("Microsites - Target Settings", () => {
                     authoring.recommend.configure(track)
                 })
 
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 const allTracks = Object.values(tracks).map((track) => { return track.name })
                 authoring.microsites.addTracks({recommend: allTracks})

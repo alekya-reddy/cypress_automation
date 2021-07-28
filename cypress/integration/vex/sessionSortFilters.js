@@ -112,7 +112,7 @@ describe("VEX - Session searching, sorting and filters", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
                 authoring.common.login()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 Object.values(sessions).forEach(session => {
                     authoring.vex.addSession(session.name)

@@ -260,7 +260,7 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
         cy.visit(authoring.microsites.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.microsites.pageTitle).should("exist")
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.
         authoring.microsites.addLandingPages(landingPage.name)

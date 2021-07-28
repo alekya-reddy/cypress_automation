@@ -66,7 +66,7 @@ describe("VEX - External Code", () => {
                 authoring.configurations.configureVEXAppearance(vexAppearance)
                 authoring.vex.visit()
                 authoring.vex.deleteVirtualEvent(event.name)
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 authoring.vex.addLandingPages(landingPage.name)
             }
