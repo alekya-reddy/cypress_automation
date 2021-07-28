@@ -148,7 +148,8 @@ export class Configurations extends Common {
                 headingStylePreview: "#landing-page-grid-preview > div",
                 carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
                 noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
-                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
+                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)",
+                heading:"#body-title-show"
             },
             microsites: { 
                 hideNavigation: "div[data-qa-hook='checkbox']",
@@ -196,7 +197,8 @@ export class Configurations extends Common {
                 headingStylePreview: "#landing-page-grid-preview > div",
                 carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
                 noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
-                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)"
+                cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)",
+                heading:"#body-title-show"   
             },
             explore: {
                 heroTitleStyle: "label[for='heroTitleFont']",

@@ -111,6 +111,7 @@ export class Microsites extends Common {
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
         this.DisallowGroups = 'div[id="microsite-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
+        this.cell= "tbody td.ant-table-cell"
         this.assetCardContent="div[class*='pf-event-microsite-card-title']"
         
 
@@ -623,7 +624,9 @@ export class Microsites extends Common {
                 cy.containsExact(this.table.antCell, checkName).should('exist')
             }
             if (visibility == 'public') {
+                if(checkName !== 'Home Page'){
                 cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                   } 
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
@@ -642,7 +645,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page) {
-        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td:contains('Modify Page')`).within(() => {
+        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td`).within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -1143,6 +1146,7 @@ export class Microsites extends Common {
         }
 
         if (blocks) {
+            cy.wait(3000)
             this.goToPageEditor(name)
             blocks.forEach((block) => {
                 const featuredBlockType = block.type == "featured"
@@ -1323,6 +1327,26 @@ export class Microsites extends Common {
                 
             }
         })
+    }
+
+    editExistingCard(config) {
+        const heading = config.heading
+
+        cy.get(this.landingPages.trackRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.landingPages.editorMenu).within(() => {
+            cy.get(this.landingPages.menuBlock).eq(3).click()
+        })
+
+        if (heading) {
+            let fontSize = heading.fontSize 
+
+            cy.containsExact("div", "Heading").click()
+            if (fontSize) {
+                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        cy.contains("button", "Confirm").click()
     }
 
 }
