@@ -624,7 +624,9 @@ export class Microsites extends Common {
                 cy.containsExact(this.table.antCell, checkName).should('exist')
             }
             if (visibility == 'public') {
-                //cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                if(checkName !== 'Home Page'){
+                cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                   } 
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')

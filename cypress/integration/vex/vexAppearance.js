@@ -117,11 +117,6 @@ const landingPage2 = {
     ]
 }
 
-const vexAppearanceSettings1 = {
-    appearance: "vexAppearance.js",
-    landingPageHeadingStyleFontSize: "large"
-}
-
 const editCardConfiguration = {
     heading: {
         fontSize: "50px"
