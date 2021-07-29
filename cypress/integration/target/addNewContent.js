@@ -9,7 +9,7 @@ const target = {
     name: "target-addNewContent.js",
     slug: "target-anc",
     addContentToBottom:"bottom",
-    addContentToTop: "top", //if true top of a track
+    addContentToTop: "top",
     contents: [webContent[0]],
     get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
