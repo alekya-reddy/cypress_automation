@@ -480,8 +480,9 @@ export class Target extends Common {
     }
 
     verifyAddContentTo(position){
+        const message="Note: the default for this setting can be changed in the track edit window"
         cy.contains("button", "Add Content").click()
-
+    
         if(position==="bottom"){
         cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').should('have.attr', 'checked')
         }
@@ -489,7 +490,8 @@ export class Target extends Common {
         {
             cy.contains('label','Top of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').should('have.attr', 'checked')
         }
-
+        
+        cy.contains('div',message,{timeout:5000}).should('exist');
         cy.contains("button", "Cancel").click()
     }
 
