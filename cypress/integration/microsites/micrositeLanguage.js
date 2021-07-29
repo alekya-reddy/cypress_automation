@@ -115,7 +115,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
                 authoring.common.login()
                 authoring.configurations.addNewLanguage(language)
                 authoring.microsites.removeMicrosite(microsite.name)
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({ target: target.name })
                 authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);

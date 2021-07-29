@@ -128,7 +128,7 @@ describe("Microsites - Navigation setup", () => {
 
         // Setup
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.microsites.addTracks({target: target.name, recommend: recommend.name})
         authoring.microsites.addLandingPages(landingPage1.name)

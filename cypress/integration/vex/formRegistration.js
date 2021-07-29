@@ -426,7 +426,7 @@ describe('VEX - Session Form Registration', function() {
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.vex.visit()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 Object.values(sessions).forEach(session => {
                     authoring.vex.addSession(session.name)
@@ -492,7 +492,7 @@ describe('VEX - Session Form Registration', function() {
         authoring.configurations.addForm(deleteForm.name)
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event2.name)
-        authoring.vex.addVirtualEvent(event2.name)
+        authoring.vex.addVirtualEvent(event2)
         authoring.vex.configureEvent(event2)
 
         // Verify can add custom and external forms to event

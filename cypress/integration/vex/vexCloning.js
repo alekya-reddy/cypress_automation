@@ -450,7 +450,7 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
             if(response.status == 404){ 
                 authoring.common.login()
                 authoring.vex.visit()
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 Object.values(sessions).forEach(session => {
                     authoring.vex.addSession(session.name)

@@ -101,7 +101,7 @@ describe("Microsites - Landing page featured content block setup", () => {
     it("Verify Carousel layout for Featured Content", () => {
         authoring.common.login()
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         authoring.microsites.addTracks({target: [ targetTrack.name], recommend: recommend.name})
         authoring.microsites.addLandingPages(landingPage.name)

@@ -220,7 +220,7 @@ describe('Campaign Tools Module User Role', function() {
         cy.visit(authoring.microsites.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.microsites.pageTitle).should("exist")
         authoring.microsites.removeMicrosite(microsite.name)
-        authoring.microsites.addMicrosite(microsite.name)
+        authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
         // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.
         authoring.microsites.addLandingPages(landingPage.name)

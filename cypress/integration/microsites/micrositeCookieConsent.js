@@ -60,7 +60,7 @@ describe("Microsite - Cookie Consent", () => {
                 authoring.target.addTrack(tracks.targetConsentOn)
                 authoring.target.configure(tracks.targetConsentOn)
 
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({
                     recommend: tracks.recommendMessageOn.name, 

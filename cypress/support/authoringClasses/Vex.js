@@ -1,7 +1,7 @@
 import { Common } from "./Common";
 
 export class Vex extends Common {
-    constructor(env, org, tld, userName, password, baseUrl){
+    constructor(env, org, tld, userName, password, baseUrl) {
         super(env, org, tld, userName, password, baseUrl);
         this.vexEventPageTitle = "Virtual Events";
         this.vexUrl = `${this.baseUrl}/authoring/content-library/virtual-events`;
@@ -11,7 +11,7 @@ export class Vex extends Common {
         this.addEventButton = "button:contains('Add Virtual Event')";
         this.eventCardLocator = '[class*="card-list-item"]';
         this.eventCardTitle = 'td[class*="ant-table-cell"]';
-        this.specificEventCardLocator = function(event){ return `[class*="card-list-item"]:contains('${event}')` };
+        this.specificEventCardLocator = function (event) { return `[class*="card-list-item"]:contains('${event}')` };
         this.moreActionsButton = "button:contains('More Actions')";
         this.configureButton = "button:contains('Configure')";
         this.removeDropdownButton = "li:contains('Remove') > span";
@@ -22,17 +22,30 @@ export class Vex extends Common {
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
         this.antDropDownScroller = '.rc-virtual-list-holder-inner';
-        this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
+        this.selectOption = function (option) { return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.onDemandRadio = 'input[value="on_demand"]';
         this.liveRadio = 'input[value="live"]';
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
-        this.sessionName = function(sessionName){ 
-            let escapedName = sessionName.replace(/(\W)/g, '\\$1') 
+        this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
+        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.searchButton = 'input[name="page-search"]',
+        this.noEventFoundmsg = 'No virtual events found',
+        this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
+        this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
+        this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
+        this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.sessionName = function (sessionName) {
+            let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
         };
+        this.sessionEditTags = "#edit-session-tags-configuration"
+        this.clearSessionFilter = 'span[aria-label="close-circle"]'
+        this.antselect = ".ant-select-selection-item"
         this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
@@ -48,19 +61,26 @@ export class Vex extends Common {
             toolbar: ".ql-toolbar",
             editor: ".ql-editor"
         };
+        this.createVEXModal = {
+            nameInput: "input[name='name']",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input',
+            dropdownfolder:"form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
+        };
+
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
         this.endTimeInput = 'input[name="endTime"]';
-        this.startTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.startTime']`} ;
-        this.endTimeEditInput = function(position) {return `input[name='sessionTimes.${position}.endTime']`} ;
-        this.timeZoneEditSelect = function(position) {return `select[name="sessionTimes.${position}.timeZone"]`};
-        this.sessionTimeRow = function(position) {return `div[id="sessionTimes_${position}"]`};
+        this.startTimeEditInput = function (position) { return `input[name='sessionTimes.${position}.startTime']` };
+        this.endTimeEditInput = function (position) { return `input[name='sessionTimes.${position}.endTime']` };
+        this.timeZoneEditSelect = function (position) { return `select[name="sessionTimes.${position}.timeZone"]` };
+        this.sessionTimeRow = function (position) { return `div[id="sessionTimes_${position}"]` };
         this.currentTime = '.ant-picker-now-btn'
         this.timeZonePicker = 'div[class="ant-row ant-form-item"]:contains("Time Zone")';
-        this.liveTypePicker = 'div[class="ant-row ant-form-item"]:contains("Live Content Type")'; 
+        this.liveTypePicker = 'div[class="ant-row ant-form-item"]:contains("Live Content Type")';
         this.zoomNumInput = "input[name='liveContentConfig.zoomMeetingNumber']";
         this.noPasswordRadio = "input[value='no_password']";
         this.applyPasswordRadio = "input[value='apply_password']";
@@ -73,8 +93,8 @@ export class Vex extends Common {
         this.topicsTag = ".ant-select-selection-item";
         this.removeTopicTagButton = ".ant-select-selection-item-remove";
         this.removeButton = "button:contains('Remove')";
-        this.removeonDemandVideo='#remove-on-demand-video';
-        this.isSimulive='input[name="videoSimulive"]';
+        this.removeonDemandVideo = '#remove-on-demand-video';
+        this.isSimulive = 'input[name="videoSimulive"]';
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
             headerTitleInput: "input[name='headerTitle']",
@@ -145,7 +165,9 @@ export class Vex extends Common {
             sessionCard: ".pf-event-session-card",
             Filter_Topic: "#vex_topics",
             searchFilter: "#vex_search_button",
-            searchInputField: "#vex_search_input"
+            searchInputField: "#vex_search_input",
+            searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
+            filterToggle: "input[name*='.enable']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -163,7 +185,7 @@ export class Vex extends Common {
             emailInput: "input[name='email']",
             emailRow: ".ant-list-item"
         };
-        this.cloneButton = "i[class*='Icon__fa-clone']";  
+        this.cloneButton = "i[class*='Icon__fa-clone']";
         this.cloneOptions = {
             eventSetup: "input[value='Event setup']",
             sessions: "input[value='Sessions']",
@@ -173,7 +195,7 @@ export class Vex extends Common {
             navigation: "input[value='Navigation']",
             searchAndFilter: "input[value='Search & Filter']"
         };
-        this.widgets={
+        this.widgets = {
             addButton: "#show-add-widgets-modal-button",
             search: "input[placeholder='Search Widgets here']",
             widgetType: "h3",
@@ -186,43 +208,96 @@ export class Vex extends Common {
             swicthInnerLabel: ".ant-tabs-tabpane.ant-tabs-tabpane-active span.ant-switch-inner",
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
+            leftIcon: "div[aria-hidden='false'] span.anticon.anticon-left",
             rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected"
         };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
-        this.allowGroups='div[id="vex-allow-visitor-groups_list"]';
-        this.DisallowGroups='div[id="vex-disallow-visitor-groups_list"]';
+        this.allowGroups = 'div[id="vex-allow-visitor-groups_list"]';
+        this.DisallowGroups = 'div[id="vex-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
         this.blocks = "div[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']";
-        this.icnPencil="div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
+        this.icnPencil = "div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
+        this.topicFilterLocator = "#vex_topics"
+        this.availabilityFilterLocator = '#vex_sessionTypes'
+        this.funnelStageFilterLocator = '#vex_funnelStages'
+        this.industryFilterLocator = '#vex_industries'
+        this.personaFilterLocator = '#vex_personas'
+        this.businessUnitFilterLocator = '#vex_businessUnits'
+        this.languageFilter='#vex_languages'
+        this.searchInputText = '#vex_search_input'
+        this.searchButton = '#vex_search_button'
     }
 
-    visit(){
+    visit() {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(eventName, verify){
+    addVirtualEvent(options,verify){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const childFolder  = options.childFolder
+
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
-        cy.get(this.pageTitleBar).within(()=>{
+        cy.get(this.pageTitleBar).within(() => {
             cy.get(this.addEventButton).click()
         })
         cy.contains(this.antModal, "Add Virtual Event").within(() => {
-            cy.get(this.eventNameInput).clear().type(eventName)
+            cy.get(this.eventNameInput).clear().type(name)
+
+            if (parentFolder) {
+                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(parentFolder+ "\n")
+            }
+            if (childFolder) {
+                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(childFolder + "\n")
+            }
+
             cy.contains('button', 'Add Virtual Event').click()
         })
 
-        if (verify !== false){
+        if (verify !== false) {
             cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, eventName, {timeout: 10000}).should('exist')
+            cy.contains(this.eventCardTitle, name, {timeout: 10000}).should('exist')
         }
     }
 
-    deleteVirtualEvent(eventName){  
+    deleteVirtualEvent(eventName) {
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
+        cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
+            cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
+            cy.get(`button[id='delete-${eventName}']`).should('exist').click()
+            cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
+                cy.contains('Yes').click()
+            })
+        })
+        cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
+
+    }
+
+    deleteVirtualEventfromfolders(name){  
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
+          cy.get(this.pageSearch).clear().type(name)
+        cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
+             cy.contains(this.eventCardTitle, name,{ timeout: 20000 }).should('exist')
+             cy.get(`button[id='delete-${name}']`).should('exist').click()
+             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
+                cy.contains('Yes').click()
+               })
+        cy.get(this.pageSearch).clear()
+            })
+            
+        cy.containsExact(this.eventCardTitle, name).should('not.exist')
+    
+    }
+
+    deleteVirtualEventWithTrashIcon(eventName){  
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
              cy.contains(this.eventCardTitle, eventName,{ timeout: 20000 }).should('exist')
-             cy.get(`button[id='delete-${eventName}']`).should('exist').click()
-             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
+             cy.get(this.eventClick).eq(0).click()
+             cy.get(this.trashIcon).should('exist').click()
+             cy.contains(this.modal, "Do you want to delete this Virtual Event?").within(() => {
+                 cy.wait(2000)
                 cy.contains('Yes').click()
                })
             })
@@ -230,13 +305,192 @@ export class Vex extends Common {
     
     }
 
-    goToEventConfig(event){
-       // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
-        cy.contains(this.eventCardTitle, event,{ timeout: 20000 }).should('exist')
+    goToEventConfig(event) {
+        // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
+        cy.contains(this.eventCardTitle, event, { timeout: 20000 }).should('exist')
         cy.get(`a[id='configure-${event}']`).should('exist').click()
     }
 
-    configureEvent(config){
+    goToSessionEditTags(sessionName) {
+        this.goToSessionList()
+        cy.do(() => {
+            cy.waitFor({ element: this.sessionName(sessionName), to: "exist", wait: 1000 })
+            if (Cypress.$(this.sessionName(sessionName)).length == 0) {
+                this.searchSession(sessionName)
+            }
+        })
+        cy.get(this.sessionName(sessionName), { timeout: 20000 }).parent().within(() => {
+            cy.get(this.sessionEditTags).click()
+        })
+        cy.get(this.antModal).should('contain', "Edit Session Tags", { timeout: 20000 });
+    }
+
+    addSessionTopics(list) {
+        let topics = [list].flat()
+        cy.get(this.antModal).within(() => {
+            cy.contains(this.antRow, "Topics").within(() => {
+                cy.get(this.antSelector).invoke('text').as('inputText')
+                cy.get('@inputText').then(inputText => {
+                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                        topics.forEach((topic) => {
+                            cy.get(this.antDropSelect.selector).type(topic + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+
+                    else {
+                        cy.get(this.antSelector).trigger('mouseover')
+                        cy.get(this.clearSessionFilter).click()
+                        topics.forEach((topic) => {
+                            cy.get(this.antDropSelect.selector).type(topic + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                })
+            })
+
+        })
+
+    }
+
+    addSessionPersonas(list) {
+        let personas = [list].flat()
+        cy.get(this.antModal).within(() => {
+            cy.contains(this.antRow, "Personas").within(() => {
+                cy.get(this.antSelector).invoke('text').as('inputText')
+                cy.get('@inputText').then(inputText => {
+                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                        personas.forEach((persona) => {
+                            cy.get(this.antDropSelect.selector).type(persona + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                    else {
+                     cy.get(this.antSelector).trigger('mouseover')
+                     cy.get(this.clearSessionFilter).click()
+                        personas.forEach((persona) => {
+                            cy.get(this.antDropSelect.selector).type(persona + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                })
+            })
+        })
+
+    
+
+    }
+
+    addSessionIndustries(list) {
+        let industries = [list].flat()
+        cy.get(this.antModal).within(() => {
+            cy.contains(this.antRow, "Industries").within(() => {
+                cy.get(this.antSelector).invoke('text').as('inputText')
+                cy.get('@inputText').then(inputText => {
+                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                          industries.forEach((industry) => {
+                            cy.get(this.antDropSelect.selector).type(industry + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                    else {
+                        cy.get(this.antSelector).trigger('mouseover')
+                        cy.get(this.clearSessionFilter).click()
+                        industries.forEach((industry) => {
+                            cy.get(this.antDropSelect.selector).type(industry + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                })
+            })
+        })
+          
+    }
+    addSessionBusinessUnits(list) {
+        let businessunits = [list].flat()
+        cy.get(this.antModal).within(() => {
+            cy.contains(this.antRow, "Business Units").within(() => {
+                cy.get(this.antSelector).invoke('text').as('inputText')
+                cy.get('@inputText').then(inputText => {
+                if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                    businessunits.forEach((businessunit) => {
+                        cy.get(this.antDropSelect.selector).type(businessunit + "\n")
+                        cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                    })
+                }
+                else {
+                    cy.get(this.antSelector).trigger('mouseover')
+                    cy.get(this.clearSessionFilter).click()
+                    businessunits.forEach((businessunit) => {
+                        cy.get(this.antDropSelect.selector).type(businessunit + "\n")
+                        cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                    })
+                }
+            })
+        })
+
+        })
+
+    }
+    addSessionFunnelStages(list) {
+        let funnelstages = [list].flat()
+        cy.get(this.antModal).within(() => {
+            cy.contains(this.antRow, "Funnel Stages").within(() => {
+                cy.get(this.antSelector).invoke('text').as('inputText')
+                cy.get('@inputText').then(inputText => {
+                 if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                        funnelstages.forEach((funnelstage) => {
+                            cy.get(this.antDropSelect.selector).type(funnelstage + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                    else {
+                        cy.get(this.antSelector).trigger('mouseover')
+                        cy.get(this.clearSessionFilter).click()
+                        funnelstages.forEach((funnelstage) => {
+                            cy.get(this.antDropSelect.selector).type(funnelstage + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                })
+            })
+
+        })
+
+    }
+    configureSessionTagging(config) {
+        const sessionName = config.sessionName
+        const language = config.language
+        const topics = config.topics
+        const personas = config.personas
+        const industry = config.industry
+        const businessUnits = config.businessUnits
+        const funnelStages = config.funnelStages
+
+        this.goToSessionEditTags(sessionName)
+
+        if (language) {
+            this.setLanguage(language)
+        }
+        if (topics) {
+            this.addSessionTopics(topics)
+        }
+        if (personas) {
+            this.addSessionPersonas(personas)
+        }
+        if (industry) {
+            this.addSessionIndustries(industry)
+        }
+        if (businessUnits) {
+            this.addSessionBusinessUnits(businessUnits)
+        }
+        if (funnelStages) {
+            this.addSessionFunnelStages(funnelStages)
+        }
+        cy.contains('button', 'Save').click();
+    }
+
+    configureEvent(config) {
         const event = config.name
         const newEventName = config.newName
         const slug = config.slug
@@ -244,52 +498,52 @@ export class Vex extends Common {
         const start = config.start
         const end = config.end
         const timeZone = config.timeZone
-        const trackProtection = config.trackProtection 
-        const externalID = config.externalID 
-        const cookieConsent = config.cookieConsent 
+        const trackProtection = config.trackProtection
+        const externalID = config.externalID
+        const cookieConsent = config.cookieConsent
         const language = config.language
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
-        newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null; 
+        newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null;
 
-        slug ? cy.get(this.eventSlugInput,{timeout:20000}).clear().type(slug) : null;
+        slug ? cy.get(this.eventSlugInput, { timeout: 20000 }).clear().type(slug) : null;
 
-        if(externalID){
+        if (externalID) {
             cy.get(this.externalIDInput).clear().type(externalID)
         }
 
-        if(form){
+        if (form) {
             let formConfig = Object.assign({}, form)
             formConfig.save = false
             this.configureForm(formConfig)
         }
 
-        if(start){
+        if (start) {
             cy.get(this.startTimeInput).click().clear().type(start + '\n')
         }
 
-        if(end){
+        if (end) {
             cy.get(this.endTimeInput).click().clear().type(end + '\n')
         }
 
-        if(timeZone){
-            cy.get(this.timeZonePicker).click().within(()=>{
+        if (timeZone) {
+            cy.get(this.timeZonePicker).click().within(() => {
                 cy.get("input").clear().type(timeZone)
             })
-            cy.get(this.antDropSelect.options(timeZone)).click({force: true})
+            cy.get(this.antDropSelect.options(timeZone)).click({ force: true })
         }
 
-        if(language){
+        if (language) {
             this.setLanguage(language)
         }
 
-        if (trackProtection){
+        if (trackProtection) {
             this.addTrackProtection(trackProtection)
         }
 
-        if(cookieConsent == false || cookieConsent == true){
+        if (cookieConsent == false || cookieConsent == true) {
             this.setCookieConsent(cookieConsent)
         }
 
@@ -297,114 +551,114 @@ export class Vex extends Common {
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 
-    setCookieConsent(cookieConsent){
-        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
-            if( (cookieConsent == false && attr.includes("ant-checkbox-checked")) || (cookieConsent == true && !attr.includes("ant-checkbox-checked")) ){
+    setCookieConsent(cookieConsent) {
+        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if ((cookieConsent == false && attr.includes("ant-checkbox-checked")) || (cookieConsent == true && !attr.includes("ant-checkbox-checked"))) {
                 cy.get(this.cookieConsentCheckbox).click()
             }
-        }) 
-        
-        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr)=>{
-            if(cookieConsent == false){
-                expect(attr.includes("ant-checkbox-checked")).to.be.false 
+        })
+
+        cy.get(this.cookieConsentCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if (cookieConsent == false) {
+                expect(attr.includes("ant-checkbox-checked")).to.be.false
             } else {
                 expect(attr.includes("ant-checkbox-checked")).to.be.true
             }
         })
     }
 
-    setLanguage(language){
+    setLanguage(language) {
         cy.wait(5000)
-        cy.contains(this.antRow, "Language").within(()=>{
+        cy.contains(this.antRow, "Language").within(() => {
             cy.get(this.antSelector).click()
         })
         cy.get(this.antDropSelect.options(language)).click()
         cy.get(`span[title='${language}']`).should('exist')
     }
 
-    configureForm(form){
+    configureForm(form) {
         const name = form.name
-        const save = form.save == false ? false : true 
+        const save = form.save == false ? false : true
         cy.wait(5000)
-        cy.contains(this.antRow, "Attendee Registration Form").within(()=>{
-            cy.get("input").clear({force: true}).type(name, {force: true})
+        cy.contains(this.antRow, "Attendee Registration Form").within(() => {
+            cy.get("input").clear({ force: true }).type(name, { force: true })
         })
         cy.get(this.antDropSelect.options(name)).click()
-        if(save){
+        if (save) {
             cy.get(this.saveButton).click()
             cy.get('body').should('contain', this.recordSavedMessage)
         }
     }
 
-    addTrackProtection(list, type = "Email"){
-        let groups = [list].flat() 
+    addTrackProtection(list, type = "Email") {
+        let groups = [list].flat()
 
-        cy.contains(this.antRow, "Protection Type").within(()=>{
+        cy.contains(this.antRow, "Protection Type").within(() => {
             cy.get(this.antDropSelect.selector).type(type + "\n")
         })
-        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(()=>{
-            groups.forEach((group)=>{
+        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(() => {
+            groups.forEach((group) => {
                 cy.get(this.antDropSelect.selector).type(group + "\n")
                 cy.get(this.antDropSelect.selector).click() // Close dropdown menu
             })
         })
-        groups.forEach((group)=>{
+        groups.forEach((group) => {
             cy.contains('.ant-select-selection-item', group).should('exist')
         })
     }
 
-    removeTrackProtection(list){
+    removeTrackProtection(list) {
         let groups = [list].flat()
 
-        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(()=>{
-            groups.forEach((group)=>{
-                cy.contains('.ant-select-selection-item', group).within(()=>{
+        cy.contains(this.accessProtection.trackProtectionArea, "Groups").within(() => {
+            groups.forEach((group) => {
+                cy.contains('.ant-select-selection-item', group).within(() => {
                     cy.get(".ant-select-selection-item-remove").click()
                 })
                 cy.contains('.ant-select-selection-item', group).should("not.exist")
             })
         })
     }
-    
-    goToSessionList(){
-        cy.containsExact("a", "Sessions", {timeout: 20000}).click()
+
+    goToSessionList() {
+        cy.containsExact("a", "Sessions", { timeout: 20000 }).click()
     }
 
-    addSession(sessionName, type = 'On Demand'){
+    addSession(sessionName, type = 'On Demand') {
         this.goToSessionList()
-        cy.contains(this.antCardHeadWrapper, "Sessions", {timeout: 10000}).within(()=>{
+        cy.contains(this.antCardHeadWrapper, "Sessions", { timeout: 10000 }).within(() => {
             cy.get(this.addSessionButton).click();
         })
-        cy.contains(this.antModal, "Add Session").within(()=>{
+        cy.contains(this.antModal, "Add Session").within(() => {
             cy.get(this.sessionNameInput).type(sessionName)
         })
         if (type == 'On Demand') {
             cy.get(this.onDemandRadio).click();
         } else if (type == 'Live') {
-            cy.get(this.liveRadio).click(); 
+            cy.get(this.liveRadio).click();
         }
-        cy.contains(this.antModal, "Add Session").within(()=>{ // must use arrow function notation or will lose 'this' context 
+        cy.contains(this.antModal, "Add Session").within(() => { // must use arrow function notation or will lose 'this' context 
             cy.get(this.addSessionButton).click();
         })
         cy.get(this.antModal).should("not.be.visible")
         cy.do(() => {
-            cy.waitFor({element: this.sessionName(sessionName), to: "exist", wait: 1000})
+            cy.waitFor({ element: this.sessionName(sessionName), to: "exist", wait: 1000 })
             if (Cypress.$(this.sessionName(sessionName)).length == 0) {
                 this.searchSession(sessionName)
             }
         })
-        cy.get(this.sessionName(sessionName), {timeout: 10000}).should('exist');
+        cy.get(this.sessionName(sessionName), { timeout: 10000 }).should('exist');
     }
 
-    removeSession(sessionName){
+    removeSession(sessionName) {
         this.goToSessionList()
-        cy.waitFor({element: this.sessionTableTitle, to: "exist", wait: 10000})
+        cy.waitFor({ element: this.sessionTableTitle, to: "exist", wait: 10000 })
         this.searchSession(sessionName)
         cy.ifElementExists(this.sessionName(sessionName), 1500, () => {
-            cy.get(this.sessionName(sessionName)).parent().within(()=>{
-                cy.contains("a", "Delete").click(); 
+            cy.get(this.sessionName(sessionName)).parent().within(() => {
+                cy.contains("a", "Delete").click();
             })
-            cy.get(".ant-popover-buttons").within(()=>{
+            cy.get(".ant-popover-buttons").within(() => {
                 cy.contains('button', "Delete").click()
             })
         })
@@ -412,69 +666,133 @@ export class Vex extends Common {
         this.clearSessionSearch()
     }
 
-    searchSession(search){
+    searchSession(search) {
         cy.get(this.searchSessionIcon).eq(1).click()
         cy.get(this.searchSessionInput).clear().type(search + "\n")
     }
 
-    clearSessionSearch(){
+    clearSessionSearch() {
         cy.get(this.searchSessionIcon).eq(1).click()
         cy.get(this.searchSessionInput).clear().type("\n")
     }
 
-    goToSessionConfig(sessionName){
+    goToSessionConfig(sessionName) {
         this.goToSessionList()
         cy.do(() => {
-            cy.waitFor({element: this.sessionName(sessionName), to: "exist", wait: 1000})
+            cy.waitFor({ element: this.sessionName(sessionName), to: "exist", wait: 1000 })
             if (Cypress.$(this.sessionName(sessionName)).length == 0) {
                 this.searchSession(sessionName)
             }
         })
-        cy.get(this.sessionName(sessionName), {timeout: 20000}).parent().within(()=>{
+        cy.get(this.sessionName(sessionName), { timeout: 20000 }).parent().within(() => {
             cy.contains("a", "Configure").click()
         })
-        cy.get(this.pageTitleLocator).should('contain', sessionName, {timeout: 20000});
+        cy.get(this.pageTitleLocator).should('contain', sessionName, { timeout: 20000 });
     }
 
-    filterSessionType(options){
+    filterSessionType(options) {
         const onDemand = options.onDemand // Required. Must be true or false
         const live = options.live // Required. Must be true or false
 
-        cy.contains("th", "Type").within(()=>{
+        cy.contains("th", "Type").within(() => {
             cy.get(".ant-table-filter-trigger-container").click()
         })
-        this.clickAntCheckbox({label: "On Demand", check: onDemand})
-        this.clickAntCheckbox({label: "Live", check: live})
-        cy.contains(this.antDropdown, "On Demand").within(()=>{
+        this.clickAntCheckbox({ label: "On Demand", check: onDemand })
+        this.clickAntCheckbox({ label: "Live", check: live })
+        cy.contains(this.antDropdown, "On Demand").within(() => {
             cy.contains("button", "OK").click()
         })
     }
 
-    filterSessionVisibility(options){
+    filterSessionVisibility(options) {
         const _public = options.public
         const _private = options.private
 
-        cy.contains("th", "Visibility").within(()=>{
+        cy.contains("th", "Visibility").within(() => {
             cy.get(".ant-table-filter-trigger-container").click()
         })
-        this.clickAntCheckbox({label: "public", check: _public})
-        this.clickAntCheckbox({label: "private", check: _private})
-        cy.contains(this.antDropdown, "public").within(()=>{
+        this.clickAntCheckbox({ label: "public", check: _public })
+        this.clickAntCheckbox({ label: "private", check: _private })
+        cy.contains(this.antDropdown, "public").within(() => {
             cy.contains("button", "OK").click()
         })
     }
 
-    toggleSortByDate(order){
-        cy.contains(this.sessionSortCell, "Start Time").within(()=>{
-            cy.get(this.caretUp).invoke("attr", "class").then((caretUpClass)=>{
-                cy.get(this.caretDown).invoke("attr", "class").then((caretDownClass)=>{
-                    if(order == 'ascend' && !caretUpClass.includes("active")){
+    filterTopicsVisibility(options) {
+        const _topics = options
+        cy.contains("span", "Topics").scrollIntoView().should('be.visible')
+        cy.contains("span", "Topics").parent('div').within(() => {
+            cy.get('span[aria-label="filter"]').click({ force: true })
+        })
+        _topics.forEach(topics => {
+            this.clickAntCheckbox(topics)
+        })
+        cy.contains("button", "OK").click({ force: true })
+    }
+
+
+    filterPersonasVisibility(options) {
+        const _personas = options
+        cy.contains("span", "Personas").scrollIntoView().should('be.visible')
+        cy.contains("span", "Personas").parent('div').within(() => {
+            cy.get('span[aria-label="filter"]').click({ force: true })
+        })
+        _personas.forEach(personas => {
+            this.clickAntCheckbox(personas)
+        })
+        cy.contains("button", "OK").click({ force: true })
+    }
+
+
+    filterIndustriesVisibility(options) {
+        const _industries = options
+        cy.contains("span", "Industries").scrollIntoView().should('be.visible')
+        cy.contains("span", "Industries").parent('div').within(() => {
+            cy.get('span[aria-label="filter"]').click({ force: true })
+        })
+        _industries.forEach(industries => {
+            this.clickAntCheckbox(industries)
+        })
+        cy.contains("button", "OK").click({ force: true })
+    }
+
+
+    filterBusinessUnitsVisibility(options) {
+        const _businessUnits = options
+        cy.contains("span", "Business Units").scrollIntoView().should('be.visible')
+        cy.contains("span", "Business Units").parent('div').within(() => {
+            cy.get('span[aria-label="filter"]').click({ force: true })
+        })
+        _businessUnits.forEach(businessUnits => {
+            this.clickAntCheckbox(businessUnits)
+        })
+        cy.contains("button", "OK").click({ force: true })
+    }
+
+
+    filterFunnelStagesVisibility(options) {
+        const _funnelStages = options
+        cy.contains("span", "Funnel Stages").scrollIntoView().should('be.visible')
+        cy.contains("span", "Funnel Stages").parent('div').within(() => {
+            cy.get('span[aria-label="filter"]').click({ force: true })
+        })
+        _funnelStages.forEach(funnelStages => {
+            this.clickAntCheckbox(funnelStages)
+        })
+        cy.contains("button", "OK").click({ force: true })
+    }
+
+    toggleSortByDate(order) {
+        cy.contains(this.sessionSortCell, "Start Time").within(() => {
+            cy.get(this.caretUp).invoke("attr", "class").then((caretUpClass) => {
+                cy.get(this.caretDown).invoke("attr", "class").then((caretDownClass) => {
+                    if (order == 'ascend' && !caretUpClass.includes("active")) {
                         cy.get(".ant-table-column-sorter-inner").click()
                         this.toggleSortByDate(order)
-                    } else if(order == 'descend' && !caretDownClass.includes("active")){
+                    } else if (order == 'descend' && !caretDownClass.includes("active")) {
                         cy.get(".ant-table-column-sorter-inner").click()
                         this.toggleSortByDate(order)
-                    } else if (order == "none" && (caretDownClass.includes("active") || caretUpClass.includes("active"))){
+                    } else if (order == "none" && (caretDownClass.includes("active") || caretUpClass.includes("active"))) {
                         cy.get(".ant-table-column-sorter-inner").click()
                         this.toggleSortByDate(order)
                     }
@@ -483,9 +801,9 @@ export class Vex extends Common {
         })
     }
 
-    pickOnDemandVideo(content){
+    pickOnDemandVideo(content) {
         cy.get(this.selectVideoButton).click();
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
             cy.get(this.selectVideoButton).click();
@@ -493,9 +811,9 @@ export class Vex extends Common {
         cy.get(this.modal).should('not.exist');
     }
 
-    pickLiveContentVideo(content){
+    pickLiveContentVideo(content) {
         cy.get(this.selectLiveContentButton).click();
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
             cy.get(this.selectLiveContentButton).click();
@@ -503,7 +821,7 @@ export class Vex extends Common {
         cy.get(this.modal).should('not.exist');
     }
 
-    removeTopics(list){
+    removeTopics(list) {
         const topics = [list].flat()
 
         topics.forEach((topic) => {
@@ -514,13 +832,13 @@ export class Vex extends Common {
         })
     }
 
-    configureSession(config){
+    configureSession(config) {
         const name = config.name
         const newName = config.newName
         const visibility = config.visibility
         const slug = config.slug
         const description = config.description
-        const topics = config.topics ? [config.topics].flat() : false 
+        const topics = config.topics ? [config.topics].flat() : false
         const type = config.type
         const video = config.video
         const contents = config.contents
@@ -534,105 +852,95 @@ export class Vex extends Common {
         const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
 
-        if(!stayOnPage){
-            cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, ()=>{
+        if (!stayOnPage) {
+            cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, () => {
                 this.goToSessionConfig(name);
             })
         }
-        
-        if(newName){
+
+        if (newName) {
             cy.get(this.sessionNameInput).clear().type(newName)
         }
 
-        if(visibility == 'Private'){
+        if (visibility == 'Private') {
             cy.get(this.privateRadio).filter('.ant-radio-input').click();
-        } else if (visibility == 'Public'){
+        } else if (visibility == 'Public') {
             cy.get(this.publicRadio).click();
-        } 
+        }
 
-        if(slug){
+        if (slug) {
             cy.get(this.sessionSlugInput).clear().type(slug)
         }
 
-        if(description){
+        if (description) {
             cy.get(this.sessionDescription.editor).clear().type(description)
         }
 
-        if(topics){
-            cy.contains(this.antRow, "Topics").within(() => {
-                cy.get(this.antDropSelect.selector).click()
-                topics.forEach((topic) => {
-                    cy.get("input").type(topic + "\n")
-                })
-                cy.get(this.antDropSelect.selector).click()
-            })
-        }
-
-        if(type == 'On Demand'){
+        if (type == 'On Demand') {
             cy.get(this.onDemandRadio).click()
-        } else if (type == 'Live'){
+        } else if (type == 'Live') {
             cy.get(this.liveRadio).click()
         }
 
-        if(engagementThreshold){
+        if (engagementThreshold) {
             cy.get(this.engagementThresholdInput).clear().type(engagementThreshold)
         }
 
-        if(engagementScore){
+        if (engagementScore) {
             cy.get(this.engagementScoreInput).clear().type(engagementScore)
         }
 
-        if(video){
-        this.pickOnDemandVideo(video);
+        if (video) {
+            this.pickOnDemandVideo(video);
         }
 
-        if(thumbnail){
+        if (thumbnail) {
             this.selectThumbnail(thumbnail);
         }
 
-        if(live){
+        if (live) {
             this.configureLive(live);
         }
 
-        if(form){
+        if (form) {
             this.setForm(form)
         }
 
-        if(formVisibility){
+        if (formVisibility) {
             cy.contains(this.antRow, "Form Visibilty").within(() => {
                 cy.get(this.antDropSelect.selector).click()
             })
             cy.get(this.antDropSelect.options(formVisibility)).click()
         }
 
-        if(maxAttendees && type !== "On Demand"){
-        cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
+        if (maxAttendees && type !== "On Demand") {
+            cy.get(this.maxAttendeesInput).clear().type(maxAttendees)
         }
 
-        if(contents){
+        if (contents) {
             this.addSupplementalContent(contents);
         }
 
         cy.get(this.saveButton).click()
-        cy.contains(this.recordSavedMessage, {timeout: 20000}).should("exist")
+        cy.contains(this.recordSavedMessage, { timeout: 20000 }).should("exist")
 
         // Configure widgets after saving or else will reset all the changes you made 
-        if(rocketChat){
+        if (rocketChat) {
             this.configureRocketChat(rocketChat)
         }
     }
 
-    setForm(form){
+    setForm(form) {
         cy.contains(this.antRow, "Attendee Session Registration Form").within(() => {
-            cy.get("input").clear({force: true}).type(form, {force: true})
+            cy.get("input").clear({ force: true }).type(form, { force: true })
         })
         cy.get(this.antDropSelect.options(form)).click()
     }
 
-    addSupplementalContent(contents){
+    addSupplementalContent(contents) {
         cy.get(this.addContentButton).click();
-        cy.get(this.modal).within(()=>{
-            contents.forEach((content)=>{
+        cy.get(this.modal).within(() => {
+            contents.forEach((content) => {
                 cy.get(this.contentPickerSearchBar).clear().type(content);
                 cy.contains(this.contentPickerItem, content).click();
             })
@@ -641,23 +949,23 @@ export class Vex extends Common {
         cy.get(this.modal).should('not.exist');
     }
 
-    removeSupplementalContent(content){
-        cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().within(()=>{
+    removeSupplementalContent(content) {
+        cy.containsExact(this.supplementalContentCardTitle, content).parent().parent().within(() => {
             cy.get(this.removeButton).click();
         })
-        cy.contains(this.antModal, "Are you sure want to remove this record?").within(()=>{
+        cy.contains(this.antModal, "Are you sure want to remove this record?").within(() => {
             cy.contains('Yes').click()
         })
         cy.containsExact(this.supplementalContentCardTitle, content).should('not.exist');
     }
 
-    selectThumbnail(config){
+    selectThumbnail(config) {
         const category = config.category // Values can be "Stock Images", "Thumbnail Images" or "Uncategorized"
         const url = config.url
         const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
 
         cy.get(`button:contains('${selectImageText}')`).click()
-        cy.get(this.thumbnailSelector).should('exist').within(()=>{
+        cy.get(this.thumbnailSelector).should('exist').within(() => {
             cy.contains('li', category).click()
             cy.get(`img[src*="${url}"]`).click()
             cy.get(this.saveButton).click()
@@ -665,14 +973,14 @@ export class Vex extends Common {
         cy.get(`img[src*="${url}"]`).should('exist')
     }
 
-    resetThumbnail(){
+    resetThumbnail() {
         cy.contains("button", "Clear").click()
         cy.get("body").should("contain", "No image selected")
         cy.get(this.saveButton).click()
         cy.get("body").should("contain", this.recordSavedMessage)
     }
 
-    configureLive(config){
+    configureLive(config) {
         // start and end can be entered as a string, which would be typed into input field, 
         // or these could be a config object that will be passed into the pickDate function which would click the date-time on the date-picker UI component 
         // if string, start and end must have format: MMM DD, YYYY HH:MMxm
@@ -684,67 +992,67 @@ export class Vex extends Common {
         const end = config.end
         const timeZone = config.timeZone // Go to the app and get the exact text for this value  
         const type = config.type // Values can be 'Zoom' or 'Content Library' 
-        const zoomNum = config.zoomNum 
+        const zoomNum = config.zoomNum
         const zoomAuth = config.zoomAuth // Values can be "No Password", "Require Password From Attendee", "Apply Password Automatically For Attendee"
-        const zoomPW = config.zoomPW 
+        const zoomPW = config.zoomPW
         const webexLink = config.webexLink
         const video = config.video
         const isSimulive = config.isSimulive
 
-        if (start=='now') {
+        if (start == 'now') {
             cy.get(this.startTimeEditInput(0)).click().clear()
             cy.get(this.currentTime).click()
-        } else if(typeof start == 'string'){
+        } else if (typeof start == 'string') {
             cy.get(this.startTimeEditInput(0)).click().clear().type(start + '\n')
         } else if (start) {
             start.pickerNum = 0
             this.pickDate(start)
         }
-        if(typeof end == 'string'){
+        if (typeof end == 'string') {
             cy.get(this.endTimeEditInput(0)).click().clear().type(end + '\n')
         } else if (end) {
             end.pickerNum = 1
             this.pickDate(end)
         }
-        if (timeZone){
+        if (timeZone) {
             cy.get(this.timeZoneEditSelect(0)).select(timeZone)
         }
-        
-        if(type){
+
+        if (type) {
             cy.get(this.liveTypePicker).click()
-            cy.get(this.antDropdownContainer).within(()=>{
+            cy.get(this.antDropdownContainer).within(() => {
                 cy.get(this.selectOption(type)).click()
             })
         }
-        if(zoomNum){
+        if (zoomNum) {
             cy.get(this.zoomNumInput).clear().type(zoomNum)
         }
-        if(zoomAuth == 'No Password'){
+        if (zoomAuth == 'No Password') {
             cy.get(this.noPasswordRadio).click()
-        } else if (zoomAuth == "Require Password From Attendee"){
+        } else if (zoomAuth == "Require Password From Attendee") {
             cy.get(this.requirePasswordRadio).click()
-        } else if (zoomAuth == "Apply Password Automatically For Attendee"){
+        } else if (zoomAuth == "Apply Password Automatically For Attendee") {
             cy.get(this.applyPasswordRadio).click()
         }
-        if(zoomPW) {
+        if (zoomPW) {
             cy.get(this.zoomPWInput).clear().type(zoomPW)
         }
-        if(webexLink){
+        if (webexLink) {
             cy.get(this.webexLinkInput).clear().type(webexLink)
         }
-        if(video){
+        if (video) {
             this.pickLiveContentVideo(video)
         }
-        if(isSimulive){
-            cy.get(this.isSimulive).parent().invoke("attr", "class").then((simulivecheckBox)=>{
-                if(!simulivecheckBox.includes("ant-checkbox-checked")){
+        if (isSimulive) {
+            cy.get(this.isSimulive).parent().invoke("attr", "class").then((simulivecheckBox) => {
+                if (!simulivecheckBox.includes("ant-checkbox-checked")) {
                     cy.get(this.isSimulive).click()
                 }
             })
         }
     }
 
-    pickDate(config){
+    pickDate(config) {
         const picker = config.picker // The locator of the date picker 
         const pickerNum = config.pickerNum || 0 // Integer - there could be more than 1 date picker on the DOM. This specifies which one. 
         const month = config.month // Values can be: Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec
@@ -763,11 +1071,11 @@ export class Vex extends Common {
             let decadeEnd = year.slice(0, -1) + '9'
             let decadeToFind = `${decadeStart}-${decadeEnd}`
 
-            for(let i = 0; i <= 10 ; i++){
-                cy.ifNoElementWithExactTextExists(this.decadePickerButton, decadeToFind, 1000, ()=>{
-                    cy.get(this.decadePickerButton).invoke('text').then((text)=>{
+            for (let i = 0; i <= 10; i++) {
+                cy.ifNoElementWithExactTextExists(this.decadePickerButton, decadeToFind, 1000, () => {
+                    cy.get(this.decadePickerButton).invoke('text').then((text) => {
                         let buttonYearStart = parseInt(text.slice(0, 4))
-                        if(buttonYearStart < parseInt(decadeStart)){
+                        if (buttonYearStart < parseInt(decadeStart)) {
                             cy.get(this.nextDecadeButton).click()
                         } else {
                             cy.get(this.prevDecadeButton).click()
@@ -778,16 +1086,16 @@ export class Vex extends Common {
         }
 
         cy.get(picker).click()
-        cy.get(this.antPickerDropdown).eq(pickerNum).within(()=>{
-            cy.get(this.yearPickerButton).click() 
+        cy.get(this.antPickerDropdown).eq(pickerNum).within(() => {
+            cy.get(this.yearPickerButton).click()
             findDecade(year)
             cy.contains(this.pickerCell, year).click()
-            cy.ifElementExists(this.monthPickerButton, 1000, ()=>{
+            cy.ifElementExists(this.monthPickerButton, 1000, () => {
                 // If you don't scroll through decades, month picker button will still be visible 
                 // If you do scroll through decades before picking a year, month picker button will disappear, so skip this step and go directly to picking a month
                 cy.get(this.monthPickerButton).click()
             }, this.antPickerContainer)
-            cy.contains(this.pickerCell, month).click() 
+            cy.contains(this.pickerCell, month).click()
             cy.get(`td[title="${year}-${monthAsNumber[month]}-${day.length == 2 ? day : "0" + day}"]`).click()
             cy.contains(this.timePickercell, hour).click()
             cy.contains(this.timePickercell, minute).click()
@@ -796,27 +1104,27 @@ export class Vex extends Common {
         })
     }
 
-    goToWidget(){
-        cy.url().then((url)=>{
-            if(!url.includes("/widget")){
-                cy.containsExact("a", "Widgets", {timeout: 20000}).click()
+    goToWidget() {
+        cy.url().then((url) => {
+            if (!url.includes("/widget")) {
+                cy.containsExact("a", "Widgets", { timeout: 20000 }).click()
             }
         })
     }
 
-    addWidget(widgetType, verify){
+    addWidget(widgetType, verify) {
         this.goToWidget()
         cy.get(this.widgets.addButton).click()
         cy.get(this.widgets.search).clear().type(widgetType)
         cy.contains(this.widgets.widgetType, widgetType).click()
         cy.get(this.widgets.confirmAddButton).click()
-        
-        if(verify !== false){
+
+        if (verify !== false) {
             cy.contains(this.widgets.listItem, widgetType).should("exist")
         }
     }
 
-    configureWidget(config){
+    configureWidget(config) {
         const { name, live, onDemand, publicName, verify } = config
 
         // Get to the configuration screen for the widget
@@ -827,28 +1135,28 @@ export class Vex extends Common {
         cy.contains(`Configure ${name}`).should("exist")
 
         // Configure the widget
-        if(live == true || live == false){
-            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "Live Session", check: live})
+        if (live == true || live == false) {
+            this.clickAntCheckbox({ wrapper: this.antCheckboxWrapper, label: "Live Session", check: live })
         }
 
-        if(onDemand == true || onDemand == false){
-            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand})
+        if (onDemand == true || onDemand == false) {
+            this.clickAntCheckbox({ wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand })
         }
 
-        if(publicName){
+        if (publicName) {
             cy.get(this.widgets.nameInput).clear().type(publicName)
         }
 
         cy.contains("button", "Save").click()
 
-        if(verify !== false){
-            cy.contains("The record updated successfully", {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains("The record updated successfully", { timeout: 10000 }).should("exist")
         }
     }
 
-    removeWidget(name, verify){
+    removeWidget(name, verify) {
         this.goToWidget()
-        cy.waitFor({element: this.widgets.addButton, to: "exist"})
+        cy.waitFor({ element: this.widgets.addButton, to: "exist" })
         cy.ifElementWithExactTextExists("span", name, 1000, () => {
             cy.contains(this.widgets.listItem, name).within(() => {
                 cy.contains("button", "Remove").click()
@@ -857,12 +1165,12 @@ export class Vex extends Common {
                 cy.contains("button", "Delete").click()
             })
         })
-        if(verify !== false){
+        if (verify !== false) {
             cy.contains(this.widgets.listItem, name).should("not.exist")
         }
     }
 
-    goToChat(){
+    goToChat() {
         this.goToWidget()
         cy.contains(this.widgets.listItem, "Chat").within(() => {
             cy.contains("button", "Configure").click()
@@ -870,199 +1178,199 @@ export class Vex extends Common {
         cy.contains("Chat Settings").should("exist")
     }
 
-    configureRocketChat(config){
+    configureRocketChat(config) {
         const { addNew, live, onDemand, moderators, readOnly, name, verify } = config
 
-        if(addNew){
+        if (addNew) {
             this.addWidget("Chat", verify)
         }
 
         this.goToChat()
 
-        if(readOnly){
+        if (readOnly) {
             // readOnly should be 'on' or 'off
             this.toggle(this.chat.readOnly, readOnly)
         }
 
-        if(live == true || live == false){
-            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "Live Session", check: live})
+        if (live == true || live == false) {
+            this.clickAntCheckbox({ wrapper: this.antCheckboxWrapper, label: "Live Session", check: live })
         }
 
-        if(onDemand == true || onDemand == false){
-            this.clickAntCheckbox({wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand})
+        if (onDemand == true || onDemand == false) {
+            this.clickAntCheckbox({ wrapper: this.antCheckboxWrapper, label: "On Demand Session", check: onDemand })
         }
 
-        if(name){
+        if (name) {
             cy.get(this.chat.nameInput).clear().type(name)
         }
 
-        if(moderators){
+        if (moderators) {
             this.addModerators(moderators)
         }
 
         cy.contains("button", "Save").click()
 
-        if(verify !== false){
-            cy.contains("The record updated successfully", {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains("The record updated successfully", { timeout: 10000 }).should("exist")
         }
     }
 
-    addModerators(list){
+    addModerators(list) {
         const moderators = [list].flat()
 
-        moderators.forEach((moderator)=>{
-            cy.get(this.chat.addModeratorButton, {timeout: 5000}).click()
-            cy.contains(this.antModal, "Add Moderator").within(()=>{
+        moderators.forEach((moderator) => {
+            cy.get(this.chat.addModeratorButton, { timeout: 5000 }).click()
+            cy.contains(this.antModal, "Add Moderator").within(() => {
                 cy.get(this.chat.emailInput).clear().type(moderator)
                 cy.contains("button", "Submit").click()
             })
             cy.contains(this.antModal, "Add Moderator").should("not.be.visible")
-            cy.containsExact("span", moderator.toLowerCase(), {timeout: 20000}).should("exist")
+            cy.containsExact("span", moderator.toLowerCase(), { timeout: 20000 }).should("exist")
         })
     }
 
-    deleteModerators(list){
+    deleteModerators(list) {
         const moderators = [list].flat()
 
-        moderators.forEach((moderator)=>{
-            cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
+        moderators.forEach((moderator) => {
+            cy.containsExact("span", moderator, { timeout: 10000 }).parents(this.chat.emailRow).within(() => {
                 cy.contains("button", "Remove").click()
             })
             cy.contains("button", "Yes").click()
-            cy.containsExact("span", moderator.toLowerCase(), {timeout: 20000}).should("not.exist")
+            cy.containsExact("span", moderator.toLowerCase(), { timeout: 20000 }).should("not.exist")
         })
     }
 
-    editModerator(config){
+    editModerator(config) {
         const moderator = config.moderator
         const newEmail = config.newEmail
 
-        cy.containsExact("span", moderator, {timeout: 10000}).parents(this.chat.emailRow).within(()=>{
+        cy.containsExact("span", moderator, { timeout: 10000 }).parents(this.chat.emailRow).within(() => {
             cy.contains("button", "Edit").click()
         })
-        cy.contains(this.antModal, "Edit Moderator").within(()=>{
+        cy.contains(this.antModal, "Edit Moderator").within(() => {
             cy.get(this.chat.emailInput).clear().type(newEmail)
             cy.contains("button", "Submit").click()
         })
-        cy.containsExact("span", newEmail, {timeout: 20000}).should("exist")
+        cy.containsExact("span", newEmail, { timeout: 20000 }).should("exist")
     }
 
-    goToSessionGroup(){
-        cy.url().then((url)=>{
+    goToSessionGroup() {
+        cy.url().then((url) => {
             // If not already in the session groups page, go there
-            if(!url.includes("/session-groups")){
-                cy.containsExact("a", "Session Groups", {timeout: 20000}).click()
+            if (!url.includes("/session-groups")) {
+                cy.containsExact("a", "Session Groups", { timeout: 20000 }).click()
             }
         })
     }
 
-    addSessionGroup(name){
+    addSessionGroup(name) {
         this.goToSessionGroup()
         cy.contains("button", "Add Group").click()
-        cy.contains(this.antModal, "Add Group").within(()=>{
+        cy.contains(this.antModal, "Add Group").within(() => {
             cy.get(this.groupNameInput).clear().type(name)
             cy.contains("button", "Submit").click()
         })
         cy.containsExact("span", name).should("exist")
     }
 
-    renameSessionGroup(config){
+    renameSessionGroup(config) {
         const name = config.name
-        const newName = config.newName 
+        const newName = config.newName
 
         this.goToSessionGroup()
-        cy.contains(this.groupRow, name).within(()=>{
+        cy.contains(this.groupRow, name).within(() => {
             cy.get(this.renameGroupButton).click()
-        }) 
-        cy.contains(this.antModal, "Edit Session Group").within(()=>{
-            cy.get(this.groupNameInput).clear().type(newName) 
+        })
+        cy.contains(this.antModal, "Edit Session Group").within(() => {
+            cy.get(this.groupNameInput).clear().type(newName)
             cy.contains("button", "Submit").click()
-        })  
-        cy.containsExact("span", newName, {timeout: 20000}).should("exist")     
+        })
+        cy.containsExact("span", newName, { timeout: 20000 }).should("exist")
     }
 
-    addToGroup(config){
+    addToGroup(config) {
         let group = config.name
         let sessions = [config.sessions].flat() // You can enter either 1 session or an array of sessions 
 
         // Select the correct group
-        cy.contains(this.groupRow, group, {timeout: 10000}).within(()=>{
+        cy.contains(this.groupRow, group, { timeout: 10000 }).within(() => {
             cy.contains("button", "Manage Sessions").click()
         })
 
         // Add sessions to the group
         cy.contains("button", "Add Sessions to Group").click()
         cy.contains(this.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click() // this opens the dropdown list 
-        sessions.forEach((session)=>{
+        sessions.forEach((session) => {
             cy.get(this.antDropSelect.options(session)).click()
-        })    
-        cy.contains(this.antModal, "Add Sessions to Group").contains("button", "Submit").click({force: true}) // have to force click because dropdown is in the way
-        
+        })
+        cy.contains(this.antModal, "Add Sessions to Group").contains("button", "Submit").click({ force: true }) // have to force click because dropdown is in the way
+
         // Verify they got added 
-        sessions.forEach((session)=>{
+        sessions.forEach((session) => {
             cy.containsExact("span", session).should("exist")
         })
     }
 
-    removeFromGroup(config){
+    removeFromGroup(config) {
         let group = config.name
         let sessions = [config.sessions].flat() // You can enter either 1 session or an array of sessions 
 
         // Select the correct group
-        cy.contains(this.groupRow, group).within(()=>{
+        cy.contains(this.groupRow, group).within(() => {
             cy.contains("button", "Manage Sessions").click()
         })
 
         // Remove sessions from the group
-        sessions.forEach((session)=>{
+        sessions.forEach((session) => {
             cy.contains(this.sessionRow, session).contains("button", "Remove").click()
             cy.get(this.antModal).contains("button", "Yes").click()
         })
-       
+
         // Verify they got removed
-        sessions.forEach((session)=>{
+        sessions.forEach((session) => {
             cy.containsExact("span", session).should("not.exist")
         })
     }
 
-    deleteSessionGroup(name){
+    deleteSessionGroup(name) {
         this.goToSessionGroup()
-        cy.ifElementWithExactTextExists("span", name, 1000, ()=>{
-            cy.contains(this.groupRow, name).within(()=>{
+        cy.ifElementWithExactTextExists("span", name, 1000, () => {
+            cy.contains(this.groupRow, name).within(() => {
                 cy.get(this.removeGroupButton).click()
             })
-            cy.get(this.antModal).within(()=>{
+            cy.get(this.antModal).within(() => {
                 cy.contains("button", "Yes").click()
             })
         })
-        cy.waitFor({element: `span:contains('${name}')`, to: "not.exist", wait: 10000})
+        cy.waitFor({ element: `span:contains('${name}')`, to: "not.exist", wait: 10000 })
         cy.containsExact("span", name).should("not.exist")
     }
 
-    backToEvent(event){
+    backToEvent(event) {
         // If you are on session configuration page and want to go back to the event configuration page
-        cy.containsExact("a", event, {timeout: 20000}).click()
-        cy.contains(this.pageTitleLocator, event, {timeout: 20000}).should('exist')
+        cy.containsExact("a", event, { timeout: 20000 }).click()
+        cy.contains(this.pageTitleLocator, event, { timeout: 20000 }).should('exist')
     }
 
-    goToEventSetup(){
+    goToEventSetup() {
         // If you are on Event configuration and are currently viewing one of its tabs (such as agenda or appearance), and you want to go back to the main set up tab
-        cy.containsExact("a", "Event Setup", {timeout: 20000}).click()
+        cy.containsExact("a", "Event Setup", { timeout: 20000 }).click()
     }
 
-    backToSession(){
+    backToSession() {
         cy.contains("a", "Session Details").click()
     }
 
-    goToNavigation(){
-        cy.url().then((url)=>{
-            if(!url.includes("/navigation")){
-                cy.containsExact("a", "Navigation", {timeout: 10000}).should("exist").click()
+    goToNavigation() {
+        cy.url().then((url) => {
+            if (!url.includes("/navigation")) {
+                cy.containsExact("a", "Navigation", { timeout: 10000 }).should("exist").click()
             }
         })
     }
 
-    addNavItem(config){
+    addNavItem(config) {
         const label = config.label
         const type = config.type
         const source = config.source
@@ -1075,56 +1383,56 @@ export class Vex extends Common {
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antSelector).eq(0).click()
         cy.get(this.antDropSelect.options(type)).click()
-        if(source && type !== "Link"){
+        if (source && type !== "Link") {
             cy.get(this.antSelector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
-        } else if (source && type == "Link"){
+        } else if (source && type == "Link") {
             cy.get(this.navigation.linkInput).clear().type(source)
         }
-        if(newTab){
+        if (newTab) {
             cy.get(this.navigation.newTabCheckBox).click()
         }
         cy.contains('button', "Submit").click()
 
-        if(verify){
+        if (verify) {
             cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
-            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(()=>{
-                if(source && !newTab){
+            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
+                if (source && !newTab) {
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
-                } else if(source && newTab){
+                } else if (source && newTab) {
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
-                }else if (type == "Text"){
+                } else if (type == "Text") {
                     cy.containsExact(this.navigation.navSubtitle, type).should('exist')
                 }
             })
         }
     }
 
-    deleteNavItems(list, verify){
+    deleteNavItems(list, verify) {
         const navItems = [list].flat()
 
         this.goToNavigation()
-        navItems.forEach((navItem)=>{
-            cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, ()=>{
-                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(()=>{
+        navItems.forEach((navItem) => {
+            cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
+                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
                     cy.contains("button", "Remove").click()
                 })
             })
-            if(verify){
-                cy.waitFor({element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000})
-                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')    
+            if (verify) {
+                cy.waitFor({ element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000 })
+                cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')
             }
         })
     }
 
-    deleteAllNavItems(){
+    deleteAllNavItems() {
         this.goToNavigation()
-        cy.ifElementExists(this.navigation.navRow, 2000, ()=>{
-            cy.get(this.navigation.navRow).then((rows)=>{
-                for(let i = rows.length - 1; i >= 0; i--){
+        cy.ifElementExists(this.navigation.navRow, 2000, () => {
+            cy.get(this.navigation.navRow).then((rows) => {
+                for (let i = rows.length - 1; i >= 0; i--) {
                     // Need to remove bottomost one first, and work your way up
                     // If start at top, could delete a node that takes out several at once, but for loop keeps going
-                    cy.get(this.navigation.navRow).eq(i).within(()=>{
+                    cy.get(this.navigation.navRow).eq(i).within(() => {
                         cy.contains('button', 'Remove').click()
                     })
                 }
@@ -1132,7 +1440,7 @@ export class Vex extends Common {
         })
     }
 
-    attachSubNav(config){
+    attachSubNav(config) {
         // Tip: This function drags the subject by the draggable menu, and drops onto the target's "remove" button 
         // To simply reorder nav items at the top level, you don't need this function. Just drag subject's menu over the target's menu 
         // To make subject a sublink of target, use this function. Subject must be above the target for this to work
@@ -1146,37 +1454,37 @@ export class Vex extends Common {
         cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
     }
 
-    goToBlacklist(){
-        cy.url().then((url)=>{
-            if(!url.includes("/event-blacklist")){
-                cy.containsExact("a", "Event Blacklist", {timeout: 10000}).click()
+    goToBlacklist() {
+        cy.url().then((url) => {
+            if (!url.includes("/event-blacklist")) {
+                cy.containsExact("a", "Event Blacklist", { timeout: 10000 }).click()
             }
         })
     }
 
-    addToBlacklist(list, verify){
+    addToBlacklist(list, verify) {
         const emails = [list].flat()
 
         this.goToBlacklist()
-        emails.forEach((email)=>{
-            cy.contains("button", "Add Email", {timeout: 10000}).click()
-            cy.contains(this.antModal, "Add Email").within(()=>{
+        emails.forEach((email) => {
+            cy.contains("button", "Add Email", { timeout: 10000 }).click()
+            cy.contains(this.antModal, "Add Email").within(() => {
                 cy.get(this.blacklist.emailInput).clear().type(email)
                 cy.contains("button", "Submit").click()
             })
-            if(verify){
-                cy.contains(this.antModal, "Add Email").should('not.be.visible', {timeout: 10000})
-                cy.containsExact('span', email.toLowerCase(), {timeout: 10000}).should('exist')
+            if (verify) {
+                cy.contains(this.antModal, "Add Email").should('not.be.visible', { timeout: 10000 })
+                cy.containsExact('span', email.toLowerCase(), { timeout: 10000 }).should('exist')
             }
         })
     }
 
-    removeFromBlacklist(list){
+    removeFromBlacklist(list) {
         const emails = [list].flat()
 
         this.goToBlacklist()
-        emails.forEach((email)=>{
-            cy.containsExact("span", email.toLowerCase(), {timeout: 10000}).parent().within(()=>{
+        emails.forEach((email) => {
+            cy.containsExact("span", email.toLowerCase(), { timeout: 10000 }).parent().within(() => {
                 cy.contains("button", "Remove").click()
             })
             cy.contains("button", "Yes").click()
@@ -1186,12 +1494,12 @@ export class Vex extends Common {
         })
     }
 
-    clearBlacklist(){
+    clearBlacklist() {
         this.goToBlacklist()
-        cy.ifElementExists(this.blacklist.emailRow, 2000, ()=>{
-            cy.get(this.blacklist.emailRow).then((rows)=>{
-                for(let i = rows.length - 1; i >= 0; i--){
-                    cy.get(this.blacklist.emailRow).eq(i).within(()=>{
+        cy.ifElementExists(this.blacklist.emailRow, 2000, () => {
+            cy.get(this.blacklist.emailRow).then((rows) => {
+                for (let i = rows.length - 1; i >= 0; i--) {
+                    cy.get(this.blacklist.emailRow).eq(i).within(() => {
                         cy.contains('button', 'Remove').click()
                     })
                     cy.contains("button", "Yes").click()
@@ -1200,76 +1508,76 @@ export class Vex extends Common {
         })
     }
 
-    editBlacklistEmail(config){
-        const email = config.email 
-        const newEmail = config.newEmail 
+    editBlacklistEmail(config) {
+        const email = config.email
+        const newEmail = config.newEmail
         const verify = config.verify
 
         this.goToBlacklist()
-        cy.containsExact("span", email.toLowerCase(), {timeout: 10000}).parent().within(()=>{
+        cy.containsExact("span", email.toLowerCase(), { timeout: 10000 }).parent().within(() => {
             cy.contains("button", "Edit").click()
         })
-        cy.contains(this.antModal + ":visible", "Edit Email").within(()=>{  // Each email opens up its own modal!!!! Cypress does automatically only pick the visible ones!!!
+        cy.contains(this.antModal + ":visible", "Edit Email").within(() => {  // Each email opens up its own modal!!!! Cypress does automatically only pick the visible ones!!!
             cy.get(this.blacklist.emailInput).clear().type(newEmail)
             cy.contains("button", "Submit").click()
         })
-        if(verify){
+        if (verify) {
             cy.wait(5000)
             cy.containsExact("span", email.toLowerCase()).should('not.exist')
             cy.containsExact("span", newEmail.toLowerCase()).should("exist")
         }
     }
 
-    goToLandingPage(){
-        cy.url().then((url)=>{
-            if(!url.includes("/pages")){
-                cy.containsExact("a", "Landing Pages", {timeout: 20000}).click()
+    goToLandingPage() {
+        cy.url().then((url) => {
+            if (!url.includes("/pages")) {
+                cy.containsExact("a", "Landing Pages", { timeout: 20000 }).click()
             }
         })
     }
 
-    addLandingPages(list, verify){
+    addLandingPages(list, verify) {
         const pages = [list].flat()
 
         this.goToLandingPage()
-        pages.forEach((page)=>{
+        pages.forEach((page) => {
             cy.contains("button", "Add Page").click()
-            cy.contains(this.antModal, "Add Page").within(()=>{
+            cy.contains(this.antModal, "Add Page").within(() => {
                 cy.get(this.pages.nameInput).clear().type(page)
                 cy.contains("button", "Add Page").click()
             })
-            if(verify !== false){
+            if (verify !== false) {
                 cy.contains(this.antModal, "Add Page").should("not.be.visible")
                 cy.containsExact(this.antCell, page).should('exist')
             }
         })
     }
 
-    deleteLandingPages(list, verify){
+    deleteLandingPages(list, verify) {
         const pages = [list].flat()
 
         this.goToLandingPage()
-        cy.contains("button", "Add Page", {timeout: 20000}).should("exist") // waits as long as needed for landing page setup to load
-        pages.forEach((page)=>{
-            cy.ifElementWithExactTextExists(this.antCell, page, 1000, ()=>{
-                cy.containsExact(this.antCell, page).siblings("td:contains('Remove')").within(()=>{
+        cy.contains("button", "Add Page", { timeout: 20000 }).should("exist") // waits as long as needed for landing page setup to load
+        pages.forEach((page) => {
+            cy.ifElementWithExactTextExists(this.antCell, page, 1000, () => {
+                cy.containsExact(this.antCell, page).siblings("td:contains('Remove')").within(() => {
                     cy.contains('button', 'Remove').click()
                 })
                 cy.contains("button", "Yes").click()
             })
-            if(verify !== false){
-                cy.waitFor({element: `${this.antCell}:contains('${page}')`, to: "not.exist", wait: 20000})
+            if (verify !== false) {
+                cy.waitFor({ element: `${this.antCell}:contains('${page}')`, to: "not.exist", wait: 20000 })
                 cy.containsExact(this.antCell, page).should("not.exist")
             }
         })
     }
 
-    clearLandingPages(){
+    clearLandingPages() {
         this.goToLandingPage()
-        cy.ifElementExists(this.pages.tableRow, 2000, ()=>{
-            cy.get(this.pages.tableRow).then((rows)=>{
-                for(let i = rows.length - 1; i >= 0; i--){
-                    cy.get(this.pages.tableRow).eq(i).within(()=>{
+        cy.ifElementExists(this.pages.tableRow, 2000, () => {
+            cy.get(this.pages.tableRow).then((rows) => {
+                for (let i = rows.length - 1; i >= 0; i--) {
+                    cy.get(this.pages.tableRow).eq(i).within(() => {
                         cy.contains('button', 'Remove').click()
                     })
                     cy.contains("button", "Yes").click()
@@ -1278,7 +1586,7 @@ export class Vex extends Common {
         })
     }
 
-    editLandingPage(config){
+    editLandingPage(config) {
         const name = config.name
         const newName = config.newName
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
@@ -1286,14 +1594,14 @@ export class Vex extends Common {
         const verify = config.verify // must specify false to skip verification 
 
         this.goToLandingPage()
-        cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(()=>{
+        cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
             cy.contains("button", "Edit").click()
         })
-        cy.contains(this.antModal + ":visible", "Edit Landing Page").within(()=>{
-            if(newName){
+        cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
+            if (newName) {
                 cy.get(this.pages.nameInput).clear().type(newName)
             }
-            switch(visibility){
+            switch (visibility) {
                 case "private":
                     cy.get(this.privateRadio).click()
                     break;
@@ -1301,69 +1609,113 @@ export class Vex extends Common {
                     cy.get(this.publicRadio).click()
                     break;
             }
-            if(slug){
+            if (slug) {
                 cy.get(this.pages.slugInput).clear().type(slug)
             }
             cy.contains("button", "Submit").click()
         })
-        if(verify !== false){
-            let checkName = newName ? newName : name 
+        if (verify !== false) {
+            let checkName = newName ? newName : name
             cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
-            if(newName){ 
-                cy.containsExact(this.antCell, checkName).should('exist') 
+            if (newName) {
+                cy.containsExact(this.antCell, checkName).should('exist')
             }
-            if(visibility == 'public'){
+            if (visibility == 'public') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('exist')
             }
-            if(visibility == 'private'){
+            if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
             }
-            if(slug){
+            if (slug) {
                 cy.containsExact(this.antCell, checkName).siblings(`td:contains('${slug}')`).should('exist')
             }
         }
     }
 
-    setToHomePage(page){
-        cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
+    setToHomePage(page) {
+        cy.containsExact(this.antCell, page, { timeout: 20000 }).parents(this.antTable.row).within(() => {
             cy.ifElementWithExactTextExists("button", "Set as Home Page", 1500, () => {
-                cy.contains("button", "Set as Home Page").click({force: true})
+                cy.contains("button", "Set as Home Page").click({ force: true })
             })
         })
     }
 
-    unsetHomePage(page){
-        cy.containsExact(this.antCell, page, {timeout: 20000}).parents(this.antTable.row).within(() => {
+    unsetHomePage(page) {
+        cy.containsExact(this.antCell, page, { timeout: 20000 }).parents(this.antTable.row).within(() => {
             cy.ifElementWithExactTextExists("button", "Unset", 1500, () => {
-                cy.contains("button", "Unset").click({force: true})
+                cy.contains("button", "Unset").click({ force: true })
             })
         })
     }
 
-    goToPageEditor(page){
-        cy.containsExact(this.antCell, page).siblings(`td:contains('Modify Page')`).within(()=>{
-            cy.contains("a", "Modify Page").invoke("attr", "href").then((href)=>{
+    goToPageEditor(page) {
+        cy.containsExact(this.antCell, page).siblings(`td:contains('Modify Page')`).within(() => {
+            cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
         })
     }
 
-    addBasicBlock(){
+    addBasicBlock() {
         // Use to add the most basic block if it doesn't matter what the landing page contains - just that it exists
         // Assumes it's a fresh landing page with no existing blocks 
-        cy.get(this.pages.addBlockButton).click({force: true}) // Cypress was complaining that this button wasn't attached to the DOM, so force click 
-        cy.get(this.pages.addHTMLButton).click({force: true})
+        cy.get(this.pages.addBlockButton).click({ force: true }) // Cypress was complaining that this button wasn't attached to the DOM, so force click 
+        cy.get(this.pages.addHTMLButton).click({ force: true })
         cy.get(this.saveButton).click()
     }
 
-    addAdvancedBlock(config){
+    configureFilter(filterName, filterSettings) {
+        const { enableToggle, overrideLabel, textColor, backgroundColor } = filterSettings
+        cy.containsExact("div", "Filters Configuration").click()
+        cy.containsExact("span", filterName).click()
+        if(enableToggle == true || enableToggle == false){
+            cy.get(this.pages.filterToggle).parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
+                if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                    cy.get(this.pages.filterToggle).click()
+
+                }
+            })
+        }
+        if (overrideLabel) {
+            cy.get("input[name*='.overrideLabel']").clear().type(overrideLabel)
+        }
+        if (textColor) {
+            this.pickColor2(textColor)
+        }
+        if (backgroundColor) {
+            this.pickColor2(backgroundColor)
+        }
+        cy.get("span:contains('" + filterName + "')").eq(1).click()
+        cy.containsExact("span", "Filters Configuration").click()
+    }
+
+    verifyFilterConfiguration(filterName, filterSettings) {
+        const { enableToggle, overrideLabel } = filterSettings
+        if (enableToggle) {
+            if (overrideLabel) {
+                cy.containsExact("option", overrideLabel).should("exist")
+            }
+            else {
+                cy.containsExact("option", filterName).should("exist")
+            }
+        }
+    }
+
+
+    addAdvancedBlock(config) {
         const type = config.type.toLowerCase()
-        const content = config.content 
+        const content = config.content
         const typography = config.typography // this has sub options 
-        const className = config.className 
+        const className = config.className
         const sessionGroup = config.sessionGroup
-        const enableSearch = config.enableSearch
-        const enableTopicFilter = config.enableTopicFilter
+        const topicFilter = config.topicFilter
+        const availabilityFilter = config.availabilityFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
+        const languageFilter = config.languageFilter
+        const searchConfiguration = config.searchConfiguration
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
@@ -1371,266 +1723,332 @@ export class Vex extends Common {
         const layout = config.layout
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
-        cy.waitFor({element: this.pages.addBlockButton, to: "exist", wait: 10000})
-        cy.get(this.pages.addBlockButton).eq(0).click({force: true}) // Always pick first one and add to top 
+        cy.waitFor({ element: this.pages.addBlockButton, to: "exist", wait: 10000 })
+        cy.get(this.pages.addBlockButton).eq(0).click({ force: true }) // Always pick first one and add to top 
 
-        if(type == "html"){
-            cy.get(this.pages.addHTMLButton + ":visible").eq(0).click({force: true})
-        } else if (type == "session group"){
-            cy.get(this.pages.addSessionGroupButton + ":visible").eq(0).click({force: true})
+        if (type == "html") {
+            cy.get(this.pages.addHTMLButton + ":visible").eq(0).click({ force: true })
+        } else if (type == "session group") {
+            cy.get(this.pages.addSessionGroupButton + ":visible").eq(0).click({ force: true })
         }
 
         // The menu of the most recently added one will be visible 
-        cy.get(this.pages.editorMenu).within(()=>{
+        cy.get(this.pages.editorMenu).within(() => {
             cy.get(this.pages.menuBlock).eq(3).click() // This opens up the block editor modal 
         })
 
-        if(content){
+        if (content) {
             cy.containsExact("div", "HTML Content").click() // Slides open the html content area
             cy.get("textarea").clear().type(content, { parseSpecialCharSequences: false })
             cy.containsExact("span", "HTML Content").click() // Slides shut the html content area
         }
 
-        if(sessionGroup){
+        if (sessionGroup) {
             cy.get("select[id*='virtualEventGroupId']").select(sessionGroup)
         }
 
-        if(layout){
+        if (layout) {
             // Values should be "Carousel" or "Grid"
             cy.get("select[id*='landingPageLayout']").select(layout)
         }
 
-        if(background){
+        if (background) {
             const color = background.color // object with keys hex, r, g, b
             const image = background.image // image must be an object that can be passed into pickThumbnail method (Common classs)
             const position = background.position // center, top, bottom -> these seem to only matter if size is 'cover'
             const size = background.size // cover or contain
 
             cy.containsExact("div", "Background").click()
-            if(color){
+            if (color) {
                 this.pickColor2(color)
             }
-            if(image){
+            if (image) {
                 cy.contains("button", "Add Image").click()
                 this.pickThumbnail(image)
             }
-            if(position){
+            if (position) {
                 cy.get("select[id*='backgroundPosition']").select(position)
             }
-            if(size){
+            if (size) {
                 cy.get("select[id*='backgroundSize']").select(size)
             }
             cy.containsExact("span", "Background").click()
         }
 
-        if(heading){
+        if (heading) {
             let color = heading.color // In HEX code or rgb (rgb preferred)
             let textAlign = heading.textAlign // center, left, right
 
             cy.containsExact("div", "Heading").click()
-            if(color){
+            if (color) {
                 this.pickColor2(color)
             }
-            if(textAlign){
+            if (textAlign) {
                 cy.get("select[id*='heading.textAlign']").select(textAlign)
             }
             cy.containsExact("span", "Heading").click()
         }
 
-        if(typography){
+        if (typography) {
             // "color" In HEX code or rgb (rgb preferred)
             // "textAlign" could be center, left, or right
             // fontSize - please only use pixels, eg 5px
-            const { color, textAlign, fontSize } = typography 
+            const { color, textAlign, fontSize } = typography
 
             cy.containsExact("div", "Typography").click()
-            if(color){
+            if (color) {
                 this.pickColor2(color)
             }
-            if(textAlign){
+            if (textAlign) {
                 cy.get("select[id*='typography.textAlign']").select(textAlign)
             }
-            if(fontSize){
+            if (fontSize) {
                 cy.get("input[name*='typography.fontSize']").clear().type(fontSize)
             }
             cy.containsExact("span", "Typography").click()
         }
 
-        if(spacing){
+        if (spacing) {
             cy.containsExact("div", "Spacing").click()
             cy.get("input:visible").clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
         }
 
-        if(card){
+        if (card) {
             const { color, textAlign, fontSize } = card
 
             cy.containsExact("div", "Card Configuration").click()
 
-            if(color){
+            if (color) {
                 this.pickColor2(color)
             }
 
-            if(textAlign){
+            if (textAlign) {
                 cy.get("select[id*='cardConfiguration.textAlign']").select(textAlign)
             }
 
-            if(fontSize){
+            if (fontSize) {
                 cy.get("input[name*='cardConfiguration.fontSize']").clear().type(fontSize)
             }
         }
 
-        if(enableSearch){
-            cy.wait(5000)
-            cy.contains('div','Search Configuration').click()
-            cy.get(this.pages.searchToggle).click()
+        //if(enableSearch){
+        // cy.wait(5000)
+        // cy.contains('div','Search Configuration').click()
+        // cy.get(this.pages.searchToggle).click()
+        // }
+        if (topicFilter) {
+            this.configureFilter("Topic Filter", topicFilter)
+        }
+        if (availabilityFilter) {
+            this.configureFilter("Availability", availabilityFilter)
+        }
+        if (funnelStageFilter) {
+            this.configureFilter("Funnel Stage", funnelStageFilter)
+        }
+        if (industryFilter) {
+            this.configureFilter("Industry", industryFilter)
+        }
+        if (personaFilter) {
+            this.configureFilter("Persona", personaFilter)
+        }
+        if (businessUnitFilter) {
+            this.configureFilter("Business Unit", businessUnitFilter)
+        }
+        if (languageFilter) {
+            this.configureFilter("Language", languageFilter)
         }
 
-        if(enableTopicFilter){
-            cy.get(this.pages.filtersConfigurationLabel).click()
-            cy.get(this.pages.topicFilterToggle).click()
+        if (searchConfiguration) {
+            const { enableToggle, searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
+            cy.containsExact("div", "Search Configuration").click()
+
+            if(enableToggle == true || enableToggle == false){
+                cy.get("input[name*='searchConfiguration.enable']").parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
+                    if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                        cy.get("input[name*='searchConfiguration.enable']").click()
+                    }
+                })
+            }
+            if (searchButtonTitle) {
+                cy.get(this.pages.searchOverrideLabel).parent().within(() => {
+                    cy.get("input").clear().type(searchButtonTitle)
+                })
+            }
+            if (buttonTextColor) {
+                this.pickColor2(buttonTextColor)
+            }
+            if (inputTextColor) {
+                this.pickColor2(inputTextColor)
+            }
+            if (buttonBackgroundAndBorderColor) {
+                this.pickColor2(buttonBackgroundAndBorderColor)
+            }
         }
 
-        if(className){
+        if (className) {
             cy.get(this.pages.classNameInput).clear().type(className)
         }
 
         cy.contains("button", "Confirm").click()
 
-        if(verify !== false){
+        if (verify !== false) {
             this.verifyBlock(config)
         }
     }
 
-    verifyBlock(config){
+    verifyBlock(config) {
         const type = config.type.toLowerCase()
         const checkContent = config.checkContent // If you want content checked, need to include checkContent: {text: [...text], locators: [...locators]}
         const typography = config.typography // this has sub options 
-        const className = config.className 
+        const className = config.className
         const sessionGroup = config.sessionGroup
         const heading = config.heading // this has sub options color, textAlign
         const background = config.background // this has several sub options 
         const spacing = config.spacing // Padding in valid css units
         const card = config.card
-        const enableSearch = config.enableSearch
-        const enableTopicFilter = config.enableTopicFilter
+        const topicFilter = config.topicFilter
+        const availabilityFilter = config.availabilityFilter
+        const funnelStageFilter = config.funnelStageFilter
+        const industryFilter = config.industryFilter
+        const personaFilter = config.personaFilter
+        const businessUnitFilter = config.businessUnitFilter
+        const languageFilter = config.languageFilter
+        const searchConfiguration = config.searchConfiguration
+        //const enableTopicFilter = config.enableTopicFilter
         const layout = config.layout
 
-        if(type == "html" && className){ // className is required to be able to find the correct block
+        if (type == "html" && className) { // className is required to be able to find the correct block
             let locator = `div[class*='${className}']`
-            cy.get(locator).invoke("attr", "style").then((style)=>{
-                if(typography && typography.textAlign){
+            cy.get(locator).invoke("attr", "style").then((style) => {
+                if (typography && typography.textAlign) {
                     expect(style).to.include(`text-align: ${typography.textAlign}`)
                 }
-                if(typography && typography.color && !typography.color.hex){
+                if (typography && typography.color && !typography.color.hex) {
                     expect(style).to.include(`color: rgb(${typography.color.r}, ${typography.color.g}, ${typography.color.b})`)
                 }
-                if(typography && typography.fontSize){
+                if (typography && typography.fontSize) {
                     expect(style).to.include(`font-size: ${typography.fontSize}`)
                 }
-                if(background && background.color && !background.color.hex){
+                if (background && background.color && !background.color.hex) {
                     expect(style).to.include(`background-color: rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
                 }
-                if(background && background.image.url){
+                if (background && background.image.url) {
                     expect(style).to.include(background.image.url)
                 }
-                if(background && background.position){
+                if (background && background.position) {
                     expect(style).to.include(`background-position: center ${background.position}`)
                 }
-                if(background && background.size){
+                if (background && background.size) {
                     expect(style).to.include(`background-size: ${background.size}`)
                 }
-                if(spacing){
+                if (spacing) {
                     expect(style).to.include(`padding: ${spacing}`)
                 }
             })
-            if(checkContent && checkContent.text){
-                checkContent.text.forEach((text)=>{
+            if (checkContent && checkContent.text) {
+                checkContent.text.forEach((text) => {
                     cy.contains(locator, text).should("exist")
                 })
             }
-            if(checkContent && checkContent.locators){
-                checkContent.locators.forEach((checkLocator)=>{
-                    cy.get(locator).within(()=>{
+            if (checkContent && checkContent.locators) {
+                checkContent.locators.forEach((checkLocator) => {
+                    cy.get(locator).within(() => {
                         cy.get(checkLocator).should("exist")
                     })
                 })
             }
         }
 
-        if(type == "session group" && sessionGroup){ // If you add a session group block with no session group, cannot find the correct block
+        if (type == "session group" && sessionGroup) { // If you add a session group block with no session group, cannot find the correct block
             let blockLocator = this.pages.sessionGroupRow
             cy.contains(blockLocator, sessionGroup).should("exist")
-            if(heading){
-                cy.contains(blockLocator, sessionGroup).within(()=>{
-                    if(heading.color && !heading.color.hex){
+            if (heading) {
+                cy.contains(blockLocator, sessionGroup).within(() => {
+                    if (heading.color && !heading.color.hex) {
                         cy.get("h4").should("have.css", 'color', `rgb(${heading.color.r}, ${heading.color.g}, ${heading.color.b})`)
                     }
-                    if(heading.textAlign){
+                    if (heading.textAlign) {
                         cy.get("h4").should("have.css", 'text-align', heading.textAlign)
                     }
                 })
             }
-            if(background && background.color && !background.color.hex){
+            if (background && background.color && !background.color.hex) {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-color", `rgb(${background.color.r}, ${background.color.g}, ${background.color.b})`)
             }
-            if(background && background.image.url){
+            if (background && background.image.url) {
                 cy.contains(blockLocator, sessionGroup).invoke("css", "background-image").should("have.contain", background.image.url)
             }
-            if(background && background.position){
-                let positionTranslator = {top: "0%", center: "50%", bottom: "100%"}
+            if (background && background.position) {
+                let positionTranslator = { top: "0%", center: "50%", bottom: "100%" }
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-position", `50% ${positionTranslator[background.position]}`)
             }
-            if(background && background.size){
+            if (background && background.size) {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "background-size", background.size)
             }
-            if(layout){
+            if (layout) {
                 cy.contains(blockLocator, sessionGroup).within(() => {
                     const shouldExistOrNot = layout == "Carousel" ? "exist" : "not.exist"
                     cy.get(this.pages.carouselArrow).should(shouldExistOrNot)
                 })
             }
-            if(spacing){
+            if (spacing) {
                 cy.contains(blockLocator, sessionGroup).should("have.css", "padding", spacing)
             }
-            if(card){
+            if (card) {
                 const { color, textAlign, fontSize } = card
                 cy.contains(blockLocator, sessionGroup).within(() => {
-                    if(color){
+                    if (color) {
                         cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "color", `rgb(${color.r}, ${color.g}, ${color.b})`)
                     }
 
-                    if(textAlign){
+                    if (textAlign) {
                         cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "text-align", textAlign)
                     }
-                    
-                    if(fontSize){
+
+                    if (fontSize) {
                         cy.get(this.pages.sessionCardTitle).eq(0).should("have.css", "font-size", fontSize)
                     }
                 })
             }
-            if(enableSearch){
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("button", "Search").should("exist")
-                })
-            } else {
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("button", "Search").should("not.exist")
-                })
-            }
-            if(enableTopicFilter){
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("Filter By Topic").should("exist")
-                })
-            } else {
-                cy.contains(blockLocator, sessionGroup).within(() => {
-                    cy.contains("Filter By Topic").should("not.exist")
-                })
-            }
+
+            cy.contains(blockLocator, sessionGroup).within(() => {
+                if (topicFilter) {
+                    this.verifyFilterConfiguration("Topic Filter", topicFilter)
+                }
+                if (availabilityFilter) {
+                    this.verifyFilterConfiguration("Availability", availabilityFilter)
+                }
+                if (funnelStageFilter) {
+                    this.verifyFilterConfiguration("Funnel Stage", funnelStageFilter)
+                }
+                if (industryFilter) {
+                    this.verifyFilterConfiguration("Industry", industryFilter)
+                }
+                if (personaFilter) {
+                    this.verifyFilterConfiguration("Persona", personaFilter)
+                }
+                if (businessUnitFilter) {
+                    this.verifyFilterConfiguration("Business Unit", businessUnitFilter)
+                }
+                if (languageFilter) {
+                    this.verifyFilterConfiguration("Language", languageFilter)
+                }
+
+                if (searchConfiguration) {
+                    const overrideTitle = searchConfiguration.searchButtonTitle
+                    if (overrideTitle) {
+                        cy.contains('button', overrideTitle).should("exist")
+                    } else {
+                        cy.containsExact('button', 'Search').should("exist")
+                    }
+                }
+            })
         }
     }
 
-    removeBlock(locator){
+
+    removeBlock(locator) {
         // Must first navigate to the landing page editor 
         // locator should be something specific to the block 
         // The blocks are shifty, getting attached, detached, then reattached to dom
@@ -1638,46 +2056,46 @@ export class Vex extends Common {
         // Cypress not smart enough to requery for the same block, and instead tries to click the previously found block that has been detached 
         // Hence, need to wait for DOM to settle before interacting with it
         cy.get(locator).should("exist")
-        cy.waitFor({element: locator, to: "not.exist", wait: 1000})
+        cy.waitFor({ element: locator, to: "not.exist", wait: 1000 })
         cy.get(locator).should('exist')
         cy.get(locator).parents(this.pages.blockContainer).click() // this selects the block and makes the menu appear
-        cy.get(locator).parents(this.pages.blockContainer).within(()=>{
+        cy.get(locator).parents(this.pages.blockContainer).within(() => {
             cy.get(this.pages.menuBlock).eq(4).click() // This opens up the block editor modal 
         })
         cy.get(locator).should("not.exist")
     }
 
-    moveBlock(locator, up_down){
+    moveBlock(locator, up_down) {
         // locator must be something specific within the block
         // up_down can be up or down
         // assumes you already on landing page editor
-        let direction = {up: 0, down: 1}
+        let direction = { up: 0, down: 1 }
 
         cy.get(locator).parents(this.pages.blockContainer).click()
-        cy.get(locator).parents(this.pages.blockContainer).within(()=>{
+        cy.get(locator).parents(this.pages.blockContainer).within(() => {
             cy.get(this.pages.menuBlock).eq(direction[up_down]).click() // This opens up the block editor modal 
         })
     }
 
-    configureLandingPage(config){
+    configureLandingPage(config) {
         const name = config.name
-        const setHome = config.setHome 
+        const setHome = config.setHome
         const unsetHome = config.unsetHome
         const blocks = config.blocks
 
         this.editLandingPage(config)
 
-        if(setHome){
+        if (setHome) {
             this.setToHomePage(name)
         }
 
-        if(unsetHome){
+        if (unsetHome) {
             this.unsetHomePage(name)
         }
 
-        if(blocks){
+        if (blocks) {
             this.goToPageEditor(name)
-            blocks.forEach((block)=>{
+            blocks.forEach((block) => {
                 this.addAdvancedBlock(block)
                 cy.get(this.pages.blockContainer).eq(0).click() // This makes the add block button reappear
             })
@@ -1686,84 +2104,84 @@ export class Vex extends Common {
         }
     }
 
-    goToAppearance(){
-        cy.url().then((url)=>{
-            if(!url.includes("/appearance")){
-                cy.containsExact("a", "Appearance Setup", {timeout: 20000}).click()
+    goToAppearance() {
+        cy.url().then((url) => {
+            if (!url.includes("/appearance")) {
+                cy.containsExact("a", "Appearance Setup", { timeout: 20000 }).click()
             }
         })
     }
 
-    configureAppearance(config){
+    configureAppearance(config) {
         const appearance = config.appearance
         const heroImage = config.heroImage
         const heroHeight = config.heroHeight
         const headerTitle = config.headerTitle
         const headerSubtitle = config.headerSubtitle
         const contentTitle = config.contentTitle
-        const contentDescription= config.contentDescription
+        const contentDescription = config.contentDescription
 
         this.goToAppearance()
 
-        if(appearance){
-            cy.get("span[class='ant-select-selection-item']",{timeout: 10000}).should('be.visible').click({force: true})
+        if (appearance) {
+            cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
             // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
-            cy.get(`div[label="${appearance}"]`,{timeout: 10000}).click()
-            cy.contains('button:visible', "Save").click() 
-         }
+            cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
+            cy.contains('button:visible', "Save").click()
+        }
 
-        if(heroImage){
+        if (heroImage) {
             this.selectThumbnail(heroImage)
         }
 
-        if(heroHeight){
+        if (heroHeight) {
             cy.get(this.appearance.heroHeightInput).clear().type(heroHeight)
         }
 
-        if(headerTitle){
+        if (headerTitle) {
             cy.get(this.appearance.headerTitle).click()
-            cy.get(this.appearance.headerTitleInput).clear().type(headerTitle , {parseSpecialCharSequences: false})
+            cy.get(this.appearance.headerTitleInput).clear().type(headerTitle, { parseSpecialCharSequences: false })
             cy.get(this.appearance.headerTitleInput).parent().contains('Save').click()
-            cy.get(this.appearance.headerTitle, {timeout: 5000}).should('contain', headerTitle)
+            cy.get(this.appearance.headerTitle, { timeout: 5000 }).should('contain', headerTitle)
         }
-        
-        if(headerSubtitle){
+
+        if (headerSubtitle) {
             cy.get(this.appearance.headerSubtitle).click()
-            cy.get(this.appearance.headerSubtitleInput).clear().type(headerSubtitle , {parseSpecialCharSequences: false})
+            cy.get(this.appearance.headerSubtitleInput).clear().type(headerSubtitle, { parseSpecialCharSequences: false })
             cy.get(this.appearance.headerSubtitleInput).parent().contains('Save').click()
-            cy.get(this.appearance.headerSubtitle, {timeout: 5000}).should('contain', headerSubtitle)
+            cy.get(this.appearance.headerSubtitle, { timeout: 5000 }).should('contain', headerSubtitle)
         }
 
-        if(contentTitle){
+        if (contentTitle) {
             cy.get(this.appearance.contentTitle).click()
-            cy.get(this.appearance.contentTitleInput).clear().type(contentTitle, {parseSpecialCharSequences: false})
+            cy.get(this.appearance.contentTitleInput).clear().type(contentTitle, { parseSpecialCharSequences: false })
             cy.get(this.appearance.contentTitleInput).parent().contains("Save").click()
-            cy.get(this.appearance.contentTitle, {timeout: 5000}).should('contain', contentTitle)
+            cy.get(this.appearance.contentTitle, { timeout: 5000 }).should('contain', contentTitle)
         }
 
-        if(contentDescription){
+        if (contentDescription) {
             cy.get(this.appearance.contentDescription).click()
-            cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription, {parseSpecialCharSequences: false})
+            cy.get(this.appearance.contentDescriptionInput).clear().type(contentDescription, { parseSpecialCharSequences: false })
             cy.get(this.appearance.contentDescriptionInput).parents("form").contains("Save").click()
-            cy.get(this.appearance.contentDescription, {timeout: 5000}).should("contain", contentDescription)
+            cy.get(this.appearance.contentDescription, { timeout: 5000 }).should("contain", contentDescription)
         }
         cy.contains('button:visible', "Save").click()
-        cy.contains(this.messages.recordSaved, {timeout: 20000}).should("exist")     
+        cy.contains(this.messages.recordSaved, { timeout: 20000 }).should("exist")
     }
 
-    selectCloneOptions(config){
+    selectCloneOptions(config) {
         // To specify which event 'tabs' you want to clone, pass them in as a key and set to true. 
         // The key must be the same as their corresponding locator keys in the this.cloneOptions object.
         Object.keys(config).forEach(option => {
-            if(this.cloneOptions[option] && config[option]){
+            if (this.cloneOptions[option] && config[option]) {
                 cy.get(this.cloneOptions[option]).click()
                 cy.get(this.cloneOptions[option]).parent().should("have.class", "ant-checkbox-checked")
             }
         })
     }
 
-    cloneEvent(config){
+    cloneEvent(config) {
         // If you specify the event to clone (template), then it is assumed you are already on the page listing all the events, and will clone from there by adding a new event 
         // If you don't specify what to clone, then it is assumed you are already on the event configuration page of the event you want to clone, and will clone from within here
         // Both ways of cloning will bring you to the newly created event configuration page
@@ -1771,11 +2189,11 @@ export class Vex extends Common {
         const name = config.name
         const verify = config.verify
 
-        if(template){
-            cy.get(this.pageTitleBar).within(()=>{
+        if (template) {
+            cy.get(this.pageTitleBar).within(() => {
                 cy.get(this.addEventButton).click()
             })
-            cy.contains(this.antModal, "Add Virtual Event").within(()=>{
+            cy.contains(this.antModal, "Add Virtual Event").within(() => {
                 cy.get(this.eventNameInput).clear().type(name)
                 cy.get(this.antSelector).eq(0).click()
             })
@@ -1784,39 +2202,39 @@ export class Vex extends Common {
                 find: this.antDropSelect.options(template)
             })
             cy.get(this.antDropSelect.options(template)).click()
-            cy.contains(this.antModal, "Add Virtual Event").within(()=>{
+            cy.contains(this.antModal, "Add Virtual Event").within(() => {
                 this.selectCloneOptions(config)
                 cy.contains("button", "Add Virtual Event").click()
             })
-            if(verify !== false){
+            if (verify !== false) {
                 cy.wait(3000);
-                cy.contains(this.antModal, "Add Virtual Event",{timeout: 10000}).should('not.be.visible')
-                cy.containsExact(this.eventCardTitle, name, {timeout: 10000}).should('exist')
+                cy.contains(this.antModal, "Add Virtual Event", { timeout: 10000 }).should('not.be.visible')
+                cy.containsExact(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
                 this.goToEventConfig(name)
             }
         } else {
             cy.get(this.cloneButton).click()
-            cy.contains(this.antModal, "Clone this Virtual Event").within(()=>{
+            cy.contains(this.antModal, "Clone this Virtual Event").within(() => {
                 cy.get(this.eventNameInput).clear().type(name)
             })
             this.selectCloneOptions(config)
             cy.contains("button", "Clone this Virtual Event").click()
-            if(verify !== false){
-                cy.contains(this.antModal, "Clone this Virtual Event",{timeout: 20000}).should("not.be.visible")
-                cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+            if (verify !== false) {
+                cy.contains(this.antModal, "Clone this Virtual Event", { timeout: 20000 }).should("not.be.visible")
+                cy.containsExact(this.pageTitleLocator, name, { timeout: 20000 }).should("exist")
             }
         }
     }
 
-    cloneSession(config){
+    cloneSession(config) {
         const template = config.template
         const name = config.name
         const verify = config.verify
 
-        if(template){
+        if (template) {
             this.goToSessionList()
             cy.contains("button", "Add Session").click()
-            cy.contains(this.antModal, "Add Session").within(()=>{
+            cy.contains(this.antModal, "Add Session").within(() => {
                 cy.get(this.sessionNameInput).clear().type(name)
                 cy.get(this.antSelector).click()
             })
@@ -1825,14 +2243,14 @@ export class Vex extends Common {
                 find: this.antDropSelect.options(template)
             })
             cy.get(this.antDropSelect.options(template)).click()
-            cy.contains(this.antModal, "Add Session").within(()=>{
+            cy.contains(this.antModal, "Add Session").within(() => {
                 cy.get(this.onDemandRadio).should("not.exist") // The on demand and live radio buttons disappear once a template is chosen
                 cy.contains("button", "Add Session").click()
             })
-            if(verify !== false){
+            if (verify !== false) {
                 cy.contains(this.antModal, "Add Session").should("not.be.visible")
                 this.searchSession(name)
-                cy.get(this.sessionName(name), {timeout: 10000}).should('exist')
+                cy.get(this.sessionName(name), { timeout: 10000 }).should('exist')
                 this.goToSessionConfig(name)
             }
         } else {
@@ -1840,26 +2258,26 @@ export class Vex extends Common {
                 clickElement: this.cloneButton,
                 checkElement: `${this.antModal}:contains('Clone this Session')`
             })
-            cy.contains(this.antModal, "Clone this Session", {timeout: 20000}).should("exist").within(()=>{
+            cy.contains(this.antModal, "Clone this Session", { timeout: 20000 }).should("exist").within(() => {
                 cy.get(this.sessionNameInput).should("exist").clear().type(name)
                 cy.contains("button", "Clone this Session").click()
             })
-            if(verify !== false){
-                cy.expectNotVisible({locator: this.antModal + ":contains('Clone this Session')"})
-                cy.containsExact(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+            if (verify !== false) {
+                cy.expectNotVisible({ locator: this.antModal + ":contains('Clone this Session')" })
+                cy.containsExact(this.pageTitleLocator, name, { timeout: 20000 }).should("exist")
             }
         }
     }
 
-    cloneLandingPage(config){
+    cloneLandingPage(config) {
         const method = config.method
         const template = config.template
         const name = config.name
         const verify = config.verify
 
-        if(method == "add page button"){
+        if (method == "add page button") {
             cy.contains("button", "Add Page").click()
-            cy.contains(this.antModal, "Add Page").within(()=>{
+            cy.contains(this.antModal, "Add Page").within(() => {
                 cy.get(this.pages.nameInput).clear().type(name)
                 cy.get(this.antSelector).click()
             })
@@ -1868,34 +2286,34 @@ export class Vex extends Common {
                 find: this.antDropSelect.options(template)
             })
             cy.get(this.antDropSelect.options(template)).click()
-            cy.contains(this.antModal, "Add Page").within(()=>{
+            cy.contains(this.antModal, "Add Page").within(() => {
                 cy.contains('button', "Add Page").click()
             })
-            if(verify !== false){
-                this.waitForAntModal({title: "Add Page"})
+            if (verify !== false) {
+                this.waitForAntModal({ title: "Add Page" })
             }
-        } else if (method == "clone button"){
-            cy.containsExact(this.antCell, template).parent().within(()=>{
+        } else if (method == "clone button") {
+            cy.containsExact(this.antCell, template).parent().within(() => {
                 cy.contains("button", "Clone").click()
             })
-            cy.contains(this.antModal, "Clone this Page").within(()=>{
+            cy.contains(this.antModal, "Clone this Page").within(() => {
                 cy.get(this.pages.nameInput).clear().type(name)
                 cy.contains("button", "Clone this Page").click()
             })
-            if(verify !== false){
-                this.waitForAntModal({title: "Clone this Page"})
+            if (verify !== false) {
+                this.waitForAntModal({ title: "Clone this Page" })
             }
         }
 
-        if(verify !== false){
-            cy.containsExact(this.antCell, name, {timeout: 20000}).should("exist")
+        if (verify !== false) {
+            cy.containsExact(this.antCell, name, { timeout: 20000 }).should("exist")
         }
     }
 
-    goToAnalytics(){
-        cy.url().then((url)=>{
-            if(!url.includes("/analytics")){
-                cy.containsExact("a", "Analytics", {timeout: 20000}).click()
+    goToAnalytics() {
+        cy.url().then((url) => {
+            if (!url.includes("/analytics")) {
+                cy.containsExact("a", "Analytics", { timeout: 20000 }).click()
             }
         })
     }
@@ -1908,13 +2326,34 @@ export class Vex extends Common {
             if (option.toggle == false || option.toggle == true) {
                 cy.get(this.searchAndFilter.switchToggle).parent().invoke('attr', 'class').then((attr) => {
                     if ((option.toggle == false && attr.includes("ant-switch-checked")) || (option.toggle == true && !attr.includes("ant-switch-checked"))) {
-                        cy.get(this.searchAndFilter.switchToggle).click() 
+                        cy.get(this.searchAndFilter.switchToggle).click()
                     }
                 })
             }
             if (option.label != "Search") {
-                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click({force:true});
-                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({force:true});
+                cy.wait(2000)
+                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click({ force: true });
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({ force: true });
+            }
+        })
+    }
+
+    removeSearchAndFilterValues(options) {
+        //Enabling ,Search filters
+        this.tabToSearchAndFilter()
+        options.forEach(option => {
+            cy.contains(this.antTabs, option.label).should("be.visible").click();
+            if (option.toggle == true) {
+                cy.get(this.searchAndFilter.switchToggle).parent().invoke('attr', 'class').then((attr) => {
+                    if ((option.toggle == true && !attr.includes("ant-switch-checked"))) {
+                        cy.get(this.searchAndFilter.switchToggle).click()
+                    }
+                })
+            }
+            if (option.label != "Search") {
+                cy.wait(2000)
+                cy.get(this.searchAndFilter.allOptionsCheckBox).last().should("be.visible").click();
+                cy.get(this.searchAndFilter.leftIcon).should("be.visible").click();
             }
         })
     }
@@ -1937,7 +2376,7 @@ export class Vex extends Common {
         cy.get(this.blocks, { timeout: 10000 }).first().should('be.visible').click()
         cy.get(this.addBlockButtons, { timeout: 10000 }).first().should('be.visible').click()
         cy.contains("button", block.name, { timeout: 10000 }).should('be.visible').click()
-        cy.get(this.icnPencil,{ timeout: 10000 }).should('be.visible').first().click()
+        cy.get(this.icnPencil, { timeout: 10000 }).should('be.visible').first().click()
         cy.get("select[id*='virtualEventGroupId']").select(block.sessionOption)
         cy.contains("button", "Confirm").click()
     }
@@ -1954,6 +2393,26 @@ export class Vex extends Common {
                 }
             }
         })
+    }
+
+    editExistingCard(config) {
+        const heading = config.heading
+
+        cy.get(this.pages.sessionGroupRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.pages.editorMenu).within(() => {
+            cy.get(this.pages.menuBlock).eq(3).click()
+        })
+
+        if (heading) {
+            let fontSize = heading.fontSize 
+
+            cy.containsExact("div", "Heading").click()
+            if (fontSize) {
+                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        cy.contains("button", "Confirm").click()
     }
 
 }

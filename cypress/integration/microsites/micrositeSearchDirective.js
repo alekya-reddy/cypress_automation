@@ -71,7 +71,7 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
                 authoring.configurations.addNewAppearance(newAppearanceSetting)
                 authoring.configurations.configureHeaderAppearance(headerAppearance)
                 authoring.microsites.removeMicrosite(microsite.name)
-                authoring.microsites.addMicrosite(microsite.name)  
+                authoring.microsites.addMicrosite(microsite)  
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({target: target.name})
                 authoring.microsites.tabToLandingPages()
@@ -159,7 +159,7 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.contains("button", "Save").click()
         authoring.microsites.visit()
         authoring.microsites.removeMicrosite(microsite1.name)
-        authoring.microsites.addMicrosite(microsite1.name) 
+        authoring.microsites.addMicrosite(microsite1) 
         authoring.microsites.goToMicrositeConfig(microsite1.name)
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")

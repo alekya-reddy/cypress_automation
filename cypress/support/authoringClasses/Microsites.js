@@ -6,6 +6,16 @@ export class Microsites extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/microsite`;
         this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
+        this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
+        this.addedbyButton =      "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.searchButton = 'input[name="page-search"]',
+        this.noMicrositeFound = "No microsites found",
+        this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
+        this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
+        this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
+        this.trashIcon = 'i[title="Delete Microsite"]';
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
@@ -63,7 +73,10 @@ export class Microsites extends Common {
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             carouselArrow: ".pf-microsite-carousel-arrow",
             landingPageLayout: "select[id*='landingPageLayout']",
-            openCard: "select[id*='cardLink']"
+            openCard: "select[id*='cardLink']",
+            Filter_Topic: "#microsite_topics",
+            searchFilter: "#microsite_search_button",
+            searchInputField: "#microsite_search_input"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -86,31 +99,54 @@ export class Microsites extends Common {
              listOption: "li[class*='ant-transfer-list-content-item']",
             itemsList: "span[class*='ant-transfer-list-content-item']"
         };
+
+        this.createMicrositeModal = {
+            nameInput: "input[name='name']",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input',
+            dropdownfolder:"form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
+        };
+
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="microsite-allow-visitor-groups_list"]';
         this.DisallowGroups = 'div[id="microsite-disallow-visitor-groups_list"]';
         this.dropDown = 'div[class="rc-virtual-list-holder-inner"]';
+        this.cell= "tbody td.ant-table-cell"
         this.assetCardContent="div[class*='pf-event-microsite-card-title']"
+        
 
     }
+    
 
     visit() {
         cy.visit(this.pageUrl);
     }
 
-    addMicrosite(microsite, verify) {
+    addMicrosite(options,verify){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const childFolder  = options.childFolder
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.get(this.pageTitleBar).within(() => {
             cy.contains("button", "Add Microsite").click()
         })
         cy.contains(this.antModal, "Add Microsite").within(() => {
-            cy.get(this.micrositesPage.nameInput).clear().type(microsite)
+            cy.get(this.micrositesPage.nameInput).clear().type(name)
+        
+
+            if (parentFolder) {
+                cy.get(this.createMicrositeModal.dropdownfolder).click({force: true}).type(parentFolder+ "\n")
+            }
+            if (childFolder) {
+                cy.get(this.createMicrositeModal.dropdownfolder).click({force: true}).type(childFolder + "\n")
+            }
+
             cy.contains('button', 'Add Microsite').click()
         })
-        if (verify !== false) {
-            this.waitForAntModal({ title: "Add Microsite" })
-            cy.contains(this.antModal, "Add Microsite").should('not.be.visible')
-            cy.containsExact(this.micrositesPage.cardTitle, microsite, { timeout: 10000 }).should('exist')
+
+        if (verify !== false){
+            cy.get(this.antModal).should('not.be.visible')
+            cy.contains(this.eventCardTitle, name, {timeout: 10000}).should('exist')
         }
     }
 
@@ -126,6 +162,38 @@ export class Microsites extends Common {
        })
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
         
+    }
+
+    removeMicrositefromFolder(name){  
+        this.goToPage(this.pageTitle, this.pageUrl)
+          cy.get(this.pageSearch).clear().type(name)
+          cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
+          cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, name, 20000, () => {
+          cy.contains(this.micrositesPage.cardTitle,name,{ timeout: 20000 }).should('exist')
+          cy.get(`button[id='delete-${name}']`).should('exist').click()
+          cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
+              cy.contains('Yes').click()
+             })
+        cy.get(this.pageSearch).clear()
+            })
+            
+            cy.containsExact(this.micrositesPage.cardTitle, name).should('not.exist')
+     }
+
+     removeMicrositeWithTrashIcon(microsite){ 
+        this.goToPage(this.pageTitle, this.pageUrl)
+        cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
+        cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
+        cy.contains(this.micrositesPage.cardTitle,microsite,{ timeout: 20000 }).should('exist')  
+             cy.get(this.eventClick).eq(0).click()
+             cy.get(this.trashIcon).should('exist').click()
+             cy.contains(this.modal, "Do you want to delete this Microsite?").within(() => {
+                 cy.wait(2000)
+                cy.contains('Yes').click()
+               })
+            })
+        cy.containsExact(this.eventCardTitle, microsite).should('not.exist')
+    
     }
 
     goToMicrositeConfig(microsite, verify) {
@@ -385,7 +453,7 @@ export class Microsites extends Common {
 
         cy.contains(this.antModal, "Assign Tracks").within(() => {
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
-            cy.contains("button", "Submit").click()
+            cy.contains("button", "Submit").click({force: true})
         })
 
         if (verify !== false) {
@@ -556,7 +624,9 @@ export class Microsites extends Common {
                 cy.containsExact(this.table.antCell, checkName).should('exist')
             }
             if (visibility == 'public') {
+                if(checkName !== 'Home Page'){
                 cy.contains('td', checkName).siblings("td:contains('Set as Home Page')").should('exist')
+                   } 
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
                 cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
@@ -575,7 +645,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page) {
-        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td:contains('Modify Page')`).within(() => {
+        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td`).within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -1076,6 +1146,7 @@ export class Microsites extends Common {
         }
 
         if (blocks) {
+            cy.wait(3000)
             this.goToPageEditor(name)
             blocks.forEach((block) => {
                 const featuredBlockType = block.type == "featured"
@@ -1256,6 +1327,26 @@ export class Microsites extends Common {
                 
             }
         })
+    }
+
+    editExistingCard(config) {
+        const heading = config.heading
+
+        cy.get(this.landingPages.trackRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.landingPages.editorMenu).within(() => {
+            cy.get(this.landingPages.menuBlock).eq(3).click()
+        })
+
+        if (heading) {
+            let fontSize = heading.fontSize 
+
+            cy.containsExact("div", "Heading").click()
+            if (fontSize) {
+                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        cy.contains("button", "Confirm").click()
     }
 
 }

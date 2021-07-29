@@ -79,7 +79,7 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
                 authoring.configurations.configureHeaderAppearance(headerAppearance)
                 authoring.vex.visit();
                 authoring.vex.deleteVirtualEvent(event.name)
-                authoring.vex.addVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 authoring.vex.configureAppearance(appearance)
                 authoring.vex.addSession(publicSession.name)
@@ -153,7 +153,7 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.contains("button", "Save").click()
         authoring.vex.visit() 
         authoring.vex.deleteVirtualEvent(event1.name)
-        authoring.vex.addVirtualEvent(event1.name)
+        authoring.vex.addVirtualEvent(event1)
         authoring.vex.goToEventConfig(event1.name)
         cy.wait(5000)
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{

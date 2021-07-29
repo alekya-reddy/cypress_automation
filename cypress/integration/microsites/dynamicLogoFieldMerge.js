@@ -57,7 +57,7 @@ describe("Microsites - Dynamic Header Logo, and Field Merges", () => {
                 authoring.common.login()
                 authoring.configurations.addNewAppearance({name: headerAppearance.appearance})
                 authoring.configurations.configureHeaderAppearance(headerAppearance)
-                authoring.microsites.addMicrosite(microsite.name)
+                authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
