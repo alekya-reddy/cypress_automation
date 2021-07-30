@@ -11,19 +11,16 @@ const microsite = {
     },
     appearance: "micrositeHideTrackLogo.js"
 }
-
 const target = {
     name: "micrositeHideTrackLogoTarget.js",
     slug: "target-logo",
     contents: ["Website Common Resource","Wiki-1 Shared Resource", "Wiki-2 Shared Resource"],
     appearance: "micrositeHideTrackLogo.js",
     flow: "on",
-    
-   get url(){
+    get url(){
      return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
-
 const recommend = {
     name: 'MicrositeHideTrackLogoReco.js',
     slug: 'recommend-logo',
@@ -34,7 +31,6 @@ const recommend = {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
 }
-
 const newAppearanceSetting = {
     name:"micrositeHideTrackLogo.js", 
     primaryColor: {r: 106, g: 171, b: 233, a: 100},
@@ -43,7 +39,6 @@ const newAppearanceSetting = {
     bodyTextFont: "Overpass",
     bobyTextcolor: {r: 180, g: 74, b: 13, a: 100}
 }
-
 const headerAppearance = {
     appearance: "micrositeHideTrackLogo.js",
     thumbnail: {
@@ -52,7 +47,6 @@ const headerAppearance = {
     }
    
 }
-
 const flowAppearance = {
     appearance: "micrositeHideTrackLogo.js",
     thumbnail: {
@@ -60,7 +54,6 @@ const flowAppearance = {
         url: "/stock/sm/animal-dog-pet-cute.jpg",
     }   
 }
-
 const topicSidebarAppearance = {
     appearance: "micrositeHideTrackLogo.js",
     thumbnail: {
@@ -68,7 +61,6 @@ const topicSidebarAppearance = {
         url: "/stock/sm/bench-forest-trees-path.jpg",
     }   
 }
-
 const micrositeAppearanceSettings = {
     appearance: "micrositeHideTrackLogo.js",
     hideNavigation: true,
@@ -79,7 +71,6 @@ const micrositeAppearanceSettings1 = {
     hideNavigation: false,
     verify: true
 }
-
 const targetSetup = {
     name: "micrositeHideTrackLogoTarget.js",
     slug: "micrositeHideTrackLogo-target",
@@ -88,7 +79,6 @@ const targetSetup = {
     },
     contents: ["Website Common Resource","Wiki-1 Shared Resource", "Wiki-2 Shared Resource"],
 }
-
 const recommendSetup = {
     name: "MicrositeHideTrackLogoReco.js",
     slug: "MicrositeHideTrackLogo-reco",
@@ -97,7 +87,6 @@ const recommendSetup = {
     },
     contents: ["Website Common Resource","Wiki-1 Shared Resource", "Wiki-2 Shared Resource"],
 }
-
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
@@ -112,7 +101,6 @@ const landingPage = {
             track: target.name,
             layout: "Grid",
             expectContents: target.contents,
-
             heading: {
                 color: {r: "0", g: "255", b: "255"},
                 textAlign: 'center'
@@ -124,7 +112,6 @@ const landingPage = {
             track: recommend.name,
             layout: "Grid",
             expectContents: recommend.contents,
-
             heading: {
                 color: {r: "0", g: "255", b: "255"},
                 textAlign: 'center'
@@ -133,7 +120,6 @@ const landingPage = {
     ]}
 
 describe("Microsite: Hide the track logo", () => {
-
     it("Set up Tracks,Appearance and Microsites if doesn't exist", ()=>{
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){
@@ -165,12 +151,12 @@ describe("Microsite: Hide the track logo", () => {
 
     //1.Verify 'Target track – Flow promoter logo' and 'Recommend track – Topic sidebar logo' is hidden when  microsite navigation logo is rendered.
     //"Hide Default Navigation Bar" always remains in disable(unchecked)state when ever we create a new appearance
-    it("Microsite : Validate 'Hide Default Navigation Bar' functionality", ()=>{
+    it("Microsite : Validate the track logos with 'Hide Default Navigation Bar' Enabled & Disabled", ()=>{
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.tabToLandingPages()
-        //"Hide Default Navigation Bar" is Disabled/Unchecked
+        //Verify the header logo is visible and track promotor logo is invisible, when "Hide Default Navigation Bar" is Disabled/Unchecked
         cy.visit(landingPage.url)
         //Verify for Target Track
         consumption.microsites.clickContent({track: target.name, content: target.contents[0]})
@@ -191,9 +177,7 @@ describe("Microsite: Hide the track logo", () => {
         //Recommend Track – Topic Sidebar logo should be hidden 
         cy.get(consumption.common.header.locator).should("not.exist")
         cy.wait(2000)
-
-       //2.Verify track logo/promoter logo is hidden, Irrespective of the default navigation bar is enabled/disabled we should hide the promoter logo
-       // "Hide Default Navigation Bar" is Enabled/Checked
+       //2.Verify the header logo and track promotor logo is invisible, when "Hide Default Navigation Bar" is Enabled/Checked
         authoring.configurations.visit.appearances()
         authoring.configurations.configureMicrositesAppearance(micrositeAppearanceSettings)
         //Verify for Target Track
@@ -208,8 +192,7 @@ describe("Microsite: Hide the track logo", () => {
         // Microsite navigation header logo & Recommend-Topic Sidebar logo should be hidden 
         cy.get(consumption.microsites.navigation.header).should("not.exist")
         cy.get(consumption.common.header.locator).should("not.exist")
-
-        //3.Verify promoter logo is not hidden, when the header logo is not selected/not available from appearances
+        //3.Verify track promotor logo is shown, when the header logo is not selected/not available from appearances
         //Go back to appearance and and delete the header logo
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(newAppearanceSetting.name)
