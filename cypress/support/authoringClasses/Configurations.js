@@ -747,6 +747,46 @@ export class Configurations extends Common {
         }
     }
 
+    configureFlowAppearance(options){
+        const { 
+            appearance, 
+            thumbnail,
+            verify 
+        } = options
+
+        this.goToCampaignAppearance(appearance, "flow")
+
+        if (thumbnail) {
+            cy.get(this.appearances.imagePicker).click()
+            this.pickThumbnail(thumbnail)
+        }
+        cy.contains("button", "Save Flow Settings").click()
+        if (verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        }
+
+    }
+
+    configuretopicSidebarAppearance(options){
+        const { 
+            appearance, 
+            thumbnail,
+            verify 
+        } = options
+
+        this.goToCampaignAppearance(appearance, "topic-sidebar")
+
+        if (thumbnail) {
+            cy.get(this.appearances.imagePicker).click()
+            this.pickThumbnail(thumbnail)
+        }
+        cy.contains("button", "Save Topic Sidebar Settings").click()
+        if (verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        }
+
+    }
+
     configureVEXAppearance(options){
         const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, layout, verify} = options
         const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
