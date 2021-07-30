@@ -16,7 +16,6 @@ const target = {
     name: "micrositeHideTrackLogoTarget.js",
     slug: "target-logo",
     contents: ["Website Common Resource","Wiki-1 Shared Resource", "Wiki-2 Shared Resource"],
-    //contents: ["Website Common Resource"],
     appearance: "micrositeHideTrackLogo.js",
     flow: "on",
     
@@ -29,7 +28,6 @@ const recommend = {
     name: 'MicrositeHideTrackLogoReco.js',
     slug: 'recommend-logo',
     contents: ["Website Common Resource","Wiki-1 Shared Resource", "Wiki-2 Shared Resource"],
-    //contents: ["Website Common Resource"],
     appearance: "micrositeHideTrackLogo.js",
     topicSidebar: "on",
     get url(){
