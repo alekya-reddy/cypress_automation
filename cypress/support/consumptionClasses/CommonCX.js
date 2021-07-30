@@ -50,6 +50,7 @@ export class CommonCX {
             iframe: ".lookbook-overlay-content",
         };
         this.backToHomePageButton = 'i[title="See All"]';
+        this.flowHeader ='#qa-header-common'
     }
 
     checkSessionCookie(wait){
