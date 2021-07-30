@@ -7,6 +7,8 @@ export class Target extends Common {
         this.pageTitle = "Target Tracks";
         this.targetAnalyticsTitle = "Target Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.pageContents="div[draggable='true'] strong"
+        this.addContentTo = 'input[name="addContentTo"]'
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -106,7 +108,7 @@ export class Target extends Common {
         const language = options.language
         const accessProtection = options.accessProtection
         const externalCode = options.externalCode
-        const contents = options.contents
+        const content = options
         /** All toggles should have value of 'on' or 'off' **/
         const flow = options.flow
         const signposts = options.signposts 
@@ -126,13 +128,13 @@ export class Target extends Common {
         const formsStrategyOptions = options.formsStrategyOptions
         /***********************************************************/
         const verify = options.verify
-
+       
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
                 this.goToTrack(name)
             }
         })
-
+        
         if(slug){
             this.setCustomUrl(slug, verify)
         }
@@ -153,8 +155,10 @@ export class Target extends Common {
             this.addAccessProtection(accessProtection, verify)
         }
 
-        if(contents){
-            this.addContent(contents, verify)
+        if(content){
+            if(content.contents){
+                this.addContent(content.contents, verify)
+            }
         }
 
         if(flow){
@@ -318,7 +322,7 @@ export class Target extends Common {
         }
     }
 
-    addContent(contents, verify){
+    addContent(contents, verify,position="Bottom"){
         cy.contains("button", "Add Content").click()
         contents.forEach((content) => {
             cy.get(this.modal).within(()=>{
@@ -326,6 +330,14 @@ export class Target extends Common {
                 cy.contains(this.contentPickerItem, content).click()
             })
         })
+        
+        if(position !== "Bottom"){
+            cy.contains('label','Top of track').parent('div').find(this.addContentTo).click()
+        }
+        else if(position === "Top"){
+            cy.contains('label','Bottom of track').parent('div').find(this.addContentTo).click()
+        }
+
         cy.get(this.modal).contains("button", "Add Content").click()
 
         if(verify !== false){
@@ -464,6 +476,36 @@ export class Target extends Common {
             cy.get("#titleOverride").clear()
             cy.contains("button", "Update").click()
         })
+    }
+
+    verifyAddContentTo(position){
+        const message="Note: the default for this setting can be changed in the track edit window"
+        cy.contains("button", "Add Content").click()
+    
+        if(position==="bottom"){
+        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find(this.addContentTo).should('have.attr', 'checked')
+        }
+        else if(position==="top")
+        {
+            cy.contains('label','Top of track',{timeout:10000}).parent('div').find(this.addContentTo).should('have.attr', 'checked')
+        }
+        
+        cy.contains('div',message,{timeout:5000}).should('exist');
+        cy.contains("button", "Cancel").click()
+    }
+
+    updateAddContentTo(position){
+        cy.get("i[title='Edit Track']").click()
+
+        if(position==="bottom"){
+        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find(this.addContentTo).click()
+        }
+        else if(position==="top")
+        {
+            cy.contains('label','Top of track',{timeout:10000}).parent('div').find(this.addContentTo).click()
+        }
+
+        cy.contains("button", "Save").click()
     }
 }
 
