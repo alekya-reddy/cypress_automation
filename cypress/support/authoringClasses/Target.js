@@ -8,6 +8,7 @@ export class Target extends Common {
         this.targetAnalyticsTitle = "Target Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
+        this.addContentTo = 'input[name="addContentTo"]'
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -329,14 +330,12 @@ export class Target extends Common {
                 cy.contains(this.contentPickerItem, content).click()
             })
         })
-
-        //false = bottom of track ,true=top of a track
-        cy.log(position)
+        
         if(position !== "Bottom"){
-            cy.contains('label','Top of track').parent('div').find('input[name="addContentTo"]').click()
+            cy.contains('label','Top of track').parent('div').find(this.addContentTo).click()
         }
         else if(position === "Top"){
-            cy.contains('label','Bottom of track').parent('div').find('input[name="addContentTo"]').click()
+            cy.contains('label','Bottom of track').parent('div').find(this.addContentTo).click()
         }
 
         cy.get(this.modal).contains("button", "Add Content").click()
@@ -484,26 +483,26 @@ export class Target extends Common {
         cy.contains("button", "Add Content").click()
     
         if(position==="bottom"){
-        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').should('have.attr', 'checked')
+        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find(this.addContentTo).should('have.attr', 'checked')
         }
         else if(position==="top")
         {
-            cy.contains('label','Top of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').should('have.attr', 'checked')
+            cy.contains('label','Top of track',{timeout:10000}).parent('div').find(this.addContentTo).should('have.attr', 'checked')
         }
         
         cy.contains('div',message,{timeout:5000}).should('exist');
         cy.contains("button", "Cancel").click()
     }
 
-    updateAddContentValue(position){
+    updateAddContentTo(position){
         cy.get("i[title='Edit Track']").click()
 
         if(position==="bottom"){
-        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').click()
+        cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find(this.addContentTo).click()
         }
         else if(position==="top")
         {
-            cy.contains('label','Top of track',{timeout:10000}).parent('div').find('input[name="addContentTo"]').click()
+            cy.contains('label','Top of track',{timeout:10000}).parent('div').find(this.addContentTo).click()
         }
 
         cy.contains("button", "Save").click()

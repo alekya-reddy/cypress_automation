@@ -3,7 +3,7 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance({ org: "automation-target", tld: "lookbookhq" })
 const consumption = createConsumptionInstance({ org: 'automation-target', tld: 'lookbookhq' })
 
-const webContent = ["Website Common Resource", "Youtube Shared Resource","Bay cat Wikipedia","Texas Wikipedia"]
+const webContent = ["Website Common Resource", "Youtube Shared Resource","Bay cat Wikipedia","Texas Wikipedia","Pilgrimage - Wikipedia"]
 
 const target = {
     name: "target-addNewContent.js",
@@ -17,21 +17,21 @@ const target = {
 }
 
 describe("Target - Add New content", () => {
-    it("Validate add contentTo value scenarios for a target", () => {
-        let a = [],b=[],c=[];
+    it("Validate add content to top or bottom of the target track", () => {
+        let a = [],b=[],c=[],d=[];
         authoring.common.login()
         authoring.target.deleteTrack(target.name)
         authoring.target.addTrack(target)
 
-        //Validate default Selection of add to content value as Bottom of a track
+        //Validate default Selection of add content to selection as 'Bottom of track'
         authoring.target.verifyAddContentTo(target.addContentToBottom)
 
         //update add contentTo value from edit track and validate in add content pop up
-        authoring.target.updateAddContentValue(target.addContentToTop)
+        authoring.target.updateAddContentTo(target.addContentToTop)
         authoring.target.verifyAddContentTo(target.addContentToTop)
 
         //update add contentTo value to bottom of track
-        authoring.target.updateAddContentValue(target.addContentToBottom)
+        authoring.target.updateAddContentTo(target.addContentToBottom)
         authoring.target.verifyAddContentTo(target.addContentToBottom)
         
         authoring.target.configure(target)
@@ -52,13 +52,13 @@ describe("Target - Add New content", () => {
         })
 
         //update add contentTo value to Top of track
-        authoring.target.updateAddContentValue(target.addContentToTop)
+        authoring.target.updateAddContentTo(target.addContentToTop)
         authoring.target.verifyAddContentTo(target.addContentToTop)
 
-        //User drag and drop content to target and validate the position of added track
+        //User drag and drop content to target and validate the position of added content
         cy.get("#content-library",{timeout:10000}).should('be.visible').click()
         
-        //verify the content count is 3 before drag dragging the content to target 
+        //verify the content count is 3 before dragging the content to target 
         cy.contains("div",target.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('3')
         })
@@ -79,6 +79,36 @@ describe("Target - Add New content", () => {
             c.push(content.text().trim())
         }).then(() => {
             expect(c.indexOf(webContent[3])).to.equal(0)
+        })
+
+        //update add contentTo value to bottom of track
+        authoring.target.updateAddContentTo(target.addContentToBottom)
+        authoring.target.verifyAddContentTo(target.addContentToBottom)
+
+        //User drag and drop content to target and validate the position of added content
+        cy.get("#content-library",{timeout:10000}).should('be.visible').click()
+        
+        //verify the content count is 4 before dragging the content to target 
+        cy.contains("div",target.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('4')
+        })
+        cy.contains("div", webContent[4],{timeout:10000}).trigger("dragstart")
+        cy.contains("div",target.name,{timeout:10000}).trigger("drop").trigger("dragend")
+
+         //verify the content count is 5 after dragging the content to target 
+        cy.reload()
+        cy.contains("div",target.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('5')
+        })
+
+        authoring.target.visit();
+        authoring.target.goToTrack(target.name)
+
+        cy.wait(3000)
+        cy.get(authoring.target.pageContents).each(content => {
+            d.push(content.text().trim())
+        }).then(() => {
+            expect(d.indexOf(webContent[4])).to.equal(4)
         })
     })
 })
