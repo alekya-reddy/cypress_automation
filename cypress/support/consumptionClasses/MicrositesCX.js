@@ -6,7 +6,8 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilterLocator = "#dropdowntopics"
+        this.topicFilterLocator = "#microsite_topics"
+        this.firstOptionLabel=".p-multiselect-items li:nth-child(1) span div"
         this.contentTypeFilterLocator = '#dropdowncontentTypeName'
         this.funnelStageFilterLocator = '#dropdownfunnelStages'
         this.industryFilterLocator = '#dropdownindustries'

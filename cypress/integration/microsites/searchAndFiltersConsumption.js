@@ -235,4 +235,21 @@ describe("Microsites - Search and Filter Content", () => {
 
     })
 
+    it.only("Verify applied landing page block filters as query strings in URL", () =>{
+        cy.visit(microsite.url)
+
+        //Select Topic Filter and select option and verify showing as query strings in URL
+        cy.get(consumption.microsites.topicFilterLocator,{timeout:10000}).click()
+        cy.get(consumption.microsites.firstOptionLabel).invoke('text').as('topicValue')
+        cy.get(consumption.microsites.firstOptionLabel).click()
+        cy.get('@topicValue').then(topicOption=>{
+            let option=topicOption.toLowerCase();
+            // expect(cy.url()).to.include(`topic=${topicOption}`)
+            cy.url().should('include', `topic=${option}`) 
+        })
+        cy.pause()
+
+    })
+
+
 })
