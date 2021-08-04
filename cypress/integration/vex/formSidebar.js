@@ -16,7 +16,6 @@ describe("Add form and validate sidebar with VEX", () => {
         authoring.configurations.deleteForm("VEXform")
 
         authoring.configurations.addForm("VEXform")
-        //cy.contains(:xpath,"//h5[contains(text(), 'Recommend Tracks')]").should('exist')
         cy.contains('Not added to any Virtual Events').should('exist')
 
         //Add event and configure form inside it
