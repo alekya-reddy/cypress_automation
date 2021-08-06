@@ -76,7 +76,9 @@ export class Microsites extends Common {
             openCard: "select[id*='cardLink']",
             Filter_Topic: "#microsite_topics",
             searchFilter: "#microsite_search_button",
-            searchInputField: "#microsite_search_input"
+            searchInputField: "#microsite_search_input",
+            searchAndFiltersBlockToggleON: "div[class*='lxjoI']",
+            searchAndFiltersBlockToggleOFF: "div[class*='OMAuq']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -433,6 +435,7 @@ export class Microsites extends Common {
         if (recommend) {
             cy.get(this.tracks.recommendRadio).click()
             cy.contains(this.antModal, "Assign Tracks").within(() => {
+                cy.wait(2000)
                 cy.get(this.antDropSelect.selector).click()
             })
             recommend.forEach((track) => {
@@ -443,6 +446,7 @@ export class Microsites extends Common {
         if (target) {
             cy.get(this.tracks.targetRadio).click()
             cy.contains(this.antModal, "Assign Tracks").within(() => {
+                cy.wait(2000)
                 cy.get(this.antDropSelect.selector).click()
             })
             target.forEach((track) => {
@@ -450,7 +454,7 @@ export class Microsites extends Common {
                 cy.wait(3000)
             })
         }
-
+        
         cy.contains(this.antModal, "Assign Tracks").within(() => {
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
             cy.contains("button", "Submit").click({force: true})
@@ -568,7 +572,8 @@ export class Microsites extends Common {
             })
             if (verify !== false) {
                 cy.contains(this.antModal, "Add Page").should("not.be.visible")
-                cy.containsExact(this.antTable.cell, page).should('exist')
+                //cy.containsExact(this.antTable.cell, page).should('exist')
+                cy.containsExact(this.antTable.cellLanding, page).should('exist')
             }
         })
     }
@@ -645,12 +650,13 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page) {
-        cy.containsExact(this.antTable.cell, page, { timeout: 10000 }).siblings(`td`).within(() => {
+        cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')").within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
-                cy.visit(`${this.baseUrl}${href}`)
+                     cy.visit(`${this.baseUrl}${href}`)
             })
         })
     }
+
     configureFilter(filterName, filterSettings) {
         const { enableToggle, overrideLabel, textColor, backgroundColor } = filterSettings
         cy.containsExact("div", "Filters Configuration").click()
@@ -684,7 +690,7 @@ export class Microsites extends Common {
     }
 
     addAdvancedBlock(config) {
-        const type = config.type.toLowerCase()
+        const type = config.type
         const content = config.content // HTML content that goes into the html block 
         const track = config.track
         const name = config.name
@@ -719,7 +725,7 @@ export class Microsites extends Common {
 
         // The menu of the most recently added one will be visible 
         cy.get(this.landingPages.editorMenu).within(() => {
-            cy.get(this.landingPages.menuBlock).eq(3).click() // This opens up the block editor modal 
+            cy.get(this.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
         })
 
         if (content) {
@@ -873,9 +879,9 @@ export class Microsites extends Common {
         if (className) {
             cy.get(this.landingPages.classNameInput).clear().type(className)
         }
-
-        cy.contains("button", "Confirm").click()
-
+        
+        cy.contains("button", "Confirm").click({force: true})
+        
         if (verify !== false) {
             this.verifyBlock(config)
         }
@@ -1230,9 +1236,9 @@ export class Microsites extends Common {
                     }
                 })
             }
-            if (option.label != "Search") {
+            if (option.label != "Search" && option.toggle ==true) {
                 cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
-                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({force: true});
             }
         })
     }
@@ -1347,6 +1353,63 @@ export class Microsites extends Common {
         }
 
         cy.contains("button", "Confirm").click()
+    }
+
+    //added by Mandar for DEV-13179 - Validate if the default value for toggle on the search and each filter tab for new blocks is inherited from Search & FIlter tab.
+    verifySearchFilterToggles(searchAndFilter) {
+        cy.get("div[data-react-beautiful-dnd-draggable='0']").click() 
+        cy.get(this.landingPages.editorMenu).within(() => {
+            cy.wait(1000)
+            cy.get(this.landingPages.menuBlock).eq(3).click() // This opens up the block editor modal 
+        })
+        searchAndFilter.forEach(option => {
+            if(option.label == "Topic") {
+                option.label="Topic Filter"
+            }  
+            if(option.label == "Search")
+             {
+                cy.wait(1000)
+                //navigate to search configuration page
+                cy.containsExact("div","Search Configuration").click()
+                if (option.toggle)
+                {
+                    cy.get(this.landingPages.searchAndFiltersBlockToggleON).should("exist")
+                }
+                else
+                {
+                    cy.get(this.landingPages.searchAndFiltersBlockToggleOFF).should("exist")
+                 
+                }
+                //navigate back
+                cy.containsExact("span","Search Configuration").click()
+            }
+            else
+            {
+                //navigate to filter configuration page
+                cy.containsExact("div","Filters Configuration").click({ force: true })  
+                cy.containsExact("span",option.label).click()
+                if (option.toggle)
+                {
+                    cy.get(this.landingPages.searchAndFiltersBlockToggleON).should("exist")
+                }
+                else
+                {
+                    cy.get(this.landingPages.searchAndFiltersBlockToggleOFF).should("exist")
+                }
+                cy.get("span:contains('" + option.label + "')").eq(1).click()
+                //navigate back
+                cy.containsExact("span", "Filters Configuration").click()
+            }
+        })
+        cy.containsExact("button","Cancel").click()
+    }
+    deleteBlock()
+    {
+        cy.get(this.landingPages.editorMenu).within(() => {
+            cy.get(this.landingPages.menuBlock).eq(4).click({force:true}) // This opens up the block editor modal 
+        })  
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
     }
 
 }

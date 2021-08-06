@@ -6,15 +6,17 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilterLocator = "#dropdowntopics"
-        this.contentTypeFilterLocator = '#dropdowncontentTypeName'
-        this.funnelStageFilterLocator = '#dropdownfunnelStages'
-        this.industryFilterLocator = '#dropdownindustries'
-        this.personaFilterLocator = '#dropdownpersonas'
-        this.businessUnitFilterLocator = '#dropdownbusinessUnits'
-        this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.topicFilterLocator = "#microsite_topics"
+        this.contentTypeFilterLocator = '#microsite_contentTypeName'
+        this.funnelStageFilterLocator = '#microsite_funnelStages'
+        this.industryFilterLocator = '#microsite_industries'
+        this.personaFilterLocator = '#microsite_personas'
+        this.businessUnitFilterLocator = '#microsite_businessUnits'
+        this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
+        this.searchWithinFilterDropdown="input[class='p-inputtext p-component p-multiselect-filter']"
+        this.searchAndFiltersDDOptionText="div[class='sc-jToBAC edUesx']"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
         this.FilterByTopic = "#microsite_topics";
@@ -32,6 +34,9 @@ export class MicrositesCX extends CommonCX {
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"
         this.searchButton='#microsite_search_button'
+        this.searchInput='#microsite_search_input'
+        this.removeFilters="div[class='chip'] > span"
+        this.filterLabel="div[class='chip']"
     }
 
     clickContent(options) {
@@ -228,8 +233,8 @@ export class MicrositesCX extends CommonCX {
     }
     searchMicrositeCard(searchTerm) {
         // Must be within session group block before using this function
-        cy.get("input").clear().type(searchTerm)
-        cy.contains("button", "Search").click()
+        cy.get(this.searchInput).clear().type(searchTerm)
+        cy.get(this.searchFilter).click()
     }
 
     addingBlock(block) {
