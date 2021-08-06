@@ -7,7 +7,6 @@ export class MicrositesCX extends CommonCX {
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
         this.topicFilterLocator = "#microsite_topics"
-        this.firstOptionLabel=".p-multiselect-items li:nth-child(1) span div"
         this.contentTypeFilterLocator = '#dropdowncontentTypeName'
         this.funnelStageFilterLocator = '#dropdownfunnelStages'
         this.industryFilterLocator = '#dropdownindustries'
@@ -252,4 +251,5 @@ export class MicrositesCX extends CommonCX {
             }
         })
     }
+
 }

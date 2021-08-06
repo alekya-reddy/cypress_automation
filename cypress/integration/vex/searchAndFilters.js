@@ -398,5 +398,15 @@ const searchAndFilterOptions =
             cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist") 
 
         })
+
+        it.only("Verify applied landing page block filters as query strings in URL", () => {
+            cy.visit(event.url)
+    
+            // //Select Filter options and verify showing as query strings in URL
+            // filterOptions.forEach((filters)=>{
+            //     SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            // })
+    
+        })
        
     })
