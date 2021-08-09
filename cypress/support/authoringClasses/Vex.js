@@ -1696,7 +1696,8 @@ export class Vex extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                cy.containsExact("option", filterName).should("exist")
+                // cy.containsExact("option", filterName).should("exist")
+                cy.get(`vex_${filterName}`).should("exist")
             }
         }
     }

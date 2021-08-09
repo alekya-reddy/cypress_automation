@@ -192,86 +192,6 @@ const filterOptionsWithMultipleBlocks = [
     }
 ]
 
-const SelectFiltersAndVerifyAsQueryStringInURL = function (filterOptions) {
-    const filterName = filterOptions.filtername;
-    const index = filterOptions.index;
-    const exists = filterOptions.exist;
-    let values = "";
-
-    cy.get(`#microsite_${filterName}`).should('be.visible', { timeout: 10000 }).click()
-    cy.wait(1000)
-    cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').as('optionValue')
-    cy.wait(1000)
-    cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).click()
-    cy.wait(1000)
-
-    cy.get('@optionValue').then(optionValue => {
-        let length = 0
-        let arrayValues = [];
-        let option = optionValue.toLowerCase();
-        arrayValues = option.split(" ");
-        length = arrayValues.length;
-        if (length > 1) {
-            let i = 0;
-            arrayValues.forEach(value => {
-                if (i !== 0) {
-                    values = values + "-" + value
-                    i++;
-                }
-                else {
-                    values = value;
-                    i++;
-                }
-            })
-        }
-        else {
-            values = option;
-        }
-
-        if (filterName === "topics" && exists === true) {
-            cy.url().should('include', `topic=${values}`)
-        }
-        else if (filterName === "topics" && exists === false) {
-            cy.url().should('not.include', `topic=${values}`)
-        }
-        if (filterName === "contentTypeName" && exists === true) {
-            cy.url().should('include', `contentType=${values}`)
-        }
-        else if (filterName === "contentTypeName" && exists === false) {
-            cy.url().should('not.include', `contentType=${values}`)
-        }
-        if (filterName === "funnelStages" && exists === true) {
-            cy.url().should('include', `funnelStage=${values}`)
-        }
-        else if (filterName === "funnelStages" && exists === false) {
-            cy.url().should('not.include', `funnelStage=${values}`)
-        }
-        if (filterName === "industries" && exists === true) {
-            cy.url().should('include', `industry=${values}`)
-        }
-        else if (filterName === "industries" && exists === false) {
-            cy.url().should('not.include', `industry=${values}`)
-        }
-        if (filterName === "personas" && exists === true) {
-            cy.url().should('include', `persona=${values}`)
-        }
-        else if (filterName === "personas" && exists === false) {
-            cy.url().should('not.include', `persona=${values}`)
-        }
-        if (filterName === "businessUnits" && exists === true) {
-            cy.url().should('include', `businessUnit=${values}`)
-        }
-        else if (filterName === "businessUnits" && exists === false) {
-            cy.url().should('not.include', `businessUnit=${values}`)
-        }
-        if (filterName === "languages" && exists === true) {
-            cy.url().should('include', `language=${values}`)
-        }
-        else if (filterName === "languages" && exists === false) {
-            cy.url().should('not.include', `language=${values}`)
-        }
-    })
-}
 
 describe("Microsites - Search and Filter Content", () => {
 
@@ -413,12 +333,12 @@ describe("Microsites - Search and Filter Content", () => {
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
     })
 
-    it.only("Verify applied landing page block filters as query strings in URL", () => {
+    it("Verify applied landing page block filters as query strings in URL", () => {
         cy.visit(microsite.url)
 
-        //Select Filter options and verify showing as query strings in URL
+        //Select Filter options and verify applied filters showing as query strings in URL
         filterOptions.forEach((filters) => {
-            SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters);
         })
 
         authoring.common.login()
@@ -435,7 +355,7 @@ describe("Microsites - Search and Filter Content", () => {
         cy.get('h4').parent('div').should('have.length', 2)
 
         filterOptionsWithMultipleBlocks.forEach((filters) => {
-            SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters);
         })
 
         authoring.microsites.visit()

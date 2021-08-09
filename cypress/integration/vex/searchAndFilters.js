@@ -114,6 +114,56 @@ const landingPage = {
             sessionGroup: "All Sessions",
         },
     ]}
+
+    const landingPage2 = {
+        name: "Test Landing Page2",
+        slug: "test-landing-page2",
+        get url(){
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        blocks: [
+            {
+                type: "Session Group",
+                sessionGroup: sessionGroupA.name,
+                searchConfiguration: {
+                    enableToggle: true,
+                    searchButtonTitle: "Test Search",
+                },
+                topicFilter: {
+                    overrideLabel: 'VEX Filter By Topics Here',
+                    enableToggle: true
+                },
+                availabilityFilter:{
+                    overrideLabel: 'VEX Filter By Availability Here',
+                    enableToggle: true
+                },
+                funnelStageFilter:{
+                    enableToggle: true,
+                    overrideLabel: 'VEX Filter By Funnel Stage Here'
+                },
+                industryFilter:{
+                    enableToggle: true,
+                    overrideLabel: 'VEX Filter By Industry Here'
+                },
+                personaFilter:{
+                    enableToggle: true,
+                    overrideLabel: 'VEX Filter By Persona Here'
+                },
+                businessUnitFilter:{
+                    enableToggle: true,
+                    overrideLabel: 'VEX Filter By Business Unit Here'
+                },
+                languageFilter:{
+                    enableToggle: true,
+                    overrideLabel: 'VEX Filter By Language Here'
+                }
+            },
+            {
+                type: "Session Group",
+                sessionGroup: "All Sessions",
+            },
+        ]}
 const searchAndFilterOptions =
     [
         {
@@ -170,6 +220,82 @@ const searchAndFilterOptions =
         industry: ['Marketing'],
         funnelStages: ['Top of Funnel']
     }
+
+    const filterOptions = [
+        {
+            filtername: "topics",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "sessionTypes",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "funnelStages",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "industries",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "personas",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "businessUnits",
+            index: "1",
+            exist: true
+        },
+        {
+            filtername: "languages",
+            index: "1",
+            exist: true
+        }
+    ]
+    
+    const filterOptionsWithMultipleBlocks = [
+        {
+            filtername: "topics",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "sessionTypes",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "funnelStages",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "industries",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "personas",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "businessUnits",
+            index: "1",
+            exist: false
+        },
+        {
+            filtername: "languages",
+            index: "1",
+            exist: false
+        }
+    ]
 
     describe("VEX- Add and configure Search and filters, verify, apply in landing page and verify search and filters are working in consumption page for VEX", () => {
 
@@ -399,14 +525,51 @@ const searchAndFilterOptions =
 
         })
 
-        it.only("Verify applied landing page block filters as query strings in URL", () => {
+        it("Verify applied landing page block filters as query strings in URL", () => {
+            authoring.common.login()
+            authoring.vex.visit();
+            authoring.vex.goToEventConfig(event.name)
+            //Verify Block level Search & Filter tab configurations 
+            authoring.vex.goToLandingPage() 
+            authoring.vex.deleteLandingPages(landingPage2.name)
+            authoring.vex.addLandingPages(landingPage2.name)
+            authoring.vex.editLandingPage(landingPage2)
+            authoring.vex.setToHomePage(landingPage2.name)
+            authoring.vex.goToPageEditor(landingPage2.name)
+            authoring.vex.addAdvancedBlock(landingPage2.blocks[0]) //Block level filter configuration
+            cy.contains('button', 'Save').click(); 
             cy.visit(event.url)
     
-            // //Select Filter options and verify showing as query strings in URL
-            // filterOptions.forEach((filters)=>{
-            //     SelectFiltersAndVerifyAsQueryStringInURL(filters);
-            // })
+            //Select Filter options and verify applied filters showing as query strings in URL
+            filterOptions.forEach((filters) => {
+                consumption.vex.SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            })
     
+            authoring.vex.visit();
+            authoring.vex.goToEventConfig(event.name)
+            //Verify Block level Search & Filter tab configurations 
+            authoring.vex.goToLandingPage()
+
+            authoring.vex.goToPageEditor(landingPage2.name)
+            cy.wait(3000)
+            cy.get('div.pf-event-sessions').eq(0).click({force: true})
+            cy.wait(2000)
+            authoring.vex.addAdvancedBlock(landingPage2.blocks[0]) //Block level filter configuration
+            cy.contains('button', 'Save').click(); 
+            cy.visit(event.url)
+
+            //  If multiple blocks are availble in a page applied filters shpould not show as querystring in url
+            cy.wait(3000)
+            cy.get('h2').parent('div').should('have.length', 2)
+    
+            filterOptionsWithMultipleBlocks.forEach((filters) => {
+                consumption.vex.SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            })
+
+            authoring.vex.visit();
+            authoring.vex.goToEventConfig(event.name)
+            authoring.vex.goToLandingPage() 
+            authoring.vex.deleteLandingPages(landingPage2.name)
         })
        
     })
