@@ -6,13 +6,15 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilterLocator = "#microsite_topics"
-        this.contentTypeFilterLocator = '#microsite_contentTypeName'
-        this.funnelStageFilterLocator = '#microsite_funnelStages'
-        this.industryFilterLocator = '#microsite_industries'
-        this.personaFilterLocator = '#microsite_personas'
-        this.businessUnitFilterLocator = '#microsite_businessUnits'
+        this.topicFilter = "#microsite_topics"
+        this.contentTypeFilter = '#microsite_contentTypeName'
+        this.funnelStageFilter = '#microsite_funnelStages'
+        this.industryFilter = '#microsite_industries'
+        this.personaFilter = '#microsite_personas'
+        this.businessUnitFilter = '#microsite_businessUnits'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
+        this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
+                                        //li[class='p-multiselect-item p-highlight'] > span > span > div
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
         this.searchWithinFilterDropdown="input[class='p-inputtext p-component p-multiselect-filter']"
@@ -181,22 +183,22 @@ export class MicrositesCX extends CommonCX {
             }
             cy.containsExact("h4", trackName).parent().within(() => {
                 if (topicFilter) {
-                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilter, topicFilter)
                 }
                 if (contentTypeFilter) {
-                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
+                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilter, contentTypeFilter)
                 }
                 if (funnelStageFilter) {
-                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilter, funnelStageFilter)
                 }
                 if (industryFilter) {
-                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                    this.verifyFilterConfiguration("Industry", this.industryFilter, industryFilter)
                 }
                 if (personaFilter) {
-                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                    this.verifyFilterConfiguration("Persona", this.personaFilter, personaFilter)
                 }
                 if (businessUnitFilter) {
-                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilter, businessUnitFilter)
                 }
                 if (searchConfiguration) {
                     const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
