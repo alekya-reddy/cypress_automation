@@ -87,18 +87,6 @@ const targetBlock =
     track: target.name
 }
 
-/*const searchAndFilter =
-{
-    searchTab: "Search",
-    topicTab: "Topic",
-    businessUnitTab: "Business Unit",
-    personaTab: "Persona",
-    industryTab: "Industry",
-    contentTypeTab: "Content Type",
-    funnelStageTab: "Funnel Stage",
-    languageTab: "Language",
-}*/
-
 const searchAndFilterOptions =
     [
         {
@@ -167,7 +155,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.deleteBlock(target.name)
     })
 
-    it.only("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
+    it("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
@@ -218,178 +206,170 @@ describe("Microsites - Search & Filters configuration, verification on landing p
             cy.get(consumption.microsites.filterByValueExisting).contains(topic).then(option => {
                 cy.wrap(option).contains(topic)
                 option[0].click()
-                })
             })
-        //cy.get(consumption.microsites.removeFilters).eq(1).click()
-        //cy.get(consumption.microsites.removeFilters).eq(1).click()
-
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
-
-            // Remove Content Type and apply Funnel Stage filter
-            cy.get(consumption.microsites.removeFilters).click()
-            cy.get(consumption.microsites.funnelStageFilter).click()
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage)
-                option[0].click()
-                // After click, dropdown should hold the text of the selected option
-                cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).should("exist")
-            })
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-            //When multiple Funnel Stage(Top of Funnel and Middle of Funnel) selected
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.funnelStage).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithMultiple.funnelStage)
-                option[0].click()
-            })
-            // After click, dropdown should hold the text of the selected option
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-
-
-            // Remove Funnel Stage and apply Industry filter
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).click()
-            cy.get(consumption.microsites.industryFilter).click()
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.industry)
-                option[0].click()
-                // After click, dropdown should hold the text of the selected option
-                cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).should("exist")
-            })
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
-
-            //When multiple Industry selected
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.industry).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithMultiple.industry)
-                option[0].click()
-            })
-            // After click, dropdown should hold the text of the selected option
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
-
-
-            //Remove Industry and apply Persona filter
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).click()
-            cy.get(consumption.microsites.personaFilter).click()
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicContentTypePersona.persona).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithTopicContentTypePersona.persona)
-                option[0].click()
-                // After click, dropdown should hold the text of the selected option
-                cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicContentTypePersona.persona).should("exist")
-            })
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-
-            //When multiple Persona is selected
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.persona).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithMultiple.persona)
-                option[0].click()
-            })
-            // After click, dropdown should hold the text of the selected option
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
-
-
-            // Remove Persona and apply Business Unit filter
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).click()
-            cy.get(consumption.microsites.businessUnitFilter).click()
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit)
-                option[0].click()
-                // After click, dropdown should hold the text of the selected option
-                cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).should("exist")
-            })
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
-            //When multiple Business Unit are selected
-            cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.businessUnit).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(contentPages.contentWithMultiple.businessUnit)
-                option[0].click()
-            })
-            // After click, dropdown should hold the text of the selected option
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
-
-            cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
-            // Search by Description with Business Unit filter on
-            consumption.microsites.searchMicrositeCard(contentPages.contentWithTopicFunnelBusinessUnit.description)
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-
-            cy.get(consumption.microsites.topicFilter).click()
-            content_topics.forEach(topic => {
-                cy.get(consumption.microsites.filterByValue).contains(topic).then(option => {
-                    // Confirm have correct option
-                    cy.wrap(option).contains(topic)
-                    option[0].click()
-                    // After click, dropdown should hold the text of the selected option
-                    cy.contains(consumption.microsites.filterLabel, topic).should("exist")
-                })
-            })
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-
-
-            cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
-
-            // Search by pressing Enter keyboard
-            // Remove filters applied 
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).eq(1).click()
-            cy.get(consumption.microsites.removeFilters).click()
-            cy.get(consumption.microsites.searchInput).clear().type("this is \n")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-            cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
-
-
-            //Verify search within Filters dropdown
-            cy.get(consumption.microsites.topicFilter).click()
-            cy.get(consumption.microsites.searchWithinFilterDropdown).should("exist")
-            cy.get(consumption.microsites.searchWithinFilterDropdown).type("a")
-            cy.contains(consumption.microsites.searchAndFiltersDDOptionText, 'a').should("exist")
-
-
-            //Funnel stage filter should not show a search bar DEV-13700
-            cy.get(consumption.microsites.funnelStageFilter).click()
-            //search should not exist
-            cy.get(consumption.microsites.searchWithinFilterDropdown).should("not.exist")
-            cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
-            cy.get(consumption.microsites.contentTypeFilter).click()
-            cy.get(consumption.microsites.searchWithinFilterDropdown).should("exist")
-
-            authoring.microsites.visit()
-            authoring.microsites.goToMicrositeConfig(microsite.name)
-            authoring.microsites.tabToLandingPages()
-            authoring.microsites.goToPageEditor(defaultLandingPage.name)
-            authoring.microsites.deleteBlock(target.name)
         })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+
+        // Remove Content Type and apply Funnel Stage filter
+        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.funnelStageFilter).click()
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).option[0].click()
+            // After click, dropdown should hold the text of the selected option
+            cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).should("exist")
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        //When multiple Funnel Stage(Top of Funnel and Middle of Funnel) selected
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.funnelStage).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithMultiple.funnelStage)
+            option[0].click()
+        })
+        // After click, dropdown should hold the text of the selected option
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
+
+        // Remove Funnel Stage and apply Industry filter
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.industryFilter).click()
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.industry)
+            option[0].click()
+            // After click, dropdown should hold the text of the selected option
+            cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).should("exist")
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+
+        //When multiple Industry selected
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.industry).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithMultiple.industry)
+            option[0].click()
+         })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+
+
+        //Remove Industry and apply Persona filter
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.personaFilter).click()
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicContentTypePersona.persona).then(option => {
+        // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithTopicContentTypePersona.persona)
+            option[0].click()
+            // After click, dropdown should hold the text of the selected option
+            cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicContentTypePersona.persona).should("exist")
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
+        //When multiple Persona is selected
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.persona).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithMultiple.persona)
+            option[0].click()
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
+
+
+        // Remove Persona and apply Business Unit filter
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.businessUnitFilter).click()
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit)
+            option[0].click()
+            // After click, dropdown should hold the text of the selected option
+            cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).should("exist")
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+        //When multiple Business Unit are selected
+        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.businessUnit).then(option => {
+            // Confirm have correct option
+            cy.wrap(option).contains(contentPages.contentWithMultiple.businessUnit)
+            option[0].click()
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
+
+        cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
+        // Search by Description with Business Unit filter on
+        consumption.microsites.searchMicrositeCard(contentPages.contentWithTopicFunnelBusinessUnit.description)
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
+        cy.get(consumption.microsites.topicFilter).click()
+        content_topics.forEach(topic => {
+            cy.get(consumption.microsites.filterByValue).contains(topic).then(option => {
+                // Confirm have correct option
+                cy.wrap(option).contains(topic).option[0].click()
+                // After click, dropdown should hold the text of the selected option
+                cy.contains(consumption.microsites.filterLabel, topic).should("exist")
+            })
+        })
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
+
+        cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
+
+        // Search by pressing Enter keyboard
+        // Remove filters applied 
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).eq(1).click()
+        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.searchInput).clear().type("this is \n")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
+
+        //Verify search within Filters dropdown
+        cy.get(consumption.microsites.topicFilter).click()
+        cy.get(consumption.microsites.searchWithinFilterDropdown).should("exist")
+        cy.get(consumption.microsites.searchWithinFilterDropdown).type("a")
+        cy.contains(consumption.microsites.searchAndFiltersDDOptionText, 'a').should("exist")
+
+
+        //Funnel stage filter should not show a search bar DEV-13700
+        cy.get(consumption.microsites.funnelStageFilter).click()
+        //search should not exist
+        cy.get(consumption.microsites.searchWithinFilterDropdown).should("not.exist")
+        cy.containsExact("h4", "Consumption SearchAndFilters").click()  //click outside to close dropdown
+        cy.get(consumption.microsites.contentTypeFilter).click()
+        cy.get(consumption.microsites.searchWithinFilterDropdown).should("exist")
+
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(defaultLandingPage.name)
+        authoring.microsites.deleteBlock(target.name)
+    })
 })
