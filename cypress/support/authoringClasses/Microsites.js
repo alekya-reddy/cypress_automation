@@ -88,7 +88,9 @@ export class Microsites extends Common {
             navSubtitle: ".rst__rowSubtitle",
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
-            navRemoveBox: ".rst__rowToolbar"
+            navRemoveBox: ".rst__rowToolbar",
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']"
         };
         this.searchAndFilter = {
             switchToggle: ".ant-tabs-tabpane.ant-tabs-tabpane-active .ant-switch-handle",
@@ -1218,6 +1220,48 @@ export class Microsites extends Common {
         }
     }
 
+    editNavItem(config) {
+        const to_edit=config.to_edit
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+
+        this.tabToNavigation()
+        //cy.get(this.navigation.addButton).click()
+        cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click()
+        })
+        cy.contains(this.antModal, "Update Navigation Item").should('exist')
+        cy.get(this.navigation.labelInput).clear({force: true}).type(label)
+        cy.get(this.antDropSelect.selector).eq(0).click()
+        cy.get(this.antDropSelect.options(type)).click({force: true})
+        if (source && type !== "Link") {
+            cy.get(this.antDropSelect.selector).eq(1).click()
+            cy.get(this.antDropSelect.options(source)).click()
+        } else if (source && type == "Link") {
+            cy.get(this.navigation.linkInput).clear().type(source)
+        }
+        if (newTab) {
+            cy.get(this.navigation.newTabCheckBox).click()
+        }
+        cy.contains('button', "Submit").click()
+
+        if (verify !== false) {
+            this.waitForAntModal({ title: "Update Navigation Item" })
+            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
+                if (type == "Link" && newTab) {
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
+                } else if (type == "Text") {
+                    cy.containsExact(this.navigation.navSubtitle, `${type}`).should('exist')
+                } else {
+                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
+                }
+            })
+        }
+    }
+
     addSearchAndFilterOptions(options) {
         //Enabling ,Search filters
         this.tabToSearchAndFilter()
@@ -1247,11 +1291,19 @@ export class Microsites extends Common {
 
         this.tabToNavigation()
         navItems.forEach((navItem) => {
+            //cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
+            //    cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
+             //       cy.contains("button", "Remove").click()
+            //    })
+            //})
+
+            
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
-                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-                    cy.contains("button", "Remove").click()
+                cy.contains(this.navigation.navTitle, navItem).should('exist').parent().parent().within(() => {
+                    cy.get(this.navigation.navDelete).should('exist').click()
                 })
             })
+
             if (verify) {
                 cy.waitFor({ element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000 })
                 cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')

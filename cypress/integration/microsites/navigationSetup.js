@@ -121,9 +121,45 @@ const navigation = {
     } 
 
 }
+const navigation_edit = {
+    edit_target_to_recommend: {
+        to_edit: "Target", 
+        label: "Recommend",
+        type: "Track",
+        source: recommend.name,
+        reference: recommend
+    },
+    edit_recommend_to_target: {
+        to_edit: "Recommend",
+        label: "Target", 
+        type: "Track",
+        source: target.name,
+        reference: target
+    },
+    edit_link_to_landing_page: {
+        to_edit: "Link2",
+        label: "Home Landing Page",
+        type: "Landing Page",
+        source: landingPage1.name,
+        reference: landingPage1
+    },
+    edit_landing_page_to_link: {
+        to_edit: "Other Landing Page",
+        label: "Link3",
+        type: "Link",
+        source: link3,
+        newTab: false
+    },
+    edit_text_to_other_text: {
+        to_edit: "Text2",
+        label: "Text4",
+        type: "Text",
+    }
+
+}
 
 describe("Microsites - Navigation setup", () => {
-    it("Build a navigation header for microsites", () => {
+    it.only("Build a navigation header for microsites", () => {
         authoring.common.login()
 
         // Setup
@@ -142,27 +178,28 @@ describe("Microsites - Navigation setup", () => {
         })
 
         // Rearrange the links, creating sublinks 
-        authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
-        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
-        authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
-        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text3.label})
-        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text2.label})
+        //authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
+       // authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
+       // authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
+        //authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text3.label})
+        //authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text2.label})
         
 
         // Attempt to remove one of the tracks and verify that cannot do this while it's used in navigation 
-        authoring.microsites.removeTracks(recommend.name, false)
-        cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
-        cy.contains(authoring.microsites.antModal, "Are you sure?").within(() => { cy.contains("button", "Cancel").click() }) 
+       // authoring.microsites.removeTracks(recommend.name, false)
+        //cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
+        //cy.contains(authoring.microsites.antModal, "Are you sure?").within(() => { cy.contains("button", "Cancel").click() }) 
 
         // Delete one of the landing pages and verify its link and attached sublink are gone 
-        authoring.microsites.removeLandingPages(landingPage2.name)
-        authoring.microsites.tabToLandingPages()
-        cy.containsExact(authoring.microsites.navigation.navTitle, landingPage2.name).should('not.exist') 
-        cy.containsExact(authoring.microsites.navigation.navTitle, link2).should('not.exist')
+        //authoring.microsites.removeLandingPages(landingPage2.name)
+        //authoring.microsites.tabToLandingPages()
+        //cy.containsExact(authoring.microsites.navigation.navTitle, landingPage2.name).should('not.exist') 
+        //cy.containsExact(authoring.microsites.navigation.navTitle, link2).should('not.exist')
 
         // Verify can delete nav items 
-        authoring.microsites.removeNavItems(navigation.deleteLink.label)
+        //authoring.microsites.removeNavItems(navigation.deleteLink.label)
     })
+
 
     it("Go to consumption and verify that the navigation header is correct", () => {
         cy.visit(microsite.url)
@@ -198,5 +235,24 @@ describe("Microsites - Navigation setup", () => {
         })
         cy.contains(consumption.microsites.navigation.menuItem, navigation.link3.label,{timeout: 20000}).click()
         cy.url().should("eq", navigation.link3.source)
+    })
+    it.only("Edit and Go to consumption and verify that the navigation header is correct", () => {
+        //go to authoring
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        Object.values(navigation_edit).forEach((navItem) => {
+            authoring.microsites.editNavItem(navItem)
+        })
+        Object.values(navigation).forEach((navItem) => {
+            authoring.microsites.removeNavItems(navItem.label)
+        })
+        //go to navigation tab
+        //for existing target/recommend, edit to link/text
+        // Edit navigation items of all types (Track, Landing Page, Link)
+        
+        //verify on authoring
+        //verify on consumption
+
     })
 })
