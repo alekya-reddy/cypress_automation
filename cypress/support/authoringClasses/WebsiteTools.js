@@ -19,6 +19,13 @@ export class WebsiteTools extends Common {
         this.promoterList = "div[name='promoterList']";
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.websiteurlPath = function(option){ return `td[id="${option}"]` };
+        this.formSratergy = "li[id='show-page-form-strategy']>a";
+        this.addFormButton = ".ant-col-4>button";
+        this.formPath = "input[id='website-form-path']";
+        this.addForm = "input[id='website-form-id']";
+        this.Pagecontrols = "div[data-qa-hook='title-bar']>h1"
+        
+
     }
 
     visit(){

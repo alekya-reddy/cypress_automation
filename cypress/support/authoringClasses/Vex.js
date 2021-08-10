@@ -28,6 +28,7 @@ export class Vex extends Common {
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
+        this.pageControl = "div[data-qa-hook='title-bar']>h1",
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
         this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
