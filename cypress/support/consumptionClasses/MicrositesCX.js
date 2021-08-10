@@ -6,15 +6,19 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilterLocator = "#microsite_topics"
-        this.contentTypeFilterLocator = '#dropdowncontentTypeName'
-        this.funnelStageFilterLocator = '#dropdownfunnelStages'
-        this.industryFilterLocator = '#dropdownindustries'
-        this.personaFilterLocator = '#dropdownpersonas'
-        this.businessUnitFilterLocator = '#dropdownbusinessUnits'
-        this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.topicFilter = "#microsite_topics"
+        this.contentTypeFilter = '#microsite_contentTypeName'
+        this.funnelStageFilter = '#microsite_funnelStages'
+        this.industryFilter = '#microsite_industries'
+        this.personaFilter = '#microsite_personas'
+        this.businessUnitFilter = '#microsite_businessUnits'
+        this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
+        this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
+                                        //li[class='p-multiselect-item p-highlight'] > span > span > div
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
+        this.searchWithinFilterDropdown="input[class='p-inputtext p-component p-multiselect-filter']"
+        this.searchAndFiltersDDOptionText="div[class='sc-jToBAC edUesx']"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
         this.FilterByTopic = "#microsite_topics";
@@ -32,6 +36,9 @@ export class MicrositesCX extends CommonCX {
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"
         this.searchButton='#microsite_search_button'
+        this.searchInput='#microsite_search_input'
+        this.removeFilters="div[class='chip'] > span"
+        this.filterLabel="div[class='chip']"
     }
 
     clickContent(options) {
@@ -176,22 +183,22 @@ export class MicrositesCX extends CommonCX {
             }
             cy.containsExact("h4", trackName).parent().within(() => {
                 if (topicFilter) {
-                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilter, topicFilter)
                 }
                 if (contentTypeFilter) {
-                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
+                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilter, contentTypeFilter)
                 }
                 if (funnelStageFilter) {
-                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilter, funnelStageFilter)
                 }
                 if (industryFilter) {
-                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                    this.verifyFilterConfiguration("Industry", this.industryFilter, industryFilter)
                 }
                 if (personaFilter) {
-                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                    this.verifyFilterConfiguration("Persona", this.personaFilter, personaFilter)
                 }
                 if (businessUnitFilter) {
-                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilter, businessUnitFilter)
                 }
                 if (searchConfiguration) {
                     const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
@@ -228,8 +235,8 @@ export class MicrositesCX extends CommonCX {
     }
     searchMicrositeCard(searchTerm) {
         // Must be within session group block before using this function
-        cy.get("input").clear().type(searchTerm)
-        cy.contains("button", "Search").click()
+        cy.get(this.searchInput).clear().type(searchTerm)
+        cy.get(this.searchFilter).click()
     }
 
     addingBlock(block) {
