@@ -13,6 +13,7 @@ export class MicrositesCX extends CommonCX {
         this.personaFilter = '#microsite_personas'
         this.businessUnitFilter = '#microsite_businessUnits'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
+        this.languageFilter = "#microsite_languages"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
                                         //li[class='p-multiselect-item p-highlight'] > span > span > div
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
