@@ -10,6 +10,7 @@ export class Target extends Common {
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
+        this.pageControl = "div[data-qa-hook='title-bar']>h1",
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
@@ -29,13 +30,15 @@ export class Target extends Common {
             cookieMessageToggle: '[data-qa-hook="cookieConsent"]',
             headerToggle: '[data-qa-hook="header"]',
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
-            exitOverride: "[data-qa-hook='Exit overrides']"
+            exitOverride: "[data-qa-hook='Exit overrides']",
+            linksAndshareLabel: "label:contains('Links & Sharing')"
         };
         this.pagePreview = {
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
-            itemDescription: "div[data-qa-hook='item-description']"
+            itemDescription: "div[data-qa-hook='item-description']",
         };
+        
         this.popoverElements = {
             customUrlInput: "#customUrl",
             endPromoterLinkInput: "#link"
@@ -98,6 +101,15 @@ export class Target extends Common {
             cy.get(this.clearSearchIcon).click()
         }
     }
+
+    addLinksAndShare(link){
+        cy.get(this.pageSidebar.linksAndshareLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+               cy.get(this.dropdown.box).click()
+               cy.get(".Select-multi-value-wrapper > .Select-value").type(link + "\n")
+           cy.contains("button", "Update").click()
+       })
+   }
 
     configure(options){
         const name = options.name
@@ -457,6 +469,7 @@ export class Target extends Common {
             cy.contains(this.modal, "Add Track Rule").should("not.exist")
         }
     }
+
 
     removeContentTitleOverride(){
         cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()

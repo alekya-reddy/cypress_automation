@@ -39,6 +39,10 @@ describe("Target - Language External Code and Forms", () => {
                 authoring.configurations.deleteExternalCode(testSpecificCodes.map(code => code.name))
                 testSpecificCodes.forEach(code => {
                     authoring.configurations.addExternalCode(code)
+                    cy.contains(authoring.common.table.cellName, exploreExternalCode.name, {timeout: 5000}).click()
+                    cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+                        cy.contains("Not added to any Target Tracks").should("exist")
+                    })
                 })
                 authoring.configurations.addNewLanguage({name: target.language, code: "elg"})
                 authoring.target.deleteTrack(target.name)
@@ -56,6 +60,11 @@ describe("Target - Language External Code and Forms", () => {
         const targetCodes = [targetLanguageName.name, targetLanguageCode.name]
         authoring.target.removeExternalCode(targetCodes) // This is just a clean up step
         authoring.target.addExternalCode(targetCodes) // Add to recommend target code field
+
+        cy.visit(authoring.configurations.pageUrls.externalCode)
+        cy.contains(authoring.common.table.cellName, targetCodes[1], { timeout: 5000 }).click()
+        cy.containsExact("div", target.name).parent().click({force: true})  
+        cy.containsExact(authoring.common.pageTitleLocator, target.name, {timeout: 5000})
         
         // check consumption
         cy.visit(target.url)
