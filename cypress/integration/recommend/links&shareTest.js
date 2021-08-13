@@ -4,7 +4,7 @@ const authoring = createAuthoringInstance() // When nothing is specified, this d
 const consumption = createConsumptionInstance()
 
 const linkandshare = {
-    name: 'test123'
+    name: 'linkAndShareFlow.js'
 }
 
 const recommend = {
@@ -19,31 +19,30 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
         authoring.configurations.deleteLinksAndSharing("test123")
         authoring.configurations.addLinksAndSharing("test123")
 
-    cy.contains('Not added to any Recommend Tracks').should('exist')
+        cy.contains('Not added to any Recommend Tracks').should('exist')
         authoring.recommend.visit()
         authoring.recommend.deleteTrack(recommend.name)
         authoring.recommend.addTrack(recommend)
         authoring.recommend.configure(recommend)
 
-        authoring.recommend.addLinksAndShare("test123") 
+        authoring.recommend.addLinksAndShare("linkAndShareFlow.js") 
         cy.visit(authoring.configurations.pageUrls.linksAndSharings)
-        cy.get(authoring.common.pageContainer).contains('test123').click()
+        cy.get(authoring.common.pageContainer).contains('linkAndShareFlow.js').click()
         
-
         cy.containsExact("div", recommend.name).parent().click({force: true})
         cy.get(authoring.recommend.pageControl).should('exist')
         cy.go('back', {timeout:5000})
 
  })
 
- it('Date',()=>{
+       it('Date',()=>{
 
- authoring.configurations.lastUpdatedDate()
+       authoring.configurations.lastUpdatedDate()
 
- cy.get(authoring.configurations.updatedDate, { timeout: 15000 }).invoke('text').then(dateText => {
-////I have used javascript function directly to match date on UI
-    const today = authoring.configurations.lastUpdatedDate();
-    expect(Date.parse(dateText)).to.be.lte(Date.parse(today));
+       cy.get(authoring.configurations.updatedDate, { timeout: 15000 }).invoke('text').then(dateText => {
+//I have used javascript function directly to match date on UI
+       const today = authoring.configurations.lastUpdatedDate();
+       expect(Date.parse(dateText)).to.be.lte(Date.parse(today));
     
 })
 
