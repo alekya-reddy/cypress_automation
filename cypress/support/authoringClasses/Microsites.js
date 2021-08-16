@@ -7,7 +7,7 @@ export class Microsites extends Common {
         this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-        this.addedbyButton =      "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
         this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
         this.clearSearch = 'i[title="Clear search"]',
         this.searchButton = 'input[name="page-search"]',
@@ -81,6 +81,7 @@ export class Microsites extends Common {
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
             labelInput: "input[name='title']",
+            labelInputEdit: "input[name='title']",
             linkInput: "input[name='link']",
             newTabCheckBox: "input[name='newTab']",
             navRow: ".rst__row",
@@ -1234,7 +1235,12 @@ export class Microsites extends Common {
             cy.get(this.navigation.navEdit).should('exist').click()
         })
         cy.contains(this.antModal, "Update Navigation Item").should('exist')
-        cy.get(this.navigation.labelInput).clear({force: true}).type(label)
+        cy.wait(1000)
+        cy.get(this.navigation.labelInputEdit).clear({force: true})
+        cy.wait(1000)
+        cy.pause()
+        cy.get(this.navigation.labelInputEdit).type(label)
+        cy.pause()
         cy.get(this.antDropSelect.selector).eq(0).click()
         cy.get(this.antDropSelect.options(type)).click({force: true})
         if (source && type !== "Link") {
