@@ -34,7 +34,7 @@ const defaultVEXLanguage = {
     filterByBusinessUnitTitle: "Filter by Business Unit",
     filterByPersonaTitle: "Filter by Persona",
     filterByIndustryTitle: "Filter by Industry",
-    filterByTopicTitle: "Filter by topic",
+    filterByTopicTitle: "Filter by Topic",
 }
 
 const customVEXLanguage = {

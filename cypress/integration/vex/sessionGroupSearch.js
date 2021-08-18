@@ -162,7 +162,7 @@ describe("VEX - Session group search", () => {
         cy.visit(event.url)
         // In Group A block, search by topic filter
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
-            cy.contains("Filter By Topic").click()
+            cy.contains("Filter by Topic").click()
             cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
                 // Confirm have correct option
                 cy.wrap(option).contains(sessions.sessionWithTopic.topics)
@@ -186,7 +186,7 @@ describe("VEX - Session group search", () => {
     it("Session group filter by topic and search should should work together", () => {
         cy.visit(event.url)
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
-            cy.contains("Filter By Topic").click()
+            cy.contains("Filter by Topic").click()
             cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
                 option[0].click()
             })

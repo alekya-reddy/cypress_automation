@@ -1,7 +1,7 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 
-const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
-const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: "automation-microsites", tld: "lookbookhq" })
+const consumption = createConsumptionInstance({ org: 'automation-microsites', tld: 'lookbookhq' })
 
 const contents = authoring.common.env.orgs["automation-microsites"].resources
 
@@ -24,7 +24,7 @@ const microsite2 = {
 const target = {
     name: "Consumption SearchAndFilters",
     slug: "search-and-filters-consumption",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -33,7 +33,7 @@ const contentPages = {
     contentWithTopicContentTypePersona: {
         name: "Canada",
         slug: "canada",
-        get url(){
+        get url() {
             return `${microsite.url}/${this.slug}`
         },
         topics: "Canada",
@@ -43,7 +43,7 @@ const contentPages = {
     contentWithTopicFunnelBusinessUnit: {
         name: "Beaver",
         slug: "ecozones_of_canada",
-        get url(){
+        get url() {
             return `${microsite.url}/${this.slug}`
         },
         description: "This is description for beaver",
@@ -55,7 +55,7 @@ const contentPages = {
     contentWithTContentTypeIndustryBusinessUnit: {
         name: "Shelf",
         slug: "scotian_shelf",
-        get url(){
+        get url() {
             return `${microsite.url}/${this.slug}`
         },
         contentType: "Article",
@@ -67,7 +67,7 @@ const contentPages = {
 const landingPage = {
     name: "Search and Filter",
     slug: "search_and_filter",
-    get url(){
+    get url() {
         return `${microsite.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -77,73 +77,41 @@ const landingPage = {
             id: "Filters Block",
             type: "track",
             track: target.name,
-            // searchConfiguration: {
-            //     enableToggle: true
-            // },
-            // topicFilter: {
-            //     enableToggle: true
-            // },
-            // contentTypeFilter:{
-            //     enableToggle: true
-            // },
-            // funnelStageFilter:{
-            //     enableToggle: true
-            // },
-            // industryFilter:{
-            //     enableToggle: true
-            // },
-            // personaFilter:{
-            //     enableToggle: true
-            // },
-            // businessUnitFilter:{
-            //     enableToggle: true
-            // }
+            searchConfiguration: {
+                enableToggle: true
+            },
+            topicFilter: {
+                enableToggle: true
+            },
+            contentTypeFilter: {
+                enableToggle: true
+            },
+            funnelStageFilter: {
+                enableToggle: true
+            },
+            industryFilter: {
+                enableToggle: true
+            },
+            personaFilter: {
+                enableToggle: true
+            },
+            businessUnitFilter: {
+                enableToggle: true
+            }
         }
     ]
 }
 
-const filterOptions =
-    [
-        {
-            label: "Topic",
-            toggle: true
-        },
-        {
-            label: "Business Unit",
-            toggle: true
-        },
-        {
-            label: "Persona",
-            toggle: true
-        },
-        {
-            label: "Industry",
-            toggle: true
-        },
-        {
-            label: "Content Type",
-            toggle: true
-        },
-        {
-            label: "Funnel Stage",
-            toggle: true
-        },
-        {
-            label: "Language",
-            toggle: true
-        }
-
-    ]
 
 describe("Microsites - Search and Filter Content", () => {
 
-    it("Set up if not already done", () =>{
-        cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){
+    it("Set up if not already done", () => {
+        cy.request({ url: microsite.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
                 authoring.common.login()
                 authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
-                authoring.microsites.addTracks({target: target.name})
+                authoring.microsites.addTracks({ target: target.name })
                 authoring.microsites.addLandingPages(landingPage.name)
                 authoring.microsites.configureLandingPage(landingPage)
 
@@ -155,7 +123,7 @@ describe("Microsites - Search and Filter Content", () => {
         })
     })
 
-    it("Content can be searched by using filters and search functionality", () =>{
+    it("Content can be searched by using filters and search functionality", () => {
         cy.visit(microsite.url)
         // Select Topic Filter
         cy.containsExact(consumption.microsites.topicFilterLocator + " > span:nth-child(1)", "Topic Filter").click()
@@ -168,7 +136,7 @@ describe("Microsites - Search and Filter Content", () => {
         })
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")  
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
         // Select Content Type filter withour removing Topic filter
         cy.containsExact(consumption.microsites.contentTypeFilterLocator + " > span:nth-child(1)", "Content Type").click()
@@ -268,7 +236,7 @@ describe("Microsites - Search and Filter Content", () => {
         // Remove filters applied 
         cy.get(consumption.microsites.topicFilterLocator + " > span:nth-child(2)").click()
         cy.get(consumption.microsites.businessUnitFilterLocator + " > span:nth-child(2)").click()
-        cy.get("input").clear().type("this is \n" )
+        cy.get("input").clear().type("this is \n")
 
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
@@ -276,7 +244,7 @@ describe("Microsites - Search and Filter Content", () => {
 
     })
     
-    it.only("Verify filter values arranged in alphabetical order for Microsites", () =>{
+    it("Verify filter values arranged in alphabetical order for Microsites", () =>{
        // cy.visit(microsite.url)
         // Select Topic Filter
         authoring.common.login()

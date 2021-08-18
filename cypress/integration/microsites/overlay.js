@@ -106,7 +106,6 @@ describe("Microsites - Overlay Tracks", () => {
 
         // Close the target track overlay and verify the recommend overlay
         cy.contains('span','×').click({force:true})
-        cy.contains('span','×').click({force:true})
         cy.get(consumption.microsites.overlay.modal).should("not.exist")
         cy.contains("a", "recommend-track-overlay").click()
         cy.get(consumption.microsites.overlay.modal).should("exist")

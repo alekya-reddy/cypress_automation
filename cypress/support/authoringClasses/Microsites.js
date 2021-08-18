@@ -99,7 +99,7 @@ export class Microsites extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
-            listOption: ".ant-tabs-tabpane.ant-tabs-tabpane-active li[class*='ant-transfer-list-content-item']",
+            listOption: "li[class*='ant-transfer-list-content-item']",
             itemsList: "span[class*='ant-transfer-list-content-item']"
         };
 
@@ -146,13 +146,11 @@ export class Microsites extends Common {
 
             cy.contains('button', 'Add Microsite').click()
         })
-<<<<<<< HEAD
 
-        if (verify !== false) {
-=======
         cy.wait(3000)
-        if (verify !== false){
->>>>>>> develop
+    
+        if (verify !== false) {
+
             cy.get(this.antModal).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
@@ -186,8 +184,8 @@ export class Microsites extends Common {
         })
 
         cy.containsExact(this.micrositesPage.cardTitle, name).should('not.exist')
+    
     }
-
     removeMicrositeWithTrashIcon(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
@@ -440,7 +438,7 @@ export class Microsites extends Common {
 
         if (recommend) {
             cy.get(this.tracks.recommendRadio).click()
-            cy.contains(this.antModal, "Assign Tracks",{timeout: 2000}).within(() => {
+            cy.contains(this.antModal, "Assign Tracks", { timeout: 2000 }).within(() => {
                 cy.get(this.antDropSelect.selector).click()
             })
             recommend.forEach((track) => {
@@ -450,7 +448,7 @@ export class Microsites extends Common {
 
         if (target) {
             cy.get(this.tracks.targetRadio).click()
-            cy.contains(this.antModal, "Assign Tracks",{timeout: 2000}).within(() => {  
+            cy.contains(this.antModal, "Assign Tracks", { timeout: 2000 }).within(() => {
                 cy.get(this.antDropSelect.selector).click()
             })
             target.forEach((track) => {
@@ -458,7 +456,7 @@ export class Microsites extends Common {
                 cy.wait(3000)
             })
         }
-        
+
         cy.contains(this.antModal, "Assign Tracks").within(() => {
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
             cy.wait(3000)
@@ -656,7 +654,7 @@ export class Microsites extends Common {
     goToPageEditor(page) {
         cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')").within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
-                     cy.visit(`${this.baseUrl}${href}`)
+                cy.visit(`${this.baseUrl}${href}`)
             })
         })
     }
@@ -729,7 +727,7 @@ export class Microsites extends Common {
 
         // The menu of the most recently added one will be visible 
         cy.get(this.landingPages.editorMenu).within(() => {
-            cy.get(this.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
+            cy.get(this.landingPages.menuBlock).eq(3).click({ force: true }) // This opens up the block editor modal 
         })
 
         if (content) {
@@ -883,7 +881,7 @@ export class Microsites extends Common {
         if (className) {
             cy.get(this.landingPages.classNameInput).clear().type(className)
         }
-        cy.contains("button", "Confirm").click({force: true})
+        cy.contains("button", "Confirm").click({ force: true })
         if (verify !== false) {
             this.verifyBlock(config)
         }
@@ -1238,9 +1236,9 @@ export class Microsites extends Common {
                     }
                 })
             }
-            if (option.label != "Search" && option.toggle ==true) {
+            if (option.label != "Search" && option.toggle == true) {
                 cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
-                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({force: true});
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click({ force: true });
             }
         })
     }
@@ -1409,43 +1407,37 @@ export class Microsites extends Common {
 
     //added by Mandar for DEV-13179 - Validate if the default value for toggle on the search and each filter tab for new blocks is inherited from Search & FIlter tab.
     verifySearchFilterToggles(searchAndFilter) {
-        cy.get(this.landingPages.blockContainer).click() 
+        cy.get(this.landingPages.blockContainer).click()
         cy.get(this.landingPages.editorMenu).within(() => {
             cy.wait(1000)
             cy.get(this.landingPages.menuBlock).eq(3).click() // This opens up the block editor modal 
         })
         searchAndFilter.forEach(option => {
-            if(option.label == "Topic") {
-                option.label="Topic Filter"
-            }  
-            if(option.label == "Search")
-             {
+            if (option.label == "Topic") {
+                option.label = "Topic Filter"
+            }
+            if (option.label == "Search") {
                 cy.wait(1000)
                 //navigate to search configuration page
-                cy.containsExact("div","Search Configuration").click()
-                if (option.toggle)
-                {
+                cy.containsExact("div", "Search Configuration").click()
+                if (option.toggle) {
                     cy.get(this.landingPages.searchAndFiltersBlockToggleON).should("exist")
                 }
-                else
-                {
+                else {
                     cy.get(this.landingPages.searchAndFiltersBlockToggleOFF).should("exist")
-                 
+
                 }
                 //navigate back
-                cy.containsExact("span","Search Configuration").click()
+                cy.containsExact("span", "Search Configuration").click()
             }
-            else
-            {
+            else {
                 //navigate to filter configuration page
-                cy.containsExact("div","Filters Configuration").click({ force: true })  
-                cy.containsExact("span",option.label).click()
-                if (option.toggle)
-                {
+                cy.containsExact("div", "Filters Configuration").click({ force: true })
+                cy.containsExact("span", option.label).click()
+                if (option.toggle) {
                     cy.get(this.landingPages.searchAndFiltersBlockToggleON).should("exist")
                 }
-                else
-                {
+                else {
                     cy.get(this.landingPages.searchAndFiltersBlockToggleOFF).should("exist")
                 }
                 cy.get("span:contains('" + option.label + "')").eq(1).click()
@@ -1453,17 +1445,32 @@ export class Microsites extends Common {
                 cy.containsExact("span", "Filters Configuration").click()
             }
         })
-        cy.containsExact("button","Cancel").click()
+        cy.containsExact("button", "Cancel").click()
     }
-   
-    deleteBlock(blockTitle)
-    {
+
+    deleteBlock(blockTitle) {
         cy.containsExact("h4", blockTitle).parents(this.landingPages.blockContainer).within(() => {
             cy.get(this.landingPages.editorMenu).within(() => {
-                cy.get(this.landingPages.menuBlock).eq(4).click({force:true}) // This opens up the block editor modal 
-            })  
+                cy.get(this.landingPages.menuBlock).eq(4).click({ force: true }) // This opens up the block editor modal 
+            })
         })
         cy.contains("button", "Save").click()
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+    }
+
+    deleteAllBlocks() {
+        cy.wait(5000)
+        cy.ifElementExists(this.landingPages.blockContainer, 1000, () => {
+            cy.get("h4").parents('div').each(() => {
+                cy.ifElementExists(this.landingPages.blockContainer, 1000, () => {
+                    cy.get(this.landingPages.blockContainer).eq(0).click({ force: true });
+                    cy.wait(3000)
+                    cy.get(this.landingPages.editorMenu).within(() => {
+                        cy.get(this.landingPages.menuBlock).eq(4).click({ force: true }) // This opens up the block editor modal 
+                    })
+                })
+            })
+            cy.contains("button", "Save").click({force:true})
+        })
     }
 }
