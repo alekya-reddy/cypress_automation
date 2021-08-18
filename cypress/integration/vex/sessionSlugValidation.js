@@ -7,8 +7,9 @@ const duplicateMessage = "already exists";
 const invalidCharacterMessage = 'Only alphanumeric characters, hyphens and underscores are allowed';
 const successfulSaveMessage = "The record was saved successfully.";
 
-const event = 'sessionSlugValidation.js';
-
+const event = {
+    name: 'sessionSlugValidation.js'
+}
 const session1 = {
     name: 'Test Session',
     slug: 'test-session'
@@ -53,11 +54,11 @@ describe('VEX - Virtual Event', function() {
     it('Verify that session slugs are validated to make sure they are unique and valid', function() {
         // Clean up - delete previously added event
         authoring.common.login();
-        authoring.vex.deleteVirtualEvent(event);
+        authoring.vex.deleteVirtualEvent(event.name);
 
         // Set up: Add event, add sessions to it
         authoring.vex.addVirtualEvent(event);
-        authoring.vex.goToEventConfig(event);
+        authoring.vex.goToEventConfig(event.name);
         authoring.vex.addSession(session1.name);
         authoring.vex.addSession(session2.name);
 
