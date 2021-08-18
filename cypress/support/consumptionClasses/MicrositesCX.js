@@ -51,10 +51,10 @@ export class MicrositesCX extends CommonCX {
     verifyFilterConfiguration(filterName, filterLocator, filterSettings) {
         const { overrideLabel, textColor, backgroundColor } = filterSettings
         if (overrideLabel) {
-            cy.containsExact(filterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            cy.containsExact(filterLocator + " > div:nth-child(3) > div", overrideLabel).should("exist")
         }
         else {
-            cy.containsExact(filterLocator + " > span:nth-child(1)", filterName).should("exist")
+            cy.containsExact(filterLocator + " > div:nth-child(3) > div", filterName).should("exist")
         }
         if (textColor) {
             cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
