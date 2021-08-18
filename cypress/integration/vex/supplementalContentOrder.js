@@ -51,7 +51,6 @@ describe("VEX - Reordering Supplemental Content", ()=>{
         // Get the initial order of the supplemental contents
         let initialOrder = []
         for(let i = 0; i < session.contents.length ; i++){
-            cy.wait(3000)
             cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").invoke('text').then((text)=>{
                 initialOrder.push(text)
             })

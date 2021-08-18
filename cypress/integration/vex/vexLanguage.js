@@ -34,7 +34,7 @@ const defaultVEXLanguage = {
     filterByBusinessUnitTitle: "Filter by Business Unit",
     filterByPersonaTitle: "Filter by Persona",
     filterByIndustryTitle: "Filter by Industry",
-    filterByTopicTitle: "Filter by topic",
+    filterByTopicTitle: "Filter by Topic",
 }
 
 const customVEXLanguage = {
@@ -188,7 +188,6 @@ describe("VEX - Language Settings", ()=>{
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(lang3.name)
         authoring.configurations.gotoLanguageTab("virtual-event")
-        cy.wait(3000)
         cy.get(authoring.configurations.languages.vex.searchButtonTitle).clear().type(customVEXLanguage.search)
         cy.get(authoring.configurations.languages.vex.searchInputFieldPlaceholder).clear().type(customVEXLanguage.searchInputFieldPlaceholder)
         cy.get(authoring.configurations.languages.vex.filterByAvailabilityTitle).clear().type(customVEXLanguage.filterByAvailabilityTitle)
@@ -239,7 +238,6 @@ describe("VEX - Language Settings", ()=>{
          cy.get('@text').then(text => {
             cy.get(authoring.configurations.languages.vex.noResultsMessage).clear().type(text+" Edited");
         })
-        cy.wait(2000)
         cy.get(authoring.configurations.languages.vex.saveSettings).click()
         cy.contains(authoring.configurations.messages.recordSaved, {timeout: 10000}).should("exist")
         cy.get(authoring.configurations.languages.vex.noResultsMessage).invoke('attr', 'value').as('text');

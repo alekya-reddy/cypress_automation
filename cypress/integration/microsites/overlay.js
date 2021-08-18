@@ -88,6 +88,7 @@ describe("Microsites - Overlay Tracks", () => {
         // You put the link and script down in the html of your webpage, and it should open the track in a modal
         // This test verifies that you can do this on a microsite landing page
         cy.visit(landingPage.url)
+        cy.wait(7000)
         landingPage.blocks.forEach((block) => {
             consumption.microsites.verifyLandingPageBlock(block)
         })
@@ -105,8 +106,10 @@ describe("Microsites - Overlay Tracks", () => {
         cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("exist")
 
         // Close the target track overlay and verify the recommend overlay
+        cy.pause()
         cy.contains('span','×').click({force:true})
-        cy.contains('span','×').click({force:true})
+        cy.pause()
+        //cy.contains('span','×').click({force:true})
         cy.get(consumption.microsites.overlay.modal).should("not.exist")
         cy.contains("a", "recommend-track-overlay").click()
         cy.get(consumption.microsites.overlay.modal).should("exist")
