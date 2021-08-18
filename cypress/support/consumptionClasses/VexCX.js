@@ -447,12 +447,6 @@ export class VexCX extends CommonCX {
                     else if (filterName === "topics" && exists === false) {
                         cy.url().should('not.include', `topic=${listValues}`)
                     }
-                    if (filterName === "contentTypeName" && exists === true) {
-                        cy.url().should('include', `contentType=${values}`)
-                    }
-                    else if (filterName === "contentTypeName" && exists === false) {
-                        cy.url().should('not.include', `contentType=${listValues}`)
-                    }
                     if (filterName === "funnelStages" && exists === true) {
                         cy.url().should('include', `funnelStage=${listValues}`)
                     }
