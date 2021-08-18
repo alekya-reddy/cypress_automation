@@ -14,11 +14,10 @@ export class MicrositesCX extends CommonCX {
         this.businessUnitFilter = '#microsite_businessUnits'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
-                                        //li[class='p-multiselect-item p-highlight'] > span > span > div
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
         this.searchInputLocator = 'input[type="search"]'
-        this.searchWithinFilterDropdown="input[class='p-inputtext p-component p-multiselect-filter']"
-        this.searchAndFiltersDDOptionText="div[class='sc-jToBAC edUesx']"
+        this.searchWithinFilterDropdown = "input[class='p-inputtext p-component p-multiselect-filter']"
+        this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
         this.FilterByTopic = "#microsite_topics";
@@ -35,10 +34,10 @@ export class MicrositesCX extends CommonCX {
         };
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"
-        this.searchButton='#microsite_search_button'
-        this.searchInput='#microsite_search_input'
-        this.removeFilters="div[class='chip'] > span"
-        this.filterLabel="div[class='chip']"
+        this.searchButton = '#microsite_search_button'
+        this.searchInput = '#microsite_search_input'
+        this.removeFilters = "div[class='chip'] > span"
+        this.filterLabel = "div[class='chip']"
     }
 
     clickContent(options) {
@@ -259,85 +258,97 @@ export class MicrositesCX extends CommonCX {
         })
     }
 
-    SelectFiltersAndVerifyAsQueryStringInURL (filterOptions) {
+    SelectFiltersAndVerifyAsQueryStringInURL(filterOptions) {
         const filterName = filterOptions.filtername;
-        const index = filterOptions.index;
+        const indexes = filterOptions.index;
         const exists = filterOptions.exist;
+        var listValues = []
         let values = "";
-    
+        let length = 0
+        let arrayValues = [];
+        let option
+
         cy.get(`#microsite_${filterName}`).should('be.visible', { timeout: 10000 }).click()
         cy.wait(1000)
-        cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').as('optionValue')
-        cy.wait(1000)
-        cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).click()
-        cy.wait(1000)
-    
-        cy.get('@optionValue').then(optionValue => {
-            let length = 0
-            let arrayValues = [];
-            let option = optionValue.toLowerCase();
-            arrayValues = option.split(" ");
-            length = arrayValues.length;
-            if (length > 1) {
-                let i = 0;
-                arrayValues.forEach(value => {
-                    if (i !== 0) {
-                        values = values + "-" + value
-                        i++;
-                    }
-                    else {
-                        values = value;
-                        i++;
-                    }
-                })
-            }
-            else {
-                values = option;
-            }
-    
-            if (filterName === "topics" && exists === true) {
-                cy.url().should('include', `topic=${values}`)
-            }
-            else if (filterName === "topics" && exists === false) {
-                cy.url().should('not.include', `topic=${values}`)
-            }
-            if (filterName === "contentTypeName" && exists === true) {
-                cy.url().should('include', `contentType=${values}`)
-            }
-            else if (filterName === "contentTypeName" && exists === false) {
-                cy.url().should('not.include', `contentType=${values}`)
-            }
-            if (filterName === "funnelStages" && exists === true) {
-                cy.url().should('include', `funnelStage=${values}`)
-            }
-            else if (filterName === "funnelStages" && exists === false) {
-                cy.url().should('not.include', `funnelStage=${values}`)
-            }
-            if (filterName === "industries" && exists === true) {
-                cy.url().should('include', `industry=${values}`)
-            }
-            else if (filterName === "industries" && exists === false) {
-                cy.url().should('not.include', `industry=${values}`)
-            }
-            if (filterName === "personas" && exists === true) {
-                cy.url().should('include', `persona=${values}`)
-            }
-            else if (filterName === "personas" && exists === false) {
-                cy.url().should('not.include', `persona=${values}`)
-            }
-            if (filterName === "businessUnits" && exists === true) {
-                cy.url().should('include', `businessUnit=${values}`)
-            }
-            else if (filterName === "businessUnits" && exists === false) {
-                cy.url().should('not.include', `businessUnit=${values}`)
-            }
-            if (filterName === "languages" && exists === true) {
-                cy.url().should('include', `language=${values}`)
-            }
-            else if (filterName === "languages" && exists === false) {
-                cy.url().should('not.include', `language=${values}`)
-            }
+        indexes.forEach(index => {
+            cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').then(text => {
+                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').as(`optionValue${index}`)
+                cy.wait(1000)
+                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).click()
+                cy.wait(1000)
+            })
         })
+
+        indexes.forEach(index => {
+            cy.get(`@optionValue${index}`).then(optionValue => {
+                option = optionValue.toLowerCase();
+                arrayValues = option.split(" ");
+                length = arrayValues.length;
+                if (length > 1) {
+                    let i = 0;
+                    arrayValues.forEach(value => {
+                        if (i !== 0) {
+                            values = values + "-" + value
+                            i++;
+                        }
+                        else {
+                            values = value;
+                            i++;
+                        }
+                    })
+                }
+                else {
+                    values = option;
+                }
+                listValues.push(values)
+            }).then(() => {
+                if (indexes.length === listValues.length) {
+                    cy.log(listValues)
+                    if (filterName === "topics" && exists === true) {
+                        cy.url().should('include', `topic=${listValues}`)
+                    }
+                    else if (filterName === "topics" && exists === false) {
+                        cy.url().should('not.include', `topic=${listValues}`)
+                    }
+                    if (filterName === "contentTypeName" && exists === true) {
+                        cy.url().should('include', `contentType=${values}`)
+                    }
+                    else if (filterName === "contentTypeName" && exists === false) {
+                        cy.url().should('not.include', `contentType=${listValues}`)
+                    }
+                    if (filterName === "funnelStages" && exists === true) {
+                        cy.url().should('include', `funnelStage=${listValues}`)
+                    }
+                    else if (filterName === "funnelStages" && exists === false) {
+                        cy.url().should('not.include', `funnelStage=${listValues}`)
+                    }
+                    if (filterName === "industries" && exists === true) {
+                        cy.url().should('include', `industry=${listValues}`)
+                    }
+                    else if (filterName === "industries" && exists === false) {
+                        cy.url().should('not.include', `industry=${listValues}`)
+                    }
+                    if (filterName === "personas" && exists === true) {
+                        cy.url().should('include', `persona=${listValues}`)
+                    }
+                    else if (filterName === "personas" && exists === false) {
+                        cy.url().should('not.include', `persona=${listValues}`)
+                    }
+                    if (filterName === "businessUnits" && exists === true) {
+                        cy.url().should('include', `businessUnit=${listValues}`)
+                    }
+                    else if (filterName === "businessUnits" && exists === false) {
+                        cy.url().should('not.include', `businessUnit=${listValues}`)
+                    }
+                    if (filterName === "languages" && exists === true) {
+                        cy.url().should('include', `language=${listValues}`)
+                    }
+                    else if (filterName === "languages" && exists === false) {
+                        cy.url().should('not.include', `language=${listValues}`)
+                    } 
+                }  
+           })
+       })   
     }
 
 }

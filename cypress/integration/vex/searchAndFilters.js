@@ -224,37 +224,37 @@ const searchAndFilterOptions =
     const filterOptions = [
         {
             filtername: "topics",
-            index: "1",
+            index: ["1","2"],
             exist: true
         },
         {
             filtername: "sessionTypes",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "funnelStages",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "industries",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "personas",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "businessUnits",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "languages",
-            index: "1",
+            index: ["1"],
             exist: true
         }
     ]
@@ -262,37 +262,37 @@ const searchAndFilterOptions =
     const filterOptionsWithMultipleBlocks = [
         {
             filtername: "topics",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "sessionTypes",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "funnelStages",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "industries",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "personas",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "businessUnits",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "languages",
-            index: "1",
+            index: ["1"],
             exist: false
         }
     ]
@@ -529,7 +529,6 @@ const searchAndFilterOptions =
             authoring.common.login()
             authoring.vex.visit();
             authoring.vex.goToEventConfig(event.name)
-            //Verify Block level Search & Filter tab configurations 
             authoring.vex.goToLandingPage() 
             authoring.vex.deleteLandingPages(landingPage2.name)
             authoring.vex.addLandingPages(landingPage2.name)
@@ -540,19 +539,18 @@ const searchAndFilterOptions =
             cy.contains('button', 'Save').click(); 
             cy.visit(event.url)
     
-            //Select Filter options and verify applied filters showing as query strings in URL
+            //Select Filter options and verify applied filters showing as query strings in URL when one block present
             filterOptions.forEach((filters) => {
                 consumption.vex.SelectFiltersAndVerifyAsQueryStringInURL(filters);
             })
     
             authoring.vex.visit();
             authoring.vex.goToEventConfig(event.name)
-            //Verify Block level Search & Filter tab configurations 
             authoring.vex.goToLandingPage()
 
             authoring.vex.goToPageEditor(landingPage2.name)
             cy.wait(3000)
-            cy.get('div.pf-event-sessions').eq(0).click({force: true})
+            cy.get(authoring.vex.eventSessions).eq(0).click({force: true})
             cy.wait(2000)
             authoring.vex.addAdvancedBlock(landingPage2.blocks[0]) //Block level filter configuration
             cy.contains('button', 'Save').click(); 

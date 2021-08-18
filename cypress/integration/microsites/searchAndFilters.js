@@ -208,37 +208,37 @@ const searchAndFilterOptions2 =
     const filterOptions = [
         {
             filtername: "topics",
-            index: "1",
+            index: ["1","2"],
             exist: true
         },
         {
             filtername: "contentTypeName",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "funnelStages",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "industries",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "personas",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "businessUnits",
-            index: "1",
+            index: ["1"],
             exist: true
         },
         {
             filtername: "languages",
-            index: "1",
+            index: ["1"],
             exist: true
         }
     ]
@@ -246,37 +246,37 @@ const searchAndFilterOptions2 =
     const filterOptionsWithMultipleBlocks = [
         {
             filtername: "topics",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "contentTypeName",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "funnelStages",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "industries",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "personas",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "businessUnits",
-            index: "1",
+            index: ["1"],
             exist: false
         },
         {
             filtername: "languages",
-            index: "1",
+            index: ["1"],
             exist: false
         }
     ]
@@ -452,6 +452,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.get(consumption.microsites.removeFilters).eq(1).click()
         cy.get(consumption.microsites.removeFilters).click()
         cy.get(consumption.microsites.businessUnitFilter).click()
+        cy.wait(3000)
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).then(option => {
             // Confirm have correct option
             cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit)
@@ -554,10 +555,11 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.configureLandingPage(landingPage2)
 
         cy.visit(microsite.url)
-        //Select Filter options and verify applied filters showing as query strings in URL
+        //Select Filter options and verify applied filters showing as query strings in URL when one block present
         filterOptions.forEach((filters) => {
-            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters);
+            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters)
         })
+        
 
         authoring.common.login()
         authoring.microsites.visit()

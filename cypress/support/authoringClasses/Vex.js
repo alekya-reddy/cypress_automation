@@ -228,6 +228,7 @@ export class Vex extends Common {
         this.languageFilter='#vex_languages'
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
+        this.eventSessions='div.pf-event-sessions'
     }
 
     visit() {
