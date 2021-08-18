@@ -210,14 +210,14 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Basic verification of filters for featured content block (
         // Technically this test should go in searchAndFiltersConsumption.js, but the featured content block is already set up here
         cy.containsExact("h4", featureBlock.name).should("exist").parent().within(()=>{
-            cy.get(consumption.microsites.topicFilterLocator).click()
+            cy.get(consumption.microsites.topicFilter).click()
             cy.get(consumption.microsites.filterByValue).contains(contentWithTopics.topics[0]).click()
             cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
             cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
             cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
 
             // Clear filter value
-            cy.get(consumption.microsites.topicFilterLocator).within(() => {
+            cy.get(consumption.microsites.topicFilter).within(() => {
                 cy.get(consumption.microsites.clearFilterValue).click()
             })
             cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
