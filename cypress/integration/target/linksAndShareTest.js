@@ -4,7 +4,7 @@ const authoring = createAuthoringInstance() // When nothing is specified, this d
 const consumption = createConsumptionInstance()
 
 const linkandshare = {
-    name: 'linkAndShareSidebar.js'
+    name: 'linkAndShareFlow.js'
 }
 
 const target = {
@@ -17,8 +17,8 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
         authoring.common.login()
         cy.visit(authoring.configurations.pageUrls.linksAndSharings)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.linksAndSharings).should("exist")
-        authoring.configurations.deleteLinksAndSharing("linkAndShareSidebar.js")
-        authoring.configurations.addLinksAndSharing("linkAndShareSidebar.js")
+        authoring.configurations.deleteLinksAndSharing("linkAndShareFlow.js")
+        authoring.configurations.addLinksAndSharing("linkAndShareFlow.js")
 
         cy.contains('Not added to any Target Tracks').should('exist')
         authoring.target.visit()
@@ -26,9 +26,9 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
         authoring.target.addTrack(target)
         authoring.target.configure(target)
 
-        authoring.target.addLinksAndShare("linkAndShareSidebar.js") 
+        authoring.target.addLinksAndShare("linkAndShareFlow.js") 
         cy.visit(authoring.configurations.pageUrls.linksAndSharings)
-        cy.get(authoring.common.pageContainer).contains('linkAndShareSidebar.js').click()
+        cy.get(authoring.common.pageContainer).contains('linkAndShareFlow.js').click()
         cy.get('h5').contains('Last updated').should("exist")
 
         cy.containsExact("div", target.name).parent().click({force: true})
