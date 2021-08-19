@@ -10,6 +10,7 @@ export class Recommend extends Common {
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
+        this.pageControl = "div[data-qa-hook='title-bar']>h1",
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             languageLabel: "label:contains('Language')",
@@ -26,7 +27,9 @@ export class Recommend extends Common {
             cookieMessageToggle: '[data-qa-hook="cookieConsent"]',
             headerToggle: '[data-qa-hook="header"]',
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
-            exitOverride: "[data-qa-hook='Exit overrides']"
+            exitOverride: "[data-qa-hook='Exit overrides']",
+            linksAndshareLabel: "label:contains('Links & Sharing')"
+
         };
         this.popoverElements = {
             customUrlInput: "#customUrl"
@@ -216,6 +219,17 @@ export class Recommend extends Common {
             })
         }
     }
+
+    addLinksAndShare(link){
+         cy.get(this.pageSidebar.linksAndshareLabel).siblings("span").click()
+         cy.get(this.popover).within(()=>{
+                cy.get(this.dropdown.box).click()
+                cy.get(".Select-multi-value-wrapper > .Select-value").type(link + "\n")
+            cy.contains("button", "Update").click()
+        })
+    }
+
+
 
 
     setAppearance(appearance, verify){
