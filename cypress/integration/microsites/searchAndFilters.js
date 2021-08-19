@@ -19,6 +19,14 @@ const target = {
     }
 }
 
+const microsite2 = {
+    name: "searchAndFilters2.js",
+    slug: "searchandfilters2-js",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const contentPages = {
     contentWithTopicContentTypePersona: {
         name: "Canada",
@@ -166,6 +174,22 @@ const searchAndFilterOptions2 =
         }
     ]
 
+    const landingPage = {
+        name: "Search and Filter",
+        slug: "search_and_filter",
+        get url() {
+            return `${microsite.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        setHome: true,
+        blocks: [
+            {
+                id: "Filters Block",
+                type: "track",
+                track: target.name
+            }
+        ]
+    }
     const landingPage2 = {
         name: "Search and Filter2",
         slug: "search_and_filter2",
@@ -241,6 +265,39 @@ const searchAndFilterOptions2 =
             index: ["1"],
             exist: true
         }
+    ]
+
+    const filterOptions2 =
+    [
+        {
+            label: "Topic",
+            toggle: true
+        },
+        {
+            label: "Business Unit",
+            toggle: true
+        },
+        {
+            label: "Persona",
+            toggle: true
+        },
+        {
+            label: "Industry",
+            toggle: true
+        },
+        {
+            label: "Content Type",
+            toggle: true
+        },
+        {
+            label: "Funnel Stage",
+            toggle: true
+        },
+        {
+            label: "Language",
+            toggle: true
+        }
+
     ]
     
     const filterOptionsWithMultipleBlocks = [
@@ -589,4 +646,31 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.removeLandingPages(landingPage2.name)
         authoring.microsites.removeLandingPages(landingPage3.name)
     })
+
+    it("Verify filter values arranged in alphabetical order for Microsites", () =>{
+         authoring.common.login()
+         authoring.microsites.removeMicrosite(microsite2.name)
+         authoring.microsites.addMicrosite(microsite2)
+ 
+         authoring.microsites.goToMicrositeConfig(microsite2.name)
+         authoring.microsites.tabToSearchAndFilter()
+ 
+         cy.wait(3000)
+         //validating the values of each filter are arranged in alphabetical order
+         authoring.microsites.verifyFilterOptionsAlphabeticalOrder(filterOptions2)
+         authoring.microsites.saveSearchAndFiltersSettings()
+ 
+         authoring.microsites.tabToSetup()
+         authoring.microsites.setup(microsite2)
+         cy.wait(5000)
+         authoring.microsites.addTracks({target: target.name})
+         authoring.microsites.addLandingPages(landingPage.name)
+         authoring.microsites.configureLandingPage(landingPage)
+ 
+         cy.visit(microsite2.url)
+        //validating the values of each filter are arranged in alphabetical order
+         filterOptions.forEach((filters) => {
+            consumption.microsites.SelectFiltersAndVerifyAlphabeticalOrder(filters)
+        })
+     })
 })

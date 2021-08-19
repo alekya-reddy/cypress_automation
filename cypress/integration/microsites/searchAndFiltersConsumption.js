@@ -13,14 +13,6 @@ const microsite = {
     }
 }
 
-const microsite2 = {
-    name: "searchAndFilters2.js",
-    slug: "searchandfilters2-js",
-    get url(){
-        return `${authoring.common.baseUrl}/${this.slug}`
-    }
-}
-
 const target = {
     name: "Consumption SearchAndFilters",
     slug: "search-and-filters-consumption",
@@ -242,31 +234,6 @@ describe("Microsites - Search and Filter Content", () => {
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
-    })
-    
-    it("Verify filter values arranged in alphabetical order for Microsites", () =>{
-       // cy.visit(microsite.url)
-        // Select Topic Filter
-        authoring.common.login()
-        authoring.microsites.removeMicrosite(microsite2.name)
-        authoring.microsites.addMicrosite(microsite2)
-
-        // authoring.microsites.visit()
-        authoring.microsites.goToMicrositeConfig(microsite2.name)
-        authoring.microsites.tabToSearchAndFilter()
-
-        cy.wait(3000)
-        authoring.microsites.verifyFilterOptionsAlphabeticalOrder(filterOptions)
-        authoring.microsites.saveSearchAndFiltersSettings()
-
-        authoring.microsites.tabToSetup()
-        authoring.microsites.setup(microsite2)
-        cy.wait(5000)
-        authoring.microsites.addTracks({target: target.name})
-        authoring.microsites.addLandingPages(landingPage.name)
-        authoring.microsites.configureLandingPage(landingPage)
-
-        cy.visit(microsite2.url)
     })
 
 })

@@ -99,7 +99,7 @@ export class Microsites extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
-            listOption: "li[class*='ant-transfer-list-content-item']",
+            listOption: "div[class*='ant-tabs-tabpane-active']",
             itemsList: "span[class*='ant-transfer-list-content-item']"
         };
 
@@ -434,6 +434,7 @@ export class Microsites extends Common {
         const verify = options.verify
 
         this.tabToTracks()
+        cy.wait(5000)
         cy.contains("button", "Assign Tracks").click()
 
         if (recommend) {
@@ -1227,6 +1228,7 @@ export class Microsites extends Common {
     addSearchAndFilterOptions(options) {
         //Enabling ,Search filters
         this.tabToSearchAndFilter()
+        cy.wait(5000) //this wait is for to retirve the data from backend its taking time
         options.forEach(option => {
             cy.contains(this.antTabs, option.label).should("be.visible").click();
             if (option.toggle == false || option.toggle == true) {

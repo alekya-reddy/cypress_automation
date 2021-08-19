@@ -55,6 +55,7 @@ export class VexCX extends CommonCX {
         this.filterSearchBox = '.p-multiselect-filter-container'
         this.filterBoxheader = '.p-multiselect-header'
         this.selectAllFilterCheckbox = '.p-checkbox-box'
+        this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
@@ -486,6 +487,33 @@ export class VexCX extends CommonCX {
                 }
             })
         })
+    }
+
+    SelectFiltersAndVerifyAlphabeticalOrder(filterOptions) {
+        let beforeSort = [];
+        let afterSort = [];
+        cy.get(`#vex_${filterOptions.filtername}`).should('be.visible', { timeout: 10000 }).click()
+        if (filterOptions.label != "Search") {
+            cy.get(this.filterValues).then(listing => {
+                const listingCount = Cypress.$(listing).length;
+                if (listingCount > 0) {
+                    cy.get(this.filterValues).each((listing, index) => {
+                        beforeSort.length = 0
+                        afterSort.length = 0
+                        cy.get(listing).invoke('text').then(listValues => {
+                            beforeSort[index] = listValues;
+                        }).then(() => {
+                            if (listingCount === index + 1) {
+                                cy.log(beforeSort)
+                                afterSort = beforeSort.sort()
+                                cy.log(afterSort)
+                                expect(beforeSort).to.equal(afterSort);
+                            }
+                        })
+                    })
+                }
+            })
+        }
     }
 
 

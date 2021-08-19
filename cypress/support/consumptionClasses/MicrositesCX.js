@@ -38,6 +38,7 @@ export class MicrositesCX extends CommonCX {
         this.searchInput = '#microsite_search_input'
         this.removeFilters = "div[class='chip'] > span"
         this.filterLabel = "div[class='chip']"
+        this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
     }
 
     clickContent(options) {
@@ -345,10 +346,37 @@ export class MicrositesCX extends CommonCX {
                     }
                     else if (filterName === "languages" && exists === false) {
                         cy.url().should('not.include', `language=${listValues}`)
-                    } 
-                }  
-           })
-       })   
+                    }
+                }
+            })
+        })
+    }
+
+    SelectFiltersAndVerifyAlphabeticalOrder(filterOptions) {
+        let beforeSort = [];
+        let afterSort = [];
+        cy.get(`#microsite_${filterOptions.filtername}`).should('be.visible', { timeout: 10000 }).click()
+        if (filterOptions.label != "Search") {
+            cy.get(this.filterValues).then(listing => {
+                const listingCount = Cypress.$(listing).length;
+                if (listingCount > 0) {
+                    cy.get(this.filterValues).each((listing, index) => {
+                        beforeSort.length = 0
+                        afterSort.length = 0
+                        cy.get(listing).invoke('text').then(listValues => {
+                            beforeSort[index] = listValues;
+                        }).then(() => {
+                            if (listingCount === index + 1) {
+                                cy.log(beforeSort)
+                                afterSort = beforeSort.sort()
+                                cy.log(afterSort)
+                                expect(beforeSort).to.equal(afterSort);
+                            }
+                        })
+                    })
+                }
+            })
+        }
     }
 
 }
