@@ -9,6 +9,8 @@ export class Target extends Common {
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
+        this.contentClick = "div[draggable='true']:nth-child(1)",
+        this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)",    
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -36,7 +38,10 @@ export class Target extends Common {
         this.pagePreview = {
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
-            itemDescription: "div[data-qa-hook='item-description']"
+            itemDescription: "div[data-qa-hook='item-description']",
+            videoStartTime: "label:contains('Video Start Time')",
+            autoPlayLabel: "div:contains('AutoPlay')"
+
         };
         this.popoverElements = {
             customUrlInput: "#customUrl",
@@ -321,6 +326,12 @@ export class Target extends Common {
             cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
         }
     }
+    addContentTarget(content){
+        cy.contains("button", "Add Content").click()
+        cy.get(this.contentPickerSearchBar).clear().type(content)
+        cy.contains(this.contentPickerItem, content).click()
+        cy.get(this.modal).contains("button", "Add Content").click()
+    }
 
     addContent(contents, verify,position="Bottom"){
         cy.contains("button", "Add Content").click()
@@ -347,6 +358,8 @@ export class Target extends Common {
             })
         }
     }
+
+    
 
     configureFlowCTA(flowCTA, verify){
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
@@ -474,6 +487,16 @@ export class Target extends Common {
         cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
             cy.get("#titleOverride").clear()
+            cy.contains("button", "Update").click()
+        })
+    }
+
+    videoStartTime(time){
+  
+        cy.get(this.pagePreview.videoStartTime).siblings("span").click() 
+        cy.get(this.popover).within(()=>{
+            
+            cy.get("div>input[name='videoStartTime']").clear().type(time)
             cy.contains("button", "Update").click()
         })
     }

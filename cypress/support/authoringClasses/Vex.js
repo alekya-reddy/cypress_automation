@@ -39,7 +39,9 @@ export class Vex extends Common {
         this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
+        this.clickEvent = "td[class*='ant-table-cell']>a";
         this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.previewClick = "div[data-qa-hook='title-bar']>div:nth-child(3)>a";
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -71,6 +73,7 @@ export class Vex extends Common {
 
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
+        this.visibilityPublic = "span[class='ant-radio']>input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
@@ -96,6 +99,7 @@ export class Vex extends Common {
         this.removeButton = "button:contains('Remove')";
         this.removeonDemandVideo = '#remove-on-demand-video';
         this.isSimulive = 'input[name="videoSimulive"]';
+        
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
             headerTitleInput: "input[name='headerTitle']",
@@ -2126,7 +2130,7 @@ export class Vex extends Common {
 
         if (appearance) {
             cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
-            // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
             cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
             cy.contains('button:visible', "Save").click()
@@ -2395,7 +2399,7 @@ export class Vex extends Common {
             }
         })
     }
-
+   
     editExistingCard(config) {
         const heading = config.heading
 
@@ -2415,5 +2419,5 @@ export class Vex extends Common {
 
         cy.contains("button", "Confirm").click()
     }
-
+    
 }

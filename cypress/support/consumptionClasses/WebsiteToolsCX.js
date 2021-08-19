@@ -12,6 +12,8 @@ export class WebsiteToolsCX extends CommonCX {
         };
         this.guidecta = "#qa-guide-view-more";
         this.qaModal = "#qa-modal";
+        this.featuredblock = "h3[class='pf-carousel-title']";
+        this.featuredEvent = "h4[class='pf-carousel-item-title']"
     }
 
     modifyIframeBlockingCode(){

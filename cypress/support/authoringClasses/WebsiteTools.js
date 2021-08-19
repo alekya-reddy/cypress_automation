@@ -24,9 +24,30 @@ export class WebsiteTools extends Common {
         this.formPath = "input[id='website-form-path']";
         this.addForm = "input[id='website-form-id']";
         this.Pagecontrols = "div[data-qa-hook='title-bar']>h1"
-        
+        this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
+        this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
+        this.modal = 'div[data-qa-hook="modal"]';    
+}
 
-    }
+addContentToFeatured(content){
+    cy.get(this.contentPickerSearchBar).clear().type(content)
+    cy.contains(this.contentPickerItem, content).click()
+    cy.get(this.modal).contains("button", "Save").click()
+}
+
+addContent(contents){
+    cy.contains("button", "Add Content").click()
+    contents.forEach((content) => {
+        cy.get(this.modal).within(()=>{
+            cy.get(this.contentPickerSearchBar).clear().type(content)
+            cy.contains(this.contentPickerItem, content).click()
+        })
+    })
+
+    cy.get(this.modal).contains("button", "Save").click()
+}
+
+
 
     visit(){
         cy.visit(this.websiteToolsUrl);
