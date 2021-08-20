@@ -39,6 +39,8 @@ export class Common {
         this.thumbnailSelector = "#thumbnail-selector";
         this.scrollableTable = 'div[class*="table-body-container"]';
         this.pageSidebar = "div[data-qa-hook='page-sidebar']";
+        this.pagePreview = "div[data-qa-hook='page-preview']";
+        this.pageContainer = "div[data-qa-hook='page-sidebar']>div>a";
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",

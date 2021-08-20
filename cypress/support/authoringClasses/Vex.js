@@ -228,6 +228,7 @@ export class Vex extends Common {
         this.languageFilter='#vex_languages'
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
+        this.eventSessions='div.pf-event-sessions'
     }
 
     visit() {
@@ -1697,7 +1698,8 @@ export class Vex extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                cy.containsExact("option", filterName).should("exist")
+                // cy.containsExact("option", filterName).should("exist")
+                cy.get(`vex_${filterName}`).should("exist")
             }
         }
     }
