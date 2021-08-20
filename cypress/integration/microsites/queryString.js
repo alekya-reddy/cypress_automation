@@ -97,7 +97,7 @@ describe("Microsites: Multiple Query strings support on filters for Microsite", 
         }) 
     }) 
     // NOTE : The assets mentioned in target.contents block above are configured with the needed content tags(filterValues) manually. Need to make sure that this test data setup is correct,if test fails
-    it("Microsite Consumption:Verify Filters and Search values are populated in each filter and search field as per multiple query strings supplied in Microsite URL on consumption", ()=>{
+    it("Verify Filters and Search values are populated in each filter and search field as per multiple query strings supplied in Microsite URL on consumption", ()=>{
         authoring.common.login() 
         //Verify blocks when single filter values are given in a query string URL
         cy.visit(landingPage.url + `?funnelStage=${filterValues.funnelStages}&businessUnit=${filterValues.businessUnits}&industry=${filterValues.industries}&language=${filterValues.language}`)

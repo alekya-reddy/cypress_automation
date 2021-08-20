@@ -31,13 +31,6 @@ export class VexCX extends CommonCX {
         this.supplementalTitle = ".pf-event-session-content > div:nth-child(1)";
         this.filterByTopicValue = "#qa-virtual-topic-filter-topic > span";
         this.sessionTime = ".css-1uk98e1";
-<<<<<<< HEAD
-        this.searchInput = 'input[type="search"]';
-        this.searchButton='#vex_search_button';
-=======
-        this.searchInputLocator = 'input[type="search"]';
-        this.searchButton = '#vex_search_button';
->>>>>>> develop
         this.carouselArrow_color = "#qa-arrow-right";
         this.carouselArrow_bgColor = ".slick-next";
         this.sessionCard = ".pf-event-session-card";
@@ -47,7 +40,6 @@ export class VexCX extends CommonCX {
         this.sessionDescriptionStyle = "#jukebox-app>div>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.checkbox = "div[class='p-checkbox-box']"
-<<<<<<< HEAD
         this.topicFilter = "#vex_topics"
         this.availabilityFilter = '#vex_sessionTypes'
         this.funnelStageFilter = '#vex_funnelStages'
@@ -56,16 +48,6 @@ export class VexCX extends CommonCX {
         this.businessUnitFilter = '#vex_businessUnits'
         this.languageFilter='#vex_languages'
         this.searchInput = 'input[type="search"]'
-=======
-        this.topicFilterLocator = "#vex_topics"
-        this.availabilityFilterLocator = '#vex_sessionTypes'
-        this.funnelStageFilterLocator = '#vex_funnelStages'
-        this.industryFilterLocator = '#vex_industries'
-        this.personaFilterLocator = '#vex_personas'
-        this.businessUnitFilterLocator = '#vex_businessUnits'
-        this.languageFilter = '#vex_languages'
-        this.searchInputLocator = 'input[type="search"]'
->>>>>>> develop
         this.searchButton = '#vex_search_button'
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
         this.filterSearchBox = '.p-multiselect-filter-container'

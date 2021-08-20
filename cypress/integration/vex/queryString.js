@@ -140,7 +140,7 @@ const searchAndFilterOptions =
                 }
             }) 
         }) 
-        it("VEX Consumption:Verify Filters and Search values are populated in each filter and search field as per multiple query strings supplied in VEX URL on consumption", ()=>{
+        it("Verify Filters and Search values are populated in each filter and search field as per multiple query strings supplied in VEX URL on consumption", ()=>{
             authoring.common.login()
            //Verify blocks when single filter values are given in a query string URL
             cy.visit(event.url + `?topic=${singleSessionTagging.topics}&language=${singleSessionTagging.language}&businessUnit=${singleSessionTagging.businessUnits}`)
