@@ -14,10 +14,9 @@ export class MicrositesCX extends CommonCX {
         this.businessUnitFilter = '#microsite_businessUnits'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.languageFilter = "#microsite_languages"
-        this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
-                                        //li[class='p-multiselect-item p-highlight'] > span > span > div
+        this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"                              
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
-        this.searchInputLocator = 'input[type="search"]'
+        this.searchInput = 'input[type="search"]'
         this.searchWithinFilterDropdown="input[class='p-inputtext p-component p-multiselect-filter']"
         this.searchAndFiltersDDOptionText="div[class='sc-jToBAC edUesx']"
         this.arrowRight = "#qa-arrow-right"
@@ -213,11 +212,11 @@ export class MicrositesCX extends CommonCX {
 
                     if (buttonBackgroundAndBorderColor) {
                         cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
                     if (inputTextColor) {
-                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
 

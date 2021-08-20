@@ -219,12 +219,12 @@ export class Vex extends Common {
         this.blocks = "div[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']";
         this.icnPencil = "div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
-        this.topicFilterLocator = "#vex_topics"
-        this.availabilityFilterLocator = '#vex_sessionTypes'
-        this.funnelStageFilterLocator = '#vex_funnelStages'
-        this.industryFilterLocator = '#vex_industries'
-        this.personaFilterLocator = '#vex_personas'
-        this.businessUnitFilterLocator = '#vex_businessUnits'
+        this.topicFilter = "#vex_topics"
+        this.availabilityFilter = '#vex_sessionTypes'
+        this.funnelStageFilter = '#vex_funnelStages'
+        this.industryFilter = '#vex_industries'
+        this.personaFilter = '#vex_personas'
+        this.businessUnitFilter = '#vex_businessUnits'
         this.languageFilter='#vex_languages'
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'

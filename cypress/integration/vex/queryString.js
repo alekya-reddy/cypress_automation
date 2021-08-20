@@ -1,12 +1,10 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 import { Configurations } from '../../support/authoringClasses/Configurations.js'
-
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
 const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'})
-
 const event = {
-    name: "vexQueryString.js",
-    slug: "vexquerystring-js",
+    name: "queryString.js",
+    slug: "querystring-js",
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
@@ -27,15 +25,19 @@ const publicSession = [
     contents:['Website - Used by Cypress automation for VEX testing'] 
     },
     {
-    name: "Live ended without on-demand",
-    slug: "ended",
-    get url(){
-        return `${event.url}/${this.slug}`
-    },
-    visibility: 'Public',
-    type: 'On Demand',
-    video: 'Youtube - Used in Cypress automation for VEX testing',
-    contents:['Website - Used by Cypress automation for VEX testing'] 
+        name: 'Live content',
+        slug: 'live-content',
+        get url(){ return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2021 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            status: 'live'
+        },
 } 
 ]
 const landingPage = {
@@ -85,8 +87,7 @@ const searchAndFilterOptions =
         {
             label: "Language",
             toggle: true
-        }
-        
+        }  
     ]
     const singleSessionTagging = {
         sessionName: publicSession[1].name,
@@ -139,25 +140,30 @@ const searchAndFilterOptions =
                 }
             }) 
         }) 
-        it("VEX Consumption:Pass Filters and Search values as a Query String parameter in VEX URL", ()=>{
+        it("VEX Consumption:Verify Filters and Search values are populated in each filter and search field as per multiple query strings supplied in VEX URL on consumption", ()=>{
             authoring.common.login()
            //Verify blocks when single filter values are given in a query string URL
             cy.visit(event.url + `?topic=${singleSessionTagging.topics}&language=${singleSessionTagging.language}&businessUnit=${singleSessionTagging.businessUnits}`)
-            cy.get(consumption.vex.topicFilterLocator).should('have.contain', singleSessionTagging.topics)
-            cy.get(consumption.vex.businessUnitFilterLocator).should('have.contain', singleSessionTagging.businessUnits)
+            cy.get(consumption.vex.topicFilter).should('have.contain', singleSessionTagging.topics)
+            cy.get(consumption.vex.businessUnitFilter).should('have.contain', singleSessionTagging.businessUnits)
             cy.get(consumption.vex.languageFilter).should('have.contain', singleSessionTagging.language)
             cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist") 
             cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("not.exist") 
+            cy.visit(event.url + `?persona=${singleSessionTagging.personas}&funnelStage=${singleSessionTagging.funnelStages}&availability="On Demand"`)
+            cy.get(consumption.vex.personaFilter).should('have.contain', singleSessionTagging.personas)
+            cy.get(consumption.vex.funnelStageFilter).should('have.contain', singleSessionTagging.funnelStages)
+            cy.get(consumption.vex.availabilityFilter).should('have.contain', "On-Demand")
+            cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist") 
             //Validate if all filters are filled with the multiple values from query strings and the sessions are filtered based on the filters.
             cy.visit(event.url + `?topic=${multipleSessionTagging.topics}&language=${singleSessionTagging.language}&persona=${multipleSessionTagging.personas}`)
-            cy.get(consumption.vex.topicFilterLocator).should('have.contain', multipleSessionTagging.topics[0])
-            cy.get(consumption.vex.topicFilterLocator).should('have.contain', multipleSessionTagging.topics[1])
-            cy.get(consumption.vex.personaFilterLocator).should('have.contain', multipleSessionTagging.personas[0])
-            cy.get(consumption.vex.personaFilterLocator).should('have.contain', multipleSessionTagging.personas[1])
+            cy.get(consumption.vex.topicFilter).should('have.contain', multipleSessionTagging.topics[0])
+            cy.get(consumption.vex.topicFilter).should('have.contain', multipleSessionTagging.topics[1])
+            cy.get(consumption.vex.personaFilter).should('have.contain', multipleSessionTagging.personas[0])
+            cy.get(consumption.vex.personaFilter).should('have.contain', multipleSessionTagging.personas[1])
             cy.get(consumption.vex.languageFilter).should('have.contain', singleSessionTagging.language)
             cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist") 
             cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist") 
-            //Validate if the search is filled the value from query string search=value and the sessions are filtered based on the search.
+            //Validate if the search field is filled with the value from query string search=value and the sessions are filtered based on the search.
             cy.visit(event.url + `?search=${publicSession[1].name}`)
             cy.get(consumption.vex.searchInputField).should('have.value',publicSession[1].name)
             cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist") 

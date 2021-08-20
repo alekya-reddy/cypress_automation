@@ -236,12 +236,12 @@ const searchAndFilterOptions =
                 cy.contains("button", languageOverrideForFilters.searchButton).should("exist")
                 cy.get('input').should("have.attr", "placeholder", languageOverrideForFilters.searchInput)
                 //filter configurations value
-                cy.get(authoring.vex.topicFilterLocator).should("exist")
-                cy.get(authoring.vex.availabilityFilterLocator).should("exist")
-                cy.get(authoring.vex.funnelStageFilterLocator).should("exist")
-                cy.get(authoring.vex.industryFilterLocator).should("exist")
-                cy.get(authoring.vex.personaFilterLocator).should("exist")
-                cy.get(authoring.vex.businessUnitFilterLocator).should("exist")
+                cy.get(authoring.vex.topicFilter).should("exist")
+                cy.get(authoring.vex.availabilityFilter).should("exist")
+                cy.get(authoring.vex.funnelStageFilter).should("exist")
+                cy.get(authoring.vex.industryFilter).should("exist")
+                cy.get(authoring.vex.personaFilter).should("exist")
+                cy.get(authoring.vex.businessUnitFilter).should("exist")
                 cy.get(authoring.vex.languageFilter).should("exist")
                 cy.get(authoring.vex.searchInputText).should("exist")
                 cy.get(authoring.vex.searchButton).should("exist")   
@@ -255,14 +255,14 @@ const searchAndFilterOptions =
                 cy.contains("div", languageOverrideForFilters.searchButton).should("exist")
                 cy.get('input:visible').should("have.attr", "placeholder", languageOverrideForFilters.searchInput)
                 //filter configurations value
-                cy.get(consumption.vex.topicFilterLocator).should("exist")
-                cy.get(consumption.vex.availabilityFilterLocator).should("exist")
-                cy.get(consumption.vex.funnelStageFilterLocator).should("exist")
-                cy.get(consumption.vex.industryFilterLocator).should("exist")
-                cy.get(consumption.vex.personaFilterLocator).should("exist")
-                cy.get(consumption.vex.businessUnitFilterLocator).should("exist")
+                cy.get(consumption.vex.topicFilter).should("exist")
+                cy.get(consumption.vex.availabilityFilter).should("exist")
+                cy.get(consumption.vex.funnelStageFilter).should("exist")
+                cy.get(consumption.vex.industryFilter).should("exist")
+                cy.get(consumption.vex.personaFilter).should("exist")
+                cy.get(consumption.vex.businessUnitFilter).should("exist")
                 cy.get(consumption.vex.languageFilter).should("exist")
-                cy.get(consumption.vex.searchInputLocator).should("exist")
+                cy.get(consumption.vex.searchInput).should("exist")
                 cy.get(consumption.vex.searchButton).should("exist")  
             })
             //Verify content tags filter dropdown in VEX consumption, when there are no values configured in "Search & Filter Tab"
@@ -276,31 +276,31 @@ const searchAndFilterOptions =
             cy.visit(event.url)
             //Verify Topic Filter dropdown 
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.topicFilterLocator).click()
+                cy.get(consumption.vex.topicFilter).click()
                 cy.wait(2000)
             })
             cy.get(consumption.vex.checkbox).should('have.length', 1)
             //Verify Funnel stage Filter dropdown 
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.funnelStageFilterLocator).click()
+                cy.get(consumption.vex.funnelStageFilter).click()
                 cy.wait(2000)
             })
             cy.get(consumption.vex.checkbox).should('have.length', 1)
             //Verify Industry Filter dropdown 
              cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.industryFilterLocator).click()
+                cy.get(consumption.vex.industryFilter).click()
                 cy.wait(2000)
             })
             cy.get(consumption.vex.checkbox).should('have.length', 1)
             //Verify Persona Filter dropdown 
              cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.personaFilterLocator).click()
+                cy.get(consumption.vex.personaFilter).click()
                 cy.wait(2000)
             })
             cy.get(consumption.vex.checkbox).should('have.length', 1)
             //Verify Business Units Filter dropdown 
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.businessUnitFilterLocator).click()
+                cy.get(consumption.vex.businessUnitFilter).click()
                 cy.wait(2000)
             })
             cy.get(consumption.vex.checkbox).should('have.length', 1)
@@ -327,35 +327,35 @@ const searchAndFilterOptions =
             //Validate if sessions are filtered based on the multi-selection in a virtual event landing page
             //In Group A Block : Multiple Topics Filter applied
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.topicFilterLocator).click()
+                cy.get(consumption.vex.topicFilter).click()
                 cy.wait(1000)
                 
             })
             cy.contains('div',multipleSessionTagging.topics[0],{timeout:1000}).parent().should('be.visible').click()
             cy.contains('div',multipleSessionTagging.topics[1],{timeout:1000}).parent().should('be.visible').click()
-            cy.get(consumption.vex.topicFilterLocator).should('have.contain', multipleSessionTagging.topics[0])
-            cy.get(consumption.vex.topicFilterLocator).should('have.contain', multipleSessionTagging.topics[1])
+            cy.get(consumption.vex.topicFilter).should('have.contain', multipleSessionTagging.topics[0])
+            cy.get(consumption.vex.topicFilter).should('have.contain', multipleSessionTagging.topics[1])
             cy.get(consumption.vex.cancelFilterbox).click()
             //Multiple Funnel Stages filter applied
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.funnelStageFilterLocator).click()
+                cy.get(consumption.vex.funnelStageFilter).click()
                 cy.wait(1000)
             })
             cy.contains('div',multipleSessionTagging.funnelStages[0],{timeout:1000}).parent().should('be.visible').click()
             cy.contains('div',multipleSessionTagging.funnelStages[1],{timeout:1000}).parent().should('be.visible').click()
-            cy.get(consumption.vex.funnelStageFilterLocator).should('have.contain', multipleSessionTagging.funnelStages[0])
-            cy.get(consumption.vex.funnelStageFilterLocator).should('have.contain', multipleSessionTagging.funnelStages[1])
+            cy.get(consumption.vex.funnelStageFilter).should('have.contain', multipleSessionTagging.funnelStages[0])
+            cy.get(consumption.vex.funnelStageFilter).should('have.contain', multipleSessionTagging.funnelStages[1])
             cy.get(consumption.vex.cancelFilterbox).click()
             //Verify the sessions after applying the filters
             cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist") 
             cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist") 
             //Persona filter applied
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.personaFilterLocator).click()
+                cy.get(consumption.vex.personaFilter).click()
                 cy.wait(1000)
             })
             cy.contains('div',multipleSessionTagging.personas[1],{timeout:1000}).parent().should('be.visible').click()
-            cy.get(consumption.vex.personaFilterLocator).should('have.contain', multipleSessionTagging.personas[1])
+            cy.get(consumption.vex.personaFilter).should('have.contain', multipleSessionTagging.personas[1])
             cy.get(consumption.vex.cancelFilterbox).click()         
             //Verify the sessions after applying the filters
             cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist") 
@@ -363,7 +363,7 @@ const searchAndFilterOptions =
             //Verify if the Select All(a checkbox on top) option is available in the filter dropdown.(checking for any single filter)
             cy.reload()
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.topicFilterLocator).click()
+                cy.get(consumption.vex.topicFilter).click()
                 cy.wait(1000)         
             })
             cy.get(consumption.vex.filterBoxheader).within(() => {
@@ -376,14 +376,14 @@ const searchAndFilterOptions =
             //Funnel stage & Availability filter should not show a search bar
             //Availability filter 
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.availabilityFilterLocator).click()
+                cy.get(consumption.vex.availabilityFilter).click()
                 cy.wait(1000)
             })
             cy.get(consumption.vex.filterSearchBox).should("not.exist")
             cy.get(consumption.vex.cancelFilterbox).click()
             //Funnel stage filter 
             cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
-                cy.get(consumption.vex.funnelStageFilterLocator).click()
+                cy.get(consumption.vex.funnelStageFilter).click()
                 cy.wait(1000)
             })
             cy.get(consumption.vex.filterSearchBox).should("not.exist")
