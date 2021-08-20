@@ -1,12 +1,20 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
-const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'});
+const authoring = createAuthoringInstance({ org: 'automation-vex', tld: 'lookbookhq' });
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' });
 
 const event = {
     name: 'sessionGroups.js',
     slug: 'sessiongroups-js',
-    get url(){
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
+const event2 = {
+    name: 'sessionGroups2.js',
+    slug: 'sessiongroups2-js',
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -15,7 +23,7 @@ const sessions = [
     {
         name: "Live pending",
         slug: "pending",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -26,12 +34,13 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        }
+        },
+        index: "0"
     },
     {
         name: "Live current",
         slug: "current",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -42,12 +51,13 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        }
+        },
+        index: "1"
     },
     {
         name: "Live ended with on-demand",
         slug: "ended-fallback",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -59,12 +69,13 @@ const sessions = [
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
-        video: 'Youtube - Used in Cypress automation for VEX testing'
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        index: "2"
     },
     {
         name: "Live ended without on-demand",
         slug: "ended",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -75,23 +86,52 @@ const sessions = [
             timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
             type: 'Webex',
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        }
+        },
+        index: "3"
     },
     {
         name: "On-demand",
         slug: "on-demand",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
         type: 'On Demand',
-        video: 'Youtube - Used in Cypress automation for VEX testing'
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        index: "4"
     },
+
+]
+
+const onDemandSessions = [
+    {
+        name: "Live ended with on-demand",
+        index: "0"
+    },
+    {
+        name: "On-demand",
+        index: "1"
+    }
+]
+
+const liveSessions = [
+    {
+        name: "Live pending",
+        index: "0"
+    },
+    {
+        name: "Live current",
+        index: "1"
+    },
+    {
+        name: "Live ended without on-demand",
+        index: "2"
+    }
 ]
 
 const groupA = {
     name: "Group A",
-    sessions: sessions.map((session)=>{ return session.name }),
+    sessions: sessions.map((session) => { return session.name }),
     notExpected: [] // It used to be that a live session that's ended without on-demand fallback would no longer be accessible, but this is no longer the case 
 }
 const groupB = {
@@ -103,16 +143,44 @@ const groupC = {
     sessions: []
 }
 
+const groupD = {
+    name: "Group D",
+    sessions: ["On-demand","Live current"]
+}
+
+const landingPage = {
+    name: "Test Landing Page",
+    slug: "test-landing-page",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "Session Group",
+            sessionGroup: "All Sessions"
+        },
+        {
+            type: "Session Group",
+            sessionGroup: "All On Demand Sessions"
+        },
+        {
+            type: "Session Group",
+            sessionGroup: "All Upcoming Sessions"
+        }
+    ]
+}
+
 // Session groups allow you to group sessions under the headings you want, instead of the default "Agenda" and "On demand" groups 
-describe('VEX - Sessions Groups', function() {
-    it("Set up if not already done", ()=>{
-        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
+describe('VEX - Sessions Groups', function () {
+    it("Set up if not already done", () => {
+        cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
                 authoring.common.login()
                 authoring.vex.visit()
                 authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
-                sessions.forEach((session)=>{
+                sessions.forEach((session) => {
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
                     authoring.vex.backToEvent(event.name)
@@ -121,11 +189,11 @@ describe('VEX - Sessions Groups', function() {
         })
     })
 
-    it('Test the CRUD (Create, Update, Destroy) operations for session groups', function() {
+    it('Test the CRUD (Create, Update, Destroy) operations for session groups', function () {
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name) 
-          
+        authoring.vex.goToEventConfig(event.name)
+
         // Delete previously added session groups because 1) Rule out bugs where previously added stuff works but not new stuff, 2) Want to test adding and deleting 
         authoring.vex.deleteSessionGroup(groupA.name)
         authoring.vex.deleteSessionGroup(groupB.name)
@@ -133,7 +201,7 @@ describe('VEX - Sessions Groups', function() {
 
         // Go to consumption and verify that, without any session groups, the default groups are "Agenda" and "On demand"
         cy.visit(event.url)
-        cy.contains("h2", "Agenda", {timeout: 50000}).should('exist')
+        cy.contains("h2", "Agenda", { timeout: 50000 }).should('exist')
         cy.contains("h2", "On Demand Sessions").should('exist')
 
         // Add the groups back 
@@ -144,8 +212,8 @@ describe('VEX - Sessions Groups', function() {
         authoring.vex.addSessionGroup(groupC.name)
 
         // Edit group name, and change it back 
-        authoring.vex.renameSessionGroup({name: groupA.name, newName: "renamed"})
-        authoring.vex.renameSessionGroup({name: "renamed", newName: groupA.name})
+        authoring.vex.renameSessionGroup({ name: groupA.name, newName: "renamed" })
+        authoring.vex.renameSessionGroup({ name: "renamed", newName: groupA.name })
 
         // Add sessions to the groups 
         authoring.vex.addToGroup(groupA)
@@ -156,17 +224,17 @@ describe('VEX - Sessions Groups', function() {
         authoring.vex.addToGroup(groupB)
 
         // Confirm the initial order of sessions in group A
-        cy.contains(authoring.vex.groupRow, groupA.name).within(()=>{
+        cy.contains(authoring.vex.groupRow, groupA.name).within(() => {
             cy.contains("button", "Manage Sessions").click()
         })
-        for(let i = 0; i < groupA.sessions.length ; i++){
+        for (let i = 0; i < groupA.sessions.length; i++) {
             cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").should("contain", groupA.sessions[i])
         }
 
         // Reorder content within group A
-        cy.containsExact("span", sessions[4].name, {timeout: 10000}).siblings(authoring.vex.draggableMenu).then((subject)=>{
-            cy.containsExact("span", sessions[0].name, {timeout: 10000}).siblings(authoring.vex.draggableMenu).then((target)=>{
-                cy.get(subject).drag({to: target, place: 'over'}) // this drags the on-demand session to the first slot 
+        cy.containsExact("span", sessions[4].name, { timeout: 10000 }).siblings(authoring.vex.draggableMenu).then((subject) => {
+            cy.containsExact("span", sessions[0].name, { timeout: 10000 }).siblings(authoring.vex.draggableMenu).then((target) => {
+                cy.get(subject).drag({ to: target, place: 'over' }) // this drags the on-demand session to the first slot 
             })
         })
 
@@ -174,17 +242,17 @@ describe('VEX - Sessions Groups', function() {
         let expectedOrder = [...groupA.sessions]
         let poppedItem = expectedOrder.pop() // pops off the on-demand session
         expectedOrder.unshift(poppedItem) // adds it back to beginning 
-        for(let i = 0; i < expectedOrder.length ; i++){
+        for (let i = 0; i < expectedOrder.length; i++) {
             cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").should("contain", expectedOrder[i])
         }
 
         // Go to consumption and verify that the sessions are grouped correctly 
         cy.visit(event.url)
-        cy.contains(consumption.vex.sessionGroup, groupA.name, {timeout: 50000}).should('exist').within(()=>{
+        cy.contains(consumption.vex.sessionGroup, groupA.name, { timeout: 50000 }).should('exist').within(() => {
             let noOfSessions = groupA.sessions.length - groupA.notExpected.length
             cy.get(consumption.vex.sessionCardTitle).should("have.length", noOfSessions)
-            groupA.sessions.forEach((session)=>{
-                if (groupA.notExpected.includes(session)){
+            groupA.sessions.forEach((session) => {
+                if (groupA.notExpected.includes(session)) {
                     cy.contains(consumption.vex.sessionCardTitle, session).should("not.exist")
                 } else {
                     cy.contains(consumption.vex.sessionCardTitle, session).should("exist")
@@ -192,12 +260,12 @@ describe('VEX - Sessions Groups', function() {
             })
 
             // Confirm the order of the sessions within Group A
-            for(let i = 0; i < expectedOrder.length ; i++){
+            for (let i = 0; i < expectedOrder.length; i++) {
                 cy.get(consumption.vex.sessionCardTitle).eq(i).should("contain", expectedOrder[i])
             }
         })
 
-        cy.contains(consumption.vex.sessionGroup, groupB.name).should('exist').within(()=>{
+        cy.contains(consumption.vex.sessionGroup, groupB.name).should('exist').within(() => {
             cy.get(consumption.vex.sessionCardTitle).should("have.length", 1)
             cy.contains(consumption.vex.sessionCardTitle, groupB.sessions).should('exist')
         })
@@ -205,18 +273,18 @@ describe('VEX - Sessions Groups', function() {
         cy.contains(consumption.vex.sessionGroup, groupC.name).should('not.exist')
     })
 
-    it("Test all the cancel buttons within the session group page, and test the input field error validations", ()=>{
+    it("Test all the cancel buttons within the session group page, and test the input field error validations", () => {
         cy.clearCookies() // 1 in 3 runs, Cypress doesn't clear cookies between it functions, so make sure it gets done here
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.removeSession("Delete me")
         authoring.vex.addSession("Delete me")
-        authoring.vex.goToSessionGroup() 
+        authoring.vex.goToSessionGroup()
 
         // "Add Group" input field validation - and test its cancel button
         cy.contains("button", "Add Group").click()
-        cy.contains(authoring.vex.antModal, "Add Group").should("exist").within(()=>{
+        cy.contains(authoring.vex.antModal, "Add Group").should("exist").within(() => {
             cy.get(authoring.vex.groupNameInput).clear()
             cy.contains("button", "Submit").click()
             cy.contains("can't be blank").should("exist")
@@ -235,7 +303,7 @@ describe('VEX - Sessions Groups', function() {
 
         // "Edit group name" input field validation, and test its cancel button
         cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Rename").click()
-        cy.contains(authoring.vex.antModal, "Edit Session Group").should("exist").within(()=>{
+        cy.contains(authoring.vex.antModal, "Edit Session Group").should("exist").within(() => {
             cy.get(authoring.vex.groupNameInput).clear()
             cy.contains("button", "Submit").click()
             cy.contains("can't be blank").should("exist")
@@ -260,7 +328,7 @@ describe('VEX - Sessions Groups', function() {
         cy.contains("button", "Add Sessions to Group").click()
         cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
         cy.get(authoring.vex.antDropSelect.options("Delete me")).should('exist').click()
-        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("button", "Submit").click({force: true})
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("button", "Submit").click({ force: true })
         cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
         cy.get(authoring.vex.antDropSelect.options("Delete me")).should('not.exist')
         // then delete that session and revisit group (there was a bug where this caused internal server error)
@@ -269,6 +337,119 @@ describe('VEX - Sessions Groups', function() {
         cy.contains("a", "Session Groups").click()
         cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Manage Sessions").click()
         cy.contains("span", "Delete me").should('not.exist')
+    })
+
+    it.only("Validate All sessions,All On Demand Sessions and All Upcoming Sessions as options for the session group", () => {
+        const allSessionNames = [],ondemandSessionsNames=[],liveSessionsNames=[]
+        cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.vex.visit()
+                // authoring.vex.deleteVirtualEvent(event2.name)
+                authoring.vex.addVirtualEvent(event2)
+                authoring.vex.configureEvent(event2)
+                sessions.forEach((session) => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    authoring.vex.backToEvent(event2.name)
+                })
+                authoring.vex.addSessionGroup(groupD.name)
+                authoring.vex.addToGroup(groupD)
+            }
+        })
+
+        //Selecting All sessions option and verify 
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.addLandingPages(landingPage.name)
+        authoring.vex.editLandingPage(landingPage)
+        authoring.vex.setToHomePage(landingPage.name)
+        authoring.vex.goToPageEditor(landingPage.name)
+        authoring.vex.addAdvancedBlock(landingPage.blocks[0])
+        sessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+        cy.contains('button', 'Save').click();
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                allSessionNames.push(text)
+            }).then(() => {
+                if (index == sessions.length - 1) {
+                    sessions.forEach((session) => {
+                        expect(allSessionNames).to.include(session.name)
+                    })
+                }
+            })
+        })
+
+        //Selecting All On Demand Sessions and verify 
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.addLandingPages(landingPage.name)
+        authoring.vex.editLandingPage(landingPage)
+        authoring.vex.setToHomePage(landingPage.name)
+        authoring.vex.goToPageEditor(landingPage.name)
+        authoring.vex.addAdvancedBlock(landingPage.blocks[1])
+        onDemandSessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+        cy.contains('button', 'Save').click();
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                ondemandSessionsNames.push(text)
+            }).then(() => {
+                if (index == onDemandSessions.length - 1) {
+                    onDemandSessions.forEach((session) => {
+                        expect(ondemandSessionsNames).to.include(session.name)
+                    })
+                }
+            })
+        })
+
+        //Selecting All Upcoming Sessions and verify 
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.addLandingPages(landingPage.name)
+        authoring.vex.editLandingPage(landingPage)
+        authoring.vex.setToHomePage(landingPage.name)
+        authoring.vex.goToPageEditor(landingPage.name)
+        authoring.vex.addAdvancedBlock(landingPage.blocks[2])
+        liveSessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+        cy.contains('button', 'Save').click();
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                liveSessionsNames.push(text)
+            }).then(() => {
+                if (index == liveSessions.length - 1) {
+                    liveSessions.forEach((session) => {
+                        expect(liveSessionsNames).to.include(session.name)
+                    })
+                }
+            })
+        })
     })
 
 })
