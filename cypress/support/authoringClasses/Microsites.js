@@ -454,7 +454,7 @@ export class Microsites extends Common {
             })
             target.forEach((track) => {
                 cy.get(this.tracks.searchTrack).type(track + "\n")
-                cy.wait(3000)
+                cy.wait(4000)
             })
         }
 

@@ -210,9 +210,7 @@ export class Vex extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             leftIcon: "div[aria-hidden='false'] span.anticon.anticon-left",
-            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
-            listOption: "div[class*='ant-tabs-tabpane-active']",
-            itemsList: "span[class*='ant-transfer-list-content-item']"
+            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected"
         };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="vex-allow-visitor-groups_list"]';
@@ -2049,6 +2047,7 @@ export class Vex extends Common {
                     }
                 }
             })
+
         }
     }
 
@@ -2420,59 +2419,12 @@ export class Vex extends Common {
         cy.contains("button", "Confirm").click()
     }
 
-    verifyFilterOptionsAlphabeticalOrder(options) {
-        let beforeSort = [];
-        let afterSort = [];
-        options.forEach(option => {
-            cy.contains(this.antTabs, option.label).should("be.visible").click()
-            cy.get(this.searchAndFilter.swicthInnerLabel).invoke('text').then(text => {
-                if (!text.includes("Show")) {
-                    cy.get(this.searchAndFilter.switchToggle).should("be.visible").click()
-                    cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
-                }
-            })
-            if (option.label != "Search") {
-                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
-                    const listingCount = Cypress.$(listing).length;
-                    if (listingCount > 0) {
-                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
-                            beforeSort.length = 0
-                            afterSort.length = 0
-                            cy.get(listing).invoke('text').then(listValues => {
-                                beforeSort[index] = listValues;
-                            }).then(() => {
-                                if (listingCount === index + 1) {
-                                    afterSort = beforeSort.sort()
-                                    expect(beforeSort).to.equal(afterSort);
-                                }
-                            })
-                        })
-                    }
-                })
-
-                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
-                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
-
-                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
-                    const listingCount = Cypress.$(listing).length;
-                    if (listingCount > 0) {
-                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
-                            beforeSort.length = 0
-                            afterSort.length = 0
-                            cy.get(listing).invoke('text').then(listValues => {
-                                beforeSort[index] = listValues;
-                            }).then(() => {
-                                if (listingCount === index + 1) {
-                                    afterSort = beforeSort.sort()
-                                    expect(beforeSort).to.equal(afterSort);
-                                }
-                            })
-                        })
-                    }
-                })
-            }
+    verifySessions(config) {
+        const sessions = config
+        const index = config.index
+        cy.get(".pf-event-session-card-title").eq(index).find("div").eq(0).invoke('text').then(text => {
+            expect(text).to.include(sessions.name)
         })
-
     }
 
 }
