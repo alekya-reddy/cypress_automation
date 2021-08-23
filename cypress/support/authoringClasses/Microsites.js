@@ -99,7 +99,7 @@ export class Microsites extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
-            listOption: "li[class*='ant-transfer-list-content-item']",
+            listOption: "div[class*='ant-tabs-tabpane-active']",
             itemsList: "span[class*='ant-transfer-list-content-item']"
         };
 
@@ -146,8 +146,11 @@ export class Microsites extends Common {
 
             cy.contains('button', 'Add Microsite').click()
         })
+
         cy.wait(3000)
+    
         if (verify !== false) {
+
             cy.get(this.antModal).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
@@ -181,8 +184,8 @@ export class Microsites extends Common {
         })
 
         cy.containsExact(this.micrositesPage.cardTitle, name).should('not.exist')
+    
     }
-
     removeMicrositeWithTrashIcon(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
@@ -431,6 +434,7 @@ export class Microsites extends Common {
         const verify = options.verify
 
         this.tabToTracks()
+        cy.wait(5000)
         cy.contains("button", "Assign Tracks").click()
 
         if (recommend) {
@@ -456,6 +460,7 @@ export class Microsites extends Common {
 
         cy.contains(this.antModal, "Assign Tracks").within(() => {
             cy.get(this.antDropSelect.selector).click() // clicking again closes the dropdown options
+            cy.wait(3000)
             cy.contains("button", "Submit").click({ force: true })
         })
 
@@ -682,7 +687,7 @@ export class Microsites extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                cy.containsExact("option", filterName).should("exist")
+                 cy.containsExact("option", filterName).should("exist")
             }
         }
     }
@@ -1223,6 +1228,7 @@ export class Microsites extends Common {
     addSearchAndFilterOptions(options) {
         //Enabling ,Search filters
         this.tabToSearchAndFilter()
+        cy.wait(5000) //this wait is for to retirve the data from backend its taking time
         options.forEach(option => {
             cy.contains(this.antTabs, option.label).should("be.visible").click();
             if (option.toggle == false || option.toggle == true) {
@@ -1350,6 +1356,57 @@ export class Microsites extends Common {
         cy.contains("button", "Confirm").click()
     }
 
+    verifyFilterOptionsAlphabeticalOrder(options) {
+        let beforeSort = [];
+        let afterSort = [];
+        options.forEach(option => {
+            cy.contains(this.antTabs, option.label).should("be.visible").click()
+            cy.get(this.searchAndFilter.switchToggle).should("be.visible").click()
+            cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
+            if (option.label != "Search") {
+                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
+                    const listingCount = Cypress.$(listing).length;
+                    if (listingCount > 0) {
+                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
+                            beforeSort.length = 0
+                            afterSort.length = 0
+                            cy.get(listing).invoke('text').then(listValues => {
+                                beforeSort[index] = listValues;
+                            }).then(() => {
+                                if (listingCount === index + 1) {
+                                    afterSort = beforeSort.sort()
+                                    expect(beforeSort).to.equal(afterSort);
+                                }
+                            })
+                        })
+                    }
+                })
+
+                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
+
+                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
+                    const listingCount = Cypress.$(listing).length;
+                    if (listingCount > 0) {
+                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
+                            beforeSort.length = 0
+                            afterSort.length = 0
+                            cy.get(listing).invoke('text').then(listValues => {
+                                beforeSort[index] = listValues;
+                            }).then(() => {
+                                if (listingCount === index + 1) {
+                                    afterSort = beforeSort.sort()
+                                    expect(beforeSort).to.equal(afterSort);
+                                }
+                            })
+                        })
+                    }
+                })
+            }
+        })
+
+    }
+
     //added by Mandar for DEV-13179 - Validate if the default value for toggle on the search and each filter tab for new blocks is inherited from Search & FIlter tab.
     verifySearchFilterToggles(searchAndFilter) {
         cy.get(this.landingPages.blockContainer).click()
@@ -1392,6 +1449,7 @@ export class Microsites extends Common {
         })
         cy.containsExact("button", "Cancel").click()
     }
+
     deleteBlock(blockTitle) {
         cy.containsExact("h4", blockTitle).parents(this.landingPages.blockContainer).within(() => {
             cy.get(this.landingPages.editorMenu).within(() => {
