@@ -15,7 +15,7 @@ export class MicrositesCX extends CommonCX {
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
-        this.searchInputLocator = 'input[type="search"]'
+        this.searchInput = 'input[type="search"]'
         this.searchWithinFilterDropdown = "input[class='p-inputtext p-component p-multiselect-filter']"
         this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
@@ -38,6 +38,7 @@ export class MicrositesCX extends CommonCX {
         this.searchInput = '#microsite_search_input'
         this.removeFilters = "div[class='chip'] > span"
         this.filterLabel = "div[class='chip']"
+        this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
     }
 
     clickContent(options) {
@@ -211,11 +212,11 @@ export class MicrositesCX extends CommonCX {
 
                     if (buttonBackgroundAndBorderColor) {
                         cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
                     if (inputTextColor) {
-                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
 
@@ -345,10 +346,37 @@ export class MicrositesCX extends CommonCX {
                     }
                     else if (filterName === "languages" && exists === false) {
                         cy.url().should('not.include', `language=${listValues}`)
-                    } 
-                }  
-           })
-       })   
+                    }
+                }
+            })
+        })
+    }
+
+    SelectFiltersAndVerifyAlphabeticalOrder(filterOptions) {
+        let beforeSort = [];
+        let afterSort = [];
+        cy.get(`#microsite_${filterOptions.filtername}`).should('be.visible', { timeout: 10000 }).click()
+        if (filterOptions.label != "Search") {
+            cy.get(this.filterValues).then(listing => {
+                const listingCount = Cypress.$(listing).length;
+                if (listingCount > 0) {
+                    cy.get(this.filterValues).each((listing, index) => {
+                        beforeSort.length = 0
+                        afterSort.length = 0
+                        cy.get(listing).invoke('text').then(listValues => {
+                            beforeSort[index] = listValues;
+                        }).then(() => {
+                            if (listingCount === index + 1) {
+                                cy.log(beforeSort)
+                                afterSort = beforeSort.sort()
+                                cy.log(afterSort)
+                                expect(beforeSort).to.equal(afterSort);
+                            }
+                        })
+                    })
+                }
+            })
+        }
     }
 
 }

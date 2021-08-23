@@ -8,7 +8,7 @@ const contents = authoring.common.env.orgs["automation-microsites"].resources
 const microsite = {
     name: "searchAndFilters.js",
     slug: "searchandfilters-js",
-    get url() {
+    get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -233,5 +233,7 @@ describe("Microsites - Search and Filter Content", () => {
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+
     })
+
 })

@@ -31,8 +31,6 @@ export class VexCX extends CommonCX {
         this.supplementalTitle = ".pf-event-session-content > div:nth-child(1)";
         this.filterByTopicValue = "#qa-virtual-topic-filter-topic > span";
         this.sessionTime = ".css-1uk98e1";
-        this.searchInputLocator = 'input[type="search"]';
-        this.searchButton = '#vex_search_button';
         this.carouselArrow_color = "#qa-arrow-right";
         this.carouselArrow_bgColor = ".slick-next";
         this.sessionCard = ".pf-event-session-card";
@@ -42,19 +40,20 @@ export class VexCX extends CommonCX {
         this.sessionDescriptionStyle = "#jukebox-app>div>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.checkbox = "div[class='p-checkbox-box']"
-        this.topicFilterLocator = "#vex_topics"
-        this.availabilityFilterLocator = '#vex_sessionTypes'
-        this.funnelStageFilterLocator = '#vex_funnelStages'
-        this.industryFilterLocator = '#vex_industries'
-        this.personaFilterLocator = '#vex_personas'
-        this.businessUnitFilterLocator = '#vex_businessUnits'
-        this.languageFilter = '#vex_languages'
-        this.searchInputLocator = 'input[type="search"]'
+        this.topicFilter = "#vex_topics"
+        this.availabilityFilter = '#vex_sessionTypes'
+        this.funnelStageFilter = '#vex_funnelStages'
+        this.industryFilter = '#vex_industries'
+        this.personaFilter = '#vex_personas'
+        this.businessUnitFilter = '#vex_businessUnits'
+        this.languageFilter='#vex_languages'
+        this.searchInput = 'input[type="search"]'
         this.searchButton = '#vex_search_button'
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
         this.filterSearchBox = '.p-multiselect-filter-container'
         this.filterBoxheader = '.p-multiselect-header'
         this.selectAllFilterCheckbox = '.p-checkbox-box'
+        this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
@@ -328,22 +327,22 @@ export class VexCX extends CommonCX {
             }
             cy.contains(blockLocator, sessionGroup).within(() => {
                 if (topicFilter) {
-                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilter, topicFilter)
                 }
                 if (availabilityFilter) {
-                    this.verifyFilterConfiguration("Availability Type", this.availabilityFilterLocator, availabilityFilter)
+                    this.verifyFilterConfiguration("Availability Type", this.availabilityFilter, availabilityFilter)
                 }
                 if (funnelStageFilter) {
-                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilter, funnelStageFilter)
                 }
                 if (industryFilter) {
-                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                    this.verifyFilterConfiguration("Industry", this.industryFilter, industryFilter)
                 }
                 if (personaFilter) {
-                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                    this.verifyFilterConfiguration("Persona", this.personaFilter, personaFilter)
                 }
                 if (businessUnitFilter) {
-                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilter, businessUnitFilter)
                 }
                 if (languageFilter) {
                     this.verifyFilterConfiguration("Language", this.languageFilter, languageFilter)
@@ -360,11 +359,11 @@ export class VexCX extends CommonCX {
 
                     if (buttonBackgroundAndBorderColor) {
                         cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
                     if (inputTextColor) {
-                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
             })
@@ -486,6 +485,33 @@ export class VexCX extends CommonCX {
                 }
             })
         })
+    }
+
+    SelectFiltersAndVerifyAlphabeticalOrder(filterOptions) {
+        let beforeSort = [];
+        let afterSort = [];
+        cy.get(`#vex_${filterOptions.filtername}`).should('be.visible', { timeout: 10000 }).click()
+        if (filterOptions.label != "Search") {
+            cy.get(this.filterValues).then(listing => {
+                const listingCount = Cypress.$(listing).length;
+                if (listingCount > 0) {
+                    cy.get(this.filterValues).each((listing, index) => {
+                        beforeSort.length = 0
+                        afterSort.length = 0
+                        cy.get(listing).invoke('text').then(listValues => {
+                            beforeSort[index] = listValues;
+                        }).then(() => {
+                            if (listingCount === index + 1) {
+                                cy.log(beforeSort)
+                                afterSort = beforeSort.sort()
+                                cy.log(afterSort)
+                                expect(beforeSort).to.equal(afterSort);
+                            }
+                        })
+                    })
+                }
+            })
+        }
     }
 
 
