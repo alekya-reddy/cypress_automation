@@ -25,6 +25,13 @@ export class TargetCX extends CommonCX {
             videoTime: "div[class='pw-player-button pw-duration']",
             playAndpauseButton: "span[class='material-icons']"
         }
+
+        this.iframeForEmbeddedForm = {
+            iframe: "iframe[title='Content Window']",
+            email: "input[name='emailAddress']",
+            submitButton: "input[class='submit-button-style ']",
+            submittedMsg: "div[class='title']"
+        }
     } 
     
 }
