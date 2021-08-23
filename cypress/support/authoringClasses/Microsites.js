@@ -687,7 +687,7 @@ export class Microsites extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                // cy.containsExact("option", filterName).should("exist")
+                 cy.containsExact("option", filterName).should("exist")
             }
         }
     }

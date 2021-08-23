@@ -647,7 +647,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.removeLandingPages(landingPage3.name)
     })
 
-    it("Verify filter values arranged in alphabetical order for Microsites", () =>{
+    it("Verify content tags filter values are arranged in alphabetical order for Microsites", () =>{
          authoring.common.login()
          authoring.microsites.removeMicrosite(microsite2.name)
          authoring.microsites.addMicrosite(microsite2)
@@ -656,7 +656,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
          authoring.microsites.tabToSearchAndFilter()
  
          cy.wait(3000)
-         //validating the values of each filter are arranged in alphabetical order
+         //validating the values of each filter are arranged in alphabetical order inside Microsite Setup->Search & Filter tab
          authoring.microsites.verifyFilterOptionsAlphabeticalOrder(filterOptions2)
          authoring.microsites.saveSearchAndFiltersSettings()
  
@@ -668,7 +668,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
          authoring.microsites.configureLandingPage(landingPage)
  
          cy.visit(microsite2.url)
-        //validating the values of each filter are arranged in alphabetical order
+        //validating the values of each filter are arranged in alphabetical order in the consumption page
          filterOptions.forEach((filters) => {
             consumption.microsites.SelectFiltersAndVerifyAlphabeticalOrder(filters)
         })
