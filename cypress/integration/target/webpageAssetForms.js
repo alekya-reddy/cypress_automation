@@ -30,14 +30,13 @@ describe("Add Form To Target Track and Verify Analytics", function() {
          cy.get(authoring.target.contentClick).click()
          cy.get(authoring.target.previewClick).invoke('removeAttr', 'target')
          cy.get(authoring.target.previewClick).click({force: true})
-
         //fill form
         cy.waitForIframeToLoad(consumption.target.iframeForEmbeddedForm.iframe ,20000)
         cy.getIframeBody(consumption.target.iframeForEmbeddedForm.iframe).within(()=>{
         cy.get(consumption.target.iframeForEmbeddedForm.email).type(email)
         cy.get(consumption.target.iframeForEmbeddedForm.submitButton).click()
-        
-    })
+
+         })
 })
         
         it("Close sessions", {
@@ -65,6 +64,7 @@ it("Verify Target Analytics", () => {
       cy.get(authoring.target.targetAsset).next().contains(email).should("exist")
       
       })
+      
 })
 
 })

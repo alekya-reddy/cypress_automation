@@ -18,7 +18,6 @@ export class Target extends Common {
         this.analyticsTable = "div[class*='SimpleTable__body']",
         this.analyticsRows = "div[class*='SimpleTable__body']",
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
-
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };

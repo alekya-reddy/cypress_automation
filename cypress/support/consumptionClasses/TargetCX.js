@@ -19,7 +19,6 @@ export class TargetCX extends CommonCX {
             videoPauseButton: "button[title='Pause']",
             videoPlayButton: "button[title='Play']"  
         }
-   
         this.parmonicVideo = {
             videoControlButton: "div[class='shaka-big-play']>svg",
             videoTime: "div[class='pw-player-button pw-duration']",
