@@ -15,7 +15,6 @@ export class Target extends Common {
         this.visitorButton = "li:nth-of-type(8) > div[role='button']",
         this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",
         this.session = "div[data-qa-hook='select-tags select-tags-undefined']>span",
-        this.analyticsTable = "div[class*='SimpleTable__body']",
         this.analyticsRows = "div[class*='SimpleTable__body']",
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
         this.createTrackModal = {
