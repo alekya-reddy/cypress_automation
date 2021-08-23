@@ -129,6 +129,17 @@ const liveSessions = [
     }
 ]
 
+const groupDSessions = [
+    {
+        name: "Live current",
+        index: "0"
+    },
+    {
+        name: "On-demand",
+        index: "1"
+    }
+]
+
 const groupA = {
     name: "Group A",
     sessions: sessions.map((session) => { return session.name }),
@@ -145,7 +156,7 @@ const groupC = {
 
 const groupD = {
     name: "Group D",
-    sessions: ["On-demand","Live current"]
+    sessions: ["On-demand", "Live current"]
 }
 
 const landingPage = {
@@ -167,6 +178,10 @@ const landingPage = {
         {
             type: "Session Group",
             sessionGroup: "All Upcoming Sessions"
+        },
+        {
+            type: "Session Group",
+            sessionGroup: "Group D"
         }
     ]
 }
@@ -339,13 +354,12 @@ describe('VEX - Sessions Groups', function () {
         cy.contains("span", "Delete me").should('not.exist')
     })
 
-    it.only("Validate All sessions,All On Demand Sessions and All Upcoming Sessions as options for the session group", () => {
-        const allSessionNames = [],ondemandSessionsNames=[],liveSessionsNames=[]
+    it("Validate All sessions,All On Demand Sessions, All Upcoming Sessions, Session groups showing as options for the session group", () => {
+        const allSessionNames = [], ondemandSessionsNames = [], liveSessionsNames = [], sessionGroupNames = []
         cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
                 authoring.common.login()
                 authoring.vex.visit()
-                // authoring.vex.deleteVirtualEvent(event2.name)
                 authoring.vex.addVirtualEvent(event2)
                 authoring.vex.configureEvent(event2)
                 sessions.forEach((session) => {
@@ -358,7 +372,7 @@ describe('VEX - Sessions Groups', function () {
             }
         })
 
-        //Selecting All sessions option and verify 
+        //Selecting All sessions option and verify in consumption page 
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
@@ -389,7 +403,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Selecting All On Demand Sessions and verify 
+        //Selecting All On Demand Sessions and verify in consumption page
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
@@ -420,7 +434,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Selecting All Upcoming Sessions and verify 
+        //Selecting All Upcoming Sessions and verify in consumption page
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
@@ -446,6 +460,38 @@ describe('VEX - Sessions Groups', function () {
                 if (index == liveSessions.length - 1) {
                     liveSessions.forEach((session) => {
                         expect(liveSessionsNames).to.include(session.name)
+                    })
+                }
+            })
+        })
+
+
+        //Selecting Session group and verify in consumption page
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.addLandingPages(landingPage.name)
+        authoring.vex.editLandingPage(landingPage)
+        authoring.vex.setToHomePage(landingPage.name)
+        authoring.vex.goToPageEditor(landingPage.name)
+        authoring.vex.addAdvancedBlock(landingPage.blocks[3])
+        groupDSessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+        cy.contains('button', 'Save').click();
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                sessionGroupNames.push(text)
+            }).then(() => {
+                if (index == groupDSessions.length - 1) {
+                    groupDSessions.forEach((session) => {
+                        expect(sessionGroupNames).to.include(session.name)
                     })
                 }
             })
