@@ -33,5 +33,4 @@ export class TargetCX extends CommonCX {
             submittedMsg: "div[class='title']"
         }
     } 
-    
 }

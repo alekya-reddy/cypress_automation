@@ -345,11 +345,8 @@ export class Target extends Common {
         cy.contains("button", "Add Content").click()
         contents.forEach((content) => {
             cy.get(this.modal).within(()=>{
-                cy.log('out')
                 cy.get(this.contentPickerSearchBar).clear().type(content)
-                cy.log('in')
                 cy.contains(this.contentPickerItem, content).click()
-                cy.log('out')
             })
         })
         

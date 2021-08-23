@@ -48,7 +48,6 @@ describe("Add Form To Target Track and Verify Analytics", function() {
           }, ()=>{
             if(Cypress.env('TEST_ENV') !== "prod"){
                 // Closing sessions in separate it block so can go to different url and clear all cookeis 
-                // If you close sessions while browser still open on the experience, it immediately starts a new session that will appear in webhooks if close session again
                 authoring.common.login()
                 cy.closeSession()
             } 
