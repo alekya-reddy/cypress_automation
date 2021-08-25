@@ -19,9 +19,10 @@ const vex = {
 }
 
 const onDemandSession = 'onDemandSession'
-const domainName = "pathfactory-tracking-test.com"
+const domainName = "pathfactory-qa-wp.com"
 const websitePath = "*"
-const videoTitle = "Limelight channel - Cigna Collaborative Care Customer Success Story - Shawn King"
+const targetElementID = "content"
+const videoTitle = "Cigna Collaborative Care Customer Success Story - Shawn King"
 const time = "0:10"
 
 
@@ -124,14 +125,17 @@ describe("Native Support For Limelight Video Test", function() {
         cy.get(authoring.websiteTools.websitePath).type(websitePath)
         cy.contains("span","Guide").click()
         cy.contains("span","Concierge").click()
+        cy.get(authoring.websiteTools.targetElementID).type(targetElementID)
         cy.contains("span","Featured").click()
         cy.contains("span","Featured Content").click()
         authoring.websiteTools.addContentToFeatured(content.internalTitle)
+        cy.get(authoring.websiteTools.selectOpen).eq(3).click()
+        cy.get(authoring.websiteTools.selectOption("both")).click()
         cy.contains("span","Save").click()
     })
 
     it("Validate limelight is laoding on consumption page", () => {
-    cy.visit("https://pathfactory-tracking-test.com/how-it-works/?lb-mode=preview")
+    cy.visit("https://pathfactory-qa-wp.com/?lb-mode=preview")
     cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
     cy.wait(3000)
     cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()

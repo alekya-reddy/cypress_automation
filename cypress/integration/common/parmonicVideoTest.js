@@ -19,8 +19,10 @@ const vex = {
 }
 
 const onDemandSession = 'onDemandSession'
-const domainName = "pathfactory-tracking-test.com"
-const websitePath = "press"
+const domainName = "pathfactory-qa-wp.com"
+const websitePath = "*"
+const targetElementID = "content"
+const videoTitle = "Mergers and Acquisitions and its impact on sales tax"
 const time = "0:10"
 const time1= '0:10 / 1:43'
 
@@ -83,7 +85,6 @@ describe("Native Support For Limelight Video Test", function() {
     cy.go("back")
     cy.get(authoring.vex.previewClick).invoke('removeAttr', 'target')
     cy.get(authoring.vex.previewClick).click()
-    //cy.get(consumption.target.sessionCardTitle).click()
 
     //check on consumption side that video can play
     cy.get(consumption.vex.parmonic.selectVideo).click()
@@ -117,18 +118,22 @@ it("Limelight for WT", () => {
         cy.get(authoring.websiteTools.websitePath).type(websitePath)
         cy.contains("span","Guide").click()
         cy.contains("span","Concierge").click()
+        cy.get(authoring.websiteTools.targetElementID).type(targetElementID)
         cy.contains("span","Featured").click()
         cy.contains("span","Featured Content").click()
         authoring.websiteTools.addContentToFeatured(content.internalTitle)
+        cy.get(authoring.websiteTools.selectOpen).eq(3).click()
+        cy.get(authoring.websiteTools.selectOption("both")).click()
         cy.contains("span","Save").click()
     })
 
         it("Validate Parmonic is loading on Consumption Page", () => {
-        cy.visit("https://pathfactory-tracking-test.com/how-it-works/?lb-mode=preview")
-    cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
+        cy.visit("https://pathfactory-qa-wp.com/?lb-mode=preview")
+        cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
+        cy.wait(3000)
+        cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()
 
-    //For Parmonic video we have isssue regarding bottom bar from third party so after that fix 
-    //we can add assertion to make sure video is getting loaded in frame same as Limelight
+    
 
 
                     })
