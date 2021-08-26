@@ -45,8 +45,6 @@ export class Target extends Common {
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
             itemDescription: "div[data-qa-hook='item-description']",
-            videoStartTime: "label:contains('Video Start Time')",
-            autoPlayLabel: "div:contains('AutoPlay')"
 
         };
         this.popoverElements = {
@@ -493,16 +491,6 @@ export class Target extends Common {
         cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
             cy.get("#titleOverride").clear()
-            cy.contains("button", "Update").click()
-        })
-    }
-
-    videoStartTime(time){
-  
-        cy.get(this.pagePreview.videoStartTime).siblings("span").click() 
-        cy.get(this.popover).within(()=>{
-            
-            cy.get("div>input[name='videoStartTime']").clear().type(time)
             cy.contains("button", "Update").click()
         })
     }
