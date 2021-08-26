@@ -10,12 +10,20 @@ const content = {
 }
 
 const target = {
-    name: 'targetparmonic.js'
+    name: 'targetparmonic.js',
+    slug: 'targetparmonic',
+    contentslug: 'website-shared-resource',
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}/${this.contentslug}`
+    }
 }
 
 const vex = {
     name: 'vexparmonic.js',
-    get url(){ return `${consumption.common.baseUrl}/${this.slug}`; },
+    slug: 'vexlimelight-js',
+    get url(){ 
+        return `${authoring.common.baseUrl}/${this.slug}`
+     },
 }
 
 const onDemandSession = 'onDemandSession'
@@ -37,11 +45,17 @@ describe("Native Support For Limelight Video Test", function() {
          authoring.contentLibrary.addContentByUrl(content)
     })
 
-    it("Limelight for Target", () => {
+    it("Setup Target track if not already done", () => { 
+        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+             if(response.status == 404){ 
+                authoring.common.login()
+                authoring.target.addTrack(target)
+                authoring.target.configure(target)
+             }
+        })
         authoring.common.login()
         authoring.target.visit()
-        authoring.target.deleteTrack(target.name)
-        authoring.target.addTrack(target)
+        authoring.target.goToTrack(target.name)
         authoring.target.addContentTarget(content.internalTitle)
         cy.get(authoring.target.contentClick).click()
         cy.get('h5').contains('Title').should("exist")
@@ -57,13 +71,28 @@ describe("Native Support For Limelight Video Test", function() {
         cy.wait(5000)
         cy.get(consumption.target.parmonicVideo.playAndpauseButton).contains('pause').click()
 
+         //clean up
+         authoring.target.visit()
+         authoring.target.goToTrack(target.name)
+         cy.get(authoring.target.contentClick).click()
+         cy.get(authoring.target.deleteContent).click()
+         cy.get(authoring.target.modal).within(()=>{
+             cy.get(authoring.target.removeButton).contains('Remove Item').click()
+         })
+
  })
 
- it("Limelight For VEX", () => {
+ it("Set up if not already done", () => {
+    cy.request({url: vex.url, failOnStatusCode: false}).then((response)=>{
+        if(response.status == 404){ 
+            cy.viewport(1500, 1000)
+            authoring.common.login()
+            authoring.vex.addVirtualEvent(vex)
+            authoring.vex.configureEvent(vex)
+         }
+    })
     authoring.common.login()
     authoring.vex.visit()
-    authoring.vex.deleteVirtualEvent(vex.name)
-    authoring.vex.addVirtualEvent(vex)
     cy.get(authoring.vex.clickEvent).contains('vexparmonic.js').click()
     
     //add seession

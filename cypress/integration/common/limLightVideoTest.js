@@ -10,12 +10,19 @@ const content = {
 }
 
 const target = {
-    name: 'targetlimelight.js'
+    name: 'targetlimelight.js',
+    slug: 'targetlimelight',
+    contentslug: 'website-shared-resource',
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}/${this.contentslug}`
+    }
 }
 
 const vex = {
     name: 'vexlimelight.js',
-    get url(){ return `${consumption.common.baseUrl}/${this.slug}`; },
+    slug: 'vexlimelight-js',
+    get url(){ 
+        return `${authoring.common.baseUrl}/${this.slug}`}
 }
 
 const onDemandSession = 'onDemandSession'
@@ -24,7 +31,6 @@ const websitePath = "*"
 const targetElementID = "content"
 const videoTitle = "Cigna Collaborative Care Customer Success Story - Shawn King"
 const time = "0:10"
-
 
 describe("Native Support For Limelight Video Test", function() {
     it("Add Limelight-Video to Content Library", () => {
@@ -37,11 +43,17 @@ describe("Native Support For Limelight Video Test", function() {
          authoring.contentLibrary.addContentByUrl(content)
     })
 
-     it("Limelight for Target", () => {
+    it("Setup Target track if not already done", () => { 
+        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+             if(response.status == 404){ 
+                authoring.common.login()
+                authoring.target.addTrack(target)
+                authoring.target.configure(target)
+             }
+        })
         authoring.common.login()
         authoring.target.visit()
-        authoring.target.deleteTrack(target.name)
-        authoring.target.addTrack(target)
+        authoring.target.goToTrack(target.name)
         authoring.target.addContentTarget(content.internalTitle)
         cy.get(authoring.target.contentClick).click()
         cy.get('h5').contains('Title').should("exist")
@@ -59,20 +71,34 @@ describe("Native Support For Limelight Video Test", function() {
        cy.wait(5000)
 
        //check on consumption that video play-pause button working
-       cy.get(consumption.target.limeLightVideo.videoPauseButton).click()
-       
-        cy.get(consumption.target.limeLightVideo.videoPlayButton).click()
-        cy.wait(10000)
         cy.get(consumption.target.limeLightVideo.videoPauseButton).click()
-      
+        cy.get(consumption.target.limeLightVideo.videoPlayButton).click()
+        cy.wait(5000)
+        cy.get(consumption.target.limeLightVideo.videoPauseButton).click()
+
+      //clean up
+        authoring.target.visit()
+        authoring.target.goToTrack(target.name)
+        cy.get(authoring.target.contentClick).click()
+        cy.get(authoring.target.deleteContent).click()
+        cy.get(authoring.target.modal).within(()=>{
+            cy.get(authoring.target.removeButton).contains('Remove Item').click()
+        })
+
     })
   
-     it("Limelight For VEX", () => {
-        authoring.common.login()
-        authoring.vex.visit()
-        authoring.vex.deleteVirtualEvent(vex.name)
-        authoring.vex.addVirtualEvent(vex)
-        cy.get(authoring.vex.clickEvent).contains('vexlimelight.js').click()
+        it("Set up if not already done", () => {
+            cy.request({url: vex.url, failOnStatusCode: false}).then((response)=>{
+               if(response.status == 404){ 
+                   cy.viewport(1500, 1000)
+                   authoring.common.login()
+                   authoring.vex.addVirtualEvent(vex)
+                   authoring.vex.configureEvent(vex)
+                }
+            })
+            authoring.common.login()
+            authoring.vex.visit()
+            cy.get(authoring.vex.clickEvent).contains('vexlimelight.js').click()
 
         //add seession
         authoring.vex.goToSessionList()
@@ -95,8 +121,9 @@ describe("Native Support For Limelight Video Test", function() {
 
         //check on consumption side that video can play
         cy.get(consumption.vex.limelight.selectVideo).click()
-        cy.get(consumption.vex.limelight.play1).click({force: true})
-        cy.wait(3000)
+        cy.wait(1000)
+        cy.get(consumption.vex.limelight.play1).click()
+        cy.wait(2000)
         cy.get(consumption.vex.limelight.pause).click()
 
         //clean up

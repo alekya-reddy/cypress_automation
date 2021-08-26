@@ -9,8 +9,12 @@ export class Target extends Common {
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
-        this.contentClick = "div[draggable='true']:nth-child(1)",
-        this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)",    
+        this.contentClick = "div[draggable='true']:nth-child(2)",
+        this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)", 
+        this.deleteContent = "span>i[title='remove']",
+        this.removeModal = 'div[data-qa-hook="modal"]',
+        this.removeButton = 'button[type="button"]',
+
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -357,9 +361,7 @@ export class Target extends Common {
                 cy.containsExact("strong", content).should("exist")
             })
         }
-    }
-
-    
+    }    
 
     configureFlowCTA(flowCTA, verify){
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
