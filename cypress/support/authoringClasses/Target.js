@@ -10,7 +10,7 @@ export class Target extends Common {
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
-        this.contentClick = "div[draggable='true']:nth-child(1)",
+        this.contentClick = "div[draggable='true']:nth-child(2)",
         this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)", 
         this.visitorButton = "li:nth-of-type(8) > div[role='button']",
         this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",

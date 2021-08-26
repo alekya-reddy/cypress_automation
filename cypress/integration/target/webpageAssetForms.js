@@ -10,8 +10,10 @@ const content = {
 
 const target = {
     name: 'formAsset.js',
+    slug: 'formAsset.js',
+    contentslug: 'website-shared-resource',
     get url(){
-        return `${authoring.common.baseUrl}/${this.slug}`
+        return `${authoring.common.baseUrl}/${this.slug}/${this.contentslug}`
     }
 }
 
@@ -19,13 +21,17 @@ const email = 'cypress@automation.com'
 
 describe("Add Form To Target Track and Verify Analytics", function() {
 
-
- it("Add Track and Fill Form", () => {
-         authoring.common.login()
-         authoring.target.visit()
-         authoring.target.deleteTrack(target.name)
-         authoring.target.addTrack(target)
-
+         it("Setup Target track if not already done", () => { 
+           cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+             if(response.status == 404){ 
+                authoring.common.login()
+                authoring.target.addTrack(target)
+                authoring.target.configure(target)
+             }
+        })
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.goToTrack(target.name)
          authoring.target.addContentTarget(content.internalTitle)
          cy.get(authoring.target.contentClick).click()
          cy.get(authoring.target.previewClick).invoke('removeAttr', 'target')
@@ -37,8 +43,7 @@ describe("Add Form To Target Track and Verify Analytics", function() {
         cy.get(consumption.target.iframeForEmbeddedForm.submitButton).click()
 
          })
-})
-        
+})   
         it("Close sessions", {
             retries: {
               runMode: 0,
@@ -63,8 +68,7 @@ it("Verify Target Analytics", () => {
       cy.get(authoring.target.analyticsRows).within(()=>{
       cy.get(authoring.target.targetAsset).next().contains(email).should("exist")
       
-      })
-      
+      }) 
 })
 
 })
