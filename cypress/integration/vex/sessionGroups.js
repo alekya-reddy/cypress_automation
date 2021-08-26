@@ -160,7 +160,7 @@ const groupD = {
 }
 
 const landingPage = {
-    name: "Test Landing Page",
+    name: "Test Landing Page with Session groups",
     slug: "test-landing-page",
     get url() {
         return `${event.url}/${this.slug}`
@@ -184,6 +184,16 @@ const landingPage = {
             sessionGroup: "Group D"
         }
     ]
+}
+
+const ClonedlandingPage = {
+    name: "Test cloned Page with Session groups",
+    slug: "test-cloned-page",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    title:"Test cloned Page"
 }
 
 // Session groups allow you to group sessions under the headings you want, instead of the default "Agenda" and "On demand" groups 
@@ -354,8 +364,8 @@ describe('VEX - Sessions Groups', function () {
         cy.contains("span", "Delete me").should('not.exist')
     })
 
-    it("Validate All sessions,All On Demand Sessions, All Upcoming Sessions, Session groups showing as options for the session group", () => {
-        const allSessionNames = [], ondemandSessionsNames = [], liveSessionsNames = [], sessionGroupNames = []
+    it("Validate All sessions,All On Demand Sessions, All Upcoming Sessions, Session groups and cloned sessions showing as options for the session group", () => {
+        const allSessionNames = [],allClonedSessions=[], ondemandSessionsNames = [],clonedOndemandSessionsNames=[], liveSessionsNames = [],conedLiveSessionsNames=[], sessionGroupNames = [],clonedSessionGroupNames = []
         cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
                 authoring.common.login()
@@ -378,8 +388,8 @@ describe('VEX - Sessions Groups', function () {
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.deleteLandingPages(ClonedlandingPage.name)
         authoring.vex.addLandingPages(landingPage.name)
-        authoring.vex.editLandingPage(landingPage)
         authoring.vex.setToHomePage(landingPage.name)
         authoring.vex.goToPageEditor(landingPage.name)
         authoring.vex.addAdvancedBlock(landingPage.blocks[0])
@@ -403,11 +413,45 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
+        //Clone landing page and verify All sessions are cloned in authoring and consumption page
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.cloneLandingPage({
+            method: "add page button",
+            template: landingPage.name, // We are cloning the landing page of the original event 
+            name: ClonedlandingPage.name
+        })
+        authoring.vex.editLandingPage(ClonedlandingPage)
+        authoring.vex.setToHomePage(ClonedlandingPage.name)
+        authoring.vex.goToPageEditor(ClonedlandingPage.name)
+
+        cy.wait(3000)
+        sessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                allClonedSessions.push(text)
+            }).then(() => {
+                if (index == sessions.length - 1) {
+                    sessions.forEach((session) => {
+                        expect(allClonedSessions).to.include(session.name)
+                    })
+                }
+            })
+        })
+
         //Selecting All On Demand Sessions and verify in consumption page
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.deleteLandingPages(ClonedlandingPage.name)
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.editLandingPage(landingPage)
         authoring.vex.setToHomePage(landingPage.name)
@@ -434,11 +478,45 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
+        //Clone landing page and verify ondemand sessions are cloned in authoring and consumption page
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.cloneLandingPage({
+            method: "add page button",
+            template: landingPage.name, // We are cloning the landing page of the original event 
+            name: ClonedlandingPage.name
+        })
+        authoring.vex.editLandingPage(ClonedlandingPage)
+        authoring.vex.setToHomePage(ClonedlandingPage.name)
+        authoring.vex.goToPageEditor(ClonedlandingPage.name)
+
+        cy.wait(3000)
+        onDemandSessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                clonedOndemandSessionsNames.push(text)
+            }).then(() => {
+                if (index == onDemandSessions.length - 1) {
+                    onDemandSessions.forEach((session) => {
+                        expect(clonedOndemandSessionsNames).to.include(session.name)
+                    })
+                }
+            })
+        })
+
         //Selecting All Upcoming Sessions and verify in consumption page
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.deleteLandingPages(ClonedlandingPage.name)
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.editLandingPage(landingPage)
         authoring.vex.setToHomePage(landingPage.name)
@@ -465,12 +543,46 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
+         //Clone landing page and verify All upcoming sessions are cloned in authoring and consumption page
+         authoring.common.login()
+         authoring.vex.visit()
+         authoring.vex.goToEventConfig(event2.name)
+         authoring.vex.goToLandingPage()
+         authoring.vex.cloneLandingPage({
+             method: "add page button",
+             template: landingPage.name, // We are cloning the landing page of the original event 
+             name: ClonedlandingPage.name
+         })
+         authoring.vex.editLandingPage(ClonedlandingPage)
+         authoring.vex.setToHomePage(ClonedlandingPage.name)
+         authoring.vex.goToPageEditor(ClonedlandingPage.name)
+ 
+         cy.wait(3000)
+         liveSessions.forEach((session) => {
+             authoring.vex.verifySessions(session)
+         })
+ 
+         cy.visit(event2.url)
+ 
+         cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+             cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                 conedLiveSessionsNames.push(text)
+             }).then(() => {
+                 if (index == liveSessions.length - 1) {
+                    liveSessions.forEach((session) => {
+                         expect(conedLiveSessionsNames).to.include(session.name)
+                     })
+                 }
+             })
+         })
+
 
         //Selecting Session group and verify in consumption page
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
         authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.deleteLandingPages(ClonedlandingPage.name)
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.editLandingPage(landingPage)
         authoring.vex.setToHomePage(landingPage.name)
@@ -492,6 +604,39 @@ describe('VEX - Sessions Groups', function () {
                 if (index == groupDSessions.length - 1) {
                     groupDSessions.forEach((session) => {
                         expect(sessionGroupNames).to.include(session.name)
+                    })
+                }
+            })
+        })
+
+        //Clone landing page and verify Session group sessions are cloned in authoring and consumption page
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToLandingPage()
+        authoring.vex.cloneLandingPage({
+            method: "add page button",
+            template: landingPage.name, // We are cloning the landing page of the original event 
+            name: ClonedlandingPage.name
+        })
+        authoring.vex.editLandingPage(ClonedlandingPage)
+        authoring.vex.setToHomePage(ClonedlandingPage.name)
+        authoring.vex.goToPageEditor(ClonedlandingPage.name)
+
+        cy.wait(3000)
+        groupDSessions.forEach((session) => {
+            authoring.vex.verifySessions(session)
+        })
+
+        cy.visit(event2.url)
+
+        cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
+            cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
+                clonedSessionGroupNames.push(text)
+            }).then(() => {
+                if (index == groupDSessions.length - 1) {
+                    groupDSessions.forEach((session) => {
+                        expect(clonedSessionGroupNames).to.include(session.name)
                     })
                 }
             })

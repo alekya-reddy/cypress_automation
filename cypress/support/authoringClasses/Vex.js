@@ -168,7 +168,8 @@ export class Vex extends Common {
             searchFilter: "#vex_search_button",
             searchInputField: "#vex_search_input",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
-            filterToggle: "input[name*='.enable']"
+            filterToggle: "input[name*='.enable']",
+            pageTitle:"input[name='pageTitle']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -1596,6 +1597,7 @@ export class Vex extends Common {
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const slug = config.slug
         const verify = config.verify // must specify false to skip verification 
+        const title = config.title
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
@@ -1615,6 +1617,11 @@ export class Vex extends Common {
             }
             if (slug) {
                 cy.get(this.pages.slugInput).clear().type(slug)
+            }
+
+            if(title)
+            {
+                cy.get(this.pages.pageTitle).clear().type(title)
             }
             cy.contains("button", "Submit").click()
         })
