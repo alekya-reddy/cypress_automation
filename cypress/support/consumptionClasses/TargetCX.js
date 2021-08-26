@@ -12,19 +12,6 @@ export class TargetCX extends CommonCX {
         this.endPromoterTitle = "#qa-modal-header-title";
         this.bottombarTitle = "#qa-bottom-bar-title";
 
-        this.limeLightVideo = {
-            splashScreen: "div[id='lookbook-video-player']>div>div>div>video",
-            videoControlButton: "div[class='vjs-control-bar']>button:nth-child(1)",
-            videoTime: "div[class='vjs-time-tooltip']",
-            videoPauseButton: "button[title='Pause']",
-            videoPlayButton: "button[title='Play']"  
-        }
-        this.parmonicVideo = {
-            videoControlButton: "div[class='shaka-big-play']>svg",
-            videoTime: "div[class='pw-player-button pw-duration']",
-            playAndpauseButton: "span[class='material-icons']"
-        }
-
         this.iframeForEmbeddedForm = {
             iframe: "iframe[title='Content Window']",
             email: "input[name='emailAddress']",
