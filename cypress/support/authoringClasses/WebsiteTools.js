@@ -24,6 +24,7 @@ export class WebsiteTools extends Common {
         this.formPath = "input[id='website-form-path']";
         this.addForm = "input[id='website-form-id']";
         this.Pagecontrols = "div[data-qa-hook='title-bar']>h1"
+        this.selectOpen = "span[class='ant-select-selection-item']";
         
 
     }

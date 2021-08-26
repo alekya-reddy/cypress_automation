@@ -29,17 +29,9 @@ export class Vex extends Common {
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
         this.pageControl = "div[data-qa-hook='title-bar']>h1",
-            this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
-        this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-            this.clearSearch = 'i[title="Clear search"]',
-            this.searchButton = 'input[name="page-search"]',
-            this.noEventFoundmsg = 'No virtual events found',
-            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
-        this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
-        this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
+        this.searchItem = 'span[class="ant-select-selection-item"]';
+        this.searchInput = 'input[class="ant-select-selection-search-input"]';
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
