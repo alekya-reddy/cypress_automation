@@ -310,7 +310,7 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event) {
-        // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
+        cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
         cy.contains(this.eventCardTitle, event, { timeout: 20000 }).should('exist')
         cy.get(`a[id='configure-${event}']`).should('exist').click()
     }
