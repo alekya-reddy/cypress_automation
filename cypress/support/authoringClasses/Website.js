@@ -46,19 +46,6 @@ export class Website extends Common {
         }
     }
 
-    deleteWebsite1(url, verify){
-        this.visit()
-    cy.ifElementWithExactTextExists(this.websiteURLName).contains(url), 10000, () => {  
-        cy.containsExact(this.websiteURLName).contains(url).click({force: true})
-        cy.contains(this.modal, "Are you sure you want to delete this?").contains("button", "Delete Website Track").click()
-    }
-
-        if(verify !== false){
-            cy.contains(this.pageTitleLocator, this.websiteCampaignsPageTitle, {timeout: 20000}).should("exist")
-            cy.containsExact(this.websiteURLName, url).should("not.exist")
-        }
-     }
-
     configureWebsite(options) {
         const {url, enabled} = options
         cy.containsExact(this.websiteURLName, url).click({force: true})
@@ -76,14 +63,12 @@ export class Website extends Common {
         })
     }
 
-    setLanguage(language, verify){
-        cy.get(this.pagePreview.languageLabel).siblings("span").click()
+    setLanguage(language){
+        cy.get(this.pagePreview.languageLabel).siblings("span").click({force:true})
         cy.get(this.popover).within(()=>{
             cy.get(this.dropdown.box).click()
             cy.get(this.dropdown.option(language)).click()
             cy.contains("button", "Update").click()
         })
     }
-
-
 }

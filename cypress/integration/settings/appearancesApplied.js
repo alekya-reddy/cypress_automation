@@ -32,7 +32,7 @@ const microsites = {
 }
 
 const website = {
-    url: "http://google.com/appearance",
+    url: "http://pathfactory-qa-wp.com/wordpress/pathfactory-parent-qa/gdpr/",
     enabled: "on"
 }
 
@@ -72,67 +72,66 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
          expect(Date.parse(dateText)).to.be.lte(Date.parse(today));
                         })
                   })
-
    })
 
-   it.only("Add appearance to all tools", () => {
+   it("Add appearance to all tools", () => {
       authoring.common.login()
-    // authoring.recommend.visit()
-    // authoring.recommend.deleteTrack(recommend.name)
-    // authoring.recommend.addTrack(recommend)
-    //  authoring.recommend.setAppearance(appearance.name)
+      authoring.recommend.visit()
+      authoring.recommend.deleteTrack(recommend.name)
+      authoring.recommend.addTrack(recommend)
+      authoring.recommend.setAppearance(appearance.name)
 
-    // authoring.target.visit()
-     //authoring.target.deleteTrack(target.name)
-    // authoring.target.addTrack(target)
-    // authoring.target.setAppearance(appearance.name)
+      authoring.target.visit()
+      authoring.target.deleteTrack(target.name)
+      authoring.target.addTrack(target)
+      authoring.target.setAppearance(appearance.name)
 
-    // authoring.explore.visit()
-     //authoring.explore.deleteExplore(explore.name)
-    // authoring.explore.addExplore(explore)
-    //  authoring.explore.setAppearance(appearance.name)
+      authoring.explore.visit()
+      authoring.explore.deleteExplore(explore.name)
+      authoring.explore.addExplore(explore)
+      authoring.explore.setAppearance(appearance.name)
 
-    // authoring.microsites.visit()
-    // authoring.microsites.removeMicrosite(microsites.name)
-    // authoring.microsites.addMicrosite(microsites)
-    // authoring.microsites.goToMicrositeConfig(microsites.name)
-    // authoring.microsites.setup(microsites)
+    authoring.microsites.visit()
+    authoring.microsites.removeMicrosite(microsites.name)
+    authoring.microsites.addMicrosite(microsites)
+    authoring.microsites.goToMicrositeConfig(microsites.name)
+    authoring.microsites.setup(microsites)
 
     authoring.website.visit()
     cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
     authoring.website.deleteWebsite1(website.url)
-    //authoring.website.addWebsite(website.url)
-    // authoring.website.configureWebsite(website)
-    // authoring.website.setAppearance(appearance.name)
+    authoring.website.addWebsite(website.url)
+    authoring.website.configureWebsite(website)
+    authoring.website.setAppearance(appearance.name)
 
-    // authoring.vex.visit()
-    // authoring.vex.deleteVirtualEvent(vex.name)
-    // authoring.vex.addVirtualEvent(vex)
-    // authoring.vex.goToEventConfig(vex.name)
-    // cy.containsExact("a", "Appearance Setup", { timeout: 20000 }).click()
-    // cy.get(authoring.vex.searchItem).should('be.visible').click({ force: true })
-    // cy.get(authoring.vex.searchInput).type(appearance.name + "\n", {force: true})
-    // cy.contains('button:visible', "Save").click()
+    authoring.vex.visit()
+    authoring.vex.deleteVirtualEvent(vex.name)
+    authoring.vex.addVirtualEvent(vex)
+    authoring.vex.goToEventConfig(vex.name)
+    cy.containsExact("a", "Appearance Setup", { timeout: 20000 }).click()
+    cy.get(authoring.vex.searchItem).should('be.visible').click({ force: true })
+    cy.get(authoring.vex.searchInput).type(appearance.name + "\n", {force: true})
+    cy.contains('button:visible', "Save").click()
 
-    // authoring.websiteTools.visit()
-    // cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
-    //     cy.contains("button", "Delete").click()
-    // })
-    // cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
-    // cy.get(authoring.websiteTools.addProperty).click()
-    //     cy.get(authoring.websiteTools.antModal).within(() => {
-    //         cy.get(authoring.websiteTools.enterDomainName).type(domainName)
-    //         cy.get(authoring.websiteTools.addProperty).click()
-    //     })
-    //     cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
-    //         cy.contains("button", "Manage").click()
-    //     })
-    //     cy.contains("a","Add Website Path").click()
-    //     cy.get(authoring.websiteTools.websitePath).type(websitePath)
-    //     cy.contains("span","Guide").click()
-    //     cy.contains("span","Concierge").click()
-    //     cy.get(authoring.websiteTools.selectOpen).eq(0).type(appearance.name+ '\n')
-    //     cy.contains("span","Save").click()
+    authoring.websiteTools.visit()
+    cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+        cy.contains("button", "Delete").click()
+    })
+    cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+    cy.get(authoring.websiteTools.addProperty).click()
+        cy.get(authoring.websiteTools.antModal).within(() => {
+            cy.get(authoring.websiteTools.enterDomainName).type(domainName)
+            cy.get(authoring.websiteTools.addProperty).click()
+        })
+        cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+            cy.contains("button", "Manage").click()
+        })
+        cy.contains("a","Add Website Path").click()
+        cy.get(authoring.websiteTools.websitePath).type(websitePath)
+        cy.contains("span","Guide").click()
+        cy.contains("span","Concierge").click()
+        cy.get(authoring.websiteTools.selectOpen).eq(0).type(appearance.name+ '\n')
+        cy.contains("span","Save").click()
 
  })
 
@@ -170,8 +169,5 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
     cy.go('back')
 
  })
-
-
-
 
 })

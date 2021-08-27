@@ -3,66 +3,54 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const consumption = createConsumptionInstance()
 
-const language = {name: "Cypress.language", code: "CT"}
+const language = {name: "Cypress.js", code: "CT"}
 
 const recommend = {
     name: 'language.recommend',
-    language : "Cypress.language"
+    language : "Cypress.js"
 }
 
 const target = {
     name: 'language.target',
-    language : "Cypress.language"
+    language : "Cypress.js"
 }
 
 const microsites = {
     name: 'language.microsite',
-    language : "Cypress.language"
+    language : "Cypress.js"
 }
 
 const website = {
-    url: "https://google.com/language",
+    url: "http://scrumecommerce.com/test-page/automation/qa-automation.html",
     enabled: "on"
 }
 
 const vex = {
     name: 'language.vex',
-    language : "Cypress.language"
+    language : "Cypress.js"
 
 }
 const domainName = "pathfactory-qa-wp.com"
-const websitePath = "test"
+const websitePath = "*"
 
 describe("Add Language and Verify LastUpdated Date", () => {
-    it.only("Add Language", () => {
+    it("Add Language", () => {
         authoring.common.login()
         cy.visit(authoring.configurations.pageUrls.languages)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.languages).should("exist")
-        authoring.configurations.deleteLanguage("Cypress.language")
-        // cy.get("div[data-qa-hook='page-sidebar']").within(() =>{
-        //     if (cy.get("div[data-qa-hook='page-sidebar']>div").contains(language.name)) {
-        //     cy.containsExact("div", language.name).siblings("div").within(() => {            
-        //         cy.get('i[title="delete"]').click({force: true})
-        //     })  
-        // }
-        //     cy.do(() => {
-        //         Cypress.$("button:contains('Delete Language')").click()
-        //     })
-        // })
-        
+        authoring.configurations.deleteLanguage("Cypress.js")
+        authoring.configurations.addNewLanguage(language)
+    
 
-          //authoring.configurations.addNewLanguage(language)
-    //    cy.wait(2000)
+         cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+            cy.contains("Not added to any Recommend Tracks").should("exist")
+            cy.contains("Not added to any Target Tracks").should("exist")
+            cy.contains("Not added to any Microsites").should("exist")
+            cy.contains("Not added to any Website Tools Pages").should("exist")
+            cy.contains("Not added to any Website Campaign Pages").should("exist")
+            cy.contains("Not added to any Virtual Events").should("exist")
 
-    //      cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
-    //          cy.contains("Not added to any Recommend Tracks").should("exist")
-    //         cy.contains("Not added to any Target Tracks").should("exist")
-    //         cy.contains("Not added to any Microsites").should("exist")
-    //         cy.contains("Not added to any Website Tools Pages").should("exist")
-    //         cy.contains("Not added to any Website Campaign Pages").should("exist")
-    //         cy.contains("Not added to any Virtual Events").should("exist")
-
-    //         })
+            })
         })
 
         it('LastUpdated Date',()=>{
@@ -75,8 +63,8 @@ describe("Add Language and Verify LastUpdated Date", () => {
                         })
                   })
 
-                  it("Add language to all tools", () => {
-                      authoring.common.login()
+                  it.only("Add language to all tools", () => {
+                    authoring.common.login()
                    authoring.recommend.visit()
                    authoring.recommend.deleteTrack(recommend.name)
                    authoring.recommend.addTrack(recommend)
@@ -93,12 +81,12 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.microsites.goToMicrositeConfig(microsites.name)
                    authoring.microsites.setup(microsites)
 
-                //   authoring.website.visit()
-                //    cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
-                //    authoring.website.deleteWebsite(website.url)
-                //    authoring.website.addWebsite(website.url)
-                //    authoring.website.configureWebsite(website)
-                //    authoring.website.setLanguage(language.name)
+                   authoring.website.visit()
+                   cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
+                   authoring.website.deleteWebsite(website.url)
+                   authoring.website.addWebsite(website.url)
+                   authoring.website.configureWebsite(website)
+                   authoring.website.setLanguage(language.name)
 
                    authoring.vex.visit()
                    authoring.vex.deleteVirtualEvent(vex.name)
@@ -112,7 +100,7 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.websiteTools.visit()
                    cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
                    cy.contains("button", "Delete").click()
-       })
+              })
                    cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
                    cy.get(authoring.websiteTools.addProperty).click()
                    cy.get(authoring.websiteTools.antModal).within(() => {
@@ -147,9 +135,9 @@ describe("Add Language and Verify LastUpdated Date", () => {
             cy.containsExact(authoring.common.pageTitleLocator, microsites.name, {timeout: 5000})
             cy.go('back')
 
-            // cy.containsExact("div", website.url).parent().click({force: true})
-            // cy.containsExact(authoring.common.pageTitleLocator, 'Website Campaigns', {timeout: 5000})
-            // cy.go('back')
+            cy.containsExact("div", website.url).parent().click({force: true})
+            cy.containsExact(authoring.common.pageTitleLocator, 'Website Campaigns', {timeout: 5000})
+            cy.go('back')
  
             cy.containsExact("div", vex.name).parent().click({force: true})
             cy.containsExact(authoring.common.pageTitleLocator, vex.name, {timeout: 5000})
