@@ -6,15 +6,18 @@ export class MicrositesCX extends CommonCX {
         this.grid = ".pf-microsite-grid";
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilterLocator = "#dropdowntopics"
-        this.contentTypeFilterLocator = '#dropdowncontentTypeName'
-        this.funnelStageFilterLocator = '#dropdownfunnelStages'
-        this.industryFilterLocator = '#dropdownindustries'
-        this.personaFilterLocator = '#dropdownpersonas'
-        this.businessUnitFilterLocator = '#dropdownbusinessUnits'
-        this.filterByValue = '#qa-microsite-topic-filter-topic > span'
+        this.topicFilter = "#microsite_topics"
+        this.contentTypeFilter = '#microsite_contentTypeName'
+        this.funnelStageFilter = '#microsite_funnelStages'
+        this.industryFilter = '#microsite_industries'
+        this.personaFilter = '#microsite_personas'
+        this.businessUnitFilter = '#microsite_businessUnits'
+        this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
+        this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
-        this.searchInputLocator = 'input[type="search"]'
+        this.searchInput = 'input[type="search"]'
+        this.searchWithinFilterDropdown = "input[class='p-inputtext p-component p-multiselect-filter']"
+        this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
         this.FilterByTopic = "#microsite_topics";
@@ -33,7 +36,11 @@ export class MicrositesCX extends CommonCX {
         };
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"
-        this.searchButton='#microsite_search_button'
+        this.searchButton = '#microsite_search_button'
+        this.searchInput = '#microsite_search_input'
+        this.removeFilters = "div[class='chip'] > span"
+        this.filterLabel = "div[class='chip']"
+        this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
     }
 
     clickContent(options) {
@@ -47,10 +54,10 @@ export class MicrositesCX extends CommonCX {
     verifyFilterConfiguration(filterName, filterLocator, filterSettings) {
         const { overrideLabel, textColor, backgroundColor } = filterSettings
         if (overrideLabel) {
-            cy.containsExact(filterLocator + " > span:nth-child(1)", overrideLabel).should("exist")
+            cy.containsExact(filterLocator + " > div:nth-child(3) > div", overrideLabel).should("exist")
         }
         else {
-            cy.containsExact(filterLocator + " > span:nth-child(1)", filterName).should("exist")
+            cy.containsExact(filterLocator + " > div:nth-child(3) > div", filterName).should("exist")
         }
         if (textColor) {
             cy.get(filterLocator).should("have.css", "color", `rgb(${textColor.r}, ${textColor.g}, ${textColor.b})`)
@@ -178,22 +185,22 @@ export class MicrositesCX extends CommonCX {
             }
             cy.containsExact("h4", trackName).parent().within(() => {
                 if (topicFilter) {
-                    this.verifyFilterConfiguration("Topic Filter", this.topicFilterLocator, topicFilter)
+                    this.verifyFilterConfiguration("Topic Filter", this.topicFilter, topicFilter)
                 }
                 if (contentTypeFilter) {
-                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilterLocator, contentTypeFilter)
+                    this.verifyFilterConfiguration("Content Type", this.contentTypeFilter, contentTypeFilter)
                 }
                 if (funnelStageFilter) {
-                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilterLocator, funnelStageFilter)
+                    this.verifyFilterConfiguration("Funnel Stage", this.funnelStageFilter, funnelStageFilter)
                 }
                 if (industryFilter) {
-                    this.verifyFilterConfiguration("Industry", this.industryFilterLocator, industryFilter)
+                    this.verifyFilterConfiguration("Industry", this.industryFilter, industryFilter)
                 }
                 if (personaFilter) {
-                    this.verifyFilterConfiguration("Persona", this.personaFilterLocator, personaFilter)
+                    this.verifyFilterConfiguration("Persona", this.personaFilter, personaFilter)
                 }
                 if (businessUnitFilter) {
-                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilterLocator, businessUnitFilter)
+                    this.verifyFilterConfiguration("Business Unit", this.businessUnitFilter, businessUnitFilter)
                 }
                 if (searchConfiguration) {
                     const { searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
@@ -207,11 +214,11 @@ export class MicrositesCX extends CommonCX {
 
                     if (buttonBackgroundAndBorderColor) {
                         cy.contains("button", searchButtonText).should("have.css", "background-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
-                        cy.get(this.searchInputLocator).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "border-color", `rgb(${buttonBackgroundAndBorderColor.r}, ${buttonBackgroundAndBorderColor.g}, ${buttonBackgroundAndBorderColor.b})`)
                     }
 
                     if (inputTextColor) {
-                        cy.get(this.searchInputLocator).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
+                        cy.get(this.searchInput).should("have.css", "color", `rgb(${inputTextColor.r}, ${inputTextColor.g}, ${inputTextColor.b})`)
                     }
                 }
 
@@ -230,8 +237,8 @@ export class MicrositesCX extends CommonCX {
     }
     searchMicrositeCard(searchTerm) {
         // Must be within session group block before using this function
-        cy.get("input").clear().type(searchTerm)
-        cy.contains("button", "Search").click()
+        cy.get(this.searchInput).clear().type(searchTerm)
+        cy.get(this.searchFilter).click()
     }
 
     addingBlock(block) {
@@ -253,4 +260,125 @@ export class MicrositesCX extends CommonCX {
             }
         })
     }
+
+    SelectFiltersAndVerifyAsQueryStringInURL(filterOptions) {
+        const filterName = filterOptions.filtername;
+        const indexes = filterOptions.index;
+        const exists = filterOptions.exist;
+        var listValues = []
+        let values = "";
+        let length = 0
+        let arrayValues = [];
+        let option
+
+        cy.get(`#microsite_${filterName}`).should('be.visible', { timeout: 10000 }).click()
+        cy.wait(1000)
+        indexes.forEach(index => {
+            cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').then(text => {
+                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').as(`optionValue${index}`)
+                cy.wait(1000)
+                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).click()
+                cy.wait(1000)
+            })
+        })
+
+        indexes.forEach(index => {
+            cy.get(`@optionValue${index}`).then(optionValue => {
+                option = optionValue.toLowerCase();
+                arrayValues = option.split(" ");
+                length = arrayValues.length;
+                if (length > 1) {
+                    let i = 0;
+                    arrayValues.forEach(value => {
+                        if (i !== 0) {
+                            values = values + "-" + value
+                            i++;
+                        }
+                        else {
+                            values = value;
+                            i++;
+                        }
+                    })
+                }
+                else {
+                    values = option;
+                }
+                listValues.push(values)
+            }).then(() => {
+                if (indexes.length === listValues.length) {
+                    cy.log(listValues)
+                    if (filterName === "topics" && exists === true) {
+                        cy.url().should('include', `topic=${listValues}`)
+                    }
+                    else if (filterName === "topics" && exists === false) {
+                        cy.url().should('not.include', `topic=${listValues}`)
+                    }
+                    if (filterName === "contentTypeName" && exists === true) {
+                        cy.url().should('include', `contentType=${values}`)
+                    }
+                    else if (filterName === "contentTypeName" && exists === false) {
+                        cy.url().should('not.include', `contentType=${listValues}`)
+                    }
+                    if (filterName === "funnelStages" && exists === true) {
+                        cy.url().should('include', `funnelStage=${listValues}`)
+                    }
+                    else if (filterName === "funnelStages" && exists === false) {
+                        cy.url().should('not.include', `funnelStage=${listValues}`)
+                    }
+                    if (filterName === "industries" && exists === true) {
+                        cy.url().should('include', `industry=${listValues}`)
+                    }
+                    else if (filterName === "industries" && exists === false) {
+                        cy.url().should('not.include', `industry=${listValues}`)
+                    }
+                    if (filterName === "personas" && exists === true) {
+                        cy.url().should('include', `persona=${listValues}`)
+                    }
+                    else if (filterName === "personas" && exists === false) {
+                        cy.url().should('not.include', `persona=${listValues}`)
+                    }
+                    if (filterName === "businessUnits" && exists === true) {
+                        cy.url().should('include', `businessUnit=${listValues}`)
+                    }
+                    else if (filterName === "businessUnits" && exists === false) {
+                        cy.url().should('not.include', `businessUnit=${listValues}`)
+                    }
+                    if (filterName === "languages" && exists === true) {
+                        cy.url().should('include', `language=${listValues}`)
+                    }
+                    else if (filterName === "languages" && exists === false) {
+                        cy.url().should('not.include', `language=${listValues}`)
+                    }
+                }
+            })
+        })
+    }
+
+    SelectFiltersAndVerifyAlphabeticalOrder(filterOptions) {
+        let beforeSort = [];
+        let afterSort = [];
+        cy.get(`#microsite_${filterOptions.filtername}`).should('be.visible', { timeout: 10000 }).click()
+        if (filterOptions.label != "Search") {
+            cy.get(this.filterValues).then(listing => {
+                const listingCount = Cypress.$(listing).length;
+                if (listingCount > 0) {
+                    cy.get(this.filterValues).each((listing, index) => {
+                        beforeSort.length = 0
+                        afterSort.length = 0
+                        cy.get(listing).invoke('text').then(listValues => {
+                            beforeSort[index] = listValues;
+                        }).then(() => {
+                            if (listingCount === index + 1) {
+                                cy.log(beforeSort)
+                                afterSort = beforeSort.sort()
+                                cy.log(afterSort)
+                                expect(beforeSort).to.equal(afterSort);
+                            }
+                        })
+                    })
+                }
+            })
+        }
+    }
+
 }

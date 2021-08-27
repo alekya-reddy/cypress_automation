@@ -24,7 +24,11 @@ const videoContent2 = {
 
 const contents = [videoContent, supplementalContent, videoContent2, supplementalContent2]
 
-const event = 'Delete content';
+//const event = 'Delete content';
+
+const event = {
+    name: 'Delete content'
+}
 
 const session = {
     name: 'Stuff To delete',
@@ -52,7 +56,7 @@ describe('VEX - Virtual Event', function() {
         authoring.common.login()
 
         // Delete the event to clear out any bad state - must delete first or else will block from clearing content library
-        authoring.vex.deleteVirtualEvent(event)
+        authoring.vex.deleteVirtualEvent(event.name)
 
         // Clean up - delete previously contents as they might have been left in altered state, leading to inconsistency + flakiness 
         authoring.contentLibrary.visit()
@@ -69,11 +73,11 @@ describe('VEX - Virtual Event', function() {
         // Add event back and add sessions to it
         authoring.vex.visit();
         authoring.vex.addVirtualEvent(event)
-        authoring.vex.goToEventConfig(event)
+        authoring.vex.goToEventConfig(event.name)
         sessions.forEach((session)=>{
             authoring.vex.addSession(session.name)
             authoring.vex.configureSession(session)
-            authoring.vex.backToEvent(event)
+            authoring.vex.backToEvent(event.name)
         })
 
         // Return to content library and should be able to delete the supplemental content used in VEX
@@ -100,18 +104,18 @@ describe('VEX - Virtual Event', function() {
 
         // Go into the session and verify that supplemental content is gone since it was deleted 
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event)
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.goToSessionConfig(session.name)
         cy.containsExact("span", supplementalContent.internalTitle).should('not.exist')
 
         // Now remove the session and verify that video can now be deleted from content library
-        cy.contains('a', event).click()
+        cy.contains('a', event.name).click()
         authoring.vex.removeSession(session.name)
         authoring.contentLibrary.delete({url: videoContent.url})
 
         // Now delete the entire event, and make sure video and supplemental content used in the second session can be deleted
         authoring.vex.visit()
-        authoring.vex.deleteVirtualEvent(event)
+        authoring.vex.deleteVirtualEvent(event.name)
         authoring.contentLibrary.delete(videoContent2) 
         authoring.contentLibrary.delete(supplementalContent2)
     })

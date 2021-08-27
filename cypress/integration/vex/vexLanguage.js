@@ -34,7 +34,7 @@ const defaultVEXLanguage = {
     filterByBusinessUnitTitle: "Filter by Business Unit",
     filterByPersonaTitle: "Filter by Persona",
     filterByIndustryTitle: "Filter by Industry",
-    filterByTopicTitle: "Filter by topic",
+    filterByTopicTitle: "Filter by Topic",
 }
 
 const customVEXLanguage = {
@@ -272,7 +272,7 @@ describe("VEX - Language Settings", ()=>{
         cy.get('input:visible').should("have.attr", "placeholder", defaultVEXLanguage.searchInputFieldPlaceholder)
 
         //Validate no results message which is set at language configuration in consumption page
-        cy.get(consumption.vex.searchInputLocator).clear().type("Sample text");
+        cy.get(consumption.vex.searchInput).clear().type("Sample text");
         cy.get(consumption.vex.searchButton).click();
         cy.get('@text').then(text => {
             cy.contains('div', text, { timeout: 10000 }).should("exist");

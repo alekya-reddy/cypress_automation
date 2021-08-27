@@ -38,7 +38,7 @@ describe("Microsites - main setup", () => {
         authoring.microsites.removeMicrosite(microsite2.name)
         authoring.microsites.removeMicrosite(newName)
         authoring.microsites.addMicrosite(microsite1)
-        authoring.microsites.addMicrosite(microsite2.name)
+        authoring.microsites.addMicrosite(microsite2)
         authoring.microsites.setup(microsite2)
 
         // The preview button should point to the microsite url 

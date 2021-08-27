@@ -1,7 +1,10 @@
 import { createAuthoringInstance } from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
-const event = 'configureSessions';
+const event = {
+    name: 'configureSessions'
+}
+
 
 const videos = [
     // We don't own any of these video. If any of them get deleted, find a replacement 
@@ -55,11 +58,11 @@ describe('VEX - Virtual Event', function() {
     it('Verify that sessions can be configured', function() {
         // Clean up - delete previously added event
         authoring.common.login()
-        authoring.vex.deleteVirtualEvent(event)
+        authoring.vex.deleteVirtualEvent(event.name)
 
         // Set up: Add event, add session to it
         authoring.vex.addVirtualEvent(event)
-        authoring.vex.goToEventConfig(event)
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.addSession(session.name)
 
         // Verify that cannot set session to public without first setting an on demand video 
