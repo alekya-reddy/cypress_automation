@@ -493,6 +493,7 @@ export class Microsites extends Common {
                     cy.contains('button', 'Remove').click()
                 })
                 cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
+                cy.wait(3000)
             })
             if (verify !== false) {
                 cy.waitFor({ element: `${this.antTable.cell}:contains('${track}')`, to: "not.exist", wait: 20000 })
@@ -1195,7 +1196,7 @@ export class Microsites extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antDropSelect.selector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).click()
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click()
         if (source && type !== "Link") {
             cy.get(this.antDropSelect.selector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
@@ -1228,41 +1229,58 @@ export class Microsites extends Common {
         const source = config.source
         const newTab = config.newTab
         const verify = config.verify
+        const newTabChanged=false
 
         this.tabToNavigation()
-        //cy.get(this.navigation.addButton).click()
         cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
             cy.get(this.navigation.navEdit).should('exist').click()
         })
         cy.contains(this.antModal, "Update Navigation Item").should('exist')
-        cy.wait(1000)
-        cy.get(this.navigation.labelInputEdit).clear({force: true})
-        cy.wait(1000)
-        cy.pause()
-        cy.get(this.navigation.labelInputEdit).type(label)
-        cy.pause()
-        cy.get(this.antDropSelect.selector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).click({force: true})
+        cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
+            cy.get("input[name='title']").filter(':visible').first().clear().type(label)
+            cy.get(this.antDropSelect.selector).first().click()
+        })
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
         if (source && type !== "Link") {
             cy.get(this.antDropSelect.selector).eq(1).click()
-            cy.get(this.antDropSelect.options(source)).click()
-        } else if (source && type == "Link") {
-            cy.get(this.navigation.linkInput).clear().type(source)
+            cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
+            cy.wait(2000)
+        } 
+        else if (source && type == "Link") {
+            cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+                cy.wait(3000)
+            })
+            cy.log(cy.get("span[class='ant-checkbox ant-checkbox-checked']").find("input[class='ant-checkbox-input']").length)
+            cy.get("div[class='ant-modal-mask']").first().parent().within(() => {//adjustment for hidden modals
+                if (newTab)
+                    if(cy.get("input[class='ant-checkbox-input']")) {
+                     cy.pause()
+                        cy.get(this.navigation.newTabCheckBox).click()
+                        newTabChanged=true
+                }
+                else if (cy.get("span[class='ant-checkbox ant-checkbox-checked']").filter(':visible').first().find("input[class='ant-checkbox-input']").length>0){
+                    cy.pause()
+                    newTabChanged=true
+                }
+            })
         }
-        if (newTab) {
-            cy.get(this.navigation.newTabCheckBox).click()
-        }
-        cy.contains('button', "Submit").click()
-
+        cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
+            cy.contains("button", "Submit").filter(':visible').first().click()
+            cy.wait(5000)
+        })
+    
         if (verify !== false) {
             this.waitForAntModal({ title: "Update Navigation Item" })
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
-                if (type == "Link" && newTab) {
+                if (type == "Link" && newTabChanged) {
                     cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
-                } else if (type == "Text") {
+                }
+                else if (type == "Text") {
                     cy.containsExact(this.navigation.navSubtitle, `${type}`).should('exist')
-                } else {
-                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
+                } 
+                else {
+                    cy.contains(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
                 }
             })
         }
@@ -1381,20 +1399,17 @@ export class Microsites extends Common {
                     cy.get(this.searchAndFilter.listOption).invoke('attr','title').then(text => {
                         expect(text).to.not.equal(null)
                     })
-                }
-                
+                }    
             }
         })
     }
 
     editExistingCard(config) {
         const heading = config.heading
-
         cy.get(this.landingPages.trackRow).should('be.visible',{timeout:10000}).click({force:true})
         cy.get(this.landingPages.editorMenu).within(() => {
             cy.get(this.landingPages.menuBlock).eq(3).click()
         })
-
         if (heading) {
             let fontSize = heading.fontSize 
 
@@ -1403,7 +1418,6 @@ export class Microsites extends Common {
                 cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
             }
         }
-
         cy.contains("button", "Confirm").click()
     }
 

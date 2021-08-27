@@ -55,6 +55,8 @@ export class VexCX extends CommonCX {
         this.filterSearchBox ='.p-multiselect-filter-container'
         this.filterBoxheader='.p-multiselect-header'
         this.selectAllFilterCheckbox='.p-checkbox-box'
+        this.menuItem= ".rc-menu-item"
+        this.cxheader="div[class*='pf-event-header']"
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 

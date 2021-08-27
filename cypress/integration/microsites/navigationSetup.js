@@ -63,6 +63,8 @@ const link2 = recommend.url
 
 const link3 = target.url
 
+const link4 =landingPage1.url
+
 const navigation = {
     target: {
         label: "Target",
@@ -75,6 +77,10 @@ const navigation = {
         type: "Track",
         source: recommend.name,
         reference: recommend
+    },
+    text2: {
+        label: "Text2",
+        type: "Text",
     },
     link1: {
         label: "Link1",
@@ -111,55 +117,48 @@ const navigation = {
         source: link3,
         newTab: false
     },
-    text2: {
-        label: "Text2",
-        type: "Text",
-    },
     text3: {
         label: "Text3",
         type: "Text",
     } 
-
 }
 const navigation_edit = {
-    edit_target_to_recommend: {
-        to_edit: "Target", 
-        label: "Recommend",
-        type: "Track",
-        source: recommend.name,
-        reference: recommend
-    },
+     
     edit_recommend_to_target: {
         to_edit: "Recommend",
-        label: "Target", 
+        label: "Target2", 
         type: "Track",
         source: target.name,
         reference: target
     },
-    edit_link_to_landing_page: {
-        to_edit: "Link2",
-        label: "Home Landing Page",
-        type: "Landing Page",
-        source: landingPage1.name,
-        reference: landingPage1
-    },
-    edit_landing_page_to_link: {
-        to_edit: "Other Landing Page",
-        label: "Link3",
+     edit_link_to_link: {
+       to_edit: "Link1",
+        label: "Link1_edited",
         type: "Link",
-        source: link3,
+        source: "https://www.google.com",
+        newTab: false
+     },
+    edit_landing_page_to_link: {
+        to_edit: "Home Landing Page",
+        label: "Link4",
+        type: "Link",
+        source: link4,
         newTab: false
     },
     edit_text_to_other_text: {
         to_edit: "Text2",
-        label: "Text4",
+        label: "Text5",
         type: "Text",
-    }
-
+    },
+     edit_link_to_text: {
+       to_edit: "Link2",
+        label: "Link2_edited to Text",
+        type: "Text",
+     }
 }
 
 describe("Microsites - Navigation setup", () => {
-    it.only("Build a navigation header for microsites", () => {
+    it("Build a navigation header for microsites", () => {
         authoring.common.login()
 
         // Setup
@@ -177,33 +176,32 @@ describe("Microsites - Navigation setup", () => {
             authoring.microsites.addNavItem(navItem)
         })
 
-        // Rearrange the links, creating sublinks 
-        //authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
-       // authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
-       // authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
-        //authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text3.label})
-        //authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text2.label})
+        //Rearrange the links, creating sublinks 
+        authoring.microsites.attachSubNav({subject: navigation.link1.label, target: navigation.landingPage1.label})
+        authoring.microsites.attachSubNav({subject: navigation.link2.label, target: navigation.landingPage2.label})        
+        authoring.microsites.attachSubNav({subject: navigation.text2.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text3.label})
+        authoring.microsites.attachSubNav({subject: navigation.link3.label, target: navigation.text2.label})
         
 
         // Attempt to remove one of the tracks and verify that cannot do this while it's used in navigation 
-       // authoring.microsites.removeTracks(recommend.name, false)
-        //cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
-        //cy.contains(authoring.microsites.antModal, "Are you sure?").within(() => { cy.contains("button", "Cancel").click() }) 
-
+        authoring.microsites.removeTracks(recommend.name, false)
+        cy.contains("Before deleting a track(s) from microsite, delete it from landing page/Navigation config").should("exist")
+        cy.contains(authoring.microsites.antModal, "Are you sure?").within(() => { cy.contains("button", "Cancel").click() })
         // Delete one of the landing pages and verify its link and attached sublink are gone 
-        //authoring.microsites.removeLandingPages(landingPage2.name)
-        //authoring.microsites.tabToLandingPages()
-        //cy.containsExact(authoring.microsites.navigation.navTitle, landingPage2.name).should('not.exist') 
-        //cy.containsExact(authoring.microsites.navigation.navTitle, link2).should('not.exist')
+        authoring.microsites.removeLandingPages(landingPage2.name)
+        authoring.microsites.tabToNavigation()
+        cy.containsExact(authoring.microsites.navigation.navTitle, landingPage2.name).should('not.exist') 
 
         // Verify can delete nav items 
-        //authoring.microsites.removeNavItems(navigation.deleteLink.label)
+        authoring.microsites.removeNavItems(navigation.deleteLink.label)
+        authoring.microsites.addNavItem(navigation.recommend)
     })
 
 
     it("Go to consumption and verify that the navigation header is correct", () => {
         cy.visit(microsite.url)
-        cy.wait(2000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
+        cy.wait(5000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         })
@@ -225,8 +223,9 @@ describe("Microsites - Navigation setup", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).click()
         cy.url().should("eq", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label, {timeout: 20000}).click()
+        cy.wait(3000)
         cy.url().should("eq", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
-        
+        cy.wait(3000)
         // Mouseover Text navigation menu, Verify dropdowns, click on the link from dropdowns and verify that it goes tp correct url
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text3.label).should("be.visible").trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text2.label).should("be.visible").trigger("mouseover")
@@ -236,23 +235,33 @@ describe("Microsites - Navigation setup", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.link3.label,{timeout: 20000}).click()
         cy.url().should("eq", navigation.link3.source)
     })
-    it.only("Edit and Go to consumption and verify that the navigation header is correct", () => {
+    it("Edit and Go to consumption and verify that the navigation header is correct", () => {
         //go to authoring
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
         Object.values(navigation_edit).forEach((navItem) => {
             authoring.microsites.editNavItem(navItem)
-        })
-        Object.values(navigation).forEach((navItem) => {
-            authoring.microsites.removeNavItems(navItem.label)
-        })
-        //go to navigation tab
-        //for existing target/recommend, edit to link/text
-        // Edit navigation items of all types (Track, Landing Page, Link)
+         })
         
-        //verify on authoring
-        //verify on consumption
+        cy.visit(microsite.url)
+        cy.wait(5000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
+        //edit_recommend_to_target
+        cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_recommend_to_target.label).should("exist").within(() => {
+            cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation_edit.edit_recommend_to_target.reference.slug}/${navigation_edit.edit_recommend_to_target.reference.firtContentSlug}`)
+        })
 
+        //edit_landing_page_to_link
+        cy.contains(consumption.microsites.navHeaderLink, navigation_edit.edit_landing_page_to_link.label).should("exist")
+        cy.contains(consumption.microsites.navHeaderLink, navigation_edit.edit_landing_page_to_link.label).trigger("mouseover")
+        cy.contains("a", navigation_edit.edit_link_to_link.label)   
+    
+
+        //edit_text_to_other_text
+        cy.contains(consumption.microsites.navHeaderText, navigation.text3.label).trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_text_to_other_text.label).should("exist")
+
+        //edit_link_to_text
+        cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_link_to_text.label).should("exist")
     })
 })

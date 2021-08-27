@@ -179,7 +179,10 @@ export class Vex extends Common {
             navSubtitle: ".rst__rowSubtitle",
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
-            navRemoveBox: ".rst__rowToolbar"
+            navRemoveBox: ".rst__rowToolbar",
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
+            navModal: "div[class='ant-modal-mask']"
         };
         this.blacklist = {
             emailInput: "input[name='email']",
@@ -1407,6 +1410,44 @@ export class Vex extends Common {
             })
         }
     }
+    editNavItem(config) {
+        const to_edit=config.to_edit
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+        const newTabChanged=false
+
+        this.goToNavigation()
+        cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click()
+        })
+        cy.contains(this.antModal, "Update Navigation Item").should('exist')
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.get("input[name='title']").filter(':visible').first().clear().type(label)
+            cy.get(this.antDropSelect.selector).first().click()
+        })
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        if (source && type !== "Link") {
+            cy.get(this.antDropSelect.selector).eq(1).click()
+            cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
+            cy.wait(2000)
+        }    
+        else if (source && type == "Link") {
+            cy.get(this.navigation.linkInput).clear().type(source)
+        }
+        else if (source && type == "Link") {
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+                cy.wait(3000)
+            })
+        }
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.contains("button", "Submit").filter(':visible').first().click()
+            cy.wait(5000)
+        })
+    }
 
     deleteNavItems(list, verify) {
         const navItems = [list].flat()
@@ -1415,7 +1456,7 @@ export class Vex extends Common {
         navItems.forEach((navItem) => {
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
                 cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-                    cy.contains("button", "Remove").click()
+                    cy.get(this.navigation.navDelete).should('exist').click()
                 })
             })
             if (verify) {
@@ -1433,7 +1474,7 @@ export class Vex extends Common {
                     // Need to remove bottomost one first, and work your way up
                     // If start at top, could delete a node that takes out several at once, but for loop keeps going
                     cy.get(this.navigation.navRow).eq(i).within(() => {
-                        cy.contains('button', 'Remove').click()
+                        cy.get(this.navigation.navDelete).click()
                     })
                 }
             })

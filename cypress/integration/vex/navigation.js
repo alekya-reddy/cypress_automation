@@ -173,6 +173,37 @@ const nav2 = [
         label: "Private",
         type: "Session",
         source: privateSession.name
+    }  
+]
+
+const navigation_edit = [
+    {
+        to_edit:publicSession.name,
+        label: "Level 3",
+        type: "Text",
+        verify: true 
+    },
+    {
+        to_edit: publicLandingPage.name,
+        label: "Web Link",
+        type: "Link",
+        source: webLink,
+        newTab: false,
+        verify: true
+    },
+    {
+        to_edit:privateLandingPage.name,
+        label: "Landing To Text ",
+        type: "Text",
+        verify: true
+     },
+    {
+        to_edit:textLink,
+        label: publicSession.name,
+        type: "Session",
+        source: publicSession.name,
+        verify: true,
+        reference: publicSession
     }
 ]
 
@@ -200,7 +231,7 @@ describe("VEX - Navigation Builder", ()=>{
         })
     })
 
-    it("Add and remove navigation links", ()=>{
+    it("Add, edit and remove navigation links", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
@@ -282,6 +313,25 @@ describe("VEX - Navigation Builder", ()=>{
         })
         cy.go("back")
 
+        //Edit---------------------------------------------
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        Object.values(navigation_edit).forEach((navItem) => {
+            authoring.vex.editNavItem(navItem)
+        })
+
+        cy.visit(event.url)
+        cy.get(consumption.vex.cxheader).within(() => {
+            cy.contains("a", navigation_edit[3].label).should("exist")
+            cy.contains("a", navigation_edit[1].label).should("exist")
+            cy.contains("div", navigation_edit[0].label).should("exist")
+            cy.contains("div", navigation_edit[2].label).should("exist")
+        })
+
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
         // Remove all remaining nav items
         cy.waitFor({element: `${authoring.vex.navigation.navTitle}:contains('${nav1[0].label}')`, to: "exist", wait: 10000})
         authoring.vex.deleteNavItems(nav1[0].label, true) // Just want to do 1 nav item deletion that verifies it is deleted - the rest can be cleared en-masse without checking
