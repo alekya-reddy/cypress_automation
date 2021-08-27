@@ -31,17 +31,16 @@ const vex = {
 
 }
 const domainName = "pathfactory-qa-wp.com"
-const websitePath = "*"
+const websitePath = "test"
 
 describe("Add Language and Verify LastUpdated Date", () => {
     it("Add Language", () => {
         authoring.common.login()
         cy.visit(authoring.configurations.pageUrls.languages)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.languages).should("exist")
-        authoring.configurations.deleteLanguage("Cypress.js")
+        authoring.configurations.deleteLanguage(language.name)
         authoring.configurations.addNewLanguage(language)
-    
-
+        cy.wait(2000)
          cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
             cy.contains("Not added to any Recommend Tracks").should("exist")
             cy.contains("Not added to any Target Tracks").should("exist")
@@ -68,7 +67,7 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.recommend.visit()
                    authoring.recommend.deleteTrack(recommend.name)
                    authoring.recommend.addTrack(recommend)
-                   authoring.recommend.configure(recommend)
+                    authoring.recommend.configure(recommend)
 
                    authoring.target.visit()
                    authoring.target.deleteTrack(target.name)
@@ -86,7 +85,8 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.website.deleteWebsite(website.url)
                    authoring.website.addWebsite(website.url)
                    authoring.website.configureWebsite(website)
-                   authoring.website.setLanguage("Cypress.js")
+                   
+                   authoring.website.setLanguage(language.name)
 
                    authoring.vex.visit()
                    authoring.vex.deleteVirtualEvent(vex.name)

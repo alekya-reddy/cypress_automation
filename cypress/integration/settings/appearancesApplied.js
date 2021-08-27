@@ -75,11 +75,11 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
    })
 
    it("Add appearance to all tools", () => {
-      authoring.common.login()
+       authoring.common.login()
       authoring.recommend.visit()
       authoring.recommend.deleteTrack(recommend.name)
       authoring.recommend.addTrack(recommend)
-      authoring.recommend.setAppearance(appearance.name)
+       authoring.recommend.setAppearance(appearance.name)
 
       authoring.target.visit()
       authoring.target.deleteTrack(target.name)

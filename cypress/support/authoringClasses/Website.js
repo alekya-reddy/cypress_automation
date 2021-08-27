@@ -52,29 +52,33 @@ export class Website extends Common {
         if(enabled) {
             this.toggle(this.enabledToggle, enabled)
         }
+        cy.wait(2000)
         if(appearance){
             this.setAppearance(appearance)
         }
+        cy.wait(2000)
         if(language){
             this.setLanguage(language)
         }
     }
 
     setAppearance(appearance){
-        cy.get(this.pagePreview.appearanceLabel).siblings("span").click()
+        cy.get(this.pagePreview.appearanceLabel).siblings("span").click({force:true})
         cy.get(this.popover).within(()=>{
             cy.get(this.dropdown.box).click()
-            cy.get(this.dropdown.option(appearance)).click({force:true})
+            cy.get(this.dropdown.option(appearance)).click()
             cy.contains("button", "Update").click()
         })
     }
 
     setLanguage(language){
         cy.get(this.pagePreview.languageLabel).siblings("span").click({force:true})
+
         cy.get(this.popover).within(()=>{
-            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.input).click({force:true})
             cy.get(this.dropdown.option(language)).click()
             cy.contains("button", "Update").click()
         })
     }
+
 }
