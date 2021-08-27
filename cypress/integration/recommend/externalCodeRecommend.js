@@ -38,6 +38,11 @@ describe("Recommend - Language External Code and Forms", () => {
                 authoring.configurations.deleteExternalCode(testSpecificCodes.map(code => code.name))
                 testSpecificCodes.forEach(code => {
                     authoring.configurations.addExternalCode(code)
+                    cy.contains(authoring.common.table.cellName, exploreExternalCode.name, {timeout: 5000}).click()
+                    cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
+                        cy.contains("Not added to any Recommend Tracks").should("exist")
+                    })
+
                 })
                 authoring.configurations.addNewLanguage({name: recommend.language, code: "elg"})
                 authoring.recommend.deleteTrack(recommend.name)
@@ -55,6 +60,12 @@ describe("Recommend - Language External Code and Forms", () => {
         const recommendCodes = [recommendLanguageName.name, recommendLanguageCode.name]
         authoring.recommend.removeExternalCode(recommendCodes) // This is just a clean up step
         authoring.recommend.addExternalCode(recommendCodes) // Add to recommend external code field
+
+        cy.visit(authoring.configurations.pageUrls.externalCode)
+        cy.contains(authoring.common.table.cellName, recommendCodes[1], { timeout: 5000 }).click()
+        cy.containsExact("div", recommend.name).parent().click({force: true})  
+        cy.containsExact(authoring.common.pageTitleLocator, recommend.name, {timeout: 5000})
+        
         // check consumption
         cy.visit(recommend.url)
         cy.get(`div:contains("${recommend.language}")`).should("exist")

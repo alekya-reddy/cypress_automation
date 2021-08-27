@@ -222,7 +222,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
         cy.get('input:visible').should("have.attr", "placeholder", defaultMicrositeLanguage.searchInputFieldPlaceholder)
 
         //Validate no results message which is set at language configuration in consumption page
-        cy.get(consumption.microsites.searchInputLocator).clear().type("Sample text");
+        cy.get(consumption.microsites.searchInput).clear().type("Sample text");
         cy.get(consumption.microsites.searchButton).click();
         cy.get('@text').then(text => {
             cy.contains('div', text, { timeout: 10000 }).should("exist");

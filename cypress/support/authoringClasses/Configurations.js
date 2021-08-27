@@ -21,6 +21,8 @@ export class Configurations extends Common {
             routes: `${this.configRoute}/routes`,
             trackLabels: `${this.configRoute}/labels`
         };
+        this.clearSearch = ".Search__closeIcon_cTCFsfpKe88w2HW42fAu4";
+        this.updatedDate = "div[data-qa-hook='page-preview']>div>div>div:nth-child(3)>div";
         this.pageTitles = {
             webhooks: "Webhooks Configuration",
             widgets: "Widgets Configuration",
@@ -45,6 +47,7 @@ export class Configurations extends Common {
             appearances: () => { cy.visit(this.pageUrls.appearances) },
             languages: () => { cy.visit(this.pageUrls.languages) },
             forms: () => { cy.visit(this.pageUrls.forms) },
+            ctas: () => {cy.visit(this.pageUrls.ctas)}
         };
         this.addWebhookModal = {
             name: "#name",
@@ -640,6 +643,15 @@ export class Configurations extends Common {
             }
         })
     }
+   lastUpdatedDate(){
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    var today =  new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = months[today.getMonth()]
+    var yyyy = today.getFullYear();
+    today = mm + ' ' + dd + ', ' + yyyy;
+    return today;
+   }
 
     addNewAppearance(options){
         const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor, verify} = options
@@ -1756,6 +1768,13 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /******************************* LINKS&SHARING ***********************************/
     /*********************************************************************************/
+    
+
+    searchLinksAndSharing(name) {
+        cy.get(this.pageSidebar).within(() => {
+            cy.get("input[name='search-experiences']").should("exist").type(name)
+         })
+        }
 
     addLinksAndSharing(name) {
         cy.get(this.pageSidebar).within(() => {
@@ -1788,7 +1807,7 @@ export class Configurations extends Common {
         })
         cy.containsExact("div", name).should("not.exist")
     }
-
+     
     /*********************************************************************************/
     /****************************** VISITOR ACTIVITY *********************************/
     /*********************************************************************************/

@@ -19,6 +19,14 @@ const target = {
     }
 }
 
+const microsite2 = {
+    name: "searchAndFilters2.js",
+    slug: "searchandfilters2-js",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const contentPages = {
     contentWithTopicContentTypePersona: {
         name: "Canada",
@@ -130,6 +138,206 @@ const searchAndFilterOptions2 =
         }
     ]
 
+    const searchAndFilterOptions3 =
+    [
+        {
+            label: "Search",
+            toggle: true
+        },
+        {
+            label: "Topic",
+            toggle: true
+        },
+        {
+            label: "Persona",
+            toggle: true
+        },
+        {
+            label: "Industry",
+            toggle: true
+        },
+        {
+            label: "Content Type",
+            toggle: true
+        },
+        {
+            label: "Funnel Stage",
+            toggle: true
+        },
+        {
+            label: "Language",
+            toggle: true
+        },
+        {
+            label: "Business Unit",
+            toggle: true
+        }
+    ]
+
+    const landingPage = {
+        name: "Search and Filter",
+        slug: "search_and_filter",
+        get url() {
+            return `${microsite.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        setHome: true,
+        blocks: [
+            {
+                id: "Filters Block",
+                type: "track",
+                track: target.name
+            }
+        ]
+    }
+    const landingPage2 = {
+        name: "Search and Filter2",
+        slug: "search_and_filter2",
+        get url() {
+            return `${microsite.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        setHome: true,
+        blocks: [
+            {
+                id: "Filters Block",
+                type: "track",
+                track: target.name
+            }
+        ]
+    }
+
+    const landingPage3 = {
+        name: "Search and Filter3",
+        slug: "search_and_filter3",
+        get url() {
+            return `${microsite.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        setHome: true,
+        blocks: [
+            {
+                id: "Filters Block",
+                type: "track",
+                track: target.name
+            },
+            {
+                id: "Filters Block",
+                type: "track",
+                track: target.name
+            }
+        ]
+    }
+    
+    const filterOptions = [
+        {
+            filtername: "topics",
+            index: ["1","2"],
+            exist: true
+        },
+        {
+            filtername: "contentTypeName",
+            index: ["1"],
+            exist: true
+        },
+        {
+            filtername: "funnelStages",
+            index: ["1"],
+            exist: true
+        },
+        {
+            filtername: "industries",
+            index: ["1"],
+            exist: true
+        },
+        {
+            filtername: "personas",
+            index: ["1"],
+            exist: true
+        },
+        {
+            filtername: "businessUnits",
+            index: ["1"],
+            exist: true
+        },
+        {
+            filtername: "languages",
+            index: ["1"],
+            exist: true
+        }
+    ]
+
+    const filterOptions2 =
+    [
+        {
+            label: "Topic",
+            toggle: true
+        },
+        {
+            label: "Business Unit",
+            toggle: true
+        },
+        {
+            label: "Persona",
+            toggle: true
+        },
+        {
+            label: "Industry",
+            toggle: true
+        },
+        {
+            label: "Content Type",
+            toggle: true
+        },
+        {
+            label: "Funnel Stage",
+            toggle: true
+        },
+        {
+            label: "Language",
+            toggle: true
+        }
+
+    ]
+    
+    const filterOptionsWithMultipleBlocks = [
+        {
+            filtername: "topics",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "contentTypeName",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "funnelStages",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "industries",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "personas",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "businessUnits",
+            index: ["1"],
+            exist: false
+        },
+        {
+            filtername: "languages",
+            index: ["1"],
+            exist: false
+        }
+    ]
+
 describe("Microsites - Search & Filters configuration, verification on landing page and consumption", () => {
     it("Set up Microsites if doesn't exist", () => {
         cy.request({ url: microsite.url, failOnStatusCode: false }).then((response) => {
@@ -150,7 +358,11 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);
         authoring.microsites.saveSearchAndFiltersSettings();
         authoring.microsites.tabToLandingPages()
-        authoring.microsites.configureLandingPage(defaultLandingPage)
+        authoring.microsites.goToPageEditor(defaultLandingPage.name)
+        authoring.microsites.deleteAllBlocks()
+        authoring.microsites.addAdvancedBlock(targetBlock)
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
         authoring.microsites.verifySearchFilterToggles(searchAndFilterOptions)
         authoring.microsites.deleteBlock(target.name)
     })
@@ -163,7 +375,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.saveSearchAndFiltersSettings();
         authoring.microsites.tabToLandingPages()
         authoring.microsites.goToPageEditor(defaultLandingPage.name)
-
+        authoring.microsites.deleteAllBlocks()
         //Verify Search and Filters Consumption - MultiSelect, Search
         authoring.microsites.addAdvancedBlock(targetBlock)
         cy.contains("button", "Save").click()
@@ -217,7 +429,9 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.get(consumption.microsites.funnelStageFilter).click()
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).then(option => {
             // Confirm have correct option
-            cy.wrap(option).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).option[0].click()
+            cy.wait(2000)
+            cy.wrap(option).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage)
+            option[0].click()
             // After click, dropdown should hold the text of the selected option
             cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).should("exist")
         })
@@ -295,6 +509,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.get(consumption.microsites.removeFilters).eq(1).click()
         cy.get(consumption.microsites.removeFilters).click()
         cy.get(consumption.microsites.businessUnitFilter).click()
+        cy.wait(3000)
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).then(option => {
             // Confirm have correct option
             cy.wrap(option).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit)
@@ -327,7 +542,8 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         content_topics.forEach(topic => {
             cy.get(consumption.microsites.filterByValue).contains(topic).then(option => {
                 // Confirm have correct option
-                cy.wrap(option).contains(topic).option[0].click()
+                cy.wrap(option).contains(topic)
+                option[0].click()
                 // After click, dropdown should hold the text of the selected option
                 cy.contains(consumption.microsites.filterLabel, topic).should("exist")
             })
@@ -372,4 +588,89 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.goToPageEditor(defaultLandingPage.name)
         authoring.microsites.deleteBlock(target.name)
     })
+
+    it("Verify applied landing page block filters as query strings in URL", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        cy.visit(microsite.url)
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        cy.wait(3000)
+        authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions3);
+        authoring.microsites.saveSearchAndFiltersSettings();
+        authoring.microsites.tabToLandingPages()
+        cy.get(`td[title='${defaultLandingPage.name}']`).siblings("td").find("span").invoke('text').then(text=>{
+            if(text.includes("Set as Home Page")){
+                authoring.microsites.editLandingPage(defaultLandingPage)
+                authoring.microsites.setToHomePage(defaultLandingPage.name)
+            }
+        })
+        authoring.microsites.removeLandingPages(landingPage2.name)
+        authoring.microsites.removeLandingPages(landingPage3.name)
+        authoring.microsites.addLandingPages(landingPage2.name)
+        authoring.microsites.editLandingPage(landingPage2)
+        authoring.microsites.configureLandingPage(landingPage2)
+
+        cy.visit(microsite.url)
+        //Select Filter options and verify applied filters showing as query strings in URL when one block present
+        filterOptions.forEach((filters) => {
+            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters)
+        })
+        
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.addLandingPages(landingPage3.name)
+        authoring.microsites.configureLandingPage(landingPage3)
+
+        cy.visit(microsite.url)
+
+        //If multiple blocks are availble in a page applied filters shpould not show as querystring in url
+        cy.wait(3000)
+        cy.get('h4').parent('div').should('have.length', 2)
+
+        filterOptionsWithMultipleBlocks.forEach((filters) => {
+            consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters);
+        })
+
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        cy.get(`td[title='${defaultLandingPage.name}']`).siblings("td").find("span").invoke('text').then(text=>{
+            if(text.includes("Set as Home Page")){
+                authoring.microsites.editLandingPage(defaultLandingPage)
+                authoring.microsites.setToHomePage(defaultLandingPage.name)
+            }
+        })
+        authoring.microsites.removeLandingPages(landingPage2.name)
+        authoring.microsites.removeLandingPages(landingPage3.name)
+    })
+
+    it("Verify content tags filter values are arranged in alphabetical order for Microsites", () =>{
+         authoring.common.login()
+         authoring.microsites.removeMicrosite(microsite2.name)
+         authoring.microsites.addMicrosite(microsite2)
+ 
+         authoring.microsites.goToMicrositeConfig(microsite2.name)
+         authoring.microsites.tabToSearchAndFilter()
+ 
+         cy.wait(3000)
+         //validating the values of each filter are arranged in alphabetical order inside Microsite Setup->Search & Filter tab
+         authoring.microsites.verifyFilterOptionsAlphabeticalOrder(filterOptions2)
+         authoring.microsites.saveSearchAndFiltersSettings()
+ 
+         authoring.microsites.tabToSetup()
+         authoring.microsites.setup(microsite2)
+         cy.wait(5000)
+         authoring.microsites.addTracks({target: target.name})
+         authoring.microsites.addLandingPages(landingPage.name)
+         authoring.microsites.configureLandingPage(landingPage)
+ 
+         cy.visit(microsite2.url)
+        //validating the values of each filter are arranged in alphabetical order in the consumption page
+         filterOptions.forEach((filters) => {
+            consumption.microsites.SelectFiltersAndVerifyAlphabeticalOrder(filters)
+        })
+     })
 })
