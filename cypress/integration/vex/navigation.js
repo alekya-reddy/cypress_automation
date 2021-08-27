@@ -260,6 +260,7 @@ describe("VEX - Navigation Builder", ()=>{
         // Verify on consumption 
         cy.viewport(1500, 1000)
         cy.visit(event.url)
+        cy.wait(5000)
         cy.get(consumption.vex.vexHeader).should("exist").within(()=>{
             nav1.forEach((navItem)=>{
                 if(navItem.type == "Session" || navItem.type == "Landing Page"){
@@ -322,6 +323,7 @@ describe("VEX - Navigation Builder", ()=>{
         })
 
         cy.visit(event.url)
+        cy.wait(5000)
         cy.get(consumption.vex.cxheader).within(() => {
             cy.contains("a", navigation_edit[3].label).should("exist")
             cy.contains("a", navigation_edit[1].label).should("exist")
@@ -342,7 +344,7 @@ describe("VEX - Navigation Builder", ()=>{
             authoring.vex.addNavItem(navItem)
         })
 
-        // Reorder the text links to have menu structure (sublinks)
+        //Reorder the text links to have menu structure (sublinks)
         authoring.vex.attachSubNav({subject: nav2[2].label, target: nav2[3].label}) // makes level 2 a sublink of level 1
         authoring.vex.attachSubNav({subject: nav2[1].label, target: nav2[2].label}) // makes level 3 a sublink of level 1, below 2 
         authoring.vex.attachSubNav({subject: nav2[1].label, target: nav2[1].label}) // makes level 3 a sublink of level 2 
@@ -351,6 +353,7 @@ describe("VEX - Navigation Builder", ()=>{
 
         // Verify on consumption that all removed items are gone, and text links have proper menu structure
         cy.visit(event.url)
+        cy.wait(5000)
         cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[3].label).should('exist').trigger("mouseover")
         cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[2].label).should('exist').trigger("mouseover")
         cy.contains(consumption.vex.vexHeaderMenuNoPopup, nav2[1].label).should('exist')

@@ -1389,7 +1389,7 @@ export class Vex extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antSelector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).click()
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
         if (source && type !== "Link") {
             cy.get(this.antSelector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
