@@ -10,7 +10,7 @@ const content = {
 
 const target = {
     name: 'formAsset.js',
-    slug: 'formAsset.js',
+    slug: 'formAsset',
     contentslug: 'website-shared-resource',
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}/${this.contentslug}`
@@ -21,21 +21,22 @@ const email = 'cypress@automation.com'
 
 describe("Add Form To Target Track and Verify Analytics", function() {
 
-         it("Setup Target track if not already done", () => { 
-           cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+    it("Setup Target track if not already done", () => { 
+        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
              if(response.status == 404){ 
                 authoring.common.login()
                 authoring.target.addTrack(target)
                 authoring.target.configure(target)
+                authoring.target.addContentTarget(content.internalTitle)
+
              }
         })
         authoring.common.login()
         authoring.target.visit()
         authoring.target.goToTrack(target.name)
-         authoring.target.addContentTarget(content.internalTitle)
-         cy.get(authoring.target.contentClick).click()
-         cy.get(authoring.target.previewClick).invoke('removeAttr', 'target')
-         cy.get(authoring.target.previewClick).click({force: true})
+          cy.get(authoring.target.contentClick).click()
+          cy.get(authoring.target.previewClick).invoke('removeAttr', 'target')
+          cy.get(authoring.target.previewClick).click({force: true})
         //fill form
         cy.waitForIframeToLoad(consumption.target.iframeForEmbeddedForm.iframe ,20000)
         cy.getIframeBody(consumption.target.iframeForEmbeddedForm.iframe).within(()=>{
