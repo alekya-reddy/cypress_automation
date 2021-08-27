@@ -6,6 +6,7 @@ export class Target extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/target`;
         this.pageTitle = "Target Tracks";
         this.targetAnalyticsTitle = "Target Analytics Overview";
+        this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
@@ -15,9 +16,15 @@ export class Target extends Common {
         this.removeModal = 'div[data-qa-hook="modal"]',
         this.removeButton = 'button[type="button"]',
 
+        this.visitorButton = "li:nth-of-type(8) > div[role='button']",
+        this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",
+        this.session = "div[data-qa-hook='select-tags select-tags-undefined']>span",
+        this.analyticsRows = "div[class*='SimpleTable__body']",
+        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
+        this.pageControl = "div[data-qa-hook='title-bar']>h1",
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('Custom URL')",
@@ -37,16 +44,15 @@ export class Target extends Common {
             cookieMessageToggle: '[data-qa-hook="cookieConsent"]',
             headerToggle: '[data-qa-hook="header"]',
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
-            exitOverride: "[data-qa-hook='Exit overrides']"
+            exitOverride: "[data-qa-hook='Exit overrides']",
+            linksAndshareLabel: "label:contains('Links & Sharing')"
         };
         this.pagePreview = {
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
             itemDescription: "div[data-qa-hook='item-description']",
-            videoStartTime: "label:contains('Video Start Time')",
-            autoPlayLabel: "div:contains('AutoPlay')"
-
         };
+        
         this.popoverElements = {
             customUrlInput: "#customUrl",
             endPromoterLinkInput: "#link"
@@ -109,6 +115,15 @@ export class Target extends Common {
             cy.get(this.clearSearchIcon).click()
         }
     }
+
+    addLinksAndShare(link){
+        cy.get(this.pageSidebar.linksAndshareLabel).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+               cy.get(this.dropdown.box).click()
+               cy.get(".Select-multi-value-wrapper > .Select-value").type(link + "\n")
+           cy.contains("button", "Update").click()
+       })
+   }
 
     configure(options){
         const name = options.name
@@ -485,20 +500,11 @@ export class Target extends Common {
         }
     }
 
+
     removeContentTitleOverride(){
         cy.get(this.pagePreview.contentTitleOverrideLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
             cy.get("#titleOverride").clear()
-            cy.contains("button", "Update").click()
-        })
-    }
-
-    videoStartTime(time){
-  
-        cy.get(this.pagePreview.videoStartTime).siblings("span").click() 
-        cy.get(this.popover).within(()=>{
-            
-            cy.get("div>input[name='videoStartTime']").clear().type(time)
             cy.contains("button", "Update").click()
         })
     }

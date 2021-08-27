@@ -29,19 +29,17 @@ export class Vex extends Common {
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
         this.pageControl = "div[data-qa-hook='title-bar']>h1",
-        this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
+            this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-        this.clearSearch = 'i[title="Clear search"]',
-        this.searchButton = 'input[name="page-search"]',
-        this.noEventFoundmsg = 'No virtual events found',
-        this.folderbreadcrum  = "h5#folder-breadcrumb-automationfolderchild";
+            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+            this.clearSearch = 'i[title="Clear search"]',
+            this.searchButton = 'input[name="page-search"]',
+            this.noEventFoundmsg = 'No virtual events found',
+            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
-        this.eventClick= 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.clickEvent = "td[class*='ant-table-cell']>a";
+        this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = 'i[title="Delete Virtual Event"]';
-        this.previewClick = "div[data-qa-hook='title-bar']>div:nth-child(3)>a";
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -68,12 +66,11 @@ export class Vex extends Common {
             nameInput: "input[name='name']",
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input',
-            dropdownfolder:"form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
+            dropdownfolder: "form[class*='ant-form-vertical']>div:nth-child(3)>div>div"
         };
 
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
-        this.visibilityPublic = "span[class='ant-radio']>input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
@@ -99,7 +96,6 @@ export class Vex extends Common {
         this.removeButton = "button:contains('Remove')";
         this.removeonDemandVideo = '#remove-on-demand-video';
         this.isSimulive = 'input[name="videoSimulive"]';
-        
         this.appearance = {
             headerTitle: "div[data-qa-hook^='header-title']",
             headerTitleInput: "input[name='headerTitle']",
@@ -214,7 +210,9 @@ export class Vex extends Common {
             allOptionsCheckBox: "div[aria-hidden='false'] div.ant-transfer-list-header label.ant-checkbox-wrapper",
             rightIcon: "div[aria-hidden='false'] span.anticon.anticon-right",
             leftIcon: "div[aria-hidden='false'] span.anticon.anticon-left",
-            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected"
+            rightItemsHeaderLabel: "div[aria-hidden='false'] span.ant-transfer-list-header-selected",
+            listOption: "div[class*='ant-tabs-tabpane-active']",
+            itemsList: "span[class*='ant-transfer-list-content-item']"
         };
         this.protectionTypeLabel = 'label[title="Protection Type"]';
         this.allowGroups = 'div[id="vex-allow-visitor-groups_list"]';
@@ -223,25 +221,26 @@ export class Vex extends Common {
         this.blocks = "div[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']";
         this.icnPencil = "div[class*='BlockMenu-sc'] div[class*=BlockAction-sc]:nth-child(4) svg"
-        this.topicFilterLocator = "#vex_topics"
-        this.availabilityFilterLocator = '#vex_sessionTypes'
-        this.funnelStageFilterLocator = '#vex_funnelStages'
-        this.industryFilterLocator = '#vex_industries'
-        this.personaFilterLocator = '#vex_personas'
-        this.businessUnitFilterLocator = '#vex_businessUnits'
-        this.languageFilter='#vex_languages'
+        this.topicFilter = "#vex_topics"
+        this.availabilityFilter = '#vex_sessionTypes'
+        this.funnelStageFilter = '#vex_funnelStages'
+        this.industryFilter = '#vex_industries'
+        this.personaFilter = '#vex_personas'
+        this.businessUnitFilter = '#vex_businessUnits'
+        this.languageFilter = '#vex_languages'
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
+        this.eventSessions = 'div.pf-event-sessions'
     }
 
     visit() {
         cy.visit(this.vexUrl);
     }
 
-    addVirtualEvent(options,verify){
+    addVirtualEvent(options, verify) {
         const name = options.name
         const parentFolder = options.parentFolder
-        const childFolder  = options.childFolder
+        const childFolder = options.childFolder
 
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(() => {
@@ -251,10 +250,10 @@ export class Vex extends Common {
             cy.get(this.eventNameInput).clear().type(name)
 
             if (parentFolder) {
-                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(parentFolder+ "\n")
+                cy.get(this.createVEXModal.dropdownfolder).click({ force: true }).type(parentFolder + "\n")
             }
             if (childFolder) {
-                cy.get(this.createVEXModal.dropdownfolder).click({force: true}).type(childFolder + "\n")
+                cy.get(this.createVEXModal.dropdownfolder).click({ force: true }).type(childFolder + "\n")
             }
 
             cy.contains('button', 'Add Virtual Event').click()
@@ -262,7 +261,7 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, {timeout: 10000}).should('exist')
+            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
     }
 
@@ -279,35 +278,35 @@ export class Vex extends Common {
 
     }
 
-    deleteVirtualEventfromfolders(name){  
-        this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
-          cy.get(this.pageSearch).clear().type(name)
+    deleteVirtualEventfromfolders(name) {
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
+        cy.get(this.pageSearch).clear().type(name)
         cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
-             cy.contains(this.eventCardTitle, name,{ timeout: 20000 }).should('exist')
-             cy.get(`button[id='delete-${name}']`).should('exist').click()
-             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
+            cy.contains(this.eventCardTitle, name, { timeout: 20000 }).should('exist')
+            cy.get(`button[id='delete-${name}']`).should('exist').click()
+            cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
-               })
-        cy.get(this.pageSearch).clear()
             })
-            
+            cy.get(this.pageSearch).clear()
+        })
+
         cy.containsExact(this.eventCardTitle, name).should('not.exist')
-    
+
     }
 
-    deleteVirtualEventWithTrashIcon(eventName){  
-        this.goToPage(this.virtualEventHomeTitle, this.vexUrl) 
+    deleteVirtualEventWithTrashIcon(eventName) {
+        this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
-             cy.contains(this.eventCardTitle, eventName,{ timeout: 20000 }).should('exist')
-             cy.get(this.eventClick).eq(0).click()
-             cy.get(this.trashIcon).should('exist').click()
-             cy.contains(this.modal, "Do you want to delete this Virtual Event?").within(() => {
-                 cy.wait(2000)
+            cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
+            cy.get(this.eventClick).eq(0).click()
+            cy.get(this.trashIcon).should('exist').click()
+            cy.contains(this.modal, "Do you want to delete this Virtual Event?").within(() => {
+                cy.wait(2000)
                 cy.contains('Yes').click()
-               })
             })
+        })
         cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
-    
+
     }
 
     goToEventConfig(event) {
@@ -336,7 +335,7 @@ export class Vex extends Common {
             cy.contains(this.antRow, "Topics").within(() => {
                 cy.get(this.antSelector).invoke('text').as('inputText')
                 cy.get('@inputText').then(inputText => {
-                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                    if (inputText == null || inputText == '' || inputText.includes('Select...')) {
                         topics.forEach((topic) => {
                             cy.get(this.antDropSelect.selector).type(topic + "\n")
                             cy.get(this.antDropSelect.selector).click() // Close dropdown menu
@@ -364,15 +363,15 @@ export class Vex extends Common {
             cy.contains(this.antRow, "Personas").within(() => {
                 cy.get(this.antSelector).invoke('text').as('inputText')
                 cy.get('@inputText').then(inputText => {
-                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                    if (inputText == null || inputText == '' || inputText.includes('Select...')) {
                         personas.forEach((persona) => {
                             cy.get(this.antDropSelect.selector).type(persona + "\n")
                             cy.get(this.antDropSelect.selector).click() // Close dropdown menu
                         })
                     }
                     else {
-                     cy.get(this.antSelector).trigger('mouseover')
-                     cy.get(this.clearSessionFilter).click()
+                        cy.get(this.antSelector).trigger('mouseover')
+                        cy.get(this.clearSessionFilter).click()
                         personas.forEach((persona) => {
                             cy.get(this.antDropSelect.selector).type(persona + "\n")
                             cy.get(this.antDropSelect.selector).click() // Close dropdown menu
@@ -382,7 +381,7 @@ export class Vex extends Common {
             })
         })
 
-    
+
 
     }
 
@@ -392,8 +391,8 @@ export class Vex extends Common {
             cy.contains(this.antRow, "Industries").within(() => {
                 cy.get(this.antSelector).invoke('text').as('inputText')
                 cy.get('@inputText').then(inputText => {
-                    if (inputText==null || inputText=='' || inputText.includes('Select...')) {
-                          industries.forEach((industry) => {
+                    if (inputText == null || inputText == '' || inputText.includes('Select...')) {
+                        industries.forEach((industry) => {
                             cy.get(this.antDropSelect.selector).type(industry + "\n")
                             cy.get(this.antDropSelect.selector).click() // Close dropdown menu
                         })
@@ -409,7 +408,7 @@ export class Vex extends Common {
                 })
             })
         })
-          
+
     }
     addSessionBusinessUnits(list) {
         let businessunits = [list].flat()
@@ -417,22 +416,22 @@ export class Vex extends Common {
             cy.contains(this.antRow, "Business Units").within(() => {
                 cy.get(this.antSelector).invoke('text').as('inputText')
                 cy.get('@inputText').then(inputText => {
-                if (inputText==null || inputText=='' || inputText.includes('Select...')) {
-                    businessunits.forEach((businessunit) => {
-                        cy.get(this.antDropSelect.selector).type(businessunit + "\n")
-                        cy.get(this.antDropSelect.selector).click() // Close dropdown menu
-                    })
-                }
-                else {
-                    cy.get(this.antSelector).trigger('mouseover')
-                    cy.get(this.clearSessionFilter).click()
-                    businessunits.forEach((businessunit) => {
-                        cy.get(this.antDropSelect.selector).type(businessunit + "\n")
-                        cy.get(this.antDropSelect.selector).click() // Close dropdown menu
-                    })
-                }
+                    if (inputText == null || inputText == '' || inputText.includes('Select...')) {
+                        businessunits.forEach((businessunit) => {
+                            cy.get(this.antDropSelect.selector).type(businessunit + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                    else {
+                        cy.get(this.antSelector).trigger('mouseover')
+                        cy.get(this.clearSessionFilter).click()
+                        businessunits.forEach((businessunit) => {
+                            cy.get(this.antDropSelect.selector).type(businessunit + "\n")
+                            cy.get(this.antDropSelect.selector).click() // Close dropdown menu
+                        })
+                    }
+                })
             })
-        })
 
         })
 
@@ -443,7 +442,7 @@ export class Vex extends Common {
             cy.contains(this.antRow, "Funnel Stages").within(() => {
                 cy.get(this.antSelector).invoke('text').as('inputText')
                 cy.get('@inputText').then(inputText => {
-                 if (inputText==null || inputText=='' || inputText.includes('Select...')) {
+                    if (inputText == null || inputText == '' || inputText.includes('Select...')) {
                         funnelstages.forEach((funnelstage) => {
                             cy.get(this.antDropSelect.selector).type(funnelstage + "\n")
                             cy.get(this.antDropSelect.selector).click() // Close dropdown menu
@@ -1673,9 +1672,9 @@ export class Vex extends Common {
         const { enableToggle, overrideLabel, textColor, backgroundColor } = filterSettings
         cy.containsExact("div", "Filters Configuration").click()
         cy.containsExact("span", filterName).click()
-        if(enableToggle == true || enableToggle == false){
+        if (enableToggle == true || enableToggle == false) {
             cy.get(this.pages.filterToggle).parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
-                if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                if (enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")) {
                     cy.get(this.pages.filterToggle).click()
 
                 }
@@ -1701,7 +1700,8 @@ export class Vex extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                cy.containsExact("option", filterName).should("exist")
+                // cy.containsExact("option", filterName).should("exist")
+                cy.get(`vex_${filterName}`).should("exist")
             }
         }
     }
@@ -1868,9 +1868,9 @@ export class Vex extends Common {
             const { enableToggle, searchButtonTitle, buttonTextColor, inputTextColor, buttonBackgroundAndBorderColor } = searchConfiguration
             cy.containsExact("div", "Search Configuration").click()
 
-            if(enableToggle == true || enableToggle == false){
+            if (enableToggle == true || enableToggle == false) {
                 cy.get("input[name*='searchConfiguration.enable']").parent("div[class*='ToggleElement']").find("div[class*='ToggleSwitch']").invoke("attr", "class").then(toggleClass => {
-                    if(enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")){
+                    if (enableToggle && !toggleClass.includes("lxjoI") || !enableToggle && toggleClass.includes("lxjoI")) {
                         cy.get("input[name*='searchConfiguration.enable']").click()
                     }
                 })
@@ -2049,6 +2049,7 @@ export class Vex extends Common {
                     }
                 }
             })
+
         }
     }
 
@@ -2130,7 +2131,7 @@ export class Vex extends Common {
 
         if (appearance) {
             cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
-            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
             cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
             cy.contains('button:visible', "Save").click()
@@ -2399,17 +2400,17 @@ export class Vex extends Common {
             }
         })
     }
-   
+
     editExistingCard(config) {
         const heading = config.heading
 
-        cy.get(this.pages.sessionGroupRow).should('be.visible',{timeout:10000}).click({force:true})
+        cy.get(this.pages.sessionGroupRow).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.get(this.pages.editorMenu).within(() => {
             cy.get(this.pages.menuBlock).eq(3).click()
         })
 
         if (heading) {
-            let fontSize = heading.fontSize 
+            let fontSize = heading.fontSize
 
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
@@ -2419,5 +2420,64 @@ export class Vex extends Common {
 
         cy.contains("button", "Confirm").click()
     }
-    
+
+    verifySessions(config) {
+        const sessions = config
+        const index = config.index
+        cy.get(".pf-event-session-card-title").eq(index).find("div").eq(0).invoke('text').then(text => {
+            expect(text).to.include(sessions.name)
+        })
+    }
+
+    verifyFilterOptionsAlphabeticalOrder(options) {
+        let beforeSort = [];
+        let afterSort = [];
+        options.forEach(option => {
+            cy.contains(this.antTabs, option.label).should("be.visible").click()
+            cy.get(this.searchAndFilter.switchToggle).should("be.visible").click()
+            cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
+            if (option.label != "Search") {
+                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
+                    const listingCount = Cypress.$(listing).length;
+                    if (listingCount > 0) {
+                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
+                            beforeSort.length = 0
+                            afterSort.length = 0
+                            cy.get(listing).invoke('text').then(listValues => {
+                                beforeSort[index] = listValues;
+                            }).then(() => {
+                                if (listingCount === index + 1) {
+                                    afterSort = beforeSort.sort()
+                                    expect(beforeSort).to.equal(afterSort);
+                                }
+                            })
+                        })
+                    }
+                })
+
+                cy.get(this.searchAndFilter.allOptionsCheckBox).first().should("be.visible").click();
+                cy.get(this.searchAndFilter.rightIcon).should("be.visible").click();
+
+                cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).then(listing => {
+                    const listingCount = Cypress.$(listing).length;
+                    if (listingCount > 0) {
+                        cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).each((listing, index) => {
+                            beforeSort.length = 0
+                            afterSort.length = 0
+                            cy.get(listing).invoke('text').then(listValues => {
+                                beforeSort[index] = listValues;
+                            }).then(() => {
+                                if (listingCount === index + 1) {
+                                    afterSort = beforeSort.sort()
+                                    expect(beforeSort).to.equal(afterSort);
+                                }
+                            })
+                        })
+                    }
+                })
+            }
+        })
+
+    }
+
 }
