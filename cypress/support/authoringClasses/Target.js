@@ -6,9 +6,17 @@ export class Target extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/target`;
         this.pageTitle = "Target Tracks";
         this.targetAnalyticsTitle = "Target Analytics Overview";
+        this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
+        this.contentClick = "div[draggable='true']:nth-child(2)",
+        this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)", 
+        this.visitorButton = "li:nth-of-type(8) > div[role='button']",
+        this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",
+        this.session = "div[data-qa-hook='select-tags select-tags-undefined']>span",
+        this.analyticsRows = "div[class*='SimpleTable__body']",
+        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -333,6 +341,12 @@ export class Target extends Common {
             cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
         }
     }
+    addContentTarget(content){
+        cy.contains("button", "Add Content").click()
+        cy.get(this.contentPickerSearchBar).clear().type(content)
+        cy.contains(this.contentPickerItem, content).click()
+        cy.get(this.modal).contains("button", "Add Content").click()
+    }
 
     addContent(contents, verify,position="Bottom"){
         cy.contains("button", "Add Content").click()
@@ -359,6 +373,8 @@ export class Target extends Common {
             })
         }
     }
+
+    
 
     configureFlowCTA(flowCTA, verify){
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
