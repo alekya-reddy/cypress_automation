@@ -32,7 +32,7 @@ const microsites = {
 }
 
 const website = {
-    url: "http://pathfactory-qa-wp.com/wordpress/pathfactory-parent-qa/gdpr/",
+    url: "http://google.com/languages",
     enabled: "on"
 }
 
@@ -99,7 +99,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
 
     authoring.website.visit()
     cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
-    authoring.website.deleteWebsite1(website.url)
+    authoring.website.deleteWebsite(website.url)
     authoring.website.addWebsite(website.url)
     authoring.website.configureWebsite(website)
     authoring.website.setAppearance(appearance.name)
@@ -157,7 +157,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
     cy.go('back')
 
     cy.containsExact("div", website.url).parent().click({force: true})
-   cy.containsExact(authoring.common.pageTitleLocator, 'Website Campaigns', {timeout: 5000})
+    cy.containsExact(authoring.common.pageTitleLocator, 'Website Campaigns', {timeout: 5000})
     cy.go('back')
 
     cy.containsExact("div", vex.name).parent().click({force: true})

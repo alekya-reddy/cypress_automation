@@ -21,7 +21,7 @@ const microsites = {
 }
 
 const website = {
-    url: "http://scrumecommerce.com/test-page/automation/qa-automation.html",
+    url: "http://google.com/languages",
     enabled: "on"
 }
 
@@ -63,8 +63,8 @@ describe("Add Language and Verify LastUpdated Date", () => {
                         })
                   })
 
-                  it.only("Add language to all tools", () => {
-                    authoring.common.login()
+                  it("Add language to all tools", () => {
+                   authoring.common.login()
                    authoring.recommend.visit()
                    authoring.recommend.deleteTrack(recommend.name)
                    authoring.recommend.addTrack(recommend)
@@ -86,7 +86,7 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.website.deleteWebsite(website.url)
                    authoring.website.addWebsite(website.url)
                    authoring.website.configureWebsite(website)
-                   authoring.website.setLanguage(language.name)
+                   authoring.website.setLanguage("Cypress.js")
 
                    authoring.vex.visit()
                    authoring.vex.deleteVirtualEvent(vex.name)

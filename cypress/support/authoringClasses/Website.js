@@ -47,10 +47,16 @@ export class Website extends Common {
     }
 
     configureWebsite(options) {
-        const {url, enabled} = options
+        const {url, enabled,appearance,language} = options
         cy.containsExact(this.websiteURLName, url).click({force: true})
         if(enabled) {
             this.toggle(this.enabledToggle, enabled)
+        }
+        if(appearance){
+            this.setAppearance(appearance)
+        }
+        if(language){
+            this.setLanguage(language)
         }
     }
 
