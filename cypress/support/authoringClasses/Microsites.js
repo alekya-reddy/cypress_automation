@@ -52,6 +52,7 @@ export class Microsites extends Common {
         this.landingPages = {
             nameInput: "input[name='name']",
             slugInput: "input[name='slug']",
+            description: "textarea[name='pageDescription']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addTracksButton: "button:contains('Tracks')",
@@ -604,6 +605,7 @@ export class Microsites extends Common {
         const name = config.name
         const newName = config.newName
         const slug = config.slug
+        const description = config.description
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const verify = config.verify
 
@@ -622,6 +624,9 @@ export class Microsites extends Common {
             }
             if (slug) {
                 cy.get(this.landingPages.slugInput).clear().type(slug)
+            }
+            if (description) {
+                cy.get(this.landingPages.description).clear().type(description)
             }
             cy.contains("button", "Submit").click()
         })
