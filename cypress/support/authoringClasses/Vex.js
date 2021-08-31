@@ -38,7 +38,9 @@ export class Vex extends Common {
         };
         this.sessionEditTags = "#edit-session-tags-configuration"
         this.clearSessionFilter = 'span[aria-label="close-circle"]'
-        this.antselect = ".ant-select-selection-item"
+        this.antselect = ".ant-select-selection-item";
+        this.clickEvent = "td[class*='ant-table-cell']>a";
+        this.previewClick = "div[data-qa-hook='title-bar']>div:nth-child(3)>a";
         this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
@@ -63,6 +65,7 @@ export class Vex extends Common {
 
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
+        this.visibilityPublic = "span[class='ant-radio']>input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
