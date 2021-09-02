@@ -17,13 +17,26 @@ const sessions = [
         slug: '1',
         get url(){
             return `${event.url}/${this.slug}`
-        }
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+    
     },
     {
         name: 'live upcoming',
         slug: '2',
         get url(){
             return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2020 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing'
         }
     },
     {
@@ -31,14 +44,32 @@ const sessions = [
         slug: '3',
         get url(){
             return `${event.url}/${this.slug}`
-        }
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2020 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing'
+        },
     },
     {
         name: 'live ended with on demand fallback',
         slug: '5',
         get url(){
             return `${event.url}/${this.slug}`
-        }
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2020 8:00pm',
+            end: 'Jun 24, 2021 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing'
+        },
     }
 ]
 
@@ -73,15 +104,33 @@ If you visit the event/session again in a fresh browser using same email, you wi
 
 describe('VEX - Virtual Event Registration', function() {
 
+    it("Setup if not already done", ()=>{
+        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.deleteVirtualEvent(event.name)
+                authoring.vex.addVirtualEvent(event)
+                //authoring.vex.goToEventConfig(event.name)
+                authoring.vex.configureEvent(event)
+                sessions.forEach((session)=>{
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    authoring.vex.backToEvent(event.name)
+                })
+            }
+        })
+    })
+
     beforeEach(()=>{
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
     })
 
     it("Event with no form configured", ()=>{
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureForm(noForm)
-
+        cy.reload()
         cy.visit(event.url)
         cy.get('form').should('not.exist')
 
@@ -103,6 +152,7 @@ describe('VEX - Virtual Event Registration', function() {
     })
 
     it("Event with form - form lacks the required email field. The email field should still show up. Only the email field needs to be filled in", ()=>{
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureForm(form1)
 
         // The form should show up on event page 
@@ -138,6 +188,7 @@ describe('VEX - Virtual Event Registration', function() {
     })
 
     it("Event with form - form has the mandatory email field and more", ()=>{
+        authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureForm(form2)
 
         // The form should show up on event page 
