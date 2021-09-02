@@ -1,14 +1,22 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 
-const authoring = createAuthoringInstance({org: "automation-vex", tld: "lookbookhq"})
-const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: "automation-vex", tld: "lookbookhq" })
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' })
 
 const event = {
     name: 'dynamicFieldMerge.js',
     slug: 'dynamicfieldMergeVex',
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
+}
+
+const event2 = {
+    name: 'dynamicFieldMergeStatus.js',
+    slug: 'dynamicfieldMergeVexStatus',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
 }
 
 const appearance = {
@@ -22,7 +30,7 @@ const appearance = {
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
-    get url(){
+    get url() {
         return `${vex.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -33,6 +41,21 @@ const landingPage = {
             type: "HTML",
             content: `<h1>{{company.name | default: default text}}</h1><h2>{{visitor.email}}</h2>`,
             className: "landingpageblock",
+        }
+    ]
+}
+
+const landingPage2 = {
+    name: "landingPageDynamicFieldMerge",
+    slug: "landingPageDynamicFieldMerge",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "Session Group",
+            sessionGroup: "All Sessions"
         }
     ]
 }
@@ -48,13 +71,198 @@ const nonCompany = {
     ip: "171.117.159.107",
 }
 
+const customFormsessions = [
+    {
+        name: "Live pending",
+        slug: "pending",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2040 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestCustomForm.js",
+        formVisibility: "Always",
+        mergeFiledStatus: "pre_event"
+    },
+    {
+        name: "Live current",
+        slug: "current",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2020 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestCustomForm.js",
+        formVisibility: "Always",
+        mergeFiledStatus: "live",
+        expectedStatus: "Live"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        form: "TestCustomForm.js",
+        formVisibility: "Always",
+        mergeFiledStatus: "on_demand",
+        expectedStatus: "Finished"
+    },
+    {
+        name: "Live ended without on-demand",
+        slug: "ended",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestCustomForm.js",
+        formVisibility: "Always",
+        mergeFiledStatus: "post_event",
+        expectedStatus: "Finished"
+    },
+    {
+        name: "On-demand",
+        slug: "on-demand",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        form: "TestCustomForm.js",
+        mergeFiledStatus: "on_demand",
+        expectedStatus: "On Demand"
+    }
+
+]
+
+const externalFormsessions = [
+    {
+        name: "Live pending",
+        slug: "pending",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2040 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestExternalForm.js",
+        formVisibility: "Always"
+    },
+    {
+        name: "Live current",
+        slug: "current",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2020 8:00pm',
+            end: 'Jun 24, 2041 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestExternalForm.js",
+        formVisibility: "Always"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        form: "TestExternalForm.js",
+        formVisibility: "Always"
+    },
+    {
+        name: "Live ended without on-demand",
+        slug: "ended",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Webex',
+            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
+        },
+        form: "TestExternalForm.js",
+        formVisibility: "Always"
+    },
+    {
+        name: "On-demand",
+        slug: "on-demand",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        form: "TestExternalForm.js",
+    },
+
+]
+
 const visitor = "test@gmail.com"
 
 
 describe("VEX - Dynamic Field Merge", () => {
     it("Set up if not already done", () => {
-         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
+        cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
                 cy.viewport(1500, 1000)
                 authoring.common.login()
                 authoring.vex.addVirtualEvent(event)
@@ -66,7 +274,7 @@ describe("VEX - Dynamic Field Merge", () => {
         })
     })
 
-    it("Verify that dynamic field merge works", () => { 
+    it("Verify that dynamic field merge works", () => {
         // Note: A field merge is a variable in the VEX (inside an html block). It could be any one of 6sense's datapoints 
         // about a visitor, such as company name, country etc. Depending on the data returned by 6sense, you will see the value 
         // of that variable displayed inside the html block. 
@@ -74,7 +282,7 @@ describe("VEX - Dynamic Field Merge", () => {
         authoring.common.login()
         // set landing page as Home page in authoring.
         // This is already done in set up however this is to make sure 'setHome' is always set to true as we change the value later  
-        authoring.vex.visit() 
+        authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureLandingPage({
             name: landingPage.name,
@@ -95,18 +303,18 @@ describe("VEX - Dynamic Field Merge", () => {
             cy.contains("h1", "default text").should("exist")
         })
 
-         // Verify that if there is no known visitor, the email field would be blank
-         cy.clearCookies()
-         cy.visit(event.url)
-         cy.get(`.${landingPage.blocks[0].className}`).within(() => {
-             cy.get("h1").should("exist")
-             cy.contains("h2", visitor).should("not.exist")
-         }) 
+        // Verify that if there is no known visitor, the email field would be blank
+        cy.clearCookies()
+        cy.visit(event.url)
+        cy.get(`.${landingPage.blocks[0].className}`).within(() => {
+            cy.get("h1").should("exist")
+            cy.contains("h2", visitor).should("not.exist")
+        })
 
         // Veify the merge fields in Vex Event appearance setting text fields
         // Unset landing page in authoring to see event appearance headers 
         authoring.common.login()
-        authoring.vex.visit() 
+        authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.configureLandingPage({
             name: landingPage.name,
@@ -114,7 +322,7 @@ describe("VEX - Dynamic Field Merge", () => {
         })
         // value in the field merge when visiting with spoofed pathfactory IP address
         cy.visit(event.url + `?lbhqip=${company.ip}&lb_email=${visitor}`)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - PathFactory test@gmail.com", {timeout: 20000}).should('exist')
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - PathFactory test@gmail.com", { timeout: 20000 }).should('exist')
         cy.contains(consumption.vex.eventHeroSubtitle, "Header SubTitle - PathFactory").should('exist')
         cy.contains(consumption.vex.eventContentTitle, "VEX Content Title - PathFactory").should('exist')
         cy.contains(consumption.vex.eventContentDescription, "VEX Content Description - PathFactory").should('exist')
@@ -122,7 +330,7 @@ describe("VEX - Dynamic Field Merge", () => {
         // Verify that dynamic field merges are their default values when visiting with a spoofed IP address for which there is 
         // no available information
         cy.visit(event.url + "?lbhqip=" + nonCompany.ip)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text test@gmail.com", {timeout: 20000}).should('exist')
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text test@gmail.com", { timeout: 20000 }).should('exist')
         cy.contains(consumption.vex.eventHeroSubtitle, "Header SubTitle - default text").should('exist')
         cy.contains(consumption.vex.eventContentTitle, "VEX Content Title - default text").should('exist')
         cy.contains(consumption.vex.eventContentDescription, "VEX Content Description - default text").should('exist')
@@ -131,6 +339,58 @@ describe("VEX - Dynamic Field Merge", () => {
         cy.clearCookies()
         cy.visit(event.url)
         cy.wait(5000)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text", {timeout: 20000}).should('exist')            
-    })    
-})    
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text", { timeout: 20000 }).should('exist')
+    })
+
+    it.only("Verify session status showing in dynamic field merge", () => {
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.deleteVirtualEvent(event2.name)
+        cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.addVirtualEvent(event2)
+                authoring.vex.configureEvent(event2)
+                customFormsessions.forEach((session) => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    authoring.vex.backToEvent(event2.name)
+                })
+
+                authoring.vex.goToLandingPage()
+                authoring.vex.deleteLandingPages(landingPage2.name)
+                authoring.vex.addLandingPages(landingPage2.name)
+                authoring.vex.editLandingPage(landingPage2)
+                authoring.vex.goToPageEditor(landingPage2.name)
+                authoring.vex.addAdvancedBlock(landingPage2.blocks[0])
+                cy.get(authoring.vex.saveButton).click()
+                cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+                cy.visit(event2.url)
+
+                //Validation of Session status on consumption page
+                customFormsessions.forEach((session) => {
+                    cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
+                    if (!session.name.includes("Live pending")) {
+                        cy.contains('div', session.expectedStatus).should('be.visible', { timeout: 10000 })
+                    }
+                    cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
+                    cy.getIframeBody(consumption.common.customFormIframe).within(() => {
+                        cy.get("#status").should("have.attr", "value", session.mergeFiledStatus)
+                        cy.contains(session.mergeFiledStatus).should('be.visible')
+                        cy.go('back')
+                    })
+                })
+
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.goToEventConfig(event2.name)
+                externalFormsessions.forEach((session) => {
+                    authoring.vex.configureSession(session)
+                    authoring.vex.backToEvent(event2.name)
+                })
+            }
+        })
+    })
+})
