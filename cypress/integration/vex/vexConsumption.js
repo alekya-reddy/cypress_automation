@@ -186,11 +186,11 @@ describe('VEX - Consumption', function(){
         })
         session.contents.forEach((content)=>{
             // This checks that the correct supplemental content are listed 
-            cy.containsExact('a', content).should('exist')
+            cy.contains('a',content)
         })
     })
 
-    it('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
+    it.only('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
         const session = sessions.find((session)=>{
             return session.name == 'Youtube';
         })

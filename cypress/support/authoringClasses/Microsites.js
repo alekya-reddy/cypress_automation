@@ -67,7 +67,7 @@ export class Microsites extends Common {
             titleOverrideInput: "input[name*='trackTitleOverride']",
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
-            micrositeCardTitle: ".pf-event-microsite-card-title > div",
+            micrositeCardTitle: ".pf-event-microsite-card-title > div div",
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
             recommendRadio: "input[value='recommend']",

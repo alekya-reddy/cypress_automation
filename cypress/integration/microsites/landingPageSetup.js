@@ -1,21 +1,21 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
-const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: "automation-microsites", tld: "lookbookhq" })
+const consumption = createConsumptionInstance({ org: 'automation-microsites', tld: 'lookbookhq' })
 
 const target = {
     name: "Target 2 Shared Resource",
     slug: "target-2-shared-resource",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    contents: ["Wiki-1 Shared Resource", "Wiki-2 Shared Resource", "Wiki-3 Shared Resource","Wiki-4 Shared Resource","Wiki-5 Shared Resource","Wiki-6 Shared Resource"]
+    contents: ["Wiki-1 Shared Resource", "Wiki-2 Shared Resource", "Wiki-3 Shared Resource", "Wiki-4 Shared Resource", "Wiki-5 Shared Resource", "Wiki-6 Shared Resource"]
 }
 
 const filtersContent = {
     name: "Authoring SearchAndFilters",
     slug: "search-and-filters-authoring",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
     contents: ["Pie"]
@@ -24,7 +24,7 @@ const filtersContent = {
 const recommend = {
     name: "Recommend Common Resource",
     slug: "recommend-common-resource",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
     contents: ["Website Common Resource"]
@@ -33,7 +33,7 @@ const recommend = {
 const microsite = {
     name: "landingPageSetup.js",
     slug: "landingpagesetup-js",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -41,7 +41,7 @@ const microsite = {
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
-    get url(){
+    get url() {
         return `${microsite.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -71,34 +71,34 @@ const landingPage = {
             searchConfiguration: {
                 enableToggle: true,
                 searchButtonTitle: "Test Search",
-                buttonTextColor: {r: "225", g: "107", b: "140", position: 0},
-                inputTextColor: {r: "204", g: "162", b: "162", position: 1},
-                buttonBackgroundAndBorderColor: {r: "231", g: "185", b: "141", position: 2}
+                buttonTextColor: { r: "225", g: "107", b: "140", position: 0 },
+                inputTextColor: { r: "204", g: "162", b: "162", position: 1 },
+                buttonBackgroundAndBorderColor: { r: "231", g: "185", b: "141", position: 2 }
             },
             topicFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Topics Here',
-                textColor: {r: "43", g: "91", b: "200", position: 0},
-                backgroundColor: {r: "87", g: "255", b: "78", position: 1}
+                textColor: { r: "43", g: "91", b: "200", position: 0 },
+                backgroundColor: { r: "87", g: "255", b: "78", position: 1 }
             },
-            contentTypeFilter:{
+            contentTypeFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Content Type Here',
-                backgroundColor: {r: "184", g: "106", b: "164", position: 1}
+                backgroundColor: { r: "184", g: "106", b: "164", position: 1 }
             },
-            funnelStageFilter:{
+            funnelStageFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Funnel Stage Here'
             },
-            industryFilter:{
+            industryFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Industry Here'
             },
-            personaFilter:{
+            personaFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Persona Here'
             },
-            businessUnitFilter:{
+            businessUnitFilter: {
                 enableToggle: true,
                 overrideLabel: 'Filter By Business Unit Here'
             }
@@ -110,11 +110,11 @@ const landingPage = {
             titleOverride: `Overrided title`,
             expectContents: recommend.contents,
             heading: {
-                color: {r: "0", g: "255", b: "255"},
+                color: { r: "0", g: "255", b: "255" },
                 textAlign: 'center'
             },
             background: {
-                color: {r: "0", g: "200", b: "100"},
+                color: { r: "0", g: "200", b: "100" },
                 image: {
                     category: "Stock Images",
                     url: "/stock/sm/bench-forest-trees-path.jpg"
@@ -124,16 +124,16 @@ const landingPage = {
             },
             spacing: "91px",
             card: {
-                color: {r: "43", g: "91", b: "200"},
+                color: { r: "43", g: "91", b: "200" },
                 textAlign: "right",
                 fontSize: "17px"
             },
             searchConfiguration: {
                 enableToggle: true,
                 searchButtonTitle: 'Test Search2',
-                buttonTextColor: {r: "215", g: "107", b: "140", position: 0},
-                inputTextColor: {r: "234", g: "162", b: "172", position: 1},
-                buttonBackgroundAndBorderColor: {r: "101", g: "15", b: "205", position: 2}
+                buttonTextColor: { r: "215", g: "107", b: "140", position: 0 },
+                inputTextColor: { r: "234", g: "162", b: "172", position: 1 },
+                buttonBackgroundAndBorderColor: { r: "101", g: "15", b: "205", position: 2 }
             }
         },
         {
@@ -145,13 +145,13 @@ const landingPage = {
                 locators: ["h1"]
             },
             typography: {
-                color: {r: "255", g: "255", b: "255"},
+                color: { r: "255", g: "255", b: "255" },
                 textAlign: 'right',
                 fontSize: "12px"
             },
             className: "landingpageblock",
             background: {
-                color: {r: "0", g: "200", b: "200"},
+                color: { r: "0", g: "200", b: "200" },
                 image: {
                     category: "Stock Images",
                     url: "/stock/sm/bench-forest-trees-path.jpg"
@@ -167,7 +167,7 @@ const landingPage = {
 const defaultLandingPage = {
     name: "Home Page",
     slug: "landing-page-home-pa",
-    get url(){
+    get url() {
         return `${microsite.url}/${this.slug}`
     }
 }
@@ -178,33 +178,31 @@ describe("Microsites - Landing page setup", () => {
         authoring.microsites.removeMicrosite(microsite.name)
         authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
-        authoring.microsites.addTracks({target: [target.name, filtersContent.name], recommend: recommend.name})
+        authoring.microsites.addTracks({ target: [target.name, filtersContent.name], recommend: recommend.name })
 
         // Every new microsite has a default landing page with these settings: 
         authoring.microsites.tabToLandingPages()
-        cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 10000}).should("exist")
-        .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
-            cy.contains("button", "Remove").should("not.exist") // Any landing page that is set to home page cannot be removed 
-        })
+        cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, { timeout: 10000 }).should("exist")
+        cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
+        cy.contains("button", "Remove").should("not.exist") // Any landing page that is set to home page cannot be removed 
 
         // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.
         authoring.microsites.addLandingPages(landingPage.name)
         authoring.microsites.configureLandingPage(landingPage)
 
         // Verify that the default landing page is no longer home page 
-        cy.containsExact(authoring.microsites.antTable.cell, defaultLandingPage.name, {timeout: 20000}).should("exist")
-        .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Set as Home Page")
-            cy.contains("button", "Remove").should("exist") 
-        })
+        cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, { timeout: 20000 }).should("exist")
+             .parents(authoring.microsites.antTable.row).within(() => {
+                cy.get(authoring.microsites.antTable.cell).eq(7).should("contain", "Set as Home Page")
+                cy.contains("button", "Remove").should("exist")
+             })
 
         // And verify that the new landing page is now the home page
-        cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, {timeout: 10000}).should("exist")
-        .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
-            cy.contains("button", "Remove").should("not.exist")
-        })
+        cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, { timeout: 10000 }).should("exist")
+            .parents(authoring.microsites.antTable.row).within(() => {
+                cy.get(authoring.microsites.antTable.cell).eq(5).should("contain", "Home Page").should("not.contain", "Set as Home Page")
+                cy.contains("button", "Remove").should("not.exist")
+            })
 
         // Visit the home url (aka microsite url), and verify that this takes you to the home landing page 
         cy.visit(microsite.url)
@@ -221,7 +219,7 @@ describe("Microsites - Landing page setup", () => {
             cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(4).should("not.be.visible")
             cy.get(consumption.microsites.cardTitle).eq(5).should("not.be.visible")
-            cy.get(consumption.microsites.arrowRight).click({force: true})
+            cy.get(consumption.microsites.arrowRight).click({ force: true })
             cy.get(consumption.microsites.cardTitle).eq(0).should("not.be.visible")
             cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
@@ -256,7 +254,7 @@ describe("Microsites - Landing page setup", () => {
         cy.contains(authoring.microsites.antModal, "Edit Landing Page").within(() => {
             cy.contains("button", "Cancel").click()
         })
-        authoring.common.waitForAntModal({title: "Edit Landing Page"})
+        authoring.common.waitForAntModal({ title: "Edit Landing Page" })
 
         // Set the main page to 'not-home-page' by setting default page to home page, and verify you can now set main page to private
         authoring.microsites.setToHomePage(defaultLandingPage.name)
@@ -266,28 +264,28 @@ describe("Microsites - Landing page setup", () => {
         })
 
         // A landing page that's set to private cannot be set as a home page and should be removable
-        cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, {timeout: 10000}).should("exist")
-        .parents(authoring.microsites.antTable.row).within(() => {
-            cy.get(authoring.microsites.antTable.cell).eq(5).should("not.contain", "Set as Home Page")
-            cy.contains("button", "Remove").should("exist") 
-        })
+        cy.containsExact(authoring.microsites.antTable.cell, landingPage.name, { timeout: 10000 }).should("exist")
+            // .parents(authoring.microsites.antTable.row).within(() => {
+                cy.get(authoring.microsites.antTable.cell).eq(5).should("not.contain", "Set as Home Page")
+                cy.contains("button", "Remove").should("exist")
+            // })
 
         // Verify that the private landing page is not accessible on consumption side
-        cy.request({url: landingPage.url, failOnStatusCode: false}).then((response)=>{
+        cy.request({ url: landingPage.url, failOnStatusCode: false }).then((response) => {
             expect(response.status).to.eq(404)
         })
 
         // Test various input validations
-        authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: landingPage.slug, verify: false})
+        authoring.microsites.editLandingPage({ name: defaultLandingPage.name, slug: landingPage.slug, verify: false })
         cy.contains(authoring.microsites.messages.duplicateEntry3).should("exist")
         cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
-        authoring.microsites.editLandingPage({name: defaultLandingPage.name, slug: "haha&^%&^", verify: false})
+        authoring.microsites.editLandingPage({ name: defaultLandingPage.name, slug: "haha&^%&^", verify: false })
         cy.contains("Only alphanumeric characters, hyphens and underscores are allowed").should("exist")
         cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
-        authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: landingPage.name, verify: false})
+        authoring.microsites.editLandingPage({ name: defaultLandingPage.name, newName: landingPage.name, verify: false })
         cy.contains(authoring.microsites.messages.duplicateEntry2).should("exist")
         cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
-        authoring.microsites.editLandingPage({name: defaultLandingPage.name, newName: "%^&*(&^", verify: false})
+        authoring.microsites.editLandingPage({ name: defaultLandingPage.name, newName: "%^&*(&^", verify: false })
         cy.contains("Name must contain letters or numbers").should("exist")
         cy.contains(authoring.microsites.antModal + ":visible", "Edit Landing Page").within(() => { cy.contains("button", "Cancel").click() })
 
