@@ -190,7 +190,7 @@ describe('VEX - Consumption', function(){
         })
     })
 
-    it.only('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
+    it('The three media types - Pdf, image, and webpage - should render correctly on VEX, and video should still play in corner', function(){
         const session = sessions.find((session)=>{
             return session.name == 'Youtube';
         })
