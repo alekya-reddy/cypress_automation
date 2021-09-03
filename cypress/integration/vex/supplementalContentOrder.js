@@ -87,6 +87,7 @@ describe("VEX - Reordering Supplemental Content", ()=>{
         
         // Visit consumption to verify the new order 
         cy.visit(session.url)
+        cy.reload()
         cy.get("body").then(()=>{
             for(let i = 0; i < newOrder.length ; i++){
                 cy.get(consumption.vex.sessionSidebar).get(`a[href^="/${event.slug}/${session.slug}"]`).eq(i).should("contain", newOrder[i])

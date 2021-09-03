@@ -104,7 +104,7 @@ const publicSession = [
             authoring.common.login()
             authoring.vex.visit();
             authoring.vex.deleteVirtualEvent(event.name)
-            authoring.vex.addVirtualEvent(event.name)
+            authoring.vex.addVirtualEvent(event)
             authoring.vex.configureEvent(event)
             publicSession.forEach((session)=>{
                 authoring.vex.addSession(session.name)

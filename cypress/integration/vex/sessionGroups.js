@@ -364,8 +364,8 @@ describe('VEX - Sessions Groups', function () {
         cy.contains("span", "Delete me").should('not.exist')
     })
 
-    it("Validate All sessions,All On Demand Sessions, All Upcoming Sessions, Session groups and cloned sessions showing as options for the session group", () => {
-        const allSessionNames = [],allClonedSessions=[], ondemandSessionsNames = [],clonedOndemandSessionsNames=[], liveSessionsNames = [],conedLiveSessionsNames=[], sessionGroupNames = [],clonedSessionGroupNames = []
+    it("Validate All sessions,All On Demand Sessions, All Upcoming Sessions, Session groups showing as options for the session group dropdown", () => {
+        const allSessionNames = [],allClonedSessions=[], ondemandSessionsNames = [],clonedOndemandSessionsNames=[], liveSessionsNames = [],clonedLiveSessionsNames=[], sessionGroupNames = [],clonedSessionGroupNames = []
         cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
                 authoring.common.login()
@@ -382,7 +382,7 @@ describe('VEX - Sessions Groups', function () {
             }
         })
 
-        //Selecting All sessions option and verify in consumption page 
+        //Selecting All sessions option and verify in authoring page and in consumption page 
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
@@ -413,7 +413,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Clone landing page and verify All sessions are cloned in authoring and consumption page
+        //Clone landing page and verify All sessions are cloned in authoring page and in consumption page 
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
@@ -446,7 +446,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Selecting All On Demand Sessions and verify in consumption page
+        //Selecting All On Demand Sessions and verify in authoring page and in consumption page 
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
@@ -478,7 +478,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Clone landing page and verify ondemand sessions are cloned in authoring and consumption page
+        //Clone landing page and verify ondemand sessions are cloned in in authoring page and in consumption page 
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
@@ -511,7 +511,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Selecting All Upcoming Sessions and verify in consumption page
+        //Selecting All Upcoming Sessions and verify in authoring page and in consumption page 
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
@@ -543,7 +543,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-         //Clone landing page and verify All upcoming sessions are cloned in authoring and consumption page
+         //Clone landing page and verify All upcoming sessions are cloned in authoring page and in consumption page 
          authoring.common.login()
          authoring.vex.visit()
          authoring.vex.goToEventConfig(event2.name)
@@ -566,18 +566,17 @@ describe('VEX - Sessions Groups', function () {
  
          cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
              cy.get(sessionName).find('div').eq(0).invoke('text').then(text => {
-                 conedLiveSessionsNames.push(text)
+                clonedLiveSessionsNames.push(text)
              }).then(() => {
                  if (index == liveSessions.length - 1) {
                     liveSessions.forEach((session) => {
-                         expect(conedLiveSessionsNames).to.include(session.name)
+                         expect(clonedLiveSessionsNames).to.include(session.name)
                      })
                  }
              })
          })
 
-
-        //Selecting Session group and verify in consumption page
+        //Selecting Session group and verify in authoring page and in consumption page 
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)
         authoring.vex.goToLandingPage()
@@ -594,7 +593,6 @@ describe('VEX - Sessions Groups', function () {
         cy.contains('button', 'Save').click();
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
-
         cy.visit(event2.url)
 
         cy.get(consumption.vex.sessionCardTitle).each((sessionName, index) => {
@@ -609,7 +607,7 @@ describe('VEX - Sessions Groups', function () {
             })
         })
 
-        //Clone landing page and verify Session group sessions are cloned in authoring and consumption page
+        //Clone landing page and verify Session group sessions are cloned in authoring page and in consumption page 
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event2.name)

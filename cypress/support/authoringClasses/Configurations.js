@@ -412,11 +412,12 @@ export class Configurations extends Common {
             }
             if (interceptCode) {
                 cy.get(this.externalCode.codeEditor).type(interceptCode, {force: true, parseSpecialCharSequences: false })
-                cy.intercept('POST', "/api/v3/external_codes", (req) => {
-                    // It is necessary to intercept the request payload and set the code to what is intended
-                    // Because the code editor will automatically add closing tags etc, which screws up the code
-                    req.body.code = interceptCode
-                })
+                //NOTE: Commenting below piece of code, because in code editor , always same code is getting typed for diff code names.We can uncomment it later if required
+                // cy.intercept('POST', "/api/v3/external_codes", (req) => {
+                //     // It is necessary to intercept the request payload and set the code to what is intended
+                //     // Because the code editor will automatically add closing tags etc, which screws up the code
+                //     req.body.code = interceptCode
+                // })
             }
             cy.contains("button", "Add External Code").click() 
         })

@@ -354,7 +354,7 @@ describe('VEX - Virtual Event', function() {
         })
 
          //Override the heading font size at block level
-         authoring.microsites.editExistingCard(editCardConfiguration)
+         authoring.vex.editExistingCard(editCardConfiguration)
 
          cy.get('h4').invoke('css','font-size').then(builderFontSize=>{
                  expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
