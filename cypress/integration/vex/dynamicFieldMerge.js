@@ -19,6 +19,30 @@ const event2 = {
     }
 }
 
+const testCustomFormValue = `{{virtual_event_session.status}}
+
+<script src="//app-sj01.marketo.com/js/forms2/js/forms2.min.js"></script>
+<form id="mktoForm_1591">
+    <input type="hidden" id="status" name="status" value={{virtual_event_session.status}}>
+</form>
+<script>MktoForms2.loadForm("//app-sj01.marketo.com", "044-UAP-113", 1591, function(form) {
+	form.onSuccess(function(){
+  	var vals = form.vals();
+  	
+  	window.parent.postMessage({
+    	conversionUrl: document.location.href,
+    	referrer: document.referrer,
+    	email: vals.Email,
+    	lookbookExternalForm: true,
+    	status: vals.status,
+  	}, "*");
+  	return true;
+	});
+  });
+</script>`
+
+const testExternalUrlValue = "https://trupanion.qualtrics.com/jfe/form/SV_06a50MYFxV3CbNb?status={{virtual_event_session.status}}"
+
 const appearance = {
     appearance: "Default",
     headerTitle: "Header Title - {{company.name | default: default text}} {{visitor.email}}",
@@ -185,7 +209,8 @@ const externalFormsessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         form: "TestExternalForm.js",
-        formVisibility: "Always"
+        formVisibility: "Always",
+        mergeFiledStatus: "pre_event"
     },
     {
         name: "Live current",
@@ -203,7 +228,9 @@ const externalFormsessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         form: "TestExternalForm.js",
-        formVisibility: "Always"
+        formVisibility: "Always",
+        mergeFiledStatus: "live",
+        expectedStatus: "Live"
     },
     {
         name: "Live ended with on-demand",
@@ -222,7 +249,9 @@ const externalFormsessions = [
         },
         video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestExternalForm.js",
-        formVisibility: "Always"
+        formVisibility: "Always",
+        mergeFiledStatus: "on_demand",
+        expectedStatus: "Finished"
     },
     {
         name: "Live ended without on-demand",
@@ -240,7 +269,9 @@ const externalFormsessions = [
             webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
         },
         form: "TestExternalForm.js",
-        formVisibility: "Always"
+        formVisibility: "Always",
+        mergeFiledStatus: "post_event",
+        expectedStatus: "Finished"
     },
     {
         name: "On-demand",
@@ -252,7 +283,9 @@ const externalFormsessions = [
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestExternalForm.js",
-    },
+        mergeFiledStatus: "on_demand",
+        expectedStatus: "On Demand"
+    }
 
 ]
 
@@ -342,55 +375,73 @@ describe("VEX - Dynamic Field Merge", () => {
         cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text", { timeout: 20000 }).should('exist')
     })
 
-    it.only("Verify session status showing in dynamic field merge", () => {
+    it("Verify session status showing in dynamic field merge", () => {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event2.name)
-        cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
-            if (response.status == 404) {
-                authoring.common.login()
-                authoring.vex.visit()
-                authoring.vex.addVirtualEvent(event2)
-                authoring.vex.configureEvent(event2)
-                customFormsessions.forEach((session) => {
-                    authoring.vex.addSession(session.name)
-                    authoring.vex.configureSession(session)
-                    authoring.vex.backToEvent(event2.name)
-                })
+        authoring.vex.addVirtualEvent(event2)
+        authoring.vex.configureEvent(event2)
+        customFormsessions.forEach((session) => {
+            authoring.vex.addSession(session.name)
+            authoring.vex.configureSession(session)
+            authoring.vex.backToEvent(event2.name)
+        })
 
-                authoring.vex.goToLandingPage()
-                authoring.vex.deleteLandingPages(landingPage2.name)
-                authoring.vex.addLandingPages(landingPage2.name)
-                authoring.vex.editLandingPage(landingPage2)
-                authoring.vex.goToPageEditor(landingPage2.name)
-                authoring.vex.addAdvancedBlock(landingPage2.blocks[0])
-                cy.get(authoring.vex.saveButton).click()
-                cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.editLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+        authoring.vex.addAdvancedBlock(landingPage2.blocks[0])
+        cy.get(authoring.vex.saveButton).click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
-                cy.visit(event2.url)
+        cy.visit(event2.url)
 
-                //Validation of Session status on consumption page
-                customFormsessions.forEach((session) => {
-                    cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
-                    if (!session.name.includes("Live pending")) {
-                        cy.contains('div', session.expectedStatus).should('be.visible', { timeout: 10000 })
-                    }
-                    cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
-                    cy.getIframeBody(consumption.common.customFormIframe).within(() => {
-                        cy.get("#status").should("have.attr", "value", session.mergeFiledStatus)
-                        cy.contains(session.mergeFiledStatus).should('be.visible')
-                        cy.go('back')
-                    })
-                })
-
-                authoring.common.login()
-                authoring.vex.visit()
-                authoring.vex.goToEventConfig(event2.name)
-                externalFormsessions.forEach((session) => {
-                    authoring.vex.configureSession(session)
-                    authoring.vex.backToEvent(event2.name)
-                })
+        //Validation of session status of each event on consumption page when custom form applied
+        customFormsessions.forEach((session) => {
+            cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
+            if (!session.name.includes("Live pending")) {
+                cy.contains('div', session.expectedStatus).should('be.visible', { timeout: 10000 })
             }
+            cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
+            cy.getIframeBody(consumption.common.customFormIframe).within(() => {
+                cy.get("#status").should("have.attr", "value", session.mergeFiledStatus)
+                cy.contains(session.mergeFiledStatus).should('be.visible')
+                cy.go('back')
+            })
+        })
+
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+        externalFormsessions.forEach((session) => {
+            authoring.vex.configureSession(session)
+            authoring.vex.backToEvent(event2.name)
+        })
+
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.editLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+        authoring.vex.addAdvancedBlock(landingPage2.blocks[0])
+        cy.get(authoring.vex.saveButton).click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        cy.visit(event2.url)
+
+        //Validation of session status of each event on consumption page when external form applied
+        externalFormsessions.forEach((session) => {
+            cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
+            if (!session.name.includes("Live pending")) {
+                cy.contains('div', session.expectedStatus).should('be.visible', { timeout: 10000 })
+            }
+            cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
+            cy.get(consumption.common.customFormIframe).invoke('attr', 'src').then(value => {
+                expect(value).to.contains(session.mergeFiledStatus)
+            })
+            cy.go('back')
         })
     })
 })
