@@ -52,7 +52,7 @@ export class Common {
             folderCell: "div[data-qa-hook='table-cell-folder-name']"
         };
         this.antTable = {
-            cell: "tbody td.ant-table-cell",
+            cell: "td.ant-table-cell",
             row: "tr[class*='ant-table-row']"
         };
         this.antCard = {

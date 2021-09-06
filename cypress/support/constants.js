@@ -66,8 +66,8 @@ export const constants = {
                     prod: 'https://cdn.pathfactory.com/assets/10668/contents/181009/31cacbc2-e385-4a58-881e-8fb175dbfa5b.png'
                 },
                 'PDF - Used by Cypress automation for VEX testing': {
-                    staging: 'https://cdn.pathfactory-qa.com/assets/122/contents/17526/6521cdc6-5677-493b-8040-3b0c3178a74e.pdf',
-                    qa: 'https://cdn.pathfactory-qa.com/assets/122/contents/17526/6521cdc6-5677-493b-8040-3b0c3178a74e.pdf',
+                    staging: 'https://automation-vex.pathfactory-development.com/pdf_viewer/starship-users-guide',
+                    qa: 'https://automation-vex.qa-pathfactory.com/pdf_viewer/starship-users-guide',
                     prod: 'https://cdn.pathfactory.com/assets/10668/contents/181010/26a87f6a-9067-4247-b2ef-30764379b980.pdf'
                 },
                 'Website - Used by Cypress automation for VEX testing': {
