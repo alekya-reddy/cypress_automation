@@ -115,7 +115,7 @@ describe("Widget Configuration", ()=>{
         cy.visit(session.url)
 
         // Expect scriptWidget
-        cy.containsExact("div", scriptWidget.publicName, {timeout: 20000}).should("exist").click()
+        cy.contains("span", scriptWidget.publicName, {timeout: 20000}).should("exist").click()
         cy.waitForIframeToLoad(consumption.vex.widget.iframe, "#test", 10000)
         cy.getIframeBody(consumption.vex.widget.iframe).within(() => {
             cy.contains("button", "Add Text Div").click()
@@ -125,15 +125,15 @@ describe("Widget Configuration", ()=>{
         })
 
         // Expect widget
-        cy.containsExact("div", widget.name, {timeout: 20000}).should("exist").click()
-        cy.waitForIframeToLoad(consumption.vex.widget.iframe, "h1", 10000, 1)
-        cy.getIframeBody(consumption.vex.widget.iframe, 1).within(() => {
+        cy.contains("span", widget.name, {timeout: 20000}).should("exist").click()
+        cy.waitForIframeToLoad(consumption.vex.widget.iframe, "h1", 10000)
+        cy.getIframeBody(consumption.vex.widget.iframe).within(() => {
             cy.contains("h1", "Hello world").should("exist")
         })
 
         // Widgets that should not be present
-        cy.containsExact("div", widget2.name).should("not.exist") // This is turned off for both demand and live, so should not exist
-        cy.containsExact("div", widget.newName).should("not.exist") // This was deleted so should not exist 
+        cy.contains("span", widget2.name).should("not.exist") // This is turned off for both demand and live, so should not exist
+        cy.contains("span", widget.newName).should("not.exist") // This was deleted so should not exist 
 
         // Delete a widget from the configuration settings and verify it is removed from both the session on authoring side and on consumption side
         // This test will fail due to app bug
@@ -147,6 +147,6 @@ describe("Widget Configuration", ()=>{
         cy.get(".ant-list-item-action").should("have.length", 2) // Only 2 widgets should remain listed of the 4 that were added
         cy.visit(session.url)
         consumption.vex.expectYoutube() // Needed only to wait for page to load before checking widget doesn't exist
-        cy.containsExact("div", widget.name).should("not.exist")
+        cy.containsExact("span", widget.name).should("not.exist")
     })
 })

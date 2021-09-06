@@ -34,7 +34,7 @@ export class Vex extends Common {
             this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
             this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
             this.clearSearch = 'i[title="Clear search"]',
-            this.searchButton = 'input[name="page-search"]',
+            this.eventsearchButton = 'input[name="page-search"]',
             this.noEventFoundmsg = 'No virtual events found',
             this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
@@ -168,7 +168,8 @@ export class Vex extends Common {
             searchFilter: "#vex_search_button",
             searchInputField: "#vex_search_input",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
-            filterToggle: "input[name*='.enable']"
+            filterToggle: "input[name*='.enable']",
+            pageTitle:"input[name='pageTitle']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -231,6 +232,7 @@ export class Vex extends Common {
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
         this.eventSessions = 'div.pf-event-sessions'
+        this.navItemRemove= 'span[aria-label="delete"]'
     }
 
     visit() {
@@ -260,6 +262,7 @@ export class Vex extends Common {
         })
 
         if (verify !== false) {
+            cy.wait(2000) // To close the Add Event modal 
             cy.get(this.antModal).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
@@ -310,7 +313,7 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event) {
-        // cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
+        cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
         cy.contains(this.eventCardTitle, event, { timeout: 20000 }).should('exist')
         cy.get(`a[id='configure-${event}']`).should('exist').click()
     }
@@ -1419,7 +1422,7 @@ export class Vex extends Common {
         navItems.forEach((navItem) => {
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
                 cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-                    cy.contains("button", "Remove").click()
+                    cy.get(this.navItemRemove).click()
                 })
             })
             if (verify) {
@@ -1437,7 +1440,7 @@ export class Vex extends Common {
                     // Need to remove bottomost one first, and work your way up
                     // If start at top, could delete a node that takes out several at once, but for loop keeps going
                     cy.get(this.navigation.navRow).eq(i).within(() => {
-                        cy.contains('button', 'Remove').click()
+                        cy.get(this.navItemRemove).click()
                     })
                 }
             })
@@ -1596,6 +1599,7 @@ export class Vex extends Common {
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const slug = config.slug
         const verify = config.verify // must specify false to skip verification 
+        const title = config.title
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
@@ -1615,6 +1619,11 @@ export class Vex extends Common {
             }
             if (slug) {
                 cy.get(this.pages.slugInput).clear().type(slug)
+            }
+
+            if(title)
+            {
+                cy.get(this.pages.pageTitle).clear().type(title)
             }
             cy.contains("button", "Submit").click()
         })

@@ -441,6 +441,7 @@ describe('VEX - Session Form Registration', function() {
         const scenarioIndex = 1
         Object.values(sessions).forEach(session => {
             cy.visit(session.url)
+            cy.wait(2000)
             const scenarioExpectations = session.scenarios[scenarioIndex]
             if(scenarioExpectations.form){
                 scenarioExpectations.form()
