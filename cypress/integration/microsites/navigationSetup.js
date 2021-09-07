@@ -195,13 +195,15 @@ describe("Microsites - Navigation setup", () => {
 
         // Verify can delete nav items 
         authoring.microsites.removeNavItems(navigation.deleteLink.label)
+
+        //Added recommend track again for further testing
         authoring.microsites.addNavItem(navigation.recommend)
     })
 
 
     it("Go to consumption and verify that the navigation header is correct", () => {
         cy.visit(microsite.url)
-        cy.wait(5000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
+        cy.wait(10000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         })
@@ -212,8 +214,8 @@ describe("Microsites - Navigation setup", () => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
         })
         cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label).should("not.exist")
-        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).should("be.visible").trigger("mouseover")
-        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label, {timeout: 20000}).should("be.visible").within(() => {
+        cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label).first().should("be.visible").trigger("mouseover")
+        cy.contains(consumption.microsites.navigation.menuItem, navigation.link1.label, {timeout: 20000}).first().should("be.visible").within(() => {
             cy.get("a").should("have.attr", "href", navigation.link1.source)
         })
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage2.label).should("not.exist")
@@ -225,7 +227,6 @@ describe("Microsites - Navigation setup", () => {
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label, {timeout: 20000}).click()
         cy.wait(3000)
         cy.url().should("eq", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
-        cy.wait(3000)
         // Mouseover Text navigation menu, Verify dropdowns, click on the link from dropdowns and verify that it goes tp correct url
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text3.label).should("be.visible").trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text2.label).should("be.visible").trigger("mouseover")
@@ -246,22 +247,22 @@ describe("Microsites - Navigation setup", () => {
         
         cy.visit(microsite.url)
         cy.wait(5000) // Wait for DOM to settle to reduce likelihood of failure at step trigger("mouseover")
-        //edit_recommend_to_target
+        //Verify edited item - 'edit_recommend_to_target' is displayed on consumption
         cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_recommend_to_target.label).should("exist").within(() => {
             cy.get("a").should("have.attr", "href", `${microsite.url}/${navigation_edit.edit_recommend_to_target.reference.slug}/${navigation_edit.edit_recommend_to_target.reference.firtContentSlug}`)
         })
 
-        //edit_landing_page_to_link
+        //Verify edited item - 'edit_landing_page_to_link' is displayed on consumption
         cy.contains(consumption.microsites.navHeaderLink, navigation_edit.edit_landing_page_to_link.label).should("exist")
         cy.contains(consumption.microsites.navHeaderLink, navigation_edit.edit_landing_page_to_link.label).trigger("mouseover")
         cy.contains("a", navigation_edit.edit_link_to_link.label)   
     
 
-        //edit_text_to_other_text
+        //Verify edited item - 'edit_text_to_other_text' is displayed on consumption
         cy.contains(consumption.microsites.navHeaderText, navigation.text3.label).trigger("mouseover")
         cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_text_to_other_text.label).should("exist")
 
-        //edit_link_to_text
+        //Verify edited item - 'edit_link_to_text' is displayed on consumption
         cy.contains(consumption.microsites.navigation.menuItem, navigation_edit.edit_link_to_text.label).should("exist")
     })
 })

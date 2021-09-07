@@ -94,7 +94,8 @@ export class Microsites extends Common {
             navContent: ".rst__rowContents",
             navRemoveBox: ".rst__rowToolbar",
             navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
-            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']"
+            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
+            navModal: "div[class='ant-modal-mask']"
         };
         this.searchAndFilter = {
             switchToggle: ".ant-tabs-tabpane.ant-tabs-tabpane-active .ant-switch-handle",
@@ -1236,61 +1237,30 @@ export class Microsites extends Common {
         const source = config.source
         const newTab = config.newTab
         const verify = config.verify
-        const newTabChanged=false
 
         this.tabToNavigation()
         cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
             cy.get(this.navigation.navEdit).should('exist').click()
         })
         cy.contains(this.antModal, "Update Navigation Item").should('exist')
-        cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
-            cy.get("input[name='title']").filter(':visible').first().clear().type(label)
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.get(this.navigation.labelInputEdit).filter(':visible').first().clear().type(label)
             cy.get(this.antDropSelect.selector).first().click()
         })
         cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
         if (source && type !== "Link") {
             cy.get(this.antDropSelect.selector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
-            cy.wait(2000)
         } 
         else if (source && type == "Link") {
-            cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
                 cy.get(this.navigation.linkInput).clear().type(source)
-                cy.wait(3000)
-            })
-            cy.log(cy.get("span[class='ant-checkbox ant-checkbox-checked']").find("input[class='ant-checkbox-input']").length)
-            cy.get("div[class='ant-modal-mask']").first().parent().within(() => {//adjustment for hidden modals
-                if (newTab)
-                    if(cy.get("input[class='ant-checkbox-input']")) {
-                     cy.pause()
-                        cy.get(this.navigation.newTabCheckBox).click()
-                        newTabChanged=true
-                }
-                else if (cy.get("span[class='ant-checkbox ant-checkbox-checked']").filter(':visible').first().find("input[class='ant-checkbox-input']").length>0){
-                    cy.pause()
-                    newTabChanged=true
-                }
             })
         }
-        cy.get("div[class='ant-modal-mask']").parent().within(() => {//adjustment for hidden modals
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
             cy.contains("button", "Submit").filter(':visible').first().click()
-            cy.wait(5000)
         })
-    
-        if (verify !== false) {
-            this.waitForAntModal({ title: "Update Navigation Item" })
-            cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
-                if (type == "Link" && newTabChanged) {
-                    cy.containsExact(this.navigation.navSubtitle, `${type}: ${source} (new tab)`).should('exist')
-                }
-                else if (type == "Text") {
-                    cy.containsExact(this.navigation.navSubtitle, `${type}`).should('exist')
-                } 
-                else {
-                    cy.contains(this.navigation.navSubtitle, `${type}: ${source}`).should('exist')
-                }
-            })
-        }
+        cy.wait(1000)
     }
 
     addSearchAndFilterOptions(options) {
@@ -1352,8 +1322,9 @@ export class Microsites extends Common {
         // This effectively drags the subject back, and then it will link up to the target as a third-level submenu 
         const subject = config.subject // name of the nav item to be moved
         const target = config.target // name of the nav item that subject will connect to 
-
+        cy.wait(2000)
         cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
+        cy.wait(2000)
         cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
     }
 

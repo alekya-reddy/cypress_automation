@@ -1400,7 +1400,7 @@ export class Vex extends Common {
             cy.get(this.navigation.newTabCheckBox).click()
         }
         cy.contains('button', "Submit").click()
-
+        cy.wait(2000)
         if (verify) {
             cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
@@ -1421,36 +1421,37 @@ export class Vex extends Common {
         const source = config.source
         const newTab = config.newTab
         const verify = config.verify
-        const newTabChanged=false
 
         this.goToNavigation()
-        cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
-            cy.get(this.navigation.navEdit).should('exist').click()
+        cy.contains(this.navigation.navTitle, to_edit,  { timeout: 5000 }).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click({force:true})
         })
         cy.contains(this.antModal, "Update Navigation Item").should('exist')
         cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
-            cy.get("input[name='title']").filter(':visible').first().clear().type(label)
+            cy.get(this.navigation.labelInput).filter(':visible').first().clear().type(label)
             cy.get(this.antDropSelect.selector).first().click()
         })
         cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
         if (source && type !== "Link") {
-            cy.get(this.antDropSelect.selector).eq(1).click()
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.antDropSelect.selector).eq(1).click()
+            })
             cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
-            cy.wait(2000)
         }    
         else if (source && type == "Link") {
-            cy.get(this.navigation.linkInput).clear().type(source)
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+            })
         }
         else if (source && type == "Link") {
             cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
                 cy.get(this.navigation.linkInput).clear().type(source)
-                cy.wait(3000)
             })
         }
         cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
             cy.contains("button", "Submit").filter(':visible').first().click()
-            cy.wait(5000)
         })
+        cy.wait(3000)
     }
 
     deleteNavItems(list, verify) {
@@ -1495,8 +1496,8 @@ export class Vex extends Common {
         const subject = config.subject // name of the nav item to be moved
         const target = config.target // name of the nav item that subject will connect to 
 
-        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
-        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
+        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart",{force: true})
+        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend",{force: true})
     }
 
     goToBlacklist() {

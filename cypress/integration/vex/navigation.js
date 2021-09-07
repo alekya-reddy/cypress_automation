@@ -178,7 +178,7 @@ const nav2 = [
 
 const navigation_edit = [
     {
-        to_edit:publicSession.name,
+        to_edit:"Link New Tab",
         label: "Level 3",
         type: "Text",
         verify: true 
@@ -289,8 +289,10 @@ describe("VEX - Navigation Builder", ()=>{
         cy.contains(deleteLandingPage.blocks[0].content).should("exist")
         cy.go("back")
         cy.contains("a", nav1[0].label).click() // Session link
+        cy.wait(20000)
         consumption.vex.expectYoutube()
         cy.go("back")
+        cy.wait(3000)
         cy.contains("a", nav1[6].label).click() // weblink - important that it redirects to the same domain or else cypress won't allow it!
         cy.contains("Browse Sessions").should("exist")
         cy.go("back")
@@ -314,7 +316,7 @@ describe("VEX - Navigation Builder", ()=>{
         })
         cy.go("back")
 
-        //Edit---------------------------------------------
+        //Edit navigation items and verify on cosumption
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
@@ -336,14 +338,14 @@ describe("VEX - Navigation Builder", ()=>{
         authoring.vex.goToEventConfig(event.name)
         // Remove all remaining nav items
         cy.waitFor({element: `${authoring.vex.navigation.navTitle}:contains('${nav1[0].label}')`, to: "exist", wait: 10000})
-        authoring.vex.deleteNavItems(nav1[0].label, true) // Just want to do 1 nav item deletion that verifies it is deleted - the rest can be cleared en-masse without checking
+        authoring.vex.deleteNavItems(nav1[1].label, true) // Just want to do 1 nav item deletion that verifies it is deleted - the rest can be cleared en-masse without checking
         authoring.vex.deleteAllNavItems()
 
-        // Add bunch of text links
+        //Add bunch of text links
         nav2.forEach((navItem)=>{
             authoring.vex.addNavItem(navItem)
         })
-
+        cy.wait(5000)
         //Reorder the text links to have menu structure (sublinks)
         authoring.vex.attachSubNav({subject: nav2[2].label, target: nav2[3].label}) // makes level 2 a sublink of level 1
         authoring.vex.attachSubNav({subject: nav2[1].label, target: nav2[2].label}) // makes level 3 a sublink of level 1, below 2 
@@ -353,9 +355,8 @@ describe("VEX - Navigation Builder", ()=>{
 
         // Verify on consumption that all removed items are gone, and text links have proper menu structure
         cy.visit(event.url)
-        cy.wait(5000)
         cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[3].label).should('exist').trigger("mouseover")
-        cy.contains(consumption.vex.vexHeaderPopupMenu, nav2[2].label).should('exist').trigger("mouseover")
+        cy.contains(consumption.vex.vexHeaderMenuNoPopup, nav2[2].label).should('exist')
         cy.contains(consumption.vex.vexHeaderMenuNoPopup, nav2[1].label).should('exist')
         cy.contains("div", nav2[0].label).should('not.exist')
         cy.contains("a", nav2[4].label).should("not.exist")
@@ -363,7 +364,7 @@ describe("VEX - Navigation Builder", ()=>{
         nav1.forEach((navItem)=>{
             cy.get(consumption.vex.vexHeader).within(()=>{
                 cy.contains(navItem.label).should("not.exist")
-            })
+           })
         })
     })
 })
