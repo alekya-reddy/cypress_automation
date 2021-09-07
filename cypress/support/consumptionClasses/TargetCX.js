@@ -11,5 +11,12 @@ export class TargetCX extends CommonCX {
         this.signpostContainer = "#signposts-container";
         this.endPromoterTitle = "#qa-modal-header-title";
         this.bottombarTitle = "#qa-bottom-bar-title";
+
+        this.iframeForEmbeddedForm = {
+            iframe: "iframe[title='Content Window']",
+            email: "input[name='emailAddress']",
+            submitButton: "input[class='submit-button-style ']",
+            submittedMsg: "div[class='title']"
+        }
     } 
 }

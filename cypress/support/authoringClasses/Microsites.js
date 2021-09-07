@@ -52,6 +52,7 @@ export class Microsites extends Common {
         this.landingPages = {
             nameInput: "input[name='name']",
             slugInput: "input[name='slug']",
+            description: "textarea[name='pageDescription']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addTracksButton: "button:contains('Tracks')",
@@ -66,7 +67,7 @@ export class Microsites extends Common {
             titleOverrideInput: "input[name*='trackTitleOverride']",
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
-            micrositeCardTitle: ".pf-event-microsite-card-title > div",
+            micrositeCardTitle: ".pf-event-microsite-card-title > div div",
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
             recommendRadio: "input[value='recommend']",
@@ -609,6 +610,7 @@ export class Microsites extends Common {
         const name = config.name
         const newName = config.newName
         const slug = config.slug
+        const description = config.description
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const verify = config.verify
 
@@ -628,6 +630,9 @@ export class Microsites extends Common {
             if (slug) {
                 cy.get(this.landingPages.slugInput).clear().type(slug)
             }
+            if (description) {
+                cy.get(this.landingPages.description).clear().type(description)
+            }
             cy.contains("button", "Submit").click()
         })
         if (verify !== false) {
@@ -642,8 +647,8 @@ export class Microsites extends Common {
                 }
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Private')").should('exist')
+                cy.contains(this.antTable.cell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
+                cy.contains(this.antTable.cell, checkName).siblings("td:contains('Private')").should('exist')
             }
             if (slug) {
                 cy.containsExact("td", checkName).siblings(`td:contains('${slug}')`).should('exist')

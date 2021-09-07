@@ -225,7 +225,6 @@ describe("Microsites - Navigation setup", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).click()
         cy.url().should("eq", `${microsite.url}/${navigation.target.reference.slug}/${navigation.target.reference.firtContentSlug}`)
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.landingPage1.label, {timeout: 20000}).click()
-        cy.wait(3000)
         cy.url().should("eq", `${microsite.url}/${navigation.landingPage1.reference.slug}`)
         // Mouseover Text navigation menu, Verify dropdowns, click on the link from dropdowns and verify that it goes tp correct url
         cy.contains(consumption.microsites.navigation.menuWithSubmenu, navigation.text3.label).should("be.visible").trigger("mouseover")

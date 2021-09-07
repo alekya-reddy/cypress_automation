@@ -19,12 +19,12 @@ const codeGenerator = (attributeValue) => `<script id="${attributeValue}">${wait
 // These codes test script codes
 const eventExternalCode = {name: "event externalCode.js", interceptCode: codeGenerator("event"), locator: "#event"}
 // These codes test html-element codes
-const vexAppearanceExternalCode = {name: "VEX Test External Code", interceptCode: `<div id="vex_test-ec">VEX Test External Code</div>`}
-const vexAppearanceExternalCode2 = {name: "VEX Test 2 External Code", interceptCode: `<div id="vex_test2-ec">VEX Test 2 External Code</div>`}
-const vexAppearanceExternalCode3 = {name: "VEX External Language Name ", interceptCode: `<div id="vex_test3-ec">{{language.name}}</div>`}
-const vexAppearanceExternalCode4 = {name: "VEX External Language Code", interceptCode: `<div id="vex_test4-ec">{{language.code}}</div>`}
+const vexAppearanceExternalCode = {name: "VEX Test External Code", interceptCode: `<div id="vex_test-ec">VEX Test External Code`}
+const vexAppearanceExternalCode2 = {name: "VEX Test 2 External Code", interceptCode: `<div id="vex_test2-ec">VEX Test 2 External Code`}
+const vexAppearanceExternalCode3 = {name: "VEX External Language Name ", interceptCode: `<div id="vex_test3-ec">{{language.name}}`}
+const vexAppearanceExternalCode4 = {name: "VEX External Language Code", interceptCode: `<div id="vex_test4-ec">{{language.code}}`}
 // A harmless global external code that won't break any tests if left on permanently - it just console.logs a message
-const globalExternalCode = {name: "External Code 3 - Shared Resource", interceptCode: `<script id="global">console.log("Global External Code")</script>`, locator: "#global"}
+const globalExternalCode = {name: "External Code 3 - Shared Resource", interceptCode: `<script id="global">console.log("Global External Code")`, locator: "#global"}
 const testSpecificCodes = [vexAppearanceExternalCode, vexAppearanceExternalCode2, vexAppearanceExternalCode3, vexAppearanceExternalCode4, eventExternalCode]
 
 const vexAppearance = {

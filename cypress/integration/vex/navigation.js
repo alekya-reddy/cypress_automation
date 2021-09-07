@@ -316,7 +316,7 @@ describe("VEX - Navigation Builder", ()=>{
         })
         cy.go("back")
 
-        //Edit navigation items and verify on cosumption
+        //Edit navigation items and verify on consumption
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
