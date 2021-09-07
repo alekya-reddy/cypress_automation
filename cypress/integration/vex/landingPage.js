@@ -70,6 +70,8 @@ const firstBlockText = "I should be first"
 const testLandingPage = {
     name: "Test Landing Page",
     slug: "test-landing-page",
+    pageTitle: "This is pageTitle",
+    pageDescription: "This is pageDescription",
     get url(){
         return `${event.url}/${this.slug}`
     },
@@ -260,7 +262,13 @@ describe("VEX - Landing Page Editor", ()=>{
         })   
 
         // Visit it on consumption 
+        //check that description and page Title you have set on landing pages will show up in the <title> and <description> attribute
         cy.visit(testLandingPage.url)
+        cy.wait(2000)
+        cy.get('meta[name="twitter:title"]').should("have.attr", "content", testLandingPage.pageTitle);
+        cy.get('meta[name="description"]').should("have.attr", "content", testLandingPage.pageDescription);
+        cy.get('meta[property="og:title"]').should("have.attr", "content", testLandingPage.pageTitle); 
+        cy.get('meta[property="og:description"]').should("have.attr", "content", testLandingPage.pageDescription);
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])
