@@ -54,6 +54,7 @@ export class Microsites extends Common {
             slugInput: "input[name='slug']",
             pageTitle: "input[name='pageTitle']",
             pageDescription: "textarea[name='pageDescription']",
+            description: "textarea[name='pageDescription']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addTracksButton: "button:contains('Tracks')",
@@ -68,7 +69,7 @@ export class Microsites extends Common {
             titleOverrideInput: "input[name*='trackTitleOverride']",
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
-            micrositeCardTitle: ".pf-event-microsite-card-title > div",
+            micrositeCardTitle: ".pf-event-microsite-card-title > div div",
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
             recommendRadio: "input[value='recommend']",
@@ -86,6 +87,7 @@ export class Microsites extends Common {
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
             labelInput: "input[name='title']",
+            labelInputEdit: "input[name='title']",
             linkInput: "input[name='link']",
             newTabCheckBox: "input[name='newTab']",
             navRow: ".rst__row",
@@ -93,7 +95,10 @@ export class Microsites extends Common {
             navSubtitle: ".rst__rowSubtitle",
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
-            navRemoveBox: ".rst__rowToolbar"
+            navRemoveBox: ".rst__rowToolbar",
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
+            navModal: "div[class='ant-modal-mask']"
         };
         this.searchAndFilter = {
             switchToggle: ".ant-tabs-tabpane.ant-tabs-tabpane-active .ant-switch-handle",
@@ -500,6 +505,7 @@ export class Microsites extends Common {
                     cy.contains('button', 'Remove').click()
                 })
                 cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
+                cy.wait(3000)
             })
             if (verify !== false) {
                 cy.waitFor({ element: `${this.antTable.cell}:contains('${track}')`, to: "not.exist", wait: 20000 })
@@ -606,6 +612,7 @@ export class Microsites extends Common {
         const name = config.name
         const newName = config.newName
         const slug = config.slug
+        const description = config.description
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const pageTitle = config.pageTitle
         const pageDescription = config.pageDescription
@@ -633,7 +640,9 @@ export class Microsites extends Common {
             if (pageDescription){
                 cy.get(this.landingPages.pageDescription).clear().type(pageDescription)
             }
-
+            if (description) {
+                cy.get(this.landingPages.description).clear().type(description)
+            }
             cy.contains("button", "Submit").click()
         })
         if (verify !== false) {
@@ -648,8 +657,8 @@ export class Microsites extends Common {
                 }
                 cy.containsExact('td', checkName).siblings("td:contains('Public')").should('exist')
             } else if (visibility == 'private') {
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
-                cy.containsExact(this.antCell, checkName).siblings("td:contains('Private')").should('exist')
+                cy.contains(this.antTable.cell, checkName).siblings("td:contains('Set as Home Page')").should('not.exist')
+                cy.contains(this.antTable.cell, checkName).siblings("td:contains('Private')").should('exist')
             }
             if (slug) {
                 cy.containsExact("td", checkName).siblings(`td:contains('${slug}')`).should('exist')
@@ -1210,7 +1219,7 @@ export class Microsites extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antDropSelect.selector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).click()
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click()
         if (source && type !== "Link") {
             cy.get(this.antDropSelect.selector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
@@ -1234,6 +1243,39 @@ export class Microsites extends Common {
                 }
             })
         }
+    }
+
+    editNavItem(config) {
+        const to_edit=config.to_edit
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+
+        this.tabToNavigation()
+        cy.contains(this.navigation.navTitle, to_edit).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click()
+        })
+        cy.contains(this.antModal, "Update Navigation Item").should('exist')
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.get(this.navigation.labelInputEdit).filter(':visible').first().clear().type(label)
+            cy.get(this.antDropSelect.selector).first().click()
+        })
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        if (source && type !== "Link") {
+            cy.get(this.antDropSelect.selector).eq(1).click()
+            cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
+        } 
+        else if (source && type == "Link") {
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+            })
+        }
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.contains("button", "Submit").filter(':visible').first().click()
+        })
+        cy.wait(1000)
     }
 
     addSearchAndFilterOptions(options) {
@@ -1266,11 +1308,19 @@ export class Microsites extends Common {
 
         this.tabToNavigation()
         navItems.forEach((navItem) => {
+            //cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
+            //    cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
+             //       cy.contains("button", "Remove").click()
+            //    })
+            //})
+
+            
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
-                cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-                    cy.contains("button", "Remove").click()
+                cy.contains(this.navigation.navTitle, navItem).should('exist').parent().parent().within(() => {
+                    cy.get(this.navigation.navDelete).should('exist').click()
                 })
             })
+
             if (verify) {
                 cy.waitFor({ element: `${this.navigation.navTitle}:contains('${navItem}')`, to: "not.exist", wait: 10000 })
                 cy.containsExact(this.navigation.navTitle, navItem).should('not.exist')
@@ -1287,8 +1337,9 @@ export class Microsites extends Common {
         // This effectively drags the subject back, and then it will link up to the target as a third-level submenu 
         const subject = config.subject // name of the nav item to be moved
         const target = config.target // name of the nav item that subject will connect to 
-
+        cy.wait(2000)
         cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
+        cy.wait(2000)
         cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
     }
 
@@ -1354,7 +1405,6 @@ export class Microsites extends Common {
         cy.get(this.landingPages.editorMenu).within(() => {
             cy.get(this.landingPages.menuBlock).eq(3).click()
         })
-
         if (heading) {
             let fontSize = heading.fontSize
 
@@ -1363,7 +1413,6 @@ export class Microsites extends Common {
                 cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
             }
         }
-
         cy.contains("button", "Confirm").click()
     }
 

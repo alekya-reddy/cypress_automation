@@ -52,7 +52,7 @@ export class Common {
             folderCell: "div[data-qa-hook='table-cell-folder-name']"
         };
         this.antTable = {
-            cell: "tbody td.ant-table-cell",
+            cell: "td.ant-table-cell",
             row: "tr[class*='ant-table-row']"
         };
         this.antCard = {
@@ -60,7 +60,7 @@ export class Common {
             title: "td[class*='ant-table-cell']"
         };
         this.antDropSelect = {
-            selector: ".ant-select-selector",
+            selector: ".ant-select-selector:visible",
             optionsContainer: "div[class*='ant-select-dropdown']",
             options: function(option){ return `div[label="${option}"]`; }
         };
