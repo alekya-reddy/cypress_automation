@@ -113,7 +113,7 @@ const customFormsessions = [
         },
         form: "TestCustomForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "pre_event"
+        mergeFieldStatus: "pre_event"
     },
     {
         name: "Live current",
@@ -132,7 +132,7 @@ const customFormsessions = [
         },
         form: "TestCustomForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "live",
+        mergeFieldStatus: "live",
         expectedStatus: "Live"
     },
     {
@@ -153,7 +153,7 @@ const customFormsessions = [
         video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestCustomForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "on_demand",
+        mergeFieldStatus: "on_demand",
         expectedStatus: "Finished"
     },
     {
@@ -173,7 +173,7 @@ const customFormsessions = [
         },
         form: "TestCustomForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "post_event",
+        mergeFieldStatus: "post_event",
         expectedStatus: "Finished"
     },
     {
@@ -186,7 +186,7 @@ const customFormsessions = [
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestCustomForm.js",
-        mergeFiledStatus: "on_demand",
+        mergeFieldStatus: "on_demand",
         expectedStatus: "On Demand"
     }
 
@@ -199,18 +199,9 @@ const externalFormsessions = [
         get url() {
             return `${event.url}/${this.slug}`
         },
-        visibility: 'Public',
-        type: 'Live',
-        live: {
-            start: 'Jun 24, 2040 8:00pm',
-            end: 'Jun 24, 2041 8:00pm',
-            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-            type: 'Webex',
-            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        },
         form: "TestExternalForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "pre_event"
+        mergeFieldStatus: "pre_event"
     },
     {
         name: "Live current",
@@ -218,18 +209,9 @@ const externalFormsessions = [
         get url() {
             return `${event.url}/${this.slug}`
         },
-        visibility: 'Public',
-        type: 'Live',
-        live: {
-            start: 'Jun 24, 2020 8:00pm',
-            end: 'Jun 24, 2041 8:00pm',
-            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-            type: 'Webex',
-            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        },
         form: "TestExternalForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "live",
+        mergeFieldStatus: "live",
         expectedStatus: "Live"
     },
     {
@@ -238,19 +220,10 @@ const externalFormsessions = [
         get url() {
             return `${event.url}/${this.slug}`
         },
-        visibility: 'Public',
-        type: 'Live',
-        live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2011 8:00pm',
-            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-            type: 'Webex',
-            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        },
         video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestExternalForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "on_demand",
+        mergeFieldStatus: "on_demand",
         expectedStatus: "Finished"
     },
     {
@@ -259,31 +232,16 @@ const externalFormsessions = [
         get url() {
             return `${event.url}/${this.slug}`
         },
-        visibility: 'Public',
-        type: 'Live',
-        live: {
-            start: 'Jun 24, 2010 8:00pm',
-            end: 'Jun 24, 2011 8:00pm',
-            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-            type: 'Webex',
-            webexLink: "https://meetingsamer31.webex.com/meet/pr1263154023"
-        },
         form: "TestExternalForm.js",
         formVisibility: "Always",
-        mergeFiledStatus: "post_event",
+        mergeFieldStatus: "post_event",
         expectedStatus: "Finished"
     },
     {
         name: "On-demand",
         slug: "on-demand",
-        get url() {
-            return `${event.url}/${this.slug}`
-        },
-        visibility: 'Public',
-        type: 'On Demand',
-        video: 'Youtube - Used in Cypress automation for VEX testing',
         form: "TestExternalForm.js",
-        mergeFiledStatus: "on_demand",
+        mergeFieldStatus: "on_demand",
         expectedStatus: "On Demand"
     }
 
@@ -398,7 +356,7 @@ describe("VEX - Dynamic Field Merge", () => {
 
         cy.visit(event2.url)
 
-        //Validation of session status of each event on consumption page when custom form applied
+        //Validation of session status of each session on consumption page when custom form applied
         customFormsessions.forEach((session) => {
             cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
             if (!session.name.includes("Live pending")) {
@@ -406,8 +364,8 @@ describe("VEX - Dynamic Field Merge", () => {
             }
             cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
             cy.getIframeBody(consumption.common.customFormIframe).within(() => {
-                cy.get("#status").should("have.attr", "value", session.mergeFiledStatus)
-                cy.contains(session.mergeFiledStatus).should('be.visible')
+                cy.get("#status").should("have.attr", "value", session.mergeFieldStatus)
+                cy.contains(session.mergeFieldStatus).should('be.visible')
                 cy.go('back')
             })
         })
@@ -431,7 +389,7 @@ describe("VEX - Dynamic Field Merge", () => {
 
         cy.visit(event2.url)
 
-        //Validation of session status of each event on consumption page when external form applied
+        //Validation of session status of each session on consumption page when external form applied
         externalFormsessions.forEach((session) => {
             cy.contains('div', session.name).should('be.visible', { timeout: 10000 }).click()
             if (!session.name.includes("Live pending")) {
@@ -439,7 +397,7 @@ describe("VEX - Dynamic Field Merge", () => {
             }
             cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 20000)
             cy.get(consumption.common.customFormIframe).invoke('attr', 'src').then(value => {
-                expect(value).to.contains(session.mergeFiledStatus)
+                expect(value).to.contains(session.mergeFieldStatus)
             })
             cy.go('back')
         })
