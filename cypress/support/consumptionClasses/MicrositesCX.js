@@ -30,7 +30,9 @@ export class MicrositesCX extends CommonCX {
             header: ".pf-microsite-header",
             menuItem: ".rc-menu-item",
             menuWithSubmenu: ".rc-menu-submenu-title",
-            cookieSettings: "#pf-microsite-cookie-consent-button"
+            cookieSettings: "#pf-microsite-cookie-consent-button",
+            navHeaderLink: "div[class='rc-menu-submenu-title'] > a",
+            navHeaderText: "div[class='rc-menu-submenu-title'] > div"
         };
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"

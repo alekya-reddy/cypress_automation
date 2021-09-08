@@ -181,7 +181,10 @@ export class Vex extends Common {
             navSubtitle: ".rst__rowSubtitle",
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
-            navRemoveBox: ".rst__rowToolbar"
+            navRemoveBox: ".rst__rowToolbar",
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
+            navModal: "div[class='ant-modal-mask']"
         };
         this.blacklist = {
             emailInput: "input[name='email']",
@@ -1389,7 +1392,7 @@ export class Vex extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antSelector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).click()
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
         if (source && type !== "Link") {
             cy.get(this.antSelector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
@@ -1400,7 +1403,7 @@ export class Vex extends Common {
             cy.get(this.navigation.newTabCheckBox).click()
         }
         cy.contains('button', "Submit").click()
-
+        cy.wait(2000)
         if (verify) {
             cy.contains(this.antModal, "Add Navigation Item").should("not.be.visible")
             cy.containsExact(this.navigation.navTitle, label).should('exist').parent().within(() => {
@@ -1414,6 +1417,45 @@ export class Vex extends Common {
             })
         }
     }
+    editNavItem(config) {
+        const to_edit=config.to_edit
+        const label = config.label
+        const type = config.type
+        const source = config.source
+        const newTab = config.newTab
+        const verify = config.verify
+
+        this.goToNavigation()
+        cy.contains(this.navigation.navTitle, to_edit,  { timeout: 5000 }).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click({force:true})
+        })
+        cy.contains(this.antModal, "Update Navigation Item").should('exist')
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.get(this.navigation.labelInput).filter(':visible').first().clear().type(label)
+            cy.get(this.antDropSelect.selector).first().click()
+        })
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        if (source && type !== "Link") {
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.antDropSelect.selector).eq(1).click()
+            })
+            cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
+        }    
+        else if (source && type == "Link") {
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+            })
+        }
+        else if (source && type == "Link") {
+            cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+                cy.get(this.navigation.linkInput).clear().type(source)
+            })
+        }
+        cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
+            cy.contains("button", "Submit").filter(':visible').first().click()
+        })
+        cy.wait(3000)
+    }
 
     deleteNavItems(list, verify) {
         const navItems = [list].flat()
@@ -1422,7 +1464,7 @@ export class Vex extends Common {
         navItems.forEach((navItem) => {
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
                 cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-                    cy.get(this.navItemRemove).click()
+                    cy.get(this.navigation.navDelete).should('exist').click()
                 })
             })
             if (verify) {
@@ -1440,7 +1482,7 @@ export class Vex extends Common {
                     // Need to remove bottomost one first, and work your way up
                     // If start at top, could delete a node that takes out several at once, but for loop keeps going
                     cy.get(this.navigation.navRow).eq(i).within(() => {
-                        cy.get(this.navItemRemove).click()
+                        cy.get(this.navigation.navDelete).click()
                     })
                 }
             })
@@ -1457,8 +1499,8 @@ export class Vex extends Common {
         const subject = config.subject // name of the nav item to be moved
         const target = config.target // name of the nav item that subject will connect to 
 
-        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart")
-        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend")
+        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart",{force: true})
+        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend",{force: true})
     }
 
     goToBlacklist() {
