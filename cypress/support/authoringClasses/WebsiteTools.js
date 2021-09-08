@@ -17,6 +17,7 @@ export class WebsiteTools extends Common {
         this.websitePath = "input[id='websitePath']";
         this.enterselectOption = function(option){ return `input[id="${option}"]` };
         this.promoterList = "div[name='promoterList']";
+        this.selectOpen = "span[class='ant-select-selection-item']";
         this.selectOption = function(option){ return `div[class="ant-select-item-option-content"]:contains("${option}")` };
         this.websiteurlPath = function(option){ return `td[id="${option}"]` };
         this.formSratergy = "li[id='show-page-form-strategy']>a";
@@ -25,10 +26,29 @@ export class WebsiteTools extends Common {
         this.addForm = "input[id='website-form-id']";
         this.Pagecontrols = "div[data-qa-hook='title-bar']>h1"
         this.selectOpen = "span[class='ant-select-selection-item']";
-        
+        this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
+        this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
+        this.modal = 'div[data-qa-hook="modal"]';
+        this.targetElementID = 'input[name="targetElementID"]';
+}
 
-    }
+addContentToFeatured(content){
+    cy.get(this.contentPickerSearchBar).clear().type(content)
+    cy.contains(this.contentPickerItem, content).click()
+    cy.get(this.modal).contains("button", "Save").click()
+}
 
+addContent(contents){
+    cy.contains("button", "Add Content").click()
+    contents.forEach((content) => {
+        cy.get(this.modal).within(()=>{
+            cy.get(this.contentPickerSearchBar).clear().type(content)
+            cy.contains(this.contentPickerItem, content).click()
+        })
+    })
+
+    cy.get(this.modal).contains("button", "Save").click()
+}
     visit(){
         cy.visit(this.websiteToolsUrl);
     }

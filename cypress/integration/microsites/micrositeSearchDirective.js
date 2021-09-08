@@ -45,6 +45,7 @@ const target = {
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
+    description: "Main Page",
     get url(){
         return `${microsite.url}/${this.slug}`
     },
@@ -76,8 +77,8 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
                 authoring.microsites.addTracks({target: target.name})
                 authoring.microsites.tabToLandingPages()
                 authoring.microsites.addLandingPages(landingPage.name)
+                authoring.microsites.editLandingPage(landingPage)
                 authoring.microsites.configureLandingPage(landingPage)
-                
             }
         }) 
     }) 
@@ -133,6 +134,7 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.contains('button', 'Save').click()
         cy.visit(landingPage.url)
         cy.wait(5000)
+        cy.reload()
         cy.get('meta[name="robots"]',{timeout:20000}).should("have.attr", "content", "noindex, nofollow");
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-microsites");
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
@@ -143,7 +145,7 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.get('meta[property="og:image:width"]').should("have.attr", "content", "576");  
         cy.get('meta[property="og:type"]').should("have.attr", "content", "website");  
         cy.get('meta[property="og:title"]').should("have.attr", "content", landingPage.name);  
-        cy.get('meta[name="description"]').should("have.attr", "content", landingPage.name); 
+        cy.get('meta[name="description"]').should("have.attr", "content", landingPage.description); 
         cy.get('meta[name="twitter:site"]').should("have.attr", "content", "www_twitter_com"); 
         cy.get('meta[name="twitter:creator"]').should("have.attr", "content", "www_twitter_com"); 
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.name);

@@ -186,7 +186,7 @@ describe('VEX - Consumption', function(){
         })
         session.contents.forEach((content)=>{
             // This checks that the correct supplemental content are listed 
-            cy.containsExact('a', content).should('exist')
+            cy.contains('a',content)
         })
     })
 

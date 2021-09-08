@@ -52,5 +52,5 @@ export class WebsiteToolsCX extends CommonCX {
             })*/
             req.reply({body: {contents: processedContents}})
         })
-    }
+    }   
 }

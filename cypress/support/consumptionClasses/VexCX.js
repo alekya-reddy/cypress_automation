@@ -50,10 +50,13 @@ export class VexCX extends CommonCX {
         this.searchInput = 'input[type="search"]'
         this.searchButton = '#vex_search_button'
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
-        this.filterSearchBox = '.p-multiselect-filter-container'
-        this.filterBoxheader = '.p-multiselect-header'
-        this.selectAllFilterCheckbox = '.p-checkbox-box'
+        this.filterSearchBox ='.p-multiselect-filter-container'
+        this.filterBoxheader='.p-multiselect-header'
+        this.selectAllFilterCheckbox='.p-checkbox-box'
+        this.menuItem= ".rc-menu-item"
+        this.cxheader="div[class*='pf-event-header']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
+
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
