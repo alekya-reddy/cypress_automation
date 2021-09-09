@@ -152,6 +152,8 @@ export class Vex extends Common {
         this.pages = {
             nameInput: "input[name='name']",
             slugInput: "input[name='slug']",
+            pageTitle: "input[name='pageTitle']",
+            pageDescription: "textarea[name='pageDescription']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addSessionGroupButton: "button:contains('Session Group')",
@@ -1645,6 +1647,8 @@ export class Vex extends Common {
         const newName = config.newName
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const slug = config.slug
+        const pageTitle = config.pageTitle
+        const pageDescription = config.pageDescription
         const verify = config.verify // must specify false to skip verification 
         const title = config.title
 
@@ -1667,9 +1671,12 @@ export class Vex extends Common {
             if (slug) {
                 cy.get(this.pages.slugInput).clear().type(slug)
             }
-
-            if(title)
-            {
+            if (pageTitle){
+                cy.get(this.pages.pageTitle).clear().type(pageTitle)
+            }
+            if (pageDescription){
+                cy.get(this.pages.pageDescription).clear().type(pageDescription)
+            if(title){
                 cy.get(this.pages.pageTitle).clear().type(title)
             }
             cy.contains("button", "Submit").click()

@@ -57,6 +57,8 @@ const microsite = {
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
+    pageTitle: "This is pageTitle",
+    pageDescription: "This is pageDescription",
     get url(){
         return `${microsite.url}/${this.slug}`
     },
@@ -90,6 +92,7 @@ describe("Microsites - Form strategy", () => {
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({recommend: tracks.recommend.name, target: tracks.target.name})
                 authoring.microsites.addLandingPages(landingPage.name)
+                authoring.microsites.editLandingPage(landingPage)
                 authoring.microsites.configureLandingPage(landingPage)
             }
         })
@@ -127,5 +130,14 @@ describe("Microsites - Form strategy", () => {
         // Refresh. Form should not show up again.
         cy.reload()
         cy.contains(consumption.target.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("not.exist")
+    })
+
+    it("Visit landing page of tracks and verify page-tile and page-description", () => {
+        cy.visit(landingPage.url)
+        cy.wait(2000)
+        cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.pageTitle);
+        cy.get('meta[name="description"]').should("have.attr", "content", landingPage.pageDescription);
+        cy.get('meta[property="og:title"]').should("have.attr", "content", landingPage.pageTitle); 
+        cy.get('meta[property="og:description"]').should("have.attr", "content", landingPage.pageDescription);
     })
 })
