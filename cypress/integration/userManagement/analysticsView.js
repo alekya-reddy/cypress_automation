@@ -65,7 +65,7 @@ describe('Governanace Analytics for Tools', function() {
         cy.get(authoring.target.analyticsActivities).should("exist")
 
         authoring.recommend.visit()
-        cy.get(authoring.recommend.targetAnalytics).should("exist").click()
+        cy.get(authoring.recommend.recommendAnalytics).should("exist").click()
         cy.wait(3000)
         cy.get(authoring.recommend.analyticsActivities).should("exist")
 
