@@ -24,7 +24,8 @@ export class WebsiteTools extends Common {
         this.addFormButton = ".ant-col-4>button";
         this.formPath = "input[id='website-form-path']";
         this.addForm = "input[id='website-form-id']";
-        this.Pagecontrols = "div[data-qa-hook='title-bar']>h1"
+        this.Pagecontrols = "div[data-qa-hook='title-bar']>h1";
+        this.titleBar = 'div[data-qa-hook="title-bar"]>button>a';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.modal = 'div[data-qa-hook="modal"]';

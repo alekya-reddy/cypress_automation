@@ -10,7 +10,8 @@ export class Website extends Common {
         this.addWebsiteURLButton = "#AddWebsiteURLLink";
         this.newURLInput = "#urlPatterns";
         this.websiteURLName = `div[data-qa-hook="table-cell-url-patterns"] > span`;
-        this.enabledToggle = `div[data-qa-hook="enabled"]`
+        this.enabledToggle = `div[data-qa-hook="enabled"]`;
+        this.websiteAnalytics = 'div[data-qa-hook="title-bar"]>div>div>div>div>a:nth-child(2)>div'
     }
 
     visit(){

@@ -16,6 +16,8 @@ export class Microsites extends Common {
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = 'i[title="Delete Microsite"]';
+        this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
+        this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,

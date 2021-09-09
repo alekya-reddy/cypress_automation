@@ -27,14 +27,19 @@ export class UserManagement extends Common {
             campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
             campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
             trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
-            trackLabelsView: "#campaign_tools_track_labels-view" 
+            trackLabelsView: "#campaign_tools_track_labels-view",
+            campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view"
         }
         this.vex = {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
-            vexModuleCRUD: "#virtual_events_module_access-create-edit-delete"
+            vexModuleCRUD: "#virtual_events_module_access-create-edit-delete",
+            vexAnalysticsView: "#path_analytics_virtual_events-view"
+
         }
         this.websiteTools = {
-            websiteToolsModuleCRUD: "#website_tools_module_access-create-edit-delete"
+            websiteToolsModuleCRUD: "#website_tools_module_access-create-edit-delete",
+            WebsiteToolsAnalysticsView: "#path_analytics_website_tools-view"
+
         }
         this.contentLibrary = {
             contentLibraryInsightsView: "#content_library_insights-view",
@@ -76,12 +81,6 @@ export class UserManagement extends Common {
                 cy.get(this.userRoles.roleName).clear().type(userRole)        
                 cy.contains("button", "Add User Role").click()
             })  
-            if (verify !== false) {
-                cy.waitFor({element: this.modal, to: "not.exist"})
-                cy.get(this.pageSidebar).within(() => {
-                    cy.containsExact("div", userRole, {timeout: 5000}).should("exist")
-                })
-            }
         })
     }
 
@@ -102,7 +101,10 @@ export class UserManagement extends Common {
             contentLibraryInsightsView,
             contentLibraryFeatureAccessCRUD,
             userManagementCRUD,
-            organizationSettingsCRUD
+            organizationSettingsCRUD,
+            campaignToolsAnalyticsView,
+            vexAnalysticsView,
+            WebsiteToolsAnalysticsView,
         } = options
 
         this.clickUserRole(roleName)
@@ -222,6 +224,28 @@ export class UserManagement extends Common {
             cy.get(this.administrativeControls.organizationSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(organizationSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !organizationSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.administrativeControls.organizationSettingsCRUD).click()
+                }       
+            })
+        }
+
+        if(campaignToolsAnalyticsView == true || campaignToolsAnalyticsView == false){
+            cy.get(this.campaignTools.campaignToolsAnalyticsView).invoke("attr", "class").then(checkboxClass => {
+                if(campaignToolsAnalyticsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsAnalyticsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignToolsAnalyticsView).click()
+                }       
+            })
+        }
+        if(vexAnalysticsView == true || vexAnalysticsView == false){
+            cy.get(this.vex.vexAnalysticsView).invoke("attr", "class").then(checkboxClass => {
+                if(vexAnalysticsView && checkboxClass.includes("checkbox-container--unchecked") || !vexAnalysticsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.vex.vexAnalysticsView).click()
+                }       
+            })
+        }
+        if(WebsiteToolsAnalysticsView == true || WebsiteToolsAnalysticsView == false){
+            cy.get(this.websiteTools.WebsiteToolsAnalysticsView).invoke("attr", "class").then(checkboxClass => {
+                if(WebsiteToolsAnalysticsView && checkboxClass.includes("checkbox-container--unchecked") || !WebsiteToolsAnalysticsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.websiteTools.WebsiteToolsAnalysticsView).click()
                 }       
             })
         }

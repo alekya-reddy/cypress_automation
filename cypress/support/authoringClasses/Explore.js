@@ -9,6 +9,7 @@ export class Explore extends Common {
         this.shareExplore = 'i[title="share"]';
         this.previewExplore = 'i[title="preview"]';
         this.emailExplore = '#explore-show-email-button';
+        this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a'
         
         this.createExploreModal = {
             nameInput: "input[name='name']",
