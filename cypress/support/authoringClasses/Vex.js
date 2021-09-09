@@ -27,8 +27,8 @@ export class Vex extends Common {
         this.liveRadio = 'input[value="live"]';
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "input[placeholder='Search name']";
-        this.addSessionButton = "button:contains('Add Session'
-        this.pageControl = "div[data-qa-hook='title-bar']>h1"
+        this.addSessionButton = "button:contains('Add Session')";
+        this.pageControl = "div[data-qa-hook='title-bar']>h1";
         this.searchItem = 'span[class="ant-select-selection-item"]';
         this.searchInput = 'input[class="ant-select-selection-search-input"]';
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
