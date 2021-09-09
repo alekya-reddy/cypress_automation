@@ -125,6 +125,17 @@ export class VexCX extends CommonCX {
             messageInput: "textarea[name='msg']",
             moderatorViewButton: "button:contains('Open Moderator View')"
         };
+        this.limelight = {
+            selectVideo: "div[class^='pf-event-session-card-title']",
+            play1: "button[class='vjs-limelight-big-play']",
+            pause: "button[title='Pause']",
+            play2 : "button[title='Play']"
+        };
+        this.parmonic = {
+            selectVideo: "div[class^='pf-event-session-card-title']",
+            playButton: "div[class='shaka-big-play']>svg",
+            playAndpauseButton: "span[class='material-icons']"
+        }
         this.widget = {
             iframe: "iframe[id^='vex_widget_iframe']"
         };
