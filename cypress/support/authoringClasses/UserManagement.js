@@ -80,7 +80,13 @@ export class UserManagement extends Common {
             cy.contains(this.modal, "Add User Role").within(()=>{
                 cy.get(this.userRoles.roleName).clear().type(userRole)        
                 cy.contains("button", "Add User Role").click()
-            })  
+            }) 
+            if (verify !== false) {
+                cy.waitFor({element: this.modal, to: "not.exist"})
+                cy.get(this.pageSidebar).within(() => {
+                    cy.containsExact("div", userRole, {timeout: 5000}).should("exist")
+                })
+            } 
         })
     }
 
