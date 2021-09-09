@@ -10,7 +10,12 @@ export class Website extends Common {
         this.addWebsiteURLButton = "#AddWebsiteURLLink";
         this.newURLInput = "#urlPatterns";
         this.websiteURLName = `div[data-qa-hook="table-cell-url-patterns"] > span`;
-        this.enabledToggle = `div[data-qa-hook="enabled"]`
+        this.enabledToggle = `div[data-qa-hook="enabled"]`;
+        this.pagePreview = {
+        appearanceLabel: "label:contains('Appearance')",
+        languageLabel: "label:contains('Language')",
+    }
+        
     }
 
     visit(){
@@ -29,11 +34,12 @@ export class Website extends Common {
 
     deleteWebsite(url, verify){
         this.visit()
-        cy.ifElementWithExactTextExists(this.websiteURLName, url, 10000, () => {
+        cy.ifElementWithExactTextExists(this.websiteURLName, url, 10000, () => {          
             cy.containsExact(this.websiteURLName, url).click({force: true})
             cy.get(this.deleteIcon, {timeout: 20000}).click()
             cy.contains(this.modal, "Are you sure you want to delete this?").contains("button", "Delete Website Track").click()
         })
+
         if(verify !== false){
             cy.contains(this.pageTitleLocator, this.websiteCampaignsPageTitle, {timeout: 20000}).should("exist")
             cy.containsExact(this.websiteURLName, url).should("not.exist")
@@ -41,12 +47,38 @@ export class Website extends Common {
     }
 
     configureWebsite(options) {
-        const {url, enabled} = options
+        const {url, enabled,appearance,language} = options
         cy.containsExact(this.websiteURLName, url).click({force: true})
         if(enabled) {
             this.toggle(this.enabledToggle, enabled)
         }
+        cy.wait(2000)
+        if(appearance){
+            this.setAppearance(appearance)
+        }
+        cy.wait(2000)
+        if(language){
+            this.setLanguage(language)
+        }
     }
 
+    setAppearance(appearance){
+        cy.get(this.pagePreview.appearanceLabel).siblings("span").click({force:true})
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(appearance)).click()
+            cy.contains("button", "Update").click()
+        })
+    }
+
+    setLanguage(language){
+        cy.get(this.pagePreview.languageLabel).siblings("span").click({force:true})
+
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.input).click({force:true})
+            cy.get(this.dropdown.option(language)).click()
+            cy.contains("button", "Update").click()
+        })
+    }
 
 }

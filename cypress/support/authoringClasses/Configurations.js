@@ -79,6 +79,7 @@ export class Configurations extends Common {
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {
             sidebar: "div[data-qa-hook='page-sidebar']",
+            searchforAppearance: "div[data-qa-hook='page-sidebar']>div",
             secondaryNav: "div[data-qa-hook='page-secondary-navigation']",
             fontSizeSmall: "#fontSizeSmall",
             fontSizeMedium: "#fontSizeMedium",
@@ -217,6 +218,7 @@ export class Configurations extends Common {
         };
         this.languages = {
             sidebar: "div[data-qa-hook='page-sidebar']",
+            searchforLanguage: "div[data-qa-hook='page-sidebar']>div",
             secondaryNav: "div[data-qa-hook='page-secondary-navigation']",
             code: "#code",
             explore: {

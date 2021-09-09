@@ -28,15 +28,17 @@ export class Vex extends Common {
         this.searchSessionIcon = 'svg[data-icon="search"]';
         this.searchSessionInput = "input[placeholder='Search name']";
         this.addSessionButton = "button:contains('Add Session')";
-        this.pageControl = "div[data-qa-hook='title-bar']>h1",
-            this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
+        this.pageControl = "div[data-qa-hook='title-bar']>h1"
+        this.searchItem = 'span[class="ant-select-selection-item"]';
+        this.searchInput = 'input[class="ant-select-selection-search-input"]';
+        this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-            this.clearSearch = 'i[title="Clear search"]',
-            this.eventsearchButton = 'input[name="page-search"]',
-            this.noEventFoundmsg = 'No virtual events found',
-            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
+        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.eventsearchButton = 'input[name="page-search"]',
+        this.noEventFoundmsg = 'No virtual events found',
+        this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = 'i[title="Delete Virtual Event"]';
@@ -46,7 +48,9 @@ export class Vex extends Common {
         };
         this.sessionEditTags = "#edit-session-tags-configuration"
         this.clearSessionFilter = 'span[aria-label="close-circle"]'
-        this.antselect = ".ant-select-selection-item"
+        this.antselect = ".ant-select-selection-item";
+        this.clickEvent = "td[class*='ant-table-cell']>a";
+        this.previewClick = "div[data-qa-hook='title-bar']>div:nth-child(3)>a";
         this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
         this.sessionSortCell = ".ant-table-column-sorters";
@@ -71,6 +75,7 @@ export class Vex extends Common {
 
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
+        this.visibilityPublic = "span[class='ant-radio']>input[value='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
