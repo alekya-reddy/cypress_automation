@@ -7,6 +7,8 @@ export class Recommend extends Common {
         this.pageTitle = "Recommend Tracks";
         this.recommendAnalyticsTitle = "Recommend Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
+        this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };

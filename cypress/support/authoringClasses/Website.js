@@ -11,11 +11,11 @@ export class Website extends Common {
         this.newURLInput = "#urlPatterns";
         this.websiteURLName = `div[data-qa-hook="table-cell-url-patterns"] > span`;
         this.enabledToggle = `div[data-qa-hook="enabled"]`;
+        this.websiteAnalytics = 'div[data-qa-hook="title-bar"]>div>div>div>div>a:nth-child(2)>div';
         this.pagePreview = {
         appearanceLabel: "label:contains('Appearance')",
         languageLabel: "label:contains('Language')",
     }
-        
     }
 
     visit(){

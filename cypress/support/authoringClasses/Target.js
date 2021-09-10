@@ -7,6 +7,7 @@ export class Target extends Common {
         this.pageTitle = "Target Tracks";
         this.targetAnalyticsTitle = "Target Analytics Overview";
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
+        this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
