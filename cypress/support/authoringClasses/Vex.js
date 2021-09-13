@@ -1678,6 +1678,7 @@ export class Vex extends Common {
             }
             if (pageDescription){
                 cy.get(this.pages.pageDescription).clear().type(pageDescription)
+            }
             if(title){
                 cy.get(this.pages.pageTitle).clear().type(title)
             }
