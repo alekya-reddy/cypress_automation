@@ -251,7 +251,7 @@ describe('VEX - Virtual Event', function() {
         cy.contains(consumption.vex.sessionGroup, sessionGroup,{ timeout: 10000 }).within(() => {
             cy.get(consumption.vex.sessionCard)
               .should("have.css", "border-radius", vexAppearanceSettings.landingPageCardRadius+"px")
-            cy.get(consumption.vex.FilterByTopic)
+            cy.get(consumption.vex.topicFilter)
               .should("have.css", "border-radius", vexAppearanceSettings.landingPageSearchFilterRadius+"px")
             cy.get(consumption.vex.searchFilter)
               .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.landingPageSearchFilterBackgroundColor))

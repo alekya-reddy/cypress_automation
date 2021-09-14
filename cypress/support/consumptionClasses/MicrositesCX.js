@@ -11,6 +11,7 @@ export class MicrositesCX extends CommonCX {
         this.funnelStageFilter = '#microsite_funnelStages'
         this.industryFilter = '#microsite_industries'
         this.personaFilter = '#microsite_personas'
+        this.languageFilter = '#microsite_languages'
         this.businessUnitFilter = '#microsite_businessUnits'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
@@ -20,7 +21,6 @@ export class MicrositesCX extends CommonCX {
         this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
-        this.FilterByTopic = "#microsite_topics";
         this.searchFilter = "#microsite_search_button";
         this.searchInputField = "#microsite_search_input";
         this.carouselArrow_color = "#qa-arrow-right";

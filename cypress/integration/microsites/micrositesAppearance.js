@@ -275,7 +275,7 @@ describe("Microsites - Appeararnace", () => {
         cy.contains("h4", target.name).parent().within(() => {
             cy.get(consumption.microsites.gridCard)
                 .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageCardRadius + "px")
-            cy.get(consumption.microsites.FilterByTopic)
+            cy.get(consumption.microsites.topicFilter)
                 .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageSearchFilterRadius + "px")
             cy.get(consumption.microsites.searchFilter)
                 .should("have.css", "background-color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFilterBackgroundColor))
