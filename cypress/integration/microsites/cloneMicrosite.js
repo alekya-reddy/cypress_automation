@@ -78,9 +78,9 @@ const recommend = {
 }
 
 const defaultLandingPage = {
-    name: "landing Page Home Page",
+    name: "Home Page",
     visibility: "Public",
-    slug: "landing-page-home-pa",
+    slug: "home-page",
     get url() {
         return `${microsite.url}/${this.slug}`
     }
@@ -408,7 +408,7 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", () => 
         // Verify navigation 
         cy.get(consumption.microsites.navigation.header).should("exist").within(() => {
             cy.contains("a", "navigation_clone_Microsite.js").eq(0).should("exist")
-            cy.get("a").eq(1).should("have.attr", "href", "www.google.com")
+            cy.get("a").eq(2).should("have.attr", "href", "www.google.com")
         })
 
     })
@@ -463,7 +463,7 @@ describe("Microsite - Clone Microsite, Tracks, Landing Page, Navigation", () => 
         cy.get(consumption.cardTitle).should("not.exist")
         // navigation link should be there
         cy.get(consumption.microsites.navigation.header).should("exist").within(() => {
-            cy.get("a").should("have.attr", "href", "www.google.com")
+            cy.get("a").eq(1).should("have.attr", "href", "www.google.com")
             // navigation track should not be there
             cy.contains("a", "navigation_clone_Microsite.js").should("not.exist")
         })
