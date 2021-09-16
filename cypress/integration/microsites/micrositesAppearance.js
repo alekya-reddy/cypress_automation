@@ -162,7 +162,10 @@ const navigation = {
 
 const editCardConfiguration = {
     heading: {
-        fontSize: "50px"
+        fontSize: "50px",
+    },
+    cardConfiguration: {
+        blockName: target.name
     }
 }
 describe("Microsites - Appeararnace", () => {

@@ -85,6 +85,7 @@ export class Microsites extends Common {
             searchInputField: "#microsite_search_input",
             searchAndFiltersBlockToggleON: "div[class*='lxjoI']",
             searchAndFiltersBlockToggleOFF: "div[class*='OMAuq']",
+            enableDescription: "input[name*='cardConfiguration.enableDescription']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -675,7 +676,7 @@ export class Microsites extends Common {
     }
 
     goToPageEditor(page) {
-        cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')").within(() => {
+        cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')",{timeout: 8000}).within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -1402,17 +1403,29 @@ export class Microsites extends Common {
 
     editExistingCard(config) {
         const heading = config.heading
-
-        cy.get(this.landingPages.trackRow).should('be.visible', { timeout: 10000 }).click({ force: true })
-        cy.get(this.landingPages.editorMenu).within(() => {
-            cy.get(this.landingPages.menuBlock).eq(3).click()
+        const cardConfiguration = config.cardConfiguration
+        let blockName = cardConfiguration.blockName
+        cy.contains(this.landingPages.trackRow, blockName,{timeout: 10000}).parent().within(() => {
+            cy.get(this.landingPages.editorMenu).within(() => {
+                cy.get(this.landingPages.menuBlock).eq(3).click({force:true})
+            })
         })
         if (heading) {
             let fontSize = heading.fontSize
-
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
                 cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+        if(cardConfiguration){
+            let enableDescription=cardConfiguration.enableDescription
+            cy.containsExact("div", "Card Configuration").click()
+            if (enableDescription == false || enableDescription == true) {
+                cy.get(this.landingPages.enableDescription).parent().find("div[class^='ToggleSwitch']").invoke('attr', 'class').then((attr) => {
+                    if ((enableDescription == false && attr.includes("lxjoI")) || (enableDescription == true && !attr.includes("lxjoI"))) {
+                        cy.get(this.landingPages.enableDescription).click()
+                    }
+                })
             }
         }
         cy.contains("button", "Confirm").click()
