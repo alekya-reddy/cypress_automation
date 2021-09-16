@@ -7,6 +7,10 @@ export class CommonCX {
         this.baseUrl = baseUrl; 
         this.jukeBoxApp = "#jukebox-app";
         this.trackProtectionEmailInput = "#email";
+        this.ciscoEmailInput = "#userInput";
+        this.ciscoPasswordInput = "input[type='password']";
+        this.ciscoNextButton="#login-button";
+        this.ciscoLogIn="input[type='submit']";
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
         this.customFormIframe = "#qa-custom-form";
