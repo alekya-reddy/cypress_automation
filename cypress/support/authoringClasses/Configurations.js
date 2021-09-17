@@ -1650,7 +1650,7 @@ export class Configurations extends Common {
         
         cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
     }
-
+//I have added hard wait to make this function work. In regression if it's still fail then will remove waits
     deleteLanguage(name, verify){
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
         cy.wait(2000)
