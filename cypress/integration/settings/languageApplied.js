@@ -40,7 +40,8 @@ describe("Add Language and Verify LastUpdated Date", () => {
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.languages).should("exist")
         authoring.configurations.deleteLanguage(language.name)
         authoring.configurations.addNewLanguage(language)
-        cy.wait(2000)
+
+        cy.wait(4000)
          cy.get(authoring.configurations.rightSidebarPreview).parent().within(()=>{
             cy.contains("Not added to any Recommend Tracks").should("exist")
             cy.contains("Not added to any Target Tracks").should("exist")
@@ -59,10 +60,10 @@ describe("Add Language and Verify LastUpdated Date", () => {
         //I have used javascript function directly to match date on UI
          const today = authoring.configurations.lastUpdatedDate();
          expect(Date.parse(dateText)).to.be.lte(Date.parse(today));
-                        })
-                  })
+        })
+    })
 
-                  it("Add language to all tools", () => {
+               it("Add language to all tools", () => {
                    authoring.common.login()
                    authoring.recommend.visit()
                    authoring.recommend.deleteTrack(recommend.name)
@@ -85,7 +86,6 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    authoring.website.deleteWebsite(website.url)
                    authoring.website.addWebsite(website.url)
                    authoring.website.configureWebsite(website)
-                   
                    authoring.website.setLanguage(language.name)
 
                    authoring.vex.visit()
@@ -96,12 +96,11 @@ describe("Add Language and Verify LastUpdated Date", () => {
                    cy.contains("button", "Save").click()
                    cy.contains(authoring.vex.messages.recordSaved).should('exist')
 
-
                    authoring.websiteTools.visit()
-                   cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+                   cy.ifElementExists(`div[title="${domainName}"]`, 1000, ()=>{
                    cy.contains("button", "Delete").click()
-              })
                    cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+            })
                    cy.get(authoring.websiteTools.addProperty).click()
                    cy.get(authoring.websiteTools.antModal).within(() => {
                    cy.get(authoring.websiteTools.enterDomainName).type(domainName)
@@ -150,3 +149,4 @@ describe("Add Language and Verify LastUpdated Date", () => {
                  })
 
                 })
+            

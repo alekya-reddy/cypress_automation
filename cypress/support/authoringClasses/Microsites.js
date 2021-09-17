@@ -7,12 +7,13 @@ export class Microsites extends Common {
         this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-            this.clearSearch = 'i[title="Clear search"]',
-            this.searchButton = 'input[name="page-search"]',
-            this.noMicrositeFound = "No microsites found",
-            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
+        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.clearSearch = 'i[title="Clear search"]',
+        this.searchButton = 'input[name="page-search"]',
+        this.noMicrositeFound = "No microsites found",
+        this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
+        this.micrositeLink = 'span[class="ant-typography"]';
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = 'i[title="Delete Microsite"]';

@@ -8,5 +8,6 @@ export class RecommendCX extends CommonCX {
         this.sidebarBackground = "#sidebar-outer";
         this.topicSidebarDropdown = "#qa-topic-sidebar-dropdown";
         this.topicSidebarHeaderTitle = "#qa-topic-sidebar-header-title";
+        this.contentTitle = 'div[class="textLayer"]>span';
     } 
 }
