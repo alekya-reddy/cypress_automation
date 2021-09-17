@@ -18,6 +18,7 @@ export class Vex extends Common {
         this.eventNameInput = 'input[name="name"]';
         this.externalIDInput = "input[name='externalId']";
         this.cookieConsentCheckbox = "input[name='gdprCookieConsentEnabled']";
+        this.sessionDescriptionCheckbox = "input[name='virtualEventConfig.displayDescription']";
         this.eventSlugInput = 'input[name="customUrl"]';
         this.noRegistrationNeededOption = 'None (Registration Not Required)';
         this.antDropdownContainer = "div[class*='ant-select-dropdown']";
@@ -178,7 +179,8 @@ export class Vex extends Common {
             searchInputField: "#vex_search_input",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             filterToggle: "input[name*='.enable']",
-            pageTitle:"input[name='pageTitle']"
+            pageTitle:"input[name='pageTitle']",
+            enableDescription: "input[name*='cardConfiguration.enableDescription']"
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -2469,18 +2471,32 @@ export class Vex extends Common {
 
     editExistingCard(config) {
         const heading = config.heading
-
-        cy.get(this.pages.sessionGroupRow).should('be.visible', { timeout: 10000 }).click({ force: true })
-        cy.get(this.pages.editorMenu).within(() => {
-            cy.get(this.pages.menuBlock).eq(3).click()
+        const cardConfiguration = config.cardConfiguration
+        let blockName = cardConfiguration.blockName
+        cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).parent().within(() => {
+            //cy.get(this.pages.sessionGroupRow).should('be.visible',{timeout:10000}).click({force:true})
+            cy.get(this.pages.editorMenu).within(() => {
+                cy.get(this.pages.menuBlock).eq(3).click({force:true})
+            })
         })
 
         if (heading) {
             let fontSize = heading.fontSize
-
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
                 cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+            }
+        }
+
+        if(cardConfiguration){
+            let enableDescription=cardConfiguration.enableDescription
+            cy.containsExact("div", "Card Configuration").click()
+            if (enableDescription == false || enableDescription == true) {
+                cy.get(this.pages.enableDescription).parent().find("div[class^='ToggleSwitch']").invoke('attr', 'class').then((attr) => {
+                    if ((enableDescription == false && attr.includes("lxjoI")) || (enableDescription == true && !attr.includes("lxjoI"))) {
+                        cy.get(this.pages.enableDescription).click()
+                    }
+                })
             }
         }
 
@@ -2544,6 +2560,21 @@ export class Vex extends Common {
             }
         })
 
+    }
+    setSessionDescription(sessionDescription) {
+        cy.get(this.sessionDescriptionCheckbox,{timeout: 10000}).parent().invoke('attr', 'class').then((attr) => {
+            if ((sessionDescription == false && attr.includes("ant-checkbox-checked")) || (sessionDescription == true && !attr.includes("ant-checkbox-checked"))) {
+                cy.get(this.sessionDescriptionCheckbox).click()
+            }
+        })
+
+        cy.get(this.sessionDescriptionCheckbox,{timeout: 10000}).parent().invoke('attr', 'class').then((attr) => {
+            if (sessionDescription == false) {
+                expect(attr.includes("ant-checkbox-checked")).to.be.false
+            } else {
+                expect(attr.includes("ant-checkbox-checked")).to.be.true
+            }
+        })
     }
 
 }

@@ -112,6 +112,30 @@ const landingPage2 = {
     ]
 }
 
+const editCardConfiguration1 = {
+    cardConfiguration: {
+        enableDescription:false,
+        blockName:target2.name
+    }
+}
+const editCardConfiguration2 = {
+    cardConfiguration: {
+        enableDescription:true,
+        blockName:target2.name
+    }
+}
+const editCardConfiguration3 = {
+    cardConfiguration: {
+        enableDescription:false,
+        blockName:landingPage2.blocks[1].name
+    }
+}
+const editCardConfiguration4 = {
+    cardConfiguration: {
+        enableDescription:true,
+        blockName:landingPage2.blocks[1].name
+    }
+}
 describe("Microsites - tracks setup", () => {
     it("Add tracks, remove tracks", ()=>{
         authoring.common.login()
@@ -251,6 +275,61 @@ describe("Microsites - tracks setup", () => {
 
         cy.get(consumption.microsites.cardTitle).within(()=>{
             cy.contains('div',recommend2.contentTitleOverRide).should('exist')
+            cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
+        })
+
+        cy.go("back")
+        authoring.microsites.goToPageEditor(landingPage2.name)
+        //Override the content Description for a track block at block level->set to false
+        authoring.microsites.editExistingCard(editCardConfiguration1)
+        cy.contains(authoring.microsites.landingPages.trackRow, target2.name).within(() => {
+            cy.contains(target2.contentDescriptionOverRide).should("not.exist")
+        })
+        cy.wait(2000)
+        //Override the content Description for a Featured Content block at block level->set to false
+        authoring.microsites.editExistingCard(editCardConfiguration3)
+        cy.contains(authoring.microsites.landingPages.trackRow, landingPage2.blocks[1].name).within(() => {
+            cy.contains(recommend2.contentDescriptionOverRide).should("not.exist")
+        })
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+        cy.go("back")
+        cy.visit(landingPage.url)
+
+        //Verifying the Overriden content Description for a track block at block level->set to false on consumption
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',target2.contentDescriptionOverRide).should('not.exist')
+        })
+         //Verifying the Overriden content Description for a Featured Content block at block level->set to false on consumption
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',recommend2.contentDescriptionOverRide).should('not.exist')
+        })
+
+        cy.go("back")
+        authoring.microsites.goToPageEditor(landingPage2.name)
+
+        //Override the content Description for a track block at block level->set to true
+        authoring.microsites.editExistingCard(editCardConfiguration2)
+        cy.contains(authoring.microsites.landingPages.trackRow, target2.name).within(() => {
+            cy.contains(target2.contentDescriptionOverRide).should("exist")
+        })
+        cy.wait(2000)
+        //Override the content Description for a Featured Content block at block level->set to true
+        authoring.microsites.editExistingCard(editCardConfiguration4)
+        cy.contains(authoring.microsites.landingPages.trackRow, landingPage2.blocks[1].name).within(() => {
+            cy.contains(recommend2.contentDescriptionOverRide).should("exist")
+        })
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+        cy.go("back")
+        cy.visit(landingPage.url)
+
+        //Verifying the Overriden content Description for a track block at block level->set to true on consumption
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',target2.contentDescriptionOverRide).should('exist')
+        })
+         //Verifying the Overriden content Description for a Featured Content block at block level->set to true on consumption
+        cy.get(consumption.microsites.cardTitle).within(()=>{
             cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
         })
     })
