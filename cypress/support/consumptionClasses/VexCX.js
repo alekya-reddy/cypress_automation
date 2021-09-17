@@ -70,7 +70,7 @@ export class VexCX extends CommonCX {
         this.simuliveVideo = {
             vexCustomControl: 'div[class*="vex-session-custom-controls"]',
             pause: '#vex-simulive-play-pause',
-            volume: '#vex-simulive-volume-control',
+            volume: '#vex-simulive-volume',
             liveStatus: '#vex-simulive-live-status',
             videoProgressBar: '#vex-simulive-seek-container',
             fullScreenMode: '#vex-simulive-full-screen'
