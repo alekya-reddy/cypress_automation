@@ -4,6 +4,7 @@ export class ExploreCX extends CommonCX {
     constructor(env, org, tld, baseUrl){
         super(env, org, tld, baseUrl);
         this.headerTitle = "#qa-header-title"
+        this.exploreTitle= 'div[class="lx-content-title__container"]';
         this.hero = {
             heroTitle: ".lx-header-title__text",
             heroSubtitle: ".lx-header-subtitle__text",

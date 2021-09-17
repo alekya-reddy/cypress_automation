@@ -62,6 +62,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
             cy.contains("Not added to any Virtual Events").should("exist")
 
             })
+        })
 
         it('LastUpdated Date',()=>{
 
@@ -72,7 +73,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
          expect(Date.parse(dateText)).to.be.lte(Date.parse(today));
                         })
                   })
-   })
+   
 
    it("Add appearance to all tools", () => {
        authoring.common.login()
@@ -114,10 +115,10 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
     cy.contains('button:visible', "Save").click()
 
     authoring.websiteTools.visit()
-    cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+    cy.ifElementExists(`div[title="${domainName}"]`, 1000, ()=>{
         cy.contains("button", "Delete").click()
-    })
     cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+})
     cy.get(authoring.websiteTools.addProperty).click()
         cy.get(authoring.websiteTools.antModal).within(() => {
             cy.get(authoring.websiteTools.enterDomainName).type(domainName)

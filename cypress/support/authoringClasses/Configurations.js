@@ -1653,9 +1653,13 @@ export class Configurations extends Common {
 
     deleteLanguage(name, verify){
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.wait(2000)
         cy.get(this.pageSidebar).within(sidebar => {
+            cy.wait(2000)
             if (sidebar.find(`a:contains("${name}")`).length > 0) {
+                cy.wait(2000)
                 cy.containsExact("div", name).siblings("div").within(() => {
+                    cy.wait(2000)
                     cy.get(this.deleteIcon).click({force: true})
                 })
                 cy.do(() => {

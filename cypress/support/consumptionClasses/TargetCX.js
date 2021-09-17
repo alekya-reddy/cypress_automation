@@ -11,6 +11,7 @@ export class TargetCX extends CommonCX {
         this.signpostContainer = "#signposts-container";
         this.endPromoterTitle = "#qa-modal-header-title";
         this.bottombarTitle = "#qa-bottom-bar-title";
+        this.contentTitle = 'div[class="textLayer"]>span';
         this.limeLightVideo = {
             splashScreen: "div[id='lookbook-video-player']>div>div>div>video",
             videoControlButton: "div[class='vjs-control-bar']>button:nth-child(1)",

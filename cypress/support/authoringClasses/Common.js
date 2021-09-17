@@ -41,6 +41,18 @@ export class Common {
         this.pageSidebar = "div[data-qa-hook='page-sidebar']";
         this.pagePreview = "div[data-qa-hook='page-preview']";
         this.pageContainer = "div[data-qa-hook='page-sidebar']>div>a";
+        this.nameSetting = 'li[id="settings"]';
+        this.clientHq = "#organization-management";
+        this.orgSearch = 'input[name="page-search"]';
+        this.orgSelect = 'div[data-qa-hook="table-cell-name"]>a';
+        this.visitOrganization = 'div[data-qa-hook="title-bar"]>div>span>span>button';
+        this.orgModal = 'div[data-qa-hook="modal"]';
+        this.orgButton = 'div[data-qa-hook="modal"]>div:nth-child(2)>button:nth-child(2)';
+        this.imperzonation = 'div[id="impersonation"]';
+        this.orgDropdown = 'li[id="organization"]';
+        this.orgValue = 'div[class="Select-value"]';
+        this.orgSave = 'button[id="save"]';
+
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",

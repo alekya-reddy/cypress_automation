@@ -9,6 +9,9 @@ export class Recommend extends Common {
         this.deleteTrackIcon = "i[title='Delete Track']";
         this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
+        this.contentClick = "div[draggable='true']:nth-child(2)";
+        this.previewLink = 'div[data-qa-hook="page-preview"]>div>div:nth-child(2)>div>div>div';
+        this.recommendCell = 'div[data-qa-hook="table-cell-internal-title"]>span';
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
