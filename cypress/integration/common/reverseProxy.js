@@ -6,8 +6,9 @@ const consumption = createConsumptionInstance()
 const target = {
     name: "reverseProxy",
     slug: "reverseproxy",
-    url: "https://reverseproxy.pathfactory-"+authoring.common.env.TEST_ENV+"-wp.com/test-authoring/reverseproxy/2017-scrum-guide-us",
+    url: "https://reverseproxy.pathfactory-"+authoring.common.env.TEST_ENV+"-wp.com/test-authoring/reverseproxy/what-buying-a-new-ca",
 }
+
 
 const recommend = {
   name: "reverse proxy recommend",
@@ -71,7 +72,8 @@ describe("Reverse Proxy For Campaign Tools", function() {
 it("Reverse Proxy For Campaign Tools", function() {
 cy.visit(target.url)
 cy.url().should('contain', target.url)
-cy.get(consumption.target.contentTitle).contains("The Scrum Guide").should("exist")
+cy.wait(1000)
+cy.get(consumption.target.contentFrame).should("exist")
 
 cy.visit(recommend.url)
 cy.url().should('contain', recommend.url)
