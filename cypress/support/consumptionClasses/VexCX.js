@@ -46,15 +46,15 @@ export class VexCX extends CommonCX {
         this.industryFilter = '#vex_industries'
         this.personaFilter = '#vex_personas'
         this.businessUnitFilter = '#vex_businessUnits'
-        this.languageFilter='#vex_languages'
+        this.languageFilter = '#vex_languages'
         this.searchInput = 'input[type="search"]'
         this.searchButton = '#vex_search_button'
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
-        this.filterSearchBox ='.p-multiselect-filter-container'
-        this.filterBoxheader='.p-multiselect-header'
-        this.selectAllFilterCheckbox='.p-checkbox-box'
-        this.menuItem= ".rc-menu-item"
-        this.cxheader="div[class*='pf-event-header']"
+        this.filterSearchBox = '.p-multiselect-filter-container'
+        this.filterBoxheader = '.p-multiselect-header'
+        this.selectAllFilterCheckbox = '.p-checkbox-box'
+        this.menuItem = ".rc-menu-item"
+        this.cxheader = "div[class*='pf-event-header']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
 
 
@@ -129,7 +129,7 @@ export class VexCX extends CommonCX {
             selectVideo: "div[class^='pf-event-session-card-title']",
             play1: "button[class='vjs-limelight-big-play']",
             pause: "button[title='Pause']",
-            play2 : "button[title='Play']"
+            play2: "button[title='Play']"
         };
         this.parmonic = {
             selectVideo: "div[class^='pf-event-session-card-title']",
@@ -409,6 +409,7 @@ export class VexCX extends CommonCX {
     }
 
     SelectFiltersAndVerifyAsQueryStringInURL(filterOptions) {
+        const search = filterOptions.searchField
         const filterName = filterOptions.filtername;
         const indexes = filterOptions.index;
         const exists = filterOptions.exist;
@@ -525,6 +526,19 @@ export class VexCX extends CommonCX {
                     })
                 }
             })
+        }
+    }
+
+    SearchTextAndVerifyAsQueryStringInURL(options) {
+        const search = options.searchField
+        const exists = options.exist
+        cy.get(this.searchInput).clear().type(search);
+        cy.get(this.searchButton).click()
+        if (exists === true) {
+            cy.url().should('include', `search=${search}`)
+        }
+        else {
+            cy.url().should('not.include', `search=${search}`)
         }
     }
 
