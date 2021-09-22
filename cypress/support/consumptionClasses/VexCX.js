@@ -133,8 +133,8 @@ export class VexCX extends CommonCX {
         };
         this.parmonic = {
             selectVideo: "div[class^='pf-event-session-card-title']",
-            playButton: "div[class='shaka-big-play']>svg",
-            playAndpauseButton: "span[class='material-icons']"
+            playButton: 'rect[class="shaka-play-button-color"]',
+            playAndpauseButton: "div:nth-of-type(1) > .bottom-icon"
         }
         this.widget = {
             iframe: "iframe[id^='vex_widget_iframe']"
