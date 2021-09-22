@@ -169,6 +169,8 @@ const searchOptions =
     exist: true
 }
 
+const queryString = "?y=qa";
+
 describe("VEX- Multiple Query strings support on filters for VEX", () => {
     it("Set up Language and VEX if doesn't exist", () => {
         cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
@@ -236,11 +238,10 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.contains('div', "No results match the search/filter criteria.").should("exist");
     })
 
-    it.only("Verify Allow for query strings to persist on VEX URL consumption", () => {
-        const queryString = "?y=qa";
+    it("Verify Allow for query strings to persist on VEX URL consumption", () => {
         authoring.common.login()
 
-        //Adding Query string to the url and validating in consumption page
+        //Adding Query string to the url and validate that should persist on consumption url
         cy.visit(event.url)
         cy.url().then(url => {
             cy.visit(url + queryString)
@@ -286,7 +287,6 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.url().then(url => {
             expect(url).to.contain(queryString);
         })
-
 
         //Validation of allow query string to persist in VEX default landing page
         cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
