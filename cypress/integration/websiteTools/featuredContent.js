@@ -62,41 +62,15 @@ describe("Configure and Validate Content adding option with view options", () =>
         cy.visit(consumptionURL)
         cy.wait(2000)
         cy.get(consumption.websiteTools.contentList).should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Lb Battlecard Corporate Web').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Australia - Wikipedia').should("exist").click()
+        cy.get(consumption.websiteTools.featuredEvent).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Lb Battlecard Corporate Web').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Australia - Wikipedia').should("exist").click()
 
         cy.waitForIframeToLoad(consumption.websiteTools.overlayIframe.iframe, 10000)
         cy.wait(1000)
         cy.getIframeBody(consumption.websiteTools.overlayIframe.iframe).within(() => {
            cy.get(consumption.websiteTools.overlayIframe.content).should("exist")
         })
-        
-    })
-
-    it("Change external link", ()=>{
-        authoring.common.login()
-        authoring.websiteTools.visit()
-        cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
-            cy.contains("button", "Manage").click()
-        })
-        cy.get(authoring.websiteTools.pencilIcon).should("exist").click()
-        cy.wait(1000)
-        cy.get(authoring.websiteTools.modalBody).within(()=>{
-            cy.get(authoring.websiteTools.selectOpen).eq(1).click()        
-         })
-            cy.contains("Open in New Tab").click() 
-            cy.contains("span","Save").click()
-    })
-
-    it("View content in New Tab on Consumption", () => {
-        cy.visit(consumptionURL)
-        cy.wait(2000)
-        cy.get(consumption.websiteTools.contentList).should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Lb Battlecard Corporate Web').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Australia - Wikipedia').should("exist").click()
-        cy.get("a").should("have.attr", "href", "#content")
         
     })
 
@@ -119,11 +93,38 @@ describe("Configure and Validate Content adding option with view options", () =>
         cy.visit(consumptionURL)
         cy.wait(2000)
         cy.get(consumption.websiteTools.contentList).should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Lb Battlecard Corporate Web').should("exist")
-        cy.get(consumption.websiteTools.featuredblock).contains('Australia - Wikipedia').should("exist").click()
+        cy.get(consumption.websiteTools.featuredEvent).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Lb Battlecard Corporate Web').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Australia - Wikipedia').should("exist").click()
         cy.get('body').should('contain', "Australia")
 
     })
-          
+    
+    it("Change external link", ()=>{
+        authoring.common.login()
+        authoring.websiteTools.visit()
+        cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+            cy.contains("button", "Manage").click()
+        })
+        cy.wait(500)
+        cy.get(authoring.websiteTools.pencilIcon).should("exist").click()
+        cy.wait(500)
+        cy.get(authoring.websiteTools.modalBody).within(()=>{
+            cy.get(authoring.websiteTools.selectOpen).eq(1).click()        
+         })
+            cy.contains("Open in New Tab").click() 
+            cy.contains("span","Save").click()
+    })
+
+    it("View content in New Tab on Consumption", () => {
+        cy.visit(consumptionURL)
+        cy.wait(2000)
+        cy.get(consumption.websiteTools.contentList).should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Lb Battlecard Corporate Web').should("exist")
+        cy.get(consumption.websiteTools.featuredEvent).contains('Australia - Wikipedia').should("exist").invoke('removeAttr', 'target').click()
+        cy.get("a").should("have.attr", "href", "#content")
+
+    })    
+    
 })

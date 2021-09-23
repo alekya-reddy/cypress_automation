@@ -13,6 +13,7 @@ export class WebsiteTools extends Common {
         this.addProperty = "#domain-card-add";
         this.enterDomainName = "#domain-card-add-input";
         this.antModal = ".ant-modal-content";
+        this.modalBody = 'div[class="ant-modal-body"]';
         this.domainCard = "div[id^='domain-card-']";
         this.websitePath = "input[id='websitePath']";
         this.enterselectOption = function(option){ return `input[id="${option}"]` };
@@ -36,9 +37,8 @@ export class WebsiteTools extends Common {
         this.selectContent = 'button[class="ant-btn"]>span';
         this.addButton = 'div[class="ant-modal-footer"]>button:nth-child(2)';
         this.trackOpen = '.ant-modal-body .ant-form-item:nth-of-type(2) .ant-select-selection-search-input';
-        this.contentSelect = '.ant-modal-body .ant-form-item:nth-of-type(3) .ant-select-selection-search-input'
-
-        
+        this.contentSelect = '.ant-modal-body .ant-form-item:nth-of-type(3) .ant-select-selection-search-input';
+        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i'    
 }
 
 addContentToFeatured(config){
