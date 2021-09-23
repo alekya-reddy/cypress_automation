@@ -155,6 +155,7 @@ const vexsessions = [
             cy.get(authoring.vex.antDropSelect.selector).type(allVisitorsGroup + "\n")
         })
         cy.contains("button", "Save").click()
+        cy.wait(1000)
     })
     it("Visit event page on consumption side and verify that it asks for email", ()=>{
         cy.visit(event.url)
@@ -294,8 +295,8 @@ const vexsessions = [
         })
         cy.contains("button", "Save").click()
     })
-    it("Consumption Validations for Vex-Session level access protection", ()=>{
-        //Preview VEX sessions for which protection type "Email" is enabled 
+    it("Consumption Validations for Vex-Session level access protection with protection type combinations", ()=>{
+        //1.Preview only VEX sessions for which protection type "Email" is enabled 
         cy.visit(vexsessions[0].url)
         cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
         cy.contains(emailRequiredMsg).should("exist")
@@ -307,18 +308,52 @@ const vexsessions = [
         cy.contains("a", "Go Back").click()
         cy.get(consumption.common.trackProtectionEmailInput).clear().type("vex@pathfactory.com" + "\n")
         cy.contains(emailSuccessMsg).should('exist')
-        //Preview VEX session for which protection type "Cisco" is enabled with valid visitor group details 
+        //2.Preview VEX , when Event has protection type="Email" and session has protection type="Email"//
+        //Note:::::Vex Event and session[vexsessions[0]]has has already protection type="Email" enabled with visitor group, Hence skipping the configurations
+        cy.visit(event.url)
+        cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
+        cy.visit(vexsessions[0].url)
+        cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
+        //3.Preview VEX , when Event has protection type="Email" and session has protection type="Cisco"//
+        //Note:::::Event Configurations: Vex Event has already protection type="Email" and vexsessions[1] has already protection type="Cisco" enabled with visitor group, Hence skipping the configurations
         authoring.common.login()
+        cy.visit(event.url)
+        cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
         cy.window().then(win => win.location.href = vexsessions[1].url);
+        cy.get('h1').contains('Log in to your account').should("exist")
+        //4.Preview VEX , when Event has protection type="Cisco" and session has protection type="Email"//
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        cy.contains("span", allVisitorsGroup).parent().find(authoring.common.accessProtection.vex_microsite_removeVisitorGroup).click()
         cy.wait(1000)
+        cy.contains(authoring.vex.antRow, "Protection Type").within(()=>{
+            cy.get(authoring.vex.antSelector).click()
+            cy.get(authoring.vex.antDropSelect.selector).type('Cisco' + "\n")
+        })
+        cy.contains(authoring.common.accessProtection.trackProtectionArea, "Groups").within(()=>{
+            cy.get(authoring.vex.antDropSelect.selector).click()
+            cy.get(authoring.vex.antDropSelect.selector).type(validCiscoGroup + "\n")
+        })
+        cy.contains("button", "Save").click()
+        cy.wait(1000)
+        //Session Configurations:vexsessions[0] has already protection type="Email" enabled with visitor group, Hence skipping the configurations
+        cy.window().then(win => win.location.href = event.url);
+        cy.get('h1').contains('Log in to your account').should("exist")
+        cy.visit(vexsessions[0].url)
+        cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
+        //5.Preview VEX , when Event has protection type="Cisco" and session has protection type="Cisco"//
+        //Note::::Vex Event and sessions has has already protection type="Cisco" enabled with visitor group, Hence skipping the configurations
+        authoring.common.login()
+        cy.window().then(win => win.location.href = event.url);
         cy.get(consumption.common.ciscoEmailInput).type(ciscoEmail)
         cy.get(consumption.common.ciscoNextButton).click()
         cy.wait(3000)
         cy.get(consumption.common.ciscoPasswordInput).type(ciscoPassowrd)
         cy.get(consumption.common.ciscoLogIn).click()
-        cy.wait(5000)
-        cy.get(consumption.vex.youtube.iframe).should("be.exist")
-        //Preview VEX session for which protection type "Cisco" is enabled with Invalid visitor group details 
+        cy.contains("Browse Sessions").should("exist")
+        cy.window().then(win => win.location.href = vexsessions[1].url); //Visit Session consumption
+        cy.get(consumption.vex.youtube.iframe,{ timeout: 10000 }).should("be.exist")
+        //6.Preview VEX session for which protection type "Cisco" is enabled with Invalid visitor group details 
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
         authoring.vex.goToSessionConfig(vexsessions[1].name)
@@ -329,6 +364,7 @@ const vexsessions = [
             cy.get(authoring.vex.antDropSelect.selector).type(invalidCiscoGroup + "\n") // This visitor has invalid domain details for cisco SSO user
         })
         cy.contains("button", "Save").click()
+        cy.wait(1000)
         cy.window().then(win => win.location.href = vexsessions[1].url)
         cy.contains(unauthorizedMsg).should('exist')
     })
