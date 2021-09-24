@@ -13,9 +13,13 @@ export class WebsiteToolsCX extends CommonCX {
         this.guidecta = "#qa-guide-view-more";
         this.qaModal = "#qa-modal";
         this.featuredblock = "h3[class='pf-carousel-title']";
-        this.featuredEvent = "h4[class='pf-carousel-item-title']"
-    }
-
+        this.featuredEvent = "h4[class='pf-carousel-item-title']";
+        this.contentList = 'div[class="slick-list"]'; 
+        this.overlayIframe = {
+            iframe: 'iframe[title="Website Content"]',
+            content: 'div[id="mw-panel"]' 
+    } 
+        }
     modifyIframeBlockingCode(){
         // This is needed when testing on consumption for website tools because iframe blocking code from 3rd party domains 
         // aren't handled by Cypress. Call this method before you visit any website tools consumption page

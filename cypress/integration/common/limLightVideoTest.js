@@ -5,7 +5,7 @@ const authoring = createAuthoringInstance() // When nothing is specified, this d
 const consumption = createConsumptionInstance()
 
 const content = {
-    internalTitle: "limelightVideo.js",
+    internalTitle: "limelight.js",
     url: "https://link.videoplatform.limelight.com/media/?channelId=273873a6e9834d0b86e66a63f9bdf767&width=1024&height=576&embedMode=html&htmlPlayerFilename=limelightjs-player.js&embedMode=html&htmlPlayerFilename=limelightjs-player.js&playerForm=LVPPlayer&orgid=6540f51f4b444780ba7c63c5e866d66a"
 }
 
@@ -24,11 +24,17 @@ const vex = {
     get url(){ 
         return `${authoring.common.baseUrl}/${this.slug}`}
 }
+ const featuredContent =[{
+    contentType: 'contentLibrary',
+     content: 'limelight.js'
+ }]
 
 const onDemandSession = 'onDemandSession'
 const domainName = "pathfactory-qa-wp.com"
-const websitePath = "*"
+const websitePath = "automation-analytics"
 const targetElementID = "content"
+const queryString = "?lb-mode=preview"
+const consumptionURL = "http://"+domainName+"/"+websitePath+"/"+queryString
 const videoTitle = "Cigna Collaborative Care Customer Success Story - Shawn King"
 const time = "0:10"
 
@@ -66,7 +72,6 @@ describe("Native Support For Limelight Video Test", function() {
         //check on consumption that video autoplay, start-time working
        cy.get(consumption.target.limeLightVideo.splashScreen).should("exist")
        cy.get(consumption.target.limeLightVideo.videoControlButton).should("exist")
-    
        cy.get(consumption.target.limeLightVideo.videoTime).contains(time).should("exist")
        cy.wait(5000)
 
@@ -136,10 +141,10 @@ describe("Native Support For Limelight Video Test", function() {
  it("Limelight for WT", () => {
     authoring.common.login()
     authoring.websiteTools.visit()
-    cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+    cy.ifElementExists(`div[title="${domainName}"]`, 1000, ()=>{
         cy.contains("button", "Delete").click()
-    })
-    cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+     cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+ })
     cy.get(authoring.websiteTools.addProperty).click()
         cy.get(authoring.websiteTools.antModal).within(() => {
             cy.get(authoring.websiteTools.enterDomainName).type(domainName)
@@ -154,20 +159,20 @@ describe("Native Support For Limelight Video Test", function() {
         cy.contains("span","Concierge").click()
         cy.get(authoring.websiteTools.targetElementID).type(targetElementID)
         cy.contains("span","Featured").click()
-        cy.contains("span","Featured Content").click()
-        authoring.websiteTools.addContentToFeatured(content.internalTitle)
-        cy.get(authoring.websiteTools.selectOpen).eq(3).click()
+        featuredContent.forEach((content)=>{
+            authoring.websiteTools.addContentToFeatured(content)
+        })
+        cy.get(authoring.websiteTools.promoterList).click()
         cy.get(authoring.websiteTools.selectOption("both")).click()
         cy.contains("span","Save").click()
     })
 
     it("Validate limelight is laoding on consumption page", () => {
-    cy.visit("https://pathfactory-qa-wp.com/?lb-mode=preview")
+    cy.visit(consumptionURL)
     cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
     cy.wait(3000)
     cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()
 
        })
  
-
 })

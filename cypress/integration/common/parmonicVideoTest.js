@@ -26,13 +26,20 @@ const vex = {
      },
 }
 
+const featuredContent =[{
+    contentType: 'contentLibrary',
+     content: 'parmonic.js'
+ }]
+
 const onDemandSession = 'onDemandSession'
 const domainName = "pathfactory-qa-wp.com"
-const websitePath = "*"
+const websitePath = "automation-analytics"
 const targetElementID = "content"
+const queryString = "?lb-mode=preview"
+const consumptionURL = "http://"+domainName+"/"+websitePath+"/"+queryString
 const videoTitle = "Mergers and Acquisitions and its impact on sales tax"
 const time = "0:10"
-const time1= '0:10 / 1:43'
+const time1= '0:001:43'
 
 describe("Native Support For Limelight Video Test", function() {
     it("Add Limelight-Video to Content Library", () => {
@@ -66,10 +73,11 @@ describe("Native Support For Limelight Video Test", function() {
         cy.get(authoring.target.previewClick).click()
 
         //check on consumption that video start time and buttons are working
-        cy.get(consumption.target.parmonicVideo.videoControlButton).should("exist").click()
+
+        cy.wait(2000)
         cy.get(consumption.target.parmonicVideo.videoTime).should('have.text', time1)
         cy.wait(5000)
-        cy.get(consumption.target.parmonicVideo.playAndpauseButton).contains('pause').click()
+        cy.get(consumption.target.parmonicVideo.playAndpauseButton).click()
 
          //clean up
          authoring.target.visit()
@@ -117,9 +125,9 @@ describe("Native Support For Limelight Video Test", function() {
 
     //check on consumption side that video can play
     cy.get(consumption.vex.parmonic.selectVideo).click()
-    cy.get(consumption.vex.parmonic.playButton).should("exist").click()
-    cy.wait(5000)
-    cy.get(consumption.vex.parmonic.playAndpauseButton).contains('pause').click()
+    cy.get(consumption.vex.parmonic.playButton).should("exist").click({force: true})
+    cy.wait(4000)
+    cy.get(consumption.vex.parmonic.playAndpauseButton).click({force: true})
 
     //clean up
     authoring.vex.visit()
@@ -131,10 +139,10 @@ describe("Native Support For Limelight Video Test", function() {
 it("Limelight for WT", () => {
     authoring.common.login()
     authoring.websiteTools.visit()
-    cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
+    cy.ifElementExists(`div[title="${domainName}"]`, 1000, ()=>{
         cy.contains("button", "Delete").click()
-    })
-    cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+     cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+ })
     cy.get(authoring.websiteTools.addProperty).click()
         cy.get(authoring.websiteTools.antModal).within(() => {
             cy.get(authoring.websiteTools.enterDomainName).type(domainName)
@@ -149,23 +157,21 @@ it("Limelight for WT", () => {
         cy.contains("span","Concierge").click()
         cy.get(authoring.websiteTools.targetElementID).type(targetElementID)
         cy.contains("span","Featured").click()
-        cy.contains("span","Featured Content").click()
-        authoring.websiteTools.addContentToFeatured(content.internalTitle)
-        cy.get(authoring.websiteTools.selectOpen).eq(3).click()
+        featuredContent.forEach((content)=>{
+            authoring.websiteTools.addContentToFeatured(content)
+        })
+        cy.get(authoring.websiteTools.promoterList).click()
         cy.get(authoring.websiteTools.selectOption("both")).click()
         cy.contains("span","Save").click()
     })
 
         it("Validate Parmonic is loading on Consumption Page", () => {
-        cy.visit("https://pathfactory-qa-wp.com/?lb-mode=preview")
+        cy.visit(consumptionURL)
         cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
         cy.wait(3000)
         cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()
 
-    
-
-
-                    })
+        })
 
     })
 

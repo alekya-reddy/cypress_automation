@@ -23,7 +23,7 @@ export class TargetCX extends CommonCX {
         this.parmonicVideo = {
             videoControlButton: "div[class='shaka-big-play']>svg",
             videoTime: "div[class='pw-player-button pw-duration']",
-            playAndpauseButton: "span[class='material-icons']"
+            playAndpauseButton: "div:nth-of-type(1) > .bottom-icon"
         }
           
         this.iframeForEmbeddedForm = {
