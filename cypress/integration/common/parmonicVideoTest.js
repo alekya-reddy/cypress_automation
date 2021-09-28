@@ -44,6 +44,9 @@ const time1= '0:001:43'
 describe("Native Support For Limelight Video Test", function() {
     it("Add Limelight-Video to Content Library", () => {
         authoring.common.login()
+        authoring.vex.visit()
+        cy.get(authoring.vex.clickEvent).contains('vexlimelight.js').click()
+        authoring.vex.removeSession(onDemandSession)
         cy.visit(authoring.contentLibrary.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.contentLibrary.pageTitle).should("exist")
         // delete content

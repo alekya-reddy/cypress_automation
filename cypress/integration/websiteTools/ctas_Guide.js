@@ -16,6 +16,10 @@ describe("Configure and validate CTAs in Guide Promoter", () => {
     it("Configure and add form cta type in Guide Promoter", () => {
         authoring.common.login()
         authoring.websiteTools.visit()
+        cy.ifElementExists(`div[title="${domainName}"]`, 1000, ()=>{
+            cy.contains("button", "Delete").click()
+         cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
+     })
         //Add a new website property
         cy.get(authoring.websiteTools.addProperty).click()
         cy.get(authoring.websiteTools.antModal).within(() => {
@@ -87,14 +91,5 @@ describe("Configure and validate CTAs in Guide Promoter", () => {
         cy.get(consumption.websiteTools.guidecta).invoke("attr", "href").then((href)=>{
             expect(href).to.include('mailto:bobman3743345@gmail.com')
         })
-    })
-    it("Clean up", () => {
-        authoring.common.login()
-        authoring.websiteTools.visit()
-        //Delete the website property
-        cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
-            cy.contains("button", "Delete").click()
-        })
-        cy.contains(authoring.common.antModal, "Are you sure?").contains("button", "Delete").click()
     })
 })

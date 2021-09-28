@@ -39,8 +39,12 @@ const videoTitle = "Cigna Collaborative Care Customer Success Story - Shawn King
 const time = "0:10"
 
 describe("Native Support For Limelight Video Test", function() {
+
     it("Add Limelight-Video to Content Library", () => {
         authoring.common.login()
+        authoring.vex.visit()
+        cy.get(authoring.vex.clickEvent).contains('vexlimelight.js').click()
+        authoring.vex.removeSession(onDemandSession)
         cy.visit(authoring.contentLibrary.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.contentLibrary.pageTitle).should("exist")
         // delete content
