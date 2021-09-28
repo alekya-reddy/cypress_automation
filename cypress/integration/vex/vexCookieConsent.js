@@ -140,7 +140,7 @@ describe("VEX - Cookie Consent", ()=>{
         // Go to session page and verify vid cookie still persistent and the cookie settings is still accessible from here 
         cy.visit(session.url)
         consumption.vex.checkPersistentCookie(5000)
-        cy.get(consumption.vex.header.cookieSettings).should('exist')
+        cy.get(consumption.vex.header.settingButton).should('exist')
         consumption.vex.toggleCookieConsent("off")
         consumption.vex.checkSessionCookie(5000)
     })
@@ -170,7 +170,7 @@ describe("VEX - Cookie Consent", ()=>{
         // Confirm cookie consent exists on VEX on consumption side 
         cy.visit(event.url)
         cy.wait(5000)
-        cy.get(consumption.vex.header.cookieSettings).should('exist')
+        cy.get(consumption.vex.header.settingButton).should('exist')
         cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist')
         consumption.vex.checkSessionCookie(5000)
     })

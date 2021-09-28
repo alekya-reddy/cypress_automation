@@ -121,8 +121,8 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.get('link[rel="canonical"]').should("have.attr", "href", event.url);
         //VEX landing page: include SEO configuration, og and twitter fields [We can verify SEO configurations with any SED values]
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-vex");
-        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
-        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://cdn.qa-pathfactory.com/images/default.png"); 
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://cdn.qa-pathfactory.com/images/default.png"); 
         cy.get('meta[property="og:description"]').should("have.attr", "content", "Virtual Event"); 
         cy.get('meta[property="twitter:description"]').should("have.attr", "content", "Virtual Event");
         cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 

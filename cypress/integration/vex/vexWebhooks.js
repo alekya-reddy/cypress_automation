@@ -362,7 +362,7 @@ describe("VEX - Form Webhook", ()=>{
             // Visit session and interact with content for the configured amount of time to trigger the various hooks 
             cy.visit(videoSession.url)
             cy.wait(5000)
-            cy.containsExact("a", supplementalContent.publicTitle).click() // View supplemental
+            cy.contains("a", supplementalContent.publicTitle).click() // View supplemental
             cy.wait(5000)
             cy.get(`a[href="/${event.slug}/${videoSession.slug}"]`).click() // Close supplemental 
             cy.wait(5000)
