@@ -328,9 +328,40 @@ describe("Microsites - tracks setup", () => {
         cy.get(consumption.microsites.cardTitle).within(()=>{
             cy.contains('div',target2.contentDescriptionOverRide).should('exist')
         })
+
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',target2.contentDescriptionOverRide).should('exist').click()
+        })
+     
+        cy.wait(5000) // This wait is needed for to update the meta data values in DOM
+        //Verify the target track level meta tags title and description
+        cy.get("meta[property='og:title']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(target2.contentTitleOverRide)
+        })
+
+        cy.get("meta[property='og:description']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(target2.contentDescriptionOverRide)
+        })
+        cy.go('back');
+
          //Verifying the Overriden content Description for a Featured Content block at block level->set to true on consumption
         cy.get(consumption.microsites.cardTitle).within(()=>{
             cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
         })
+
+        cy.get(consumption.microsites.cardTitle).within(()=>{
+            cy.contains('div',recommend2.contentDescriptionOverRide).should('exist').click()
+        })
+
+        cy.wait(5000) // This wait is needed for to update the meta data values in DOM
+        //Verify the Recommend track level meta tags title and description
+        cy.get("meta[property='og:title']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(recommend2.contentTitleOverRide)
+        })
+
+        cy.get("meta[property='og:description']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(recommend2.contentDescriptionOverRide)
+        })
+        cy.go('back');
     })
 })
