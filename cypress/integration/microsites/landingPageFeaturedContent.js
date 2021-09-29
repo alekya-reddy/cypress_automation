@@ -1,12 +1,12 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
-const consumption = createConsumptionInstance({org: 'automation-microsites', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: "automation-microsites", tld: "lookbookhq" })
+const consumption = createConsumptionInstance({ org: 'automation-microsites', tld: 'lookbookhq' })
 
 const microsite = {
     name: "landingPageFeaturedContent.js",
     slug: "landingpagefeaturedcontent-js",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -23,10 +23,10 @@ const trackWithTopics = {
     trackType: "target",
     name: "landingPageFeaturedContent.js",
     slug: "lp-fc-js",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    get micrositeUrl(){
+    get micrositeUrl() {
         return `${microsite.url}/${this.slug}/${contentWithTopics.slug}`
     },
     contents: [contentWithTopics.internalTitle, "Youtube Shared Resource"]
@@ -36,10 +36,10 @@ const target = {
     trackType: "target",
     name: "Target Common Resource",
     slug: "target-common-resource",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    get micrositeUrl(){
+    get micrositeUrl() {
         return `${microsite.url}/${this.slug}/openai`
     },
     contents: ["Website Common Resource"]
@@ -49,10 +49,10 @@ const recommend = {
     trackType: "recommend",
     name: "Recommend Common Resource",
     slug: "recommend-common-resource",
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     },
-    get micrositeUrl(){
+    get micrositeUrl() {
         return `${microsite.url}/${this.slug}/openai`
     },
     contents: ["Website Common Resource"]
@@ -93,11 +93,11 @@ const featureBlock = {
         }
     ],
     heading: {
-        color: {r: "0", g: "255", b: "255"},
+        color: { r: "0", g: "255", b: "255" },
         textAlign: 'center'
     },
     background: {
-        color: {r: "0", g: "200", b: "100"},
+        color: { r: "0", g: "200", b: "100" },
         image: {
             category: "Stock Images",
             url: "/stock/sm/bench-forest-trees-path.jpg"
@@ -107,27 +107,27 @@ const featureBlock = {
     },
     spacing: "91px",
     card: {
-        color: {r: "43", g: "91", b: "200"},
+        color: { r: "43", g: "91", b: "200" },
         textAlign: "right",
         fontSize: "17px"
     },
     topicFilter: {
         enableToggle: true,
         overrideLabel: 'Filter By Topics Here',
-        textColor: {r: "43", g: "91", b: "200", position: 0},
-        backgroundColor: {r: "87", g: "255", b: "78", position: 1}
+        textColor: { r: "43", g: "91", b: "200", position: 0 },
+        backgroundColor: { r: "87", g: "255", b: "78", position: 1 }
     },
     searchConfiguration: {
         enableToggle: true,
-        textColor: {r: "87", g: "255", b: "78", position: 0},
-        backgroundColor: {r: "43", g: "91", b: "200", position: 1}
+        textColor: { r: "87", g: "255", b: "78", position: 0 },
+        backgroundColor: { r: "43", g: "91", b: "200", position: 1 }
     }
 }
 
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
-    get url(){
+    get url() {
         return `${microsite.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -138,14 +138,22 @@ const landingPage = {
     ]
 }
 
+const searchAndFilterOptions =
+    [
+        {
+            label: "Topic",
+            toggle: true
+        }
+    ]
+
 describe("Microsites - Landing page featured content block setup", () => {
     // Note: landingPageSetup.js is already so long that I decided to create a separate file for featured content blocks
     // Cypress slows down significantly if tests are too long, so it's important not to go over ~3 minutes/file
-    it("Setup target track if not already done", ()=>{
-        cy.request({url: trackWithTopics.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
+    it("Setup target track if not already done", () => {
+        cy.request({ url: trackWithTopics.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
                 authoring.common.login()
-                authoring.contentLibrary.delete({url: contentWithTopics.url, wait: 1000})
+                authoring.contentLibrary.delete({ url: contentWithTopics.url, wait: 1000 })
                 authoring.contentLibrary.addContentByUrl(contentWithTopics)
                 authoring.contentLibrary.sideBarEdit(contentWithTopics)
                 authoring.target.addTrack(trackWithTopics)
@@ -159,9 +167,9 @@ describe("Microsites - Landing page featured content block setup", () => {
         authoring.microsites.removeMicrosite(microsite.name)
         authoring.microsites.addMicrosite(microsite)
         authoring.microsites.setup(microsite)
-        authoring.microsites.addTracks({target: [target.name, trackWithTopics.name], recommend: recommend.name})
+        authoring.microsites.addTracks({ target: [target.name, trackWithTopics.name], recommend: recommend.name })
         authoring.microsites.addLandingPages(landingPage.name)
-        authoring.microsites.configureLandingPage({...landingPage, stayInEditor: true}) // Includes verification that block configuration is correct
+        authoring.microsites.configureLandingPage({ ...landingPage, stayInEditor: true }) // Includes verification that block configuration is correct
 
         // Verify cannot add a content that already exists in the block
         authoring.microsites.addFeaturedContent({
@@ -194,9 +202,15 @@ describe("Microsites - Landing page featured content block setup", () => {
     })
 
     it("Verify that the featured content block has the correct settings on consumption", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        cy.wait(3000)
+        authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);
+        authoring.microsites.saveSearchAndFiltersSettings();
         // Verify on consumption that the blocks were set up correctly - do this before any of the blocks get deleted or else can't use verify method
         cy.visit(landingPage.url)
-        const blockToVerify = {...featureBlock}
+        const blockToVerify = { ...featureBlock }
         blockToVerify.contents = false // Disable checking for contents since one was deleted
         consumption.microsites.verifyLandingPageBlock(blockToVerify)
 
@@ -209,26 +223,27 @@ describe("Microsites - Landing page featured content block setup", () => {
 
         // Basic verification of filters for featured content block (
         // Technically this test should go in searchAndFiltersConsumption.js, but the featured content block is already set up here
-        cy.containsExact("h4", featureBlock.name).should("exist").parent().within(()=>{
+        cy.containsExact("h4", featureBlock.name).should("exist").parent().within(() => {
             cy.get(consumption.microsites.topicFilter).click()
-            cy.get(consumption.microsites.filterByValue).contains(contentWithTopics.topics[0]).click()
-            cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
-            cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
-
-            // Clear filter value
-            cy.get(consumption.microsites.topicFilter).within(() => {
-                cy.get(consumption.microsites.clearFilterValue).click()
-            })
-            cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
-            cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("exist")
-
-            // Test search
-            consumption.microsites.searchMicrositeCard(trackWithTopics.contents[0])
-            cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
-            cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
-            cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
         })
+        cy.get(consumption.microsites.filterByValue).contains(contentWithTopics.topics[0]).click()
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
+        cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("exist")
+        cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("exist")
+
+        // Clear filter value
+        cy.get(consumption.microsites.topicFilter).within(() => {
+            cy.get("span.closebtn").click()
+        })
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
+        cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("exist")
+
+        // Test search
+        consumption.microsites.searchMicrositeCard(trackWithTopics.contents[0])
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
+        cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
+
 
         // The deleted block should not exist
         cy.contains(deleteBlock.name).should("not.exist")
