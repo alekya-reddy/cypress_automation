@@ -609,7 +609,8 @@ describe("VEX- Add and configure Search and filters, verify, apply in landing pa
             authoring.vex.configureSession(session)
             authoring.vex.backToEvent(event2.name)
         })
-
+        authoring.vex.configureSessionTagging(singleSessionTagging)
+        authoring.vex.configureSessionTagging(multipleSessionTagging)
         authoring.vex.tabToSearchAndFilter()
         cy.wait(3000)
         //validating the values of each filter are arranged in alphabetical order inside VEX Setup->Search & Filter tab

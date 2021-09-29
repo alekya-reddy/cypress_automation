@@ -40,7 +40,8 @@ export class CommonCX {
         this.header = {
             locator: "#qa-header",
             cookieSettings: "#qa-cookie-consent",
-            facebookIcon: "#facebook-link"
+            facebookIcon: "#facebook-link",
+            settingButton: "#pf-event-cookie-consent-button"
         };
         this.cookieSettings = {
             modal: "div[id='qa-modal']:visible",
@@ -102,7 +103,7 @@ export class CommonCX {
     toggleCookieConsent(_on_off){
         let on_off = _on_off.toUpperCase()
         if(Cypress.$(this.header.cookieSettings).length > 0){
-            cy.get(this.header.cookieSettings).click()
+            cy.get(this.header.settingButton).click()
         } else {
             // Miscrosites have a different id for the cookie settings button  
             cy.get(this.navigation.cookieSettings).click()
