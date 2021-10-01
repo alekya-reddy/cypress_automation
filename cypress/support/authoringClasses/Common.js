@@ -52,6 +52,8 @@ export class Common {
         this.orgDropdown = 'li[id="organization"]';
         this.orgValue = 'div[class="Select-value"]';
         this.orgSave = 'button[id="save"]';
+        this.editIconUserRoles = '.Select-value-icon';
+        this.userRolename = 'div[class="Select-control"]';
 
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
