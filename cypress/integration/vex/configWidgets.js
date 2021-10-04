@@ -132,7 +132,7 @@ describe("Widget Configuration", ()=>{
         })
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tabs distribute evenly to widget if more than one widget tabs enabled.
-         cy.get('.p-tabview-nav').invoke('css','width').then(tabWdith=>{
+         cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWdith=>{
             let index = tabWdith.indexOf("px");
             let TotalWidgetTabWidth = tabWdith.substr(0, index)
              cy.get('li').then(count=>{
@@ -169,7 +169,7 @@ describe("Widget Configuration", ()=>{
 
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tab is equal to the container width when only one widget is present in widget container
-        cy.get('.p-tabview-nav').invoke('css','width').then(tabWdith=>{
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWdith=>{
             let index = tabWdith.indexOf("px");
             let TotalWidgetTabWidth = tabWdith.substr(0, index);
              cy.get('li').then(count=>{
