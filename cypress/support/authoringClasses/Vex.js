@@ -156,7 +156,7 @@ export class Vex extends Common {
             nameInput: "input[name='name']",
             slugInput: "input[name='slug']",
             pageTitle: "input[name='pageTitle']",
-            pageDescription: "textarea[name='pageDescription']",
+            pageDescription: "[name='pageDescription']",
             addBlockButton: "button[class*='AddBlockButton']",
             addHTMLButton: "button:contains('HTML')",
             addSessionGroupButton: "button:contains('Session Group')",
@@ -872,6 +872,7 @@ export class Vex extends Common {
         const form = config.form
         const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
+        const override=config.override
 
         if (!stayOnPage) {
             cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, () => {
@@ -942,6 +943,25 @@ export class Vex extends Common {
             this.addSupplementalContent(contents);
         }
 
+        if(override){
+            const title=override.pageTitle
+            const description=override.pageDescription
+            const maxChars=override.maximumChars
+            
+            if(title){
+                cy.get(this.pages.pageTitle).clear().type(title)
+            }
+
+            if(description){
+                if(maxChars){
+                    cy.get(this.pages.pageDescription).clear().type(maxChars)
+                    cy.get(this.saveButton).click()
+                    cy.contains("The page description for content must be 255 characters or less. Please type a shorter page description.").should('exist')
+                }
+                cy.get(this.pages.pageDescription).clear().type(description)
+            }
+        }
+
         cy.get(this.saveButton).click()
         cy.contains(this.recordSavedMessage, { timeout: 20000 }).should("exist")
 
@@ -949,6 +969,8 @@ export class Vex extends Common {
         if (rocketChat) {
             this.configureRocketChat(rocketChat)
         }
+
+       
     }
 
     setForm(form) {
@@ -986,11 +1008,11 @@ export class Vex extends Common {
         const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
 
         cy.get(`button:contains('${selectImageText}')`).click()
-        cy.get(this.thumbnailSelector).should('exist').within(() => {
+        cy.get(this.thumbnailSelector,{timeout:10000}).should('exist').within(() => {
             cy.contains('li', category).click()
             cy.get(`img[src*="${url}"]`).click()
             cy.get(this.saveButton).click()
-        })
+         })
         cy.get(`img[src*="${url}"]`).should('exist')
     }
 
@@ -1655,11 +1677,17 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const verify = config.verify // must specify false to skip verification 
         const title = config.title
+        const thumbnail=config.thumbnail
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
             cy.contains("button", "Edit").click()
         })
+
+        if (thumbnail) {
+            this.selectThumbnail(thumbnail);
+        }
+
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
             if (newName) {
                 cy.get(this.pages.nameInput).clear().type(newName)
@@ -1686,6 +1714,7 @@ export class Vex extends Common {
             }
             cy.contains("button", "Submit").click()
         })
+
         if (verify !== false) {
             let checkName = newName ? newName : name
             cy.contains(this.antModal, "Edit Landing Page").should('not.be.visible')
