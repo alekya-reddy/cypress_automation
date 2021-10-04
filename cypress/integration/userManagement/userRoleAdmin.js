@@ -22,10 +22,6 @@ const explore = {
     name: 'GDPR T2 explore'
 }
 
-const microsite = {
-    name: 'DoNotDelete'
-}
-
 const virtualEvent = {
     name: 'virtualEventModuleRole.js'
 }
