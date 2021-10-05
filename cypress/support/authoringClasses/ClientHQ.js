@@ -52,11 +52,15 @@ export class ClientHQ extends Common {
     }
     
     clientHQToggleDeactive(toggle, on_off){
-        let toggle = on_off
         this.toggle(toggle, on_off)
         cy.contains('Save').click({force: true})
-            cy.contains('button', "Yes, Deactivate").click() 
-        
+        cy.contains('button', "Yes, Deactivate").click() 
+        cy.get('body').should('contain', 'Organization Updated Successfully!')
+    }
+
+    clientHQToggleactive(toggle, on_off){
+        this.toggle(toggle, on_off)
+        cy.contains('Save').click({force: true})
         cy.get('body').should('contain', 'Organization Updated Successfully!')
     }
 

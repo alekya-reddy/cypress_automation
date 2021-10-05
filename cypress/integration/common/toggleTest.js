@@ -4,10 +4,6 @@ import { constants } from '../../support/constants.js';
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const consumption = createConsumptionInstance()
 
-const recommend = {
-    name: 'Automation'
-}
-
 const target = {
     name: ' Automation'
 }
@@ -16,8 +12,8 @@ const dummy = {
     url: " https://dummy.qa-pathfactory.com/users/sign_in"
 }
 
-describe("Reverse Proxy For Campaign Tools", function() {
-    it("Configure Reverse-Proxy in Authoring", () => {
+describe("Authoring/Consumption Toggle Access", function() {
+    it("Authoring/Consumption Access", () => {
 
         authoring.common.login()
         cy.get(authoring.common.nameSetting).click()
@@ -46,7 +42,7 @@ describe("Reverse Proxy For Campaign Tools", function() {
         cy.contains('span', "The Scrum Guide").should("exist")
 
     })
-    it("Configure Reverse-Proxy in Authoring", () => {
+    it("Authoring Access", () => {
         authoring.common.login()
         cy.get(authoring.common.nameSetting).click()
         cy.get(1000)
@@ -59,7 +55,7 @@ describe("Reverse Proxy For Campaign Tools", function() {
         cy.get(authoring.common.orgModal).should("exist")
         cy.get(authoring.common.orgButton).click()
 
-        //validate that user can access authoring side
+        //validate that user can access authoring/consumption side
         cy.contains('a', "Content Library Insights").should("exist")
         cy.contains('button', "Add Content").should("exist")
         cy.get(authoring.common.nameSetting).click()
@@ -84,38 +80,32 @@ describe("Reverse Proxy For Campaign Tools", function() {
 
     })
        
-    it("Configure Reverse-Proxy in Authoring", () => {
+    it("Authoring no Access", () => {
         authoring.common.login()
         cy.get(authoring.common.nameSetting).click()
         cy.get(1000)
         cy.get(authoring.common.clientHq).should("exist").click()
         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
-        cy.wait(2000)
         authoring.clientHQ.clientHQToggleDeactive(authoring.clientHQ.authoringToggle, 'off');
-
-    })
-
-    it("Configure Reverse-Proxy in Authoring", () => {
+         //validate that user can't access authoring
         cy.request({url: dummy.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
-                cy.log("can't access")
+                cy.log("can't access authoring org")
             }
         })
+
     })
 
-    it("Configure Reverse-Proxy in Authoring", () => {
+    it("Turn On Authoring/Consumption Toggle", () => {
         authoring.common.login()
         cy.get(authoring.common.nameSetting).click()
         cy.get(authoring.common.clientHq).should("exist").click()
-        cy.get(1000)
         cy.contains('div', "Active: yes").should("exist").click()
         cy.contains('span', "no").should("exist").click()
-         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
-         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
-        cy.wait(2000)
-        //authoring.clientHQ.clientHQToggleDeactive(authoring.clientHQ.authoringToggle, 'on');
-        //authoring.clientHQ.clientHQToggle(authoring.clientHQ.authoringToggle, 'on');
+        cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
+        cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
+        authoring.clientHQ.clientHQToggleactive(authoring.clientHQ.authoringToggle, 'on');
    
     })
         
