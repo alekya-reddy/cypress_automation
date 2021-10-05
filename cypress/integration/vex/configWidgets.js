@@ -132,9 +132,9 @@ describe("Widget Configuration", ()=>{
         })
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tabs distribute evenly to widget if more than one widget tabs enabled.
-         cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWdith=>{
-            let index = tabWdith.indexOf("px");
-            let TotalWidgetTabWidth = tabWdith.substr(0, index)
+         cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+            let index = tabWidth.indexOf("px");
+            let TotalWidgetTabWidth = tabWidth.substr(0, index)
              cy.get('li').then(count=>{
                 const widgetCount = (Cypress.$(count).length)-1;
                 cy.get('li').each((count) => {
@@ -169,9 +169,9 @@ describe("Widget Configuration", ()=>{
 
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tab is equal to the container width when only one widget is present in widget container
-        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWdith=>{
-            let index = tabWdith.indexOf("px");
-            let TotalWidgetTabWidth = tabWdith.substr(0, index);
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+            let index = tabWidth.indexOf("px");
+            let TotalWidgetTabWidth = tabWidth.substr(0, index);
              cy.get('li').then(count=>{
                 const widgetCount = (Cypress.$(count).length)-1;
                 expect(widgetCount).to.equal(1);
