@@ -130,7 +130,25 @@ describe("Widget Configuration", ()=>{
         cy.getIframeBody(consumption.vex.widget.iframe).within(() => {
             cy.contains("h1", "Hello world").should("exist")
         })
-
+        //DEV-14464:'[VEX] Improve widget tabs display'
+        //Validate that the widget tabs distribute evenly to widget if more than one widget tabs enabled.
+         cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+            let index = tabWidth.indexOf("px");
+            let TotalWidgetTabWidth = tabWidth.substr(0, index)
+             cy.get('li').then(count=>{
+                const widgetCount = (Cypress.$(count).length)-1;
+                cy.get('li').each((count) => {
+                    if (count === widgetCount+1){
+                        return;
+                    };
+                    cy.get(count).invoke('css','width').then(actualWidth => {
+                        let parts = actualWidth.split("px");
+                        let actualWidgettabWidth = parts[0];
+                        expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
+                    })
+                  })
+                })
+            })
         // Widgets that should not be present
         cy.contains("span", widget2.name).should("not.exist") // This is turned off for both demand and live, so should not exist
         cy.contains("span", widget.newName).should("not.exist") // This was deleted so should not exist 
@@ -148,5 +166,21 @@ describe("Widget Configuration", ()=>{
         cy.visit(session.url)
         consumption.vex.expectYoutube() // Needed only to wait for page to load before checking widget doesn't exist
         cy.containsExact("span", widget.name).should("not.exist")
+
+        //DEV-14464:'[VEX] Improve widget tabs display'
+        //Validate that the widget tab is equal to the container width when only one widget is present in widget container
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+            let index = tabWidth.indexOf("px");
+            let TotalWidgetTabWidth = tabWidth.substr(0, index);
+             cy.get('li').then(count=>{
+                const widgetCount = (Cypress.$(count).length)-1;
+                expect(widgetCount).to.equal(1);
+                cy.get('li').invoke('css','width').then(actualWidth => {
+                    let parts = actualWidth.split("px");
+                    let actualWidgettabWidth = parts[0];
+                    expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
+                })
+            })
+        })
     })
 })

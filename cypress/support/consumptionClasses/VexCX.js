@@ -137,7 +137,8 @@ export class VexCX extends CommonCX {
             playAndpauseButton: "div:nth-of-type(1) > .bottom-icon"
         }
         this.widget = {
-            iframe: "iframe[id^='vex_widget_iframe']"
+            iframe: "iframe[id^='vex_widget_iframe']",
+            widgetContainer:".p-tabview-nav"
         };
         this.landingPage = {
             block: ".pf-html-block",
