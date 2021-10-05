@@ -9,6 +9,7 @@ export class Target extends Common {
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.editTrack = 'i[title="Edit Folder"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
         this.contentClick = "div[draggable='true']:nth-child(2)",
@@ -20,6 +21,8 @@ export class Target extends Common {
         this.visitorButton = "li:nth-of-type(8) > div[role='button']",
         this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",
         this.session = "div[data-qa-hook='select-tags select-tags-undefined']>span",
+        this.analyticsButton = "div[data-qa-hook='title-bar'] a",
+        this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
         this.analyticsRows = "div[class*='SimpleTable__body']",
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
         this.createTrackModal = {
