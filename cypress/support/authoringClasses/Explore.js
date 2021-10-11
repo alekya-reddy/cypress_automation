@@ -13,7 +13,7 @@ export class Explore extends Common {
         this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a'
         
         this.createExploreModal = {
-            nameInput: "input[name='name']",
+            nameInput: "#name",
             experienceType: 'input[name="experienceType"]',
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
@@ -99,6 +99,7 @@ export class Explore extends Common {
         const trackName = options.trackName
         const parentFolder = options.parentFolder
 
+        cy.wait(3000)
         cy.get(this.editExplorePageIcon).click()
         cy.contains(this.modal, "Edit Explore Page").within(()=>{
             if (name) {

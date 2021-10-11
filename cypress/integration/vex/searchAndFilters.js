@@ -198,8 +198,8 @@ const searchAndFilterOptions =
 const multipleSessionTagging = {
     sessionName: publicSession[0].name,
     language: 'Vex-SearchAndFilter',
-    topics: ['General Use', 'Aerospace'],
-    businessUnits: ['General Use', 'Matrix'],
+    topics: ['General Use', 'Aerospace','Cloud & Computing'],
+    businessUnits: ['General Use', 'Matrix','*<Product & Services>^'],
     personas: ['Automation Persona', 'Test Persona'],
     industry: ['Marketing', 'Test Industry'],
     funnelStages: ['Top of Funnel', 'Middle of Funnel', 'Bottom of Funnel']
