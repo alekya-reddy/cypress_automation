@@ -27,6 +27,8 @@ export class ClientHQ extends Common {
         this.websiteToolsV2Toggle = `[data-qa-hook="enableWebsiteToolsV2"]`
         this.websiteToolsToggle = '[data-qa-hook="enableWebsiteJourney"]'
         this.oceToggle = '[data-qa-hook="enableOce"]'
+        this.authoringToggle = 'div[data-qa-hook="active"]'
+        this.consumptionToggle = 'div[data-qa-hook="offline"]'
     }
 
     visit(){
@@ -44,6 +46,19 @@ export class ClientHQ extends Common {
 
     clientHQToggle(toggle, on_off){
         this.visitOrgConfig()
+        this.toggle(toggle, on_off)
+        cy.contains('Save').click({force: true})
+        cy.get('body').should('contain', 'Organization Updated Successfully!')
+    }
+    
+    clientHQToggleDeactive(toggle, on_off){
+        this.toggle(toggle, on_off)
+        cy.contains('Save').click({force: true})
+        cy.contains('button', "Yes, Deactivate").click() 
+        cy.get('body').should('contain', 'Organization Updated Successfully!')
+    }
+
+    clientHQToggleactive(toggle, on_off){
         this.toggle(toggle, on_off)
         cy.contains('Save').click({force: true})
         cy.get('body').should('contain', 'Organization Updated Successfully!')
