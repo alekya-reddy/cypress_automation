@@ -324,6 +324,8 @@ const filterOptions2 =
 
     ]
 
+    const htmlEncodeValue="cloud%26computing"
+
 describe("VEX- Add and configure Search and filters, verify, apply in landing page and verify search and filters are working in consumption page for VEX", () => {
 
     it("Set up VEX if doesn't exist", () => {
@@ -502,7 +504,7 @@ describe("VEX- Add and configure Search and filters, verify, apply in landing pa
         cy.get(consumption.vex.cancelFilterbox).click()
         //Verify the sessions after applying the filters
         cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist")
-        cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist")
+        
         //Persona filter applied
         cy.contains(consumption.vex.sessionGroup, landingPage.blocks[1].sessionGroup).within(() => {
             cy.get(consumption.vex.personaFilter).click()
@@ -571,6 +573,11 @@ describe("VEX- Add and configure Search and filters, verify, apply in landing pa
         filterOptions.forEach((filters) => {
             consumption.vex.SelectFiltersAndVerifyAsQueryStringInURL(filters);
         })
+
+         //Validate HTML Encode
+         cy.visit(event.url+`?topic=${htmlEncodeValue}`)
+         cy.url().should('include', `topic=cloud-computing`)
+         cy.get(consumption.vex.topicFilter).contains("Cloud & Computing").should('exist')
 
         authoring.vex.visit();
         authoring.vex.goToEventConfig(event.name)

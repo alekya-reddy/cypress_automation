@@ -218,7 +218,7 @@ export class Explore extends Common {
 
         if(selectFilters){
             // Required. Must be true or false
-            const { topic, contentType, funnelStage,  businessUnit, persona, industry} = selectFilters
+            const { topic, contentType, funnelStage,  businessUnit, persona, industry,language} = selectFilters
              
             if(topic == true || topic == false) {
                 this.clickCheckbox({label: "Topic", check: topic})    
@@ -238,6 +238,9 @@ export class Explore extends Common {
             if(industry == true || industry == false) {
                 this.clickCheckbox({label: "Industry", check: industry})
             }   
+            if(language == true || language == false) {
+                this.clickCheckbox({label: "Language", check: language})
+            } 
         } 
 
         if(heroTitle){

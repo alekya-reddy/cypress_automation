@@ -338,6 +338,8 @@ const searchAndFilterOptions2 =
         }
     ]
 
+    const htmlEncodeValue="cloud%26computing"
+
 describe("Microsites - Search & Filters configuration, verification on landing page and consumption", () => {
     it("Set up Microsites if doesn't exist", () => {
         cy.request({ url: microsite.url, failOnStatusCode: false }).then((response) => {
@@ -422,15 +424,17 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         })
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.reload()
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
         // Remove Content Type and apply Funnel Stage filter
         cy.get(consumption.microsites.removeFilters).click()
         cy.get(consumption.microsites.funnelStageFilter).click()
+        cy.wait(3000)
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).then(option => {
             // Confirm have correct option
-            cy.wait(2000)
-            cy.wrap(option).contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage)
+            cy.wait(4000)
+            cy.contains(contentPages.contentWithTopicFunnelBusinessUnit.funnelStage)
             option[0].click()
             // After click, dropdown should hold the text of the selected option
             cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTopicFunnelBusinessUnit.funnelStage).should("exist")
@@ -438,6 +442,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
+        
         //When multiple Funnel Stage(Top of Funnel and Middle of Funnel) selected
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.funnelStage).then(option => {
             // Confirm have correct option
@@ -450,10 +455,9 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
-
         // Remove Funnel Stage and apply Industry filter
-        cy.get(consumption.microsites.removeFilters).eq(1).click()
-        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.removeFilters).eq(0).click()
+        cy.get(consumption.microsites.removeFilters).eq(0).click()
         cy.get(consumption.microsites.industryFilter).click()
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).then(option => {
             // Confirm have correct option
@@ -462,7 +466,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
             // After click, dropdown should hold the text of the selected option
             cy.contains(consumption.microsites.filterLabel, contentPages.contentWithTContentTypeIndustryBusinessUnit.industry).should("exist")
         })
-        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
+        
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
@@ -472,9 +476,9 @@ describe("Microsites - Search & Filters configuration, verification on landing p
             cy.wrap(option).contains(contentPages.contentWithMultiple.industry)
             option[0].click()
          })
-        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("not.exist")
-        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("exist")
-        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicContentTypePersona.name).should("exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("not.exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("exist")
 
 
@@ -493,8 +497,8 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTopicFunnelBusinessUnit.name).should("not.exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
 
-        //When multiple Persona is selected
-        cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.persona).then(option => {
+         //When multiple Persona is selected
+         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithMultiple.persona).then(option => {
             // Confirm have correct option
             cy.wrap(option).contains(contentPages.contentWithMultiple.persona)
             option[0].click()
@@ -504,10 +508,9 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithTContentTypeIndustryBusinessUnit.name).should("not.exist")
         cy.contains(consumption.microsites.cardTitle, contentPages.contentWithMultiple.name).should("exist")
 
-
         // Remove Persona and apply Business Unit filter
-        cy.get(consumption.microsites.removeFilters).eq(1).click()
-        cy.get(consumption.microsites.removeFilters).click()
+        cy.get(consumption.microsites.removeFilters).eq(0).click()
+        cy.get(consumption.microsites.removeFilters).eq(0).click()
         cy.get(consumption.microsites.businessUnitFilter).click()
         cy.wait(3000)
         cy.get(consumption.microsites.filterByValue).contains(contentPages.contentWithTContentTypeIndustryBusinessUnit.businessUnit).then(option => {
@@ -617,6 +620,10 @@ describe("Microsites - Search & Filters configuration, verification on landing p
             consumption.microsites.SelectFiltersAndVerifyAsQueryStringInURL(filters)
         })
         
+        //Validate HTML Encode
+        cy.visit(microsite.url+`?topic=${htmlEncodeValue}`)
+        cy.url().should('include', `topic=cloud-computing`)
+        cy.get(consumption.microsites.topicFilter).contains("Cloud & Computing").should('exist')
 
         authoring.common.login()
         authoring.microsites.visit()
@@ -645,6 +652,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         })
         authoring.microsites.removeLandingPages(landingPage2.name)
         authoring.microsites.removeLandingPages(landingPage3.name)
+        
     })
 
     it("Verify content tags filter values are arranged in alphabetical order for Microsites", () =>{

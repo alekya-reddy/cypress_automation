@@ -13,53 +13,85 @@ const target = {
 };
 
 const targetExplore = {
-    name: 'searchAndFilter.js',
+    name: 'searchandfilter.js',
     experienceType: 'Target',
     trackName: target.name,
-    slug: 'searchAndFilter-js',
+    slug: 'searchandfilter-js',
+    filters: "on",
+    selectFilters: { 
+        topic: true,
+        contentType: true, 
+        businessUnit: true,
+        funnelStage: true,
+        persona: true,
+        industry: true,
+        language:true
+    },   
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 };
 
+const filterOptions = [
+    {
+        filtername: "topic",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "content-type",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "funnel-stage",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "industry",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "persona",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "business-unit",
+        index: ["1"],
+        exist: true
+    },
+    {
+        filtername: "language",
+        index: ["1"],
+        exist: true
+    }
+]
+
+const htmlEncodeValue="cloud%26computing"
+
 describe("Search and Filters validation - explore page", () => {
 
-    it("Verify that by clicking on Edit we can modify track associated with the Explore page", () => {
+    it("Verify applied filters showing as query strings in URL", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.deleteExplore(targetExplore.name)
         authoring.explore.addExplore(targetExplore)
         authoring.explore.configureExplore(targetExplore)
-        authoring.common.login()
-        authoring.explore.visit()
-        authoring.explore.goToExplorePage(targetExplore.name)
-        //authoring.explore.editExplore(recommendExplore)
 
-        // cy.contains(authoring.explore.pageSidebar.container, `Recommend Track: ${recommend.name}`)
+        // Verify in consumption
+        cy.visit(targetExplore.url)
 
-        // // Verify consumption
-        // cy.visit(targetExplore.url)
-        // target.contents.forEach(targetContent => {
-        //     cy.contains(consumption.explore.body.card, targetContent).should("not.exist")
-        // })
-        // recommend.contents.forEach(recommendContent => {
-        //     cy.contains(consumption.explore.body.card, recommendContent).should("exist")
-        // })
+        filterOptions.forEach((filters) => {
+            consumption.explore.SelectFiltersAndVerifyAsQueryStringInURL(filters);
+        })
 
-        // authoring.explore.visit()
-        // authoring.explore.goToExplorePage(targetExplore.name)
-        // authoring.explore.editExplore(targetExplore)
-        // cy.contains(authoring.explore.pageSidebar.container, `Target Track: ${target.name}`)
-
-        // // Verify consumption
-        // cy.visit(targetExplore.url)
-        // target.contents.forEach(targetContent => {
-        //     cy.contains(consumption.explore.body.card, targetContent).should("exist")
-        // })
-        // recommend.contents.forEach(recommendContent => {
-        //     cy.contains(consumption.explore.body.card, recommendContent).should("not.exist")
-        // })
-
+         //Validate HTML Encode
+         cy.visit(targetExplore.url +`?topic=${htmlEncodeValue}`)
+         cy.url().should('include', `topic=cloud-computing`)
+         cy.contains('span',"Filter By Topic: Cloud & Computing").should('exist')
     })
 
 })
