@@ -20,7 +20,7 @@ const target = {
 
 const vex = {
     name: 'vexparmonic.js',
-    slug: 'vexlimelight-js',
+    slug: 'vexparamonic-js',
     get url(){ 
         return `${authoring.common.baseUrl}/${this.slug}`
      },
@@ -45,8 +45,7 @@ describe("Native Support For Limelight Video Test", function() {
     it("Add Limelight-Video to Content Library", () => {
         authoring.common.login()
         authoring.vex.visit()
-        cy.get(authoring.vex.clickEvent).contains('vexlimelight.js').click()
-        authoring.vex.removeSession(onDemandSession)
+        authoring.vex.deleteVirtualEvent(vex.name)
         cy.visit(authoring.contentLibrary.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.contentLibrary.pageTitle).should("exist")
         // delete content
@@ -90,26 +89,18 @@ describe("Native Support For Limelight Video Test", function() {
          cy.get(authoring.target.modal).within(()=>{
              cy.get(authoring.target.removeButton).contains('Remove Item').click()
          })
-
  })
 
  it("Set up if not already done", () => {
-    cy.request({url: vex.url, failOnStatusCode: false}).then((response)=>{
-        if(response.status == 404){ 
-            cy.viewport(1500, 1000)
             authoring.common.login()
+            authoring.vex.visit()
             authoring.vex.addVirtualEvent(vex)
             authoring.vex.configureEvent(vex)
-         }
-    })
-    authoring.common.login()
-    authoring.vex.visit()
-    cy.get(authoring.vex.clickEvent).contains('vexparmonic.js').click()
     
     //add seession
-    authoring.vex.goToSessionList()
-    cy.get(authoring.vex.addSessionButton).click()
-    cy.contains(authoring.vex.antModal, "Add Session").within(()=>{
+        authoring.vex.goToSessionList()
+        cy.get(authoring.vex.addSessionButton).click()
+        cy.contains(authoring.vex.antModal, "Add Session").within(()=>{
         cy.get(authoring.vex.sessionNameInput).clear().type(onDemandSession)
         cy.get(authoring.vex.addSessionButton).click()
     })
@@ -132,10 +123,6 @@ describe("Native Support For Limelight Video Test", function() {
     cy.wait(4000)
     cy.get(consumption.vex.parmonic.playAndpauseButton).click({force: true})
 
-    //clean up
-    authoring.vex.visit()
-    cy.get(authoring.vex.clickEvent).contains('vexparmonic.js').click()
-    authoring.vex.removeSession(onDemandSession)
     
 })
 
@@ -175,6 +162,5 @@ it("Limelight for WT", () => {
         cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()
 
         })
-
     })
 
