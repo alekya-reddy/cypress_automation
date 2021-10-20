@@ -17,11 +17,20 @@ const explore = {
     experienceType: 'Target',
     trackName: target.name,
     slug: 'header-js',
+    appearance: 'heroImages.js',
+    pageTitle: 'It is Title',
+    pageDescription: 'It is Description',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 };
 
+const exploreWithThumbnail = {
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/animal-dog-pet-cute.jpg"
+    }
+}
 describe("Explore - Header feature", () => {
 
     it("Set up if not already done", ()=>{
@@ -39,6 +48,13 @@ describe("Explore - Header feature", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
+        cy.get(authoring.explore.pageSidebar.pageTitleLabel).trigger('mouseover')
+        cy.contains("This title will show in the browser tab, social sharing, title tag, and meta title")
+        cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).trigger('mouseover')
+        cy.contains("This description will show in the social sharing, meta description, and og description")
+        cy.get(authoring.explore.pageSidebar.thumbnail).trigger('mouseover')
+        cy.contains("This thumbnail will show in the social sharing and og image")
+
         // turn header toggle on and override headet title
         authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'ON')
         authoring.explore.setHeaderOverrides('Automation Headline')
@@ -56,6 +72,9 @@ describe("Explore - Header feature", () => {
             cy.contains('button', 'Save Header Overrides').click()
         })
 
+        cy.get('#explore-seo-thumbnail').click()
+        authoring.common.pickThumbnail(exploreWithThumbnail.thumbnail)
+
         // verify on consumption that header title fallback to default value, which is 'Recommended Content' 
         cy.visit(explore.url)
         cy.contains(consumption.explore.headerTitle, 'Recommended Content')   
@@ -67,6 +86,16 @@ describe("Explore - Header feature", () => {
 
         cy.visit(explore.url)
         cy.get(consumption.explore.headerTitle).should('not.exist')
+        
+        cy.wait(2000)
+        cy.get('meta[property="og:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
+        cy.get('meta[name="twitter:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:title"]').should("have.attr", "content", explore.pageTitle);  
+        cy.get('meta[name="description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[name="twitter:title"]').should("have.attr", "content", explore.pageTitle);
+
     })
 })
 

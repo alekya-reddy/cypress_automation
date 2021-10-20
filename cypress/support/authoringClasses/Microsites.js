@@ -620,6 +620,7 @@ export class Microsites extends Common {
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const pageTitle = config.pageTitle
         const pageDescription = config.pageDescription
+        const thumbnail = config.thumbnail
         const verify = config.verify
 
         this.tabToLandingPages()
@@ -643,6 +644,9 @@ export class Microsites extends Common {
             }
             if (pageDescription){
                 cy.get(this.landingPages.pageDescription).clear().type(pageDescription)
+            }
+            if (thumbnail){
+                this.selectThumbnail(thumbnail)
             }
             if (description) {
                 cy.get(this.landingPages.description).clear().type(description)
@@ -674,6 +678,22 @@ export class Microsites extends Common {
         cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
             cy.contains("button", "Set as Home Page").click({ force: true })
         })
+    }
+
+    selectThumbnail(config) {
+        const category = config.category // Values can be "Stock Images", "Thumbnail Images" or "Uncategorized"
+        const url = config.url
+        const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
+
+        cy.get(`button:contains('${selectImageText}')`).click()
+        cy.wait(1000)
+        cy.get(this.thumbnailSelector,{timeout:10000}).should('exist').within(() => {
+            cy.wait(1000)
+            cy.contains('li', category).click()
+            cy.get(`img[src*="${url}"]`).click()
+            cy.get(this.saveButton).click()
+         })
+        cy.get(`img[src*="${url}"]`).should('exist')
     }
 
     goToPageEditor(page) {

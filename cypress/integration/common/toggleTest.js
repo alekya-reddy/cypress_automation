@@ -88,11 +88,10 @@ describe("Authoring/Consumption Toggle Access", function() {
         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
         authoring.clientHQ.clientHQToggleDeactive(authoring.clientHQ.authoringToggle, 'off');
-         //validate that user can't access authoring
-        cy.request({url: dummy.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
-                cy.log("can't access authoring org")
-            }
+        
+        //validate that user can't access authoring
+         cy.request({url: dummy.url, failOnStatusCode: false}).then((response)=>{
+            expect(response.status).to.eq(404)
         })
 
     })
@@ -106,6 +105,7 @@ describe("Authoring/Consumption Toggle Access", function() {
         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
         authoring.clientHQ.clientHQToggleactive(authoring.clientHQ.authoringToggle, 'on');
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.consumptionToggle, 'on');
    
     })
         

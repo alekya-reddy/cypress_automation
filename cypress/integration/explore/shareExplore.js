@@ -20,7 +20,9 @@ const explore = {
     heroTitle: 'Hero Title',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
-    }
+    },
+    pageTitle: 'It is Title',
+    pageDescription: 'It is Description',
 };
 
 describe("Explore - Share Explore Page", () => {
@@ -81,6 +83,15 @@ describe("Explore - Share Explore Page", () => {
         target.contents.forEach(content => {
             cy.contains(consumption.explore.body.card, content, {wait: 500}).should('exist')
         })
+
+        cy.wait(2000)
+        cy.get('meta[property="og:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg"); 
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg"); 
+        cy.get('meta[name="twitter:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:title"]').should("have.attr", "content", explore.pageTitle);  
+        cy.get('meta[name="description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[name="twitter:title"]').should("have.attr", "content", explore.pageTitle);
         
     })
 })

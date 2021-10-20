@@ -600,10 +600,12 @@ export class Vex extends Common {
     configureForm(form) {
         const name = form.name
         const save = form.save == false ? false : true
-        cy.wait(5000)
+        cy.wait(2000)
         cy.contains(this.antRow, "Attendee Registration Form").within(() => {
+            cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
+        cy.wait(4000)
         cy.get(this.antDropSelect.options(name)).click()
         if (save) {
             cy.get(this.saveButton).click()

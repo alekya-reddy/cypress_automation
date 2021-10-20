@@ -75,6 +75,10 @@ const testLandingPage = {
     get url(){
         return `${event.url}/${this.slug}`
     },
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/animal-dog-pet-cute.jpg"
+    },
     visibility: 'Public',
     blocks: [
         {
@@ -197,6 +201,12 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.addLandingPages([testLandingPage.name, "Edit me"])
         authoring.vex.editLandingPage(testLandingPage)
         authoring.vex.editLandingPage({name: "Edit me", newName: "Delete me"})
+        cy.contains("button", "Edit").eq(0).click()
+        cy.contains("div", "This title will be shown in the title tag, meta title and og title")
+        cy.contains("div", "This image will show in the og image")
+        cy.contains("div", "This description will show in the meta description, and og description")
+        cy.contains("button", "Submit").click()
+        cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible')
 
         // Input validation for adding name 
         authoring.vex.addLandingPages(testLandingPage.name, false)
@@ -269,6 +279,9 @@ describe("VEX - Landing Page Editor", ()=>{
         cy.get('meta[name="description"]').should("have.attr", "content", testLandingPage.pageDescription);
         cy.get('meta[property="og:title"]').should("have.attr", "content", testLandingPage.pageTitle); 
         cy.get('meta[property="og:description"]').should("have.attr", "content", testLandingPage.pageDescription);
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg");
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg");
+
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])

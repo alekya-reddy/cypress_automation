@@ -25,7 +25,9 @@ export class Explore extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
-            publicTitleLabel: "label:contains('Public Title')",
+            pageTitleLabel: "label:contains('Page Title')",
+            pageDescriptionLabel: "label:contains('Page Description')",
+            thumbnail: "#explore-seo-thumbnail",
             appearanceLabel: "label:contains('Appearance')",
             externalCodeLabel: "label:contains('External Code')",
             ctaToggle: 'div[data-qa-hook="ctaSection"]',
@@ -35,7 +37,8 @@ export class Explore extends Common {
         };
         this.popoverElements = {
             customUrlInput: "#slug",
-            publicTitleInput: "#publicTitle"
+            pageTitleInput: "#publicTitle",
+            pageDescriptionInput: "#pageDescription"
         };
         this.header = {
             headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
@@ -160,7 +163,7 @@ export class Explore extends Common {
     }
 
     configureExplore(options){
-        const { name, slug, appearance, publicTitle, externalCode, verify } = options
+        const { name, slug, appearance, pageTitle, pageDescription, thumbnail, externalCode, verify } = options
         // These toggle options should have values of "on" or "off"
         const { header, headerTitle, searchFunction, filters, ctaToggle, cta, selectFilters } = options
 
@@ -180,8 +183,16 @@ export class Explore extends Common {
             this.setAppearance(appearance, verify)
         }
 
-        if(publicTitle){
-            this.setPublicTitle(publicTitle)
+        if(pageTitle){
+            this.setPageTitle(pageTitle)
+        }
+
+        if(pageDescription){
+            this.setPageDescription(pageDescription)
+        }
+        if(thumbnail){
+            cy.get(this.pageSidebar.thumbnail).click()
+            this.pickThumbnail(thumbnail)
         }
 
         if(externalCode){
@@ -329,11 +340,19 @@ export class Explore extends Common {
         })
     }
 
-    setPublicTitle(title, verify){
-        cy.get(this.pageSidebar.publicTitleLabel).siblings("span").click()
-        cy.get(this.popover).get(this.popoverElements.publicTitleInput).clear().type(title + "\n")
+    setPageTitle(title, verify){
+        cy.get(this.pageSidebar.pageTitleLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.pageTitleInput).clear().type(title + "\n")
         if(verify !== false){
-            cy.get(this.pageSidebar.publicTitleLabel).siblings("span").should("contain", title)
+            cy.get(this.pageSidebar.pageTitleLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    setPageDescription(description, verify){
+        cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.pageDescriptionInput).clear().type(description + "\n")
+        if(verify !== false){
+            cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").should("contain", description)
         }
     }
 
