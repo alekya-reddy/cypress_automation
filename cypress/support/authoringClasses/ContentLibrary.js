@@ -26,7 +26,9 @@ export class ContentLibrary extends Common{
             estimatedCostInput: "#estimatedCost",
             language: "div[data-qa-hook='preview-section-language']",
             businessUnit: "div[data-qa-hook='preview-section-business-units']",
-            businessUnitCheckbox: "div[data-qa-hook='checkbox']",
+            persona: "div[data-qa-hook='preview-section-personas']",
+            industry: "div[data-qa-hook='preview-section-industries']",
+            tagsCheckbox: "div[data-qa-hook='checkbox']",
             expiry: "div[data-qa-hook='preview-section-expiry-date']",
             expiryInput: "#expiryDate",
             externalID: "div[data-qa-hook='preview-section-external-id']",
@@ -131,6 +133,8 @@ export class ContentLibrary extends Common{
         const topics = config.topics ? [config.topics].flat() : false
         const funnelStages = config.funnelStages ? [config.funnelStages].flat() : false 
         const businessUnits = config.businessUnits ? [config.businessUnits].flat() : false
+        const personas = config.personas ? [config.personas].flat() : false
+        const industries = config.industries ? [config.industries].flat() : false
         const externalID = config.externalID 
         const url = config.url // Search key 
         const newUrl = config.newUrl
@@ -295,11 +299,13 @@ export class ContentLibrary extends Common{
         }
 
         if(language){
+            cy.wait(500)
             cy.angryClick({
                 clickElement: this.sidebarComponent.language,
                 checkElement: this.dropdown.box
             })
             cy.get(this.sidebarComponent.language).within(()=>{
+                cy.wait(500)
                 cy.get(this.dropdown.box).click()
                 cy.get(this.dropdown.option(language)).click()
                 cy.contains("button", "Save").click()
@@ -310,11 +316,11 @@ export class ContentLibrary extends Common{
         if(businessUnits){
             cy.angryClick({
                 clickElement: this.sidebarComponent.businessUnit,
-                checkElement: this.sidebarComponent.businessUnitCheckbox
+                checkElement: this.sidebarComponent.tagsCheckbox
             })
             cy.get(this.sidebarComponent.businessUnit).within(()=>{
                 // Need to uncheck any checked business units first 
-                cy.get(this.sidebarComponent.businessUnitCheckbox).each((checkbox)=>{
+                cy.get(this.sidebarComponent.tagsCheckbox).each((checkbox)=>{
                     cy.get(checkbox).invoke("attr", "class").then((checkboxClass)=>{
                         if(!checkboxClass.includes("unchecked")){
                             cy.get(checkbox).click()
@@ -323,7 +329,7 @@ export class ContentLibrary extends Common{
                 })
                 // Then check the business units you want 
                 businessUnits.forEach((businessUnit)=>{
-                    cy.contains(this.sidebarComponent.businessUnitCheckbox, businessUnit).click()
+                    cy.contains(this.sidebarComponent.tagsCheckbox, businessUnit).click()
                 })
                 cy.contains("button", "Save").click()
                 if(verify !== false){
@@ -333,6 +339,64 @@ export class ContentLibrary extends Common{
                 }
             })
         }
+
+                if(personas){
+                    cy.wait(500)
+                    cy.angryClick({
+                        clickElement: this.sidebarComponent.persona,
+                        checkElement: this.sidebarComponent.tagsCheckbox
+                    })
+                    cy.get(this.sidebarComponent.persona).within(()=>{
+                        cy.wait(500)
+                        // Need to uncheck any checked personas first 
+                        cy.get(this.sidebarComponent.tagsCheckbox).each((checkbox)=>{
+                            cy.get(checkbox).invoke("attr", "class").then((checkboxClass)=>{              
+                                if(!checkboxClass.includes("unchecked")){
+                                    cy.get(checkbox).click()
+                                }
+                            })
+                         })
+                         // Then check the personas you want 
+                        personas.forEach((persona)=>{
+                            cy.contains(this.sidebarComponent.tagsCheckbox, persona).click()
+                        })
+                        cy.contains("button", "Save").click()
+                        if(verify !== false){
+                            personas.forEach((persona)=>{
+                                cy.contains(persona).should("exist")
+                            })
+                        }
+                     })
+                }
+        
+                if(industries){
+                    cy.wait(500)
+                    cy.angryClick({
+                        clickElement: this.sidebarComponent.industry,
+                        checkElement: this.sidebarComponent.tagsCheckbox
+                    })
+                    cy.get(this.sidebarComponent.industry).within(()=>{
+                        cy.wait(500)
+                        // Need to uncheck any checked industries first 
+                        cy.get(this.sidebarComponent.tagsCheckbox).each((checkbox)=>{
+                            cy.get(checkbox).invoke("attr", "class").then((checkboxClass)=>{
+                                if(!checkboxClass.includes("unchecked")){
+                                    cy.get(checkbox).click()
+                                }
+                            })
+                        })
+                        // Then check the industries you want 
+                        industries.forEach((industry)=>{
+                            cy.contains(this.sidebarComponent.tagsCheckbox, industry).click()
+                        })
+                        cy.contains("button", "Save").click()
+                        if(verify !== false){
+                            industries.forEach((industry)=>{
+                                cy.contains(industry).should("exist")
+                            })
+                        }
+                    })
+                }        
 
         if(expiry){
             cy.angryClick({
