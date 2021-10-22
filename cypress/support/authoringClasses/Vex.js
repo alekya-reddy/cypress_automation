@@ -257,6 +257,7 @@ export class Vex extends Common {
         const name = options.name
         const parentFolder = options.parentFolder
         const childFolder = options.childFolder
+        const clone = options.clone
 
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(() => {
@@ -270,6 +271,11 @@ export class Vex extends Common {
             }
             if (childFolder) {
                 cy.get(this.createVEXModal.dropdownfolder).click({ force: true }).type(childFolder + "\n")
+            }
+            if(clone){
+                cy.get('input[class="ant-select-selection-search-input"]').eq(0).click({force: true}).type(clone + "\n")  
+                cy.wait(200)
+                this.eventSetup(true)  
             }
 
             cy.contains('button', 'Add Virtual Event').click()
