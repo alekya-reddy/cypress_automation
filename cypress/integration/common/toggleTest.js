@@ -106,7 +106,7 @@ describe("Authoring/Consumption Toggle Access", function() {
         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
         authoring.clientHQ.clientHQToggleactive(authoring.clientHQ.authoringToggle, 'on');
-   
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.authoringToggle, 'on');   
     })
         
 })
