@@ -31,6 +31,9 @@ const exploreWithThumbnail = {
         url: "/stock/sm/animal-dog-pet-cute.jpg"
     }
 }
+ const exploreWithDescription255 = {
+    pageDescription: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz',
+ }
 describe("Explore - Header feature", () => {
 
     it("Set up if not already done", ()=>{
@@ -48,12 +51,21 @@ describe("Explore - Header feature", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
+        //verify helper text
         cy.get(authoring.explore.pageSidebar.pageTitleLabel).trigger('mouseover')
-        cy.contains("This title will show in the browser tab, social sharing, title tag, and meta title")
+        cy.contains("This title will show in the browser tab, social sharing, title tag, and meta title").should("exist")
         cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).trigger('mouseover')
-        cy.contains("This description will show in the social sharing, meta description, and og description")
+        cy.contains("This description will show in the social sharing, meta description, and og description").should("exist")
         cy.get(authoring.explore.pageSidebar.thumbnail).trigger('mouseover')
-        cy.contains("This thumbnail will show in the social sharing and og image")
+        cy.contains("This thumbnail will show in the social sharing and og image").should("exist")
+
+        //verify that description can't be more than 255 characters
+        cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).siblings("span").click()
+        cy.get(authoring.common.popover).get(authoring.explore.popoverElements.pageDescriptionInput).clear().type(exploreWithDescription255.pageDescription + "\n")
+        cy.contains("button", "Update").click()
+        cy.contains('div', "Description must be fewer than 255 characters.").should("exist")
+        cy.contains("button", "Cancel").click()
+        authoring.explore.configureExplore(explore)
 
         // turn header toggle on and override headet title
         authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'ON')

@@ -201,12 +201,13 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.addLandingPages([testLandingPage.name, "Edit me"])
         authoring.vex.editLandingPage(testLandingPage)
         authoring.vex.editLandingPage({name: "Edit me", newName: "Delete me"})
+        //verify helper text
         cy.contains("button", "Edit").eq(0).click()
-        cy.contains("div", "This title will be shown in the title tag, meta title and og title")
+        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
         cy.contains("div", "This image will show in the og image")
-        cy.contains("div", "This description will show in the meta description, and og description")
+        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
         cy.contains("button", "Submit").click()
-        cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible')
+        cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
 
         // Input validation for adding name 
         authoring.vex.addLandingPages(testLandingPage.name, false)
@@ -272,7 +273,7 @@ describe("VEX - Landing Page Editor", ()=>{
         })   
 
         // Visit it on consumption 
-        //check that description and page Title you have set on landing pages will show up in the <title> and <description> attribute
+        //check that description,thumbnail and page Title you have set on landing pages will show up in the <title> and <description> attribute
         cy.visit(testLandingPage.url)
         cy.wait(2000)
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", testLandingPage.pageTitle);

@@ -326,7 +326,9 @@ export class Explore extends Common {
 
     setHeaderOverrides(headerTitle) {
         cy.get("body").then($body => {
+            cy.wait(500)
             if ($body.find(this.header.headerNoOverrides).length > 0) {
+                cy.wait(500)
                 cy.get(this.header.headerNoOverrides).click()
             }
             else {
@@ -350,7 +352,8 @@ export class Explore extends Common {
 
     setPageDescription(description, verify){
         cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").click()
-        cy.get(this.popover).get(this.popoverElements.pageDescriptionInput).clear().type(description + "\n")
+        cy.get(this.popover).get(this.popoverElements.pageDescriptionInput).clear().type(description)
+        cy.contains("button", "Update").click()
         if(verify !== false){
             cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").should("contain", description)
         }

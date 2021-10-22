@@ -83,7 +83,8 @@ describe("Explore - Share Explore Page", () => {
         target.contents.forEach(content => {
             cy.contains(consumption.explore.body.card, content, {wait: 500}).should('exist')
         })
-
+        
+        //verify SEO attributes
         cy.wait(2000)
         cy.get('meta[property="og:description"]').should("have.attr", "content", explore.pageDescription); 
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg"); 
