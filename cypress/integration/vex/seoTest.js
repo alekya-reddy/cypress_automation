@@ -41,7 +41,6 @@ describe('VEX - Virtual Event', function() {
         //verify that new SEO fileds added in VEX
         authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
-        cy.contains('legend', "SEO and Social Sharing Attributes").should("exist")
 
         //Verify SEO attributes mapping correct values 
         cy.visit(event.url)

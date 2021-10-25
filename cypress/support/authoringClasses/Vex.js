@@ -45,6 +45,9 @@ export class Vex extends Common {
         this.trashIcon = 'i[title="Delete Virtual Event"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'span[class="ant-select-selection-item"]>a';
+        this.pageTitle = 'input[name="landingExperience.pageTitle"]';
+        this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
+        this.eventSetupCheckbox = 'input[value="Event setup"]';
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -288,6 +291,22 @@ export class Vex extends Common {
         }
     }
 
+    eventSetup(setUp) {
+        cy.get(this.eventSetupCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if ((setUp == false && attr.includes("ant-checkbox-checked")) || (setUp == true && !attr.includes("ant-checkbox-checked"))) {
+                cy.get(this.eventSetupCheckbox).click()
+            }
+        })
+
+        cy.get(this.eventSetupCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if (setUp == false) {
+                expect(attr.includes("ant-checkbox-checked")).to.be.false
+            } else {
+                expect(attr.includes("ant-checkbox-checked")).to.be.true
+            }
+        })
+    }
+
     deleteVirtualEvent(eventName) {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
@@ -529,6 +548,9 @@ export class Vex extends Common {
         const externalID = config.externalID
         const cookieConsent = config.cookieConsent
         const language = config.language
+        const pageTitle = config.pageTitle
+        const pageDescription = config.pageDescription
+        const thumbnail = config.thumbnail
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
@@ -564,6 +586,15 @@ export class Vex extends Common {
 
         if (language) {
             this.setLanguage(language)
+        }
+        if (pageTitle) {
+            cy.get(this.pageTitle).clear().type(pageTitle)
+        }
+        if (pageDescription) {
+            cy.get(this.pageDescription).clear().type(pageDescription)
+        }
+        if (thumbnail) {
+            this.selectThumbnail(thumbnail);
         }
 
         if (trackProtection) {

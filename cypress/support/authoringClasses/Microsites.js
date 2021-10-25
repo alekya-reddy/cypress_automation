@@ -576,9 +576,8 @@ export class Microsites extends Common {
         })
     }
 
-    addLandingPages(list, verify) {
+    addLandingPages(list,verify) {
         const pages = [list].flat()
-
         this.tabToLandingPages()
         pages.forEach((page) => {
             cy.contains("button", "Add Page").click()
@@ -591,6 +590,22 @@ export class Microsites extends Common {
                 cy.containsExact(this.antTable.cell, page).should('exist')
             }
         })
+    }
+
+    clonePages(options) {
+        const name = options.name
+        const clone = options.clone
+        this.tabToLandingPages()
+
+        cy.contains("button", "Add Page").click()
+            cy.contains(this.antModal, "Add Page").within(() => {
+                cy.get(this.landingPages.nameInput).clear().type(name)
+        if(clone){
+         cy.get('span[class="ant-select-selection-item"]').click({force: true}).type(clone + "\n")  
+         cy.wait(200)
+                }
+                cy.contains("button", "Add Page").click()
+            })        
     }
 
     removeLandingPages(list, verify) {
