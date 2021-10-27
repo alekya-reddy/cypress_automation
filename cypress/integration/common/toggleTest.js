@@ -105,8 +105,16 @@ describe("Authoring/Consumption Toggle Access", function() {
         cy.contains('span', "no").should("exist").click()
         cy.get(authoring.common.orgSearch).click().type("Dummy" + "\n")
         cy.get(authoring.common.orgSelect).contains("Dummy").should("exist").click()
+        cy.wait(200)
         authoring.clientHQ.clientHQToggleactive(authoring.clientHQ.authoringToggle, 'on');
-   
+    })
+
+    it("Turn On back Automation Org toggle on", () =>{
+        authoring.common.login()
+        cy.get(authoring.common.nameSetting).click()
+        cy.get(authoring.common.clientHq).should("exist").click()
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.authoringToggle, 'on');
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.consumptionToggle, 'on');
     })
         
 })
