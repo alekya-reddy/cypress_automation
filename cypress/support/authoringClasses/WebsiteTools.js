@@ -67,7 +67,7 @@ addContentToFeatured(config){
     cy.get(this.contentSelect).click()
     cy.get(this.selectOption(content)).click()
     cy.wait(1000)
-    cy.get(this.addButton).click()
+    cy.get(this.addButton).click({force: true})
     }  
     if(contentType=="Recommend Content Track"){
         const content = config.content
@@ -80,7 +80,7 @@ addContentToFeatured(config){
     cy.get(this.contentSelect).click()
     cy.get(this.selectOption(content)).click()
     cy.wait(1000)
-    cy.get(this.addButton).click()
+    cy.get(this.addButton).click({force: true})
     }
     
     cy.get('button[type="submit"]:contains("Set Featured Content")').click({force: true})

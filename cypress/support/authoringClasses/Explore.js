@@ -102,7 +102,8 @@ export class Explore extends Common {
         const trackName = options.trackName
         const parentFolder = options.parentFolder
 
-        cy.get(this.editExplorePageIcon).click()
+        cy.get(this.editExplorePageIcon).click({force:true})
+        cy.wait(2000)
         cy.contains(this.modal, "Edit Explore Page").within(()=>{
             if (name) {
                 cy.get(this.createExploreModal.nameInput).clear().type(name)

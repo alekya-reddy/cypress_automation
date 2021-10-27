@@ -640,8 +640,11 @@ export class Microsites extends Common {
 
         this.tabToLandingPages()
         cy.contains('td', name).siblings("td").within(() => {
-            cy.contains("span", "Edit").click()
+            cy.contains("span", "Edit").click({force: true})
         })
+        if (thumbnail){
+            this.selectThumbnail(thumbnail)
+        }
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
             if (newName) {
                 cy.get(this.landingPages.nameInput).clear().type(newName)
@@ -659,9 +662,6 @@ export class Microsites extends Common {
             }
             if (pageDescription){
                 cy.get(this.landingPages.pageDescription).clear().type(pageDescription)
-            }
-            if (thumbnail){
-                this.selectThumbnail(thumbnail)
             }
             if (description) {
                 cy.get(this.landingPages.description).clear().type(description)

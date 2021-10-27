@@ -2267,9 +2267,10 @@ export class Vex extends Common {
 
         if (appearance) {
             cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
-            // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
-            cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
+            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.wait(1000)
+            //cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
             cy.contains('button:visible', "Save").click()
         }
 

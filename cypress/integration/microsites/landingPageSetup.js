@@ -44,8 +44,6 @@ const landingPage = {
     get url() {
         return `${microsite.url}/${this.slug}`
     },
-    pageTitle: 'It is Title',
-    pageDescription: 'It is Description',
     visibility: 'Public',
     setHome: true,
     blocks: [
@@ -191,13 +189,6 @@ describe("Microsites - Landing page setup", () => {
         // Add a new landing page and fully configure it with landing page blocks. Set this page as home page.
         authoring.microsites.addLandingPages(landingPage.name)
         authoring.microsites.configureLandingPage(landingPage)
-        //verify helper text
-        cy.contains("button", "Edit").click()
-        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
-        cy.contains("div", "This image will show in the og image")
-        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
-        cy.contains("button", "Submit").click()
-        cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
 
         // Verify that the default landing page is no longer home page 
         cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, { timeout: 20000 }).should("exist")
@@ -250,12 +241,6 @@ describe("Microsites - Landing page setup", () => {
         landingPage.blocks.forEach((block) => {
             consumption.microsites.verifyLandingPageBlock(block)
         })
-        //verify SEO attributes
-        cy.wait(2000)
-        cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.pageTitle);
-        cy.get('meta[name="description"]').should("have.attr", "content", landingPage.pageDescription);
-        cy.get('meta[property="og:title"]').should("have.attr", "content", landingPage.pageTitle); 
-        cy.get('meta[property="og:description"]').should("have.attr", "content", landingPage.pageDescription)
 
         // Back in authoring, you should not be able to set the home page to private
         authoring.microsites.visit()

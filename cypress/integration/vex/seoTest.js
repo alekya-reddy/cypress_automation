@@ -6,6 +6,7 @@ const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'look
 const event = {
     name: 'SeoTest',
     slug: "seotest",
+
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     },
@@ -15,6 +16,10 @@ const event = {
     },
     pageTitle: "SEO value Title",
     pageDescription: "SEO value description",
+}
+
+const appearance = {
+    name: "SEOAppearance.js"
 }
 
 const event2 = {
@@ -86,7 +91,7 @@ describe('VEX - Virtual Event', function() {
     
     })
 
-        it('Verify that no thumbnail set will pull from default appearance header image', function() {
+        it.only('Verify that no thumbnail set will pull from default appearance header image', function() {
             authoring.common.login()
             authoring.vex.visit();
             //verify if no thumbnail set it pull values from default header appearance or background-image
@@ -94,12 +99,15 @@ describe('VEX - Virtual Event', function() {
             cy.contains('span', "Clear").click()
             cy.contains('span', "Save").click()
             cy.contains('div', "The record was saved successfully.").should("exist")
+            
+            authoring.vex.configureAppearance("SEOAppearance.js")
+
             cy.visit(event.url)
             cy.get('meta[property="og:description"]').should("have.attr", "content", event.pageDescription); 
             cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 
             cy.get('meta[property="og:image:width"]').should("have.attr", "content", "576"); 
-            cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.cdn.lookbookhq.com/stock/sm/sky-earth-space-working.jpg"); 
-            cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.cdn.lookbookhq.com/stock/sm/sky-earth-space-working.jpg"); 
+            cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/car-road-snow-winter.jpg"); 
+            cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/car-road-snow-winter.jpg"); 
             cy.get('meta[property="twitter:description"]').should("have.attr", "content", event.pageDescription);
             cy.get('meta[property="og:type"]').should("have.attr", "content", "website");  
             cy.get('meta[property="og:title"]').should("have.attr", "content", event.pageTitle);  
