@@ -52,6 +52,11 @@ describe('Microsites SEO attributes', function() {
         authoring.microsites.setup(microsite)
 
         authoring.microsites.addLandingPages(landingPage.name)
+        //verify new column of page title, description and thumbnail has been added
+        cy.contains("th", "Page Title").should('be.visible')
+        cy.contains("th", "Thumbnail").should('be.visible')
+        cy.contains("th", "Page Description").should('be.visible')
+
         cy.contains('td', landingPage.name).siblings("td").within(() => {
             cy.contains("span", "Edit").click({force: true})
         })
@@ -61,6 +66,11 @@ describe('Microsites SEO attributes', function() {
         cy.contains("button", "Submit").click()
         cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
         authoring.microsites.editLandingPage(landingPage)
+
+        //verify that edited values visible on landing page
+         cy.contains("div",landingPage.pageTitle).should("exist")
+         cy.contains("div",landingPage.pageDescription).should("exist")
+         cy.get('img[src="https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
 
         //Verify SEO attributes and helper text
 
@@ -76,7 +86,7 @@ describe('Microsites SEO attributes', function() {
         cy.get('meta[property="og:title"]').should("have.attr", "content", landingPage.pageTitle);  
         cy.get('meta[name="description"]').should("have.attr", "content", landingPage.pageDescription); 
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", landingPage.pageTitle);
-        //cloned landing page
+        //clone landing page
         authoring.microsites.visit();
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.clonePages(landingpageCloned)
@@ -116,6 +126,7 @@ describe('Microsites SEO attributes', function() {
             cy.contains("span", "Edit").click({force: true})
         })
         cy.contains('span', "Clear").click()
+        cy.contains('span', "Add Image").should("exist")
         cy.contains('span', "Submit").click()
 
         cy.visit(landingPage.url)

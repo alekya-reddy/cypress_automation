@@ -199,10 +199,22 @@ describe("VEX - Landing Page Editor", ()=>{
 
         // Add, edit landing pages 
         authoring.vex.addLandingPages([testLandingPage.name, "Edit me"])
+         //verify new column of page title, description and thumbnail has been added
+         cy.contains("th", "Page Title").should('be.visible')
+         cy.contains("th", "Thumbnail").should('be.visible')
+         cy.contains("th", "Page Description").should('be.visible')
+
         authoring.vex.editLandingPage(testLandingPage)
+        //verify that edited values visible on landing page
+         cy.contains("div",testLandingPage.pageTitle).should("exist")
+         cy.contains("div",testLandingPage.pageDescription).should("exist")
+         cy.get('img[src="https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
+
         authoring.vex.editLandingPage({name: "Edit me", newName: "Delete me"})
         //verify helper text
-        cy.contains("button", "Edit").eq(0).click()
+        cy.contains('td', testLandingPage.name).siblings("td").within(() => {
+            cy.contains("span", "Edit").click({force: true})
+        })
         cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
         cy.contains("div", "This image will show in the og image")
         cy.contains("div", "This description will show in the meta description, and og description").should("exist")

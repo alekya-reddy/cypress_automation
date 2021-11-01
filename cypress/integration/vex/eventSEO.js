@@ -46,6 +46,9 @@ describe('VEX - Virtual Event', function() {
         //verify that new SEO fileds added in VEX
         authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
+        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
+        cy.contains("div", "This image will show in the og image")
+        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
 
         //Verify SEO attributes mapping correct values 
         cy.visit(event.url)
@@ -91,7 +94,7 @@ describe('VEX - Virtual Event', function() {
     
     })
 
-        it.only('Verify that no thumbnail set will pull from default appearance header image', function() {
+        it('Verify that no thumbnail set will pull from default appearance header image', function() {
             authoring.common.login()
             authoring.vex.visit();
             //verify if no thumbnail set it pull values from default header appearance or background-image
