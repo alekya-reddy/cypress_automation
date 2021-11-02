@@ -52,7 +52,7 @@ describe('Microsites SEO attributes', function() {
         authoring.microsites.setup(microsite)
 
         authoring.microsites.addLandingPages(landingPage.name)
-        //verify new column of page title, description and thumbnail has been added
+        //verify new column of page title, description and thumbnail has been added on landing page
         cy.contains("th", "Page Title").should('be.visible')
         cy.contains("th", "Thumbnail").should('be.visible')
         cy.contains("th", "Page Description").should('be.visible')
@@ -60,9 +60,9 @@ describe('Microsites SEO attributes', function() {
         cy.contains('td', landingPage.name).siblings("td").within(() => {
             cy.contains("span", "Edit").click({force: true})
         })
-        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
-        cy.contains("div", "This image will show in the og image")
-        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
+        cy.contains("div", "Used for title tag, meta title and og title. Appears in search result when microsite link is shared on social media.").should("exist")
+        cy.contains("div", "Used for og image and appears when microsite link is shared on social media.")
+        cy.contains("div", "Used for og description and meta description. Appears in search result when microsite link is shared on social media.").should("exist")
         cy.contains("button", "Submit").click()
         cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
         authoring.microsites.editLandingPage(landingPage)
@@ -73,7 +73,6 @@ describe('Microsites SEO attributes', function() {
          cy.get('img[src="https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
 
         //Verify SEO attributes and helper text
-
         cy.visit(landingPage.url)
         cy.wait(2000)
         cy.get('meta[property="og:description"]').should("have.attr", "content", landingPage.pageDescription); 
@@ -116,9 +115,8 @@ describe('Microsites SEO attributes', function() {
 
     it('Verify that no thumbnail set will pull from default appearance header image', function() {
         authoring.common.login()
-        cy.visit(authoring.configurations.pageUrls.appearances)
-
         authoring.microsites.visit();
+
         //verify if no thumbnail set it pull values from default header appearance or background-image
         authoring.microsites.goToMicrositeConfig(microsite.name)
         authoring.microsites.tabToLandingPages()

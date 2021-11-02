@@ -18,8 +18,8 @@ const event = {
     pageDescription: "SEO value description",
 }
 
-const appearance = {
-    name: "SEOAppearance.js"
+const SEOappearance = {
+    appearance: "SEOAppearance.js",
 }
 
 const event2 = {
@@ -46,9 +46,9 @@ describe('VEX - Virtual Event', function() {
         //verify that new SEO fileds added in VEX
         authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
-        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
-        cy.contains("div", "This image will show in the og image")
-        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
+        cy.contains("div", "Used for title tag, meta title and og title. Appears in search result when event link is shared on social media.").should("exist")
+        cy.contains("div", "Used for og image, session registration page and event landing page and appears when event link is shared on social media.")
+        cy.contains("div", "Used for og description and meta description. Appears in search result when event link is shared on social media.").should("exist")
 
         //Verify SEO attributes mapping correct values 
         cy.visit(event.url)
@@ -94,17 +94,17 @@ describe('VEX - Virtual Event', function() {
     
     })
 
-        it('Verify that no thumbnail set will pull from default appearance header image', function() {
+        it.only('Verify that no thumbnail set will pull from default appearance header image', function() {
             authoring.common.login()
             authoring.vex.visit();
-            //verify if no thumbnail set it pull values from default header appearance or background-image
+            cy.wait(500)
             cy.contains('a', event.name).click()
+            //verify if no thumbnail set it pull values from default header appearance or background-image
             cy.contains('span', "Clear").click()
             cy.contains('span', "Save").click()
             cy.contains('div', "The record was saved successfully.").should("exist")
-            
-            authoring.vex.configureAppearance("SEOAppearance.js")
-
+            authoring.vex.configureAppearance(SEOappearance)
+    
             cy.visit(event.url)
             cy.get('meta[property="og:description"]').should("have.attr", "content", event.pageDescription); 
             cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 

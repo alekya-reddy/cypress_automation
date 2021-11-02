@@ -215,9 +215,9 @@ describe("VEX - Landing Page Editor", ()=>{
         cy.contains('td', testLandingPage.name).siblings("td").within(() => {
             cy.contains("span", "Edit").click({force: true})
         })
-        cy.contains("div", "This title will be shown in the title tag, meta title and og title").should("exist")
-        cy.contains("div", "This image will show in the og image")
-        cy.contains("div", "This description will show in the meta description, and og description").should("exist")
+        cy.contains("div", "Used for title tag, meta title and og title. Appears in search result when event link is shared on social media.").should("exist")
+        cy.contains("div", "Used for og image and appears when event link is shared on social media.")
+        cy.contains("div", "Used for og description and meta description. Appears in search result when event link is shared on social media.").should("exist")
         cy.contains("button", "Submit").click()
         cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
 

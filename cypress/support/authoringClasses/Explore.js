@@ -330,7 +330,7 @@ export class Explore extends Common {
             cy.wait(500)
             if ($body.find(this.header.headerNoOverrides).length > 0) {
                 cy.wait(500)
-                cy.get(this.header.headerNoOverrides).click()
+                cy.get(this.header.headerNoOverrides).click({force:true})
             }
             else {
                 cy.get(this.header.headerOverrides).click()

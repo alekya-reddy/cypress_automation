@@ -53,11 +53,11 @@ describe("Explore - Header feature", () => {
         authoring.explore.goToExplorePage(explore.name)
         //verify helper text
         cy.get(authoring.explore.pageSidebar.pageTitleLabel).trigger('mouseover')
-        cy.contains("This title will show in the browser tab, social sharing, title tag, and meta title").should("exist")
+        cy.contains("Used for title tag, meta title and og title. Appears in search result when explore link is shared on social media.").should("exist")
         cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).trigger('mouseover')
-        cy.contains("This description will show in the social sharing, meta description, and og description").should("exist")
+        cy.contains("Used for og description and meta description. Appears in search result when explore link is shared on social media.").should("exist")
         cy.get(authoring.explore.pageSidebar.thumbnail).trigger('mouseover')
-        cy.contains("This thumbnail will show in the social sharing and og image").should("exist")
+        cy.contains("Used for og image and appears when explore link is shared on social media.").should("exist")
 
         //verify that description can't be more than 255 characters
         cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).siblings("span").click()

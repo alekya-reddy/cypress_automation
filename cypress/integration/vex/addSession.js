@@ -61,6 +61,9 @@ describe('VEX - Virtual Event', function() {
         cy.get(authoring.vex.sessionName(liveSession), {timeout: 10000}).should('exist')
         // Go to live session config to verify it has the correct session type and selected times 
         authoring.vex.goToSessionConfig(liveSession)
+        cy.contains('div', "Used for title tag, meta title and og title. Appears in search result when event link is shared on social media.").should('exist')
+        cy.contains('div', "Used for og image and appears when event link is shared on social media.").should('exist')
+        cy.contains('div', "Used for og description and meta description. Appears in search result when event link is shared on social media.").should('exist')
         cy.get(authoring.vex.liveRadio).should("have.attr", "checked")
         cy.get(authoring.vex.onDemandRadio).should("not.have.attr", "checked")
         cy.get(authoring.vex.startTimeEditInput(0)).should("have.attr", "title", start)
