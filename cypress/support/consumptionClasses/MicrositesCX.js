@@ -270,6 +270,7 @@ export class MicrositesCX extends CommonCX {
         let length = 0
         let arrayValues = [];
         let option
+        let splittedValues = []
 
         cy.get(`#microsite_${filterName}`).should('be.visible', { timeout: 10000 }).click()
         cy.wait(1000)
@@ -284,6 +285,11 @@ export class MicrositesCX extends CommonCX {
 
         indexes.forEach(index => {
             cy.get(`@optionValue${index}`).then(optionValue => {
+                var format = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+/;
+
+                if (format.test(optionValue)) {
+                    optionValue = optionValue.replace(/[^\w\s]/gi, '')
+                }
                 option = optionValue.toLowerCase();
                 arrayValues = option.split(" ");
                 length = arrayValues.length;
@@ -291,7 +297,13 @@ export class MicrositesCX extends CommonCX {
                     let i = 0;
                     arrayValues.forEach(value => {
                         if (i !== 0) {
-                            values = values + "-" + value
+                            splittedValues = values.split('')
+                            if (splittedValues[splittedValues.length - 1].includes("-")) {
+                                values = values + value
+                            }
+                            else {
+                                values = values + "-" + value
+                            }
                             i++;
                         }
                         else {

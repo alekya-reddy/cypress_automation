@@ -2503,7 +2503,7 @@ export class Vex extends Common {
 
     saveSearchAndFiltersSettings() {
         cy.contains("button", "Save All Settings").should('be.visible').click();
-        cy.contains("span", "The record was saved successfully.").should('be.visible')
+        cy.contains("span", "The record was saved successfully.",{timeout:20000}).should('be.visible')
     }
 
     tabToSearchAndFilter() {
