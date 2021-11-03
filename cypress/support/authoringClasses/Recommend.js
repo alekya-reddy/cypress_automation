@@ -19,6 +19,7 @@ export class Recommend extends Common {
             nameInput: "input[name='name']"
         };
         this.pageControl = "div[data-qa-hook='title-bar']>h1",
+        this.canonicalUrlOverride="#canonicalUrlOverride",
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             languageLabel: "label:contains('Language')",
@@ -108,6 +109,9 @@ export class Recommend extends Common {
         // These options will require certain toggles to be "on"
         const { sidebarOptions, exitOptions, formsStrategyOptions } = options 
 
+        /******************** Search Engine Directive*/
+        const searchEngineDirective = options.searchEngineDirective
+
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
                 this.goToTrack(name)
@@ -185,6 +189,10 @@ export class Recommend extends Common {
             }
 
             cy.get(this.closeModal).click()
+        }
+
+        if(searchEngineDirective){
+            this.selectSearchEngineDirective(searchEngineDirective)
         }
     }
 
@@ -417,5 +425,24 @@ export class Recommend extends Common {
         if(verify !== false){
             cy.contains(this.modal, "Add Track Rule").should("not.exist")
         }
+    }
+
+    selectSearchEngineDirective(option){
+        cy.contains('label',"Search Engine Directive",{timeout:10000}).siblings('span').click()
+        cy.get(this.popover).within(()=>{
+         cy.get(this.dropdown.box).click()
+         cy.get(this.dropdown.option(option)).click()
+         cy.contains("button", "Update").click()
+     })
+    }
+
+    setCanonicalOverrideUrl(contentName,overrideUrl){
+        cy.get(`img[alt='${contentName}']`,{timeout:10000}).click()
+        cy.contains('label',"Canonical Url Override",{timeout:10000}).siblings('span').click()
+        cy.get(this.popover).within(()=>{
+          cy.get(this.canonicalUrlOverride).click()
+         cy.get(this.canonicalUrlOverride).type(overrideUrl)
+         cy.contains("button", "Update").click()
+     })
     }
 }
