@@ -23,6 +23,20 @@ const explore = {
     }
 };
 
+const explorePage = {
+    name: 'eventslug.js',
+    experienceType: 'Target',
+    trackName: 'sharedTarget',
+    slug: 'eventslug-js',
+    get url(){
+        return `${authoring.common.baseUrl}/l/`
+    }
+};
+
+const string = {
+    name: 'events'
+}
+
 describe("Explore - Edit Slug", () => {
 
     it("Set up if not already done", ()=>{
@@ -91,5 +105,31 @@ describe("Explore - Edit Slug", () => {
             expect(response.status).to.eq(404)
         })
     })
+
+    it("Search Explore with slug", ()=>{
+        cy.request({url: explorePage.url + explorePage.slug, failOnStatusCode: false}).then((response)=>{
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.explore.visit()
+                authoring.explore.addExplore(explorePage)
+      }
+  })
+               authoring.common.login()
+               authoring.explore.visit()
+               //all Explore page that has the string in name/slug will return as search results
+               cy.get(authoring.explore.searchPage).click().type(explorePage.name)
+               cy.contains(explorePage.name).should('exist')
+               cy.get(authoring.explore.clearSearch).click()
+
+              //only Microsite with exact slug should return as search results
+               cy.get(authoring.explore.searchPage).click().type(explorePage.slug)
+               cy.contains(explorePage.name).should('exist')
+               cy.get(authoring.explore.clearSearch).click()
+
+              //all Microsite page that has the string in name or slug will return as search results 
+               cy.get(authoring.explore.searchPage).click().type(string.name)
+               cy.get('div[data-qa-hook="table-cell-name"]').should('exist').should('contain', string.name)
+   })
+
 })
 
