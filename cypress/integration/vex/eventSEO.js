@@ -94,7 +94,7 @@ describe('VEX - Virtual Event', function() {
     
     })
 
-        it.only('Verify that no thumbnail set will pull from default appearance header image', function() {
+        it('Verify that no thumbnail set will pull from default appearance header image', function() {
             authoring.common.login()
             authoring.vex.visit();
             cy.wait(500)
