@@ -2270,6 +2270,7 @@ export class Vex extends Common {
             cy.wait(1000)
             cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
+            //it's working without this locator as well so commenting it
             //cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
             cy.contains('button:visible', "Save").click()
         }
