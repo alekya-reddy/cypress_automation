@@ -97,6 +97,7 @@ describe("Explore - language setting", () => {
         authoring.configurations.visit.languages()
         authoring.configurations.clicklanguage(language.name)
         authoring.configurations.gotoLanguageTab("explore")
+        cy.wait(1000)
         cy.get(authoring.configurations.languages.explore.searchInput).clear()
         cy.get(authoring.configurations.languages.explore.searchPlaceholderInput).clear()
         cy.get(authoring.configurations.languages.explore.contentTypeInput).clear()

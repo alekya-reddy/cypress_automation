@@ -1778,6 +1778,7 @@ export class Configurations extends Common {
     
 
     searchLinksAndSharing(name) {
+        cy.wait(2000)
         cy.get(this.pageSidebar).within(() => {
             cy.get("input[name='search-experiences']").should("exist").type(name)
          })

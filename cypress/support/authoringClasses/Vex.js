@@ -45,6 +45,9 @@ export class Vex extends Common {
         this.trashIcon = 'i[title="Delete Virtual Event"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'span[class="ant-select-selection-item"]>a';
+        this.pageTitle = 'input[name="landingExperience.pageTitle"]';
+        this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
+        this.eventSetupCheckbox = 'input[value="Event setup"]';
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -257,6 +260,7 @@ export class Vex extends Common {
         const name = options.name
         const parentFolder = options.parentFolder
         const childFolder = options.childFolder
+        const clone = options.clone
 
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.get(this.pageTitleBar).within(() => {
@@ -271,6 +275,11 @@ export class Vex extends Common {
             if (childFolder) {
                 cy.get(this.createVEXModal.dropdownfolder).click({ force: true }).type(childFolder + "\n")
             }
+            if(clone){
+                cy.get('input[class="ant-select-selection-search-input"]').eq(0).click({force: true}).type(clone + "\n")  
+                cy.wait(200)
+                this.eventSetup(true)  
+            }
 
             cy.contains('button', 'Add Virtual Event').click()
         })
@@ -280,6 +289,22 @@ export class Vex extends Common {
             cy.get(this.antModal).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
+    }
+
+    eventSetup(setUp) {
+        cy.get(this.eventSetupCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if ((setUp == false && attr.includes("ant-checkbox-checked")) || (setUp == true && !attr.includes("ant-checkbox-checked"))) {
+                cy.get(this.eventSetupCheckbox).click()
+            }
+        })
+
+        cy.get(this.eventSetupCheckbox).parent().invoke('attr', 'class').then((attr) => {
+            if (setUp == false) {
+                expect(attr.includes("ant-checkbox-checked")).to.be.false
+            } else {
+                expect(attr.includes("ant-checkbox-checked")).to.be.true
+            }
+        })
     }
 
     deleteVirtualEvent(eventName) {
@@ -523,6 +548,9 @@ export class Vex extends Common {
         const externalID = config.externalID
         const cookieConsent = config.cookieConsent
         const language = config.language
+        const pageTitle = config.pageTitle
+        const pageDescription = config.pageDescription
+        const thumbnail = config.thumbnail
 
         this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
@@ -558,6 +586,15 @@ export class Vex extends Common {
 
         if (language) {
             this.setLanguage(language)
+        }
+        if (pageTitle) {
+            cy.get(this.pageTitle).clear().type(pageTitle)
+        }
+        if (pageDescription) {
+            cy.get(this.pageDescription).clear().type(pageDescription)
+        }
+        if (thumbnail) {
+            this.selectThumbnail(thumbnail);
         }
 
         if (trackProtection) {
@@ -600,10 +637,12 @@ export class Vex extends Common {
     configureForm(form) {
         const name = form.name
         const save = form.save == false ? false : true
-        cy.wait(5000)
+        cy.wait(2000)
         cy.contains(this.antRow, "Attendee Registration Form").within(() => {
+            cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
+        cy.wait(4000)
         cy.get(this.antDropSelect.options(name)).click()
         if (save) {
             cy.get(this.saveButton).click()
@@ -2228,9 +2267,11 @@ export class Vex extends Common {
 
         if (appearance) {
             cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
-            // cy.get(this.appearance.input).type(appearance + "\n", {force: true})
             cy.wait(1000)
-            cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
+            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.wait(1000)
+            //it's working without this locator as well so commenting it
+            //cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
             cy.contains('button:visible', "Save").click()
         }
 
