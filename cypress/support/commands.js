@@ -147,6 +147,19 @@ Cypress.Commands.add("getIframeBody", (iframeLocator, index)=>{
     })
 })
 
+Cypress.Commands.add("getIframeHead", (iframeLocator, index)=>{
+    // Highly advised that you use cy.waitFOrIframeToLoad before calling this function, unless you're certain iframe is fully loaded already 
+    // If iframe is not fully loaded by the time this gets called, it will get a 'snapshot' of the half-loaded head, which will not update as more elements load 
+    const i = index ? index : 0 // If iframeLocator expected to return more than 1 match, must specify which one you want 
+    cy.get(iframeLocator).should('exist')
+    cy.document().then((doc) => {
+        let iframe = doc.querySelectorAll(iframeLocator)[i]                            // querySelector is vanilla javascript function to find elements 
+        let body = iframe.contentWindow.document.querySelector('head')            // use javascript to find body within the iframe head
+        let jElement = Cypress.$(body)                                            // convert js html element to jquery 
+        cy.wrap(jElement)                                                         // wrap jquery element with cypress commands, allowing you to chain off this element using cypress
+    })
+})
+
 Cypress.Commands.add("waitForIframeToLoad", (iframeLocator, elementIndicatorLocator, maxWait, index) => {
     // This command waits for the iframe to load a specific element. Does not fail test if condition never becomes true 
     // elementIndicatorLocator is the element whose presence in the iframe would indirectly indicate that the iframe has fully loaded its contents

@@ -15,6 +15,14 @@ const microsite1 = {
     name: "micrositeSearchDirective1.js",
 }
 
+const microsite2 = {
+    name: "micrositeSearchDirective2.js",
+    slug: "micrositesearchdirective2-js",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const newAppearanceSetting = {
     name:"micrositeSearchDirective.js", 
     primaryColor: {r: 106, g: 171, b: 233, a: 100},
@@ -42,6 +50,45 @@ const target = {
     contents: ["Wiki-1 Shared Resource", "Wiki-2 Shared Resource", "Wiki-3 Shared Resource","Wiki-4 Shared Resource","Wiki-5 Shared Resource","Wiki-6 Shared Resource"]
 }
 
+const target2 = {
+    name: "TestTargetCanoinicalOverride",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Wiki-7 Shared Resource"],
+    searchEngineDirective:"Index, Follow"
+}
+
+const target3 = {
+    name: "TestTargetCanoinicalOverride",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Wiki-7 Shared Resource"],
+    searchEngineDirective:"Canonical URL of Track",
+    canonical_override:'www.canonicalOverrride123.com'
+}
+
+const recommend = {
+    name: "TestRecommendCanoinicalOverride",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Wiki-6 Shared Resource"],
+    searchEngineDirective:"Index, Follow"
+}
+
+const recommend2 = {
+    name: "TestRecommendCanoinicalOverride",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    },
+    contents: ["Wiki-6 Shared Resource"],
+    searchEngineDirective:"Canonical URL of Track",
+    canonical_override:'www.canonicalOverrride123.com'
+}
+
+
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
@@ -61,6 +108,34 @@ const landingPage = {
             expectContents: target.contents
         },
     ]}
+    
+    const landingPage2 = {
+        name: "Main Page",
+        slug: "main-page",
+        description: "Main Page",
+        get url(){
+            return `${microsite.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        setHome: true,
+        blocks: [
+            {
+                id: "Target Block Grid",
+                type: "track",
+                track: target2.name,
+                titleOverride: "Target Track Grid",
+                layout: "Grid",
+                expectContents: target2.contents
+            },
+            {
+                id: "Recommened Block Grid",
+                type: "track",
+                track: recommend.name,
+                titleOverride: "Recommend Track Grid",
+                layout: "Grid",
+                expectContents: recommend.contents
+            },
+        ]}
 
 describe("Microsites - Search Engine Directive and SEO configurations Validations", () => {
 
@@ -166,5 +241,59 @@ describe("Microsites - Search Engine Directive and SEO configurations Validation
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")
         }) 
+    })
+
+    it('Add the ability to override canonical URLs for assets in content tracks', () => {
+        authoring.common.login()
+        authoring.microsites.removeMicrosite(microsite2.name)
+        authoring.target.deleteTrack(target2.name)
+        authoring.target.addTrack(target2)
+        authoring.target.configure(target2)
+        authoring.recommend.deleteTrack(recommend.name)
+        authoring.recommend.addTrack(recommend)
+        authoring.recommend.configure(recommend)
+        authoring.microsites.addMicrosite(microsite2)  
+        authoring.microsites.setup(microsite2)
+        authoring.microsites.addTracks({target: target2.name})
+        authoring.microsites.addTracks({recommend: recommend.name})
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.addLandingPages(landingPage2.name)
+        authoring.microsites.editLandingPage(landingPage2)
+        authoring.microsites.configureLandingPage(landingPage2)
+
+        cy.visit(microsite2.url)
+        cy.contains('div',target2.contents[0],{timeout:10000}).click()
+        cy.waitForIframeToLoad("iframe", 10000)
+        cy.getIframeHead("iframe").within(() => {
+        cy.get("link[rel='canonical'][href='https://en.wikipedia.org/wiki/7']",{timeout:10000}).should('exist');
+        })
+        cy.go('back')
+
+        cy.wait(3000)
+        cy.contains('div',recommend.contents[0],{timeout:10000}).click()
+        cy.waitForIframeToLoad("iframe", 10000)
+        cy.getIframeHead("iframe").within(() => {
+        cy.get("link[rel='canonical'][href='https://en.wikipedia.org/wiki/6']",{timeout:10000}).should('exist');
+        })
+        cy.go('back')
+        
+        authoring.target.visit()
+        authoring.target.goToTrack(target3.name)
+        authoring.target.selectSearchEngineDirective(target3.searchEngineDirective)
+        authoring.target.setCanonicalOverrideUrl(target2.contents[0],target3.canonical_override)
+
+        authoring.recommend.visit()
+        authoring.recommend.goToTrack(recommend2.name)
+        authoring.recommend.selectSearchEngineDirective(recommend2.searchEngineDirective)
+        authoring.recommend.setCanonicalOverrideUrl(recommend2.contents[0],recommend2.canonical_override)
+        
+        cy.visit(microsite2.url)
+        cy.contains('div',target2.contents[0],{timeout:10000}).click()
+        cy.get(`link[rel='canonical'][href='${target3.canonical_override}']`,{timeout:10000}).should('exist');
+        cy.go('back')
+
+        cy.wait(3000)
+        cy.contains('div',recommend.contents[0],{timeout:10000}).click()
+        cy.get(`link[rel='canonical'][href='${recommend2.canonical_override}']`,{timeout:10000}).should('exist');
     })
 })
