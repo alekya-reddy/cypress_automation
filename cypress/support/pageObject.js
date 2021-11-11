@@ -12,6 +12,8 @@ import {Website} from './authoringClasses/Website.js';
 import {Microsites} from './authoringClasses/Microsites.js';
 import {constants} from './constants.js';
 import {UserManagement} from './authoringClasses/UserManagement.js';
+import {ContentIntelligence} from './authoringClasses/ContentIntelligence.js';
+
 
 import { CommonCX } from './consumptionClasses/CommonCX.js';
 import { VexCX } from './consumptionClasses/VexCX.js';
@@ -52,7 +54,8 @@ export const createAuthoringInstance = function(config = {}){
             explore: new Explore(env, org, tld, username, password, baseUrl),
             website: new Website(env, org, tld, username, password, baseUrl),
             microsites: new Microsites(env, org, tld, username, password, baseUrl),
-            userManagement: new UserManagement(env, org, tld, username, password, baseUrl)
+            userManagement: new UserManagement(env, org, tld, username, password, baseUrl),
+            contentIntelligence: new ContentIntelligence(env, org, tld, username, password, baseUrl)
         }
     );
 }
