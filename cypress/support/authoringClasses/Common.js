@@ -72,7 +72,6 @@ export class Common {
             title: "td[class*='ant-table-cell']"
         };
         this.antDropSelect = {
-            //selector: ".ant-select-selector:visible",
             selector: ".ant-select-selector",
             optionsContainer: "div[class*='ant-select-dropdown']",
             options: function(option){ return `div[label="${option}"]`; }
