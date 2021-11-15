@@ -69,7 +69,6 @@ const validCiscoGroup ="Cisco valid visitor group"
 const invalidCiscoGroup ="Cisco invalid visitor group"
 const ciscoEmail = "redd.pill@yahoo.com"
 const ciscoPassowrd = "Cisco123"
-//const unauthorizedMsg = "You are not authorized to access this page."
 const vexsessions = [
     {
     name: "OnDemand-session",
