@@ -123,10 +123,6 @@ const liveSessions = [
         name: "Live current",
         index: "1"
     },
-    {
-        name: "Live ended without on-demand",
-        index: "2"
-    }
 ]
 
 const groupDSessions = [
