@@ -13,7 +13,14 @@ describe("Content Intelligence", () => {
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsToggle, "ON")
         cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
 
+        cy.visit(authoring.contentIntelligence.contentConfigurations)
+        cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
+
+        cy.visit(authoring.contentIntelligence.contentStrategy)
+        cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+        
         // Content intelligence & website tools are disabled: Don't show both Content configurations and Content strategy
+        authoring.common.login()
         authoring.clientHQ.visitOrgConfig()
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.contentIntelligence, "OFF")
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsV2Toggle, "OFF")
@@ -36,10 +43,10 @@ describe("Content Intelligence", () => {
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsToggle, "OFF")
 
         cy.visit(authoring.contentIntelligence.contentConfigurations)
-        cy.contains("You don't have permission to view this page.", { timeout: 10000 }).should('exist')
+        cy.contains('h1','Content Configurations',{timeout:20000}).should('exist')
 
         cy.visit(authoring.contentIntelligence.contentStrategy)
-        cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+        cy.contains("Content Strategy Overview", { timeout: 20000 }).should('exist')
 
         // Content Intelligence is disabled and Website tools is enabled: Show only Content configurations
         authoring.common.login()
