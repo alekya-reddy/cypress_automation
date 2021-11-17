@@ -642,8 +642,7 @@ export class Vex extends Common {
             cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
-        cy.wait(4000)
-        cy.get(this.antDropSelect.options(name)).click()
+        cy.get(this.antDropSelect.options(name)).click({ force: true })
         if (save) {
             cy.get(this.saveButton).click()
             cy.get('body').should('contain', this.recordSavedMessage)
@@ -969,7 +968,7 @@ export class Vex extends Common {
 
         if (formVisibility) {
             cy.contains(this.antRow, "Form Visibilty").within(() => {
-                cy.get(this.antDropSelect.selector).click()
+                cy.get(this.antDropSelect.selector).click({ force: true })
             })
             cy.get(this.antDropSelect.options(formVisibility)).click()
         }
