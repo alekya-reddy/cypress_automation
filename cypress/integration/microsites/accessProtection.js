@@ -67,7 +67,6 @@ const microsite = {
 const allVisitorsGroup = "All Visitors"
 const gmailAPGroup = "gmail AP group"
 const hotmailAPGroup = "hotmail AP group"
-//const emailRequiredMsg = "Email confirmation is required"
 const emailNotAuthMsg = "Email is not authorized, please try again"
 const emailSuccessMsg = "Success! An email has been sent to your inbox"
 
