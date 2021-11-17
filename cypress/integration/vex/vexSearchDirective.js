@@ -14,6 +14,14 @@ const event1 = {
     name: "vexSearchDirective1.js"
 }
 
+const event2 = {
+    name: 'vexSearchDirective2.js',
+    slug: 'vexSearchDirective2-js',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 
 const headerAppearance = {
     appearance: "vexSearchDirective.js",
@@ -60,12 +68,44 @@ const landingPage = {
         return `${event.url}/${this.slug}`
     },
     visibility: 'Public',
+    pageTitle:"Landing page title override",
+    pageDescription:"Landing page description override",
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/bow-tie-businessman-fashion-man.jpg",
+    },
     blocks: [
         {
             type: "Session Group",
             sessionGroup: sessionGroupA.name,
         },
+        {
+            type: "Session Group",
+            sessionGroup: "All Sessions"
+        }
     ]}
+
+    const sessions = [
+        {
+            name: "On-demand",
+            slug: "on-demand",
+            get url() {
+                return `${event.url}/${this.slug}`
+            },
+            visibility: 'Public',
+            type: 'On Demand',
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            override:{
+                pageTitle:"Session Page title override",
+                maximumChars:"Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quisetr",//more than 255 chars
+                pageDescription:"Session Page title description",
+            },
+            thumbnail: {
+                category: "Stock Images",
+                url: "/stock/sm/animal-dog-pet-cute.jpg",
+            }
+        }
+    ]
 
 
 describe("VEX- Search Engine Directive and SEO configurations Validations", () => {
@@ -159,7 +199,60 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")
         }) 
-   
+    })
 
+    it("Verify Meta Description, Meta Title and Meta Image for VEX Session page, VEX landing page", () => {
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.deleteVirtualEvent(event2.name)
+        authoring.vex.addVirtualEvent(event2)
+        authoring.vex.configureEvent(event2)
+        sessions.forEach((session) => {
+            authoring.vex.addSession(session.name)
+            authoring.vex.configureSession(session)
+            authoring.vex.backToEvent(event2.name)
+        })
+
+        authoring.vex.goToLandingPage()
+        authoring.vex.deleteLandingPages(landingPage.name)
+        authoring.vex.addLandingPages(landingPage.name)
+        authoring.vex.editLandingPage(landingPage)
+        authoring.vex.setToHomePage(landingPage.name)
+        authoring.vex.goToPageEditor(landingPage.name)
+        authoring.vex.addAdvancedBlock(landingPage.blocks[1])
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        cy.visit(event2.url)
+        cy.wait(5000) // This wait is needed for to update the meta data values in DOM
+        //Verify the landing page title,description and Image
+        cy.get("meta[property='og:title']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(landingPage.pageTitle)
+        })
+
+        cy.get("meta[property='og:description']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(landingPage.pageDescription)
+        })
+
+        cy.get("meta[property='og:image']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(landingPage.thumbnail.url)
+        })
+        cy.wait(2000) // This wait is needed for to update the meta data values in DOM
+        cy.contains('div', sessions[0].name).should('be.visible', { timeout: 10000 }).click()
+
+        cy.reload()
+        cy.wait(3000) // This wait is needed for to update the meta data values in DOM
+        //Verify the Session page title,description and Image
+        cy.get("meta[property='og:title']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(sessions[0].override.pageTitle)
+        })
+
+        cy.get("meta[property='og:description']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(sessions[0].override.pageDescription)
+        })
+
+        cy.get("meta[property='og:image']").invoke('attr','content').then(value=>{
+            expect(value).to.contains(sessions[0].thumbnail.url)
+        })
     })
 })

@@ -35,4 +35,109 @@ export class ExploreCX extends CommonCX {
     featuredContentGrid(i,j) {
         return `#qa-explore-asset-type-featured-grid-${i}-${j}` 
     }
+
+    SelectFiltersAndVerifyAsQueryStringInURL(filterOptions) {
+        const filterName = filterOptions.filtername;
+        const indexes = filterOptions.index;
+        const exists = filterOptions.exist;
+        var listValues = []
+        let values = "";
+        let length = 0
+        let arrayValues = [];
+        let option
+        let splittedValues = []
+
+        cy.get(`#qa-explore-${filterName}-filter`).should('be.visible', { timeout: 10000 }).click()
+        cy.wait(1000)
+        indexes.forEach(index => {
+            cy.get(`div span[role=listitem]:nth-of-type(${index})`+":visible", { timeout: 10000 }).invoke('text').then(text => {
+                cy.get(`div span[role=listitem]:nth-of-type(${index})`+":visible", { timeout: 10000 }).invoke('text').as(`optionValue${index}`)
+                cy.wait(1000)
+                cy.get(`div span[role=listitem]:nth-of-type(${index})`+":visible", { timeout: 10000 }).click()
+                cy.wait(1000)
+            })
+        })
+
+        indexes.forEach(index => {
+            cy.get(`@optionValue${index}`).then(optionValue => {
+                var format = /[!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?]+/;
+
+                if (format.test(optionValue)) {
+                    optionValue = optionValue.replace(/[^\w\s]/gi, '')
+                }
+                option = optionValue.toLowerCase();
+                arrayValues = option.split(" ");
+                length = arrayValues.length;
+                if (length > 1) {
+                    let i = 0;
+                    arrayValues.forEach(value => {
+                        if (i !== 0) {
+                            splittedValues = values.split('')
+                            if (splittedValues[splittedValues.length - 1].includes("-")) {
+                                values = values + value
+                            }
+                            else {
+                                values = values + "-" + value
+                            }
+                            i++;
+                        }
+                        else {
+                            values = value;
+                            i++;
+                        }
+                    })
+                }
+                else {
+                    values = option;
+                }
+                listValues.push(values)
+            }).then(() => {
+                if (indexes.length === listValues.length) {
+                    cy.log(listValues)
+                    if (filterName === "topics" && exists === true) {
+                        cy.url().should('include', `topic=${listValues}`)
+                    }
+                    else if (filterName === "topics" && exists === false) {
+                        cy.url().should('not.include', `topic=${listValues}`)
+                    }
+                    if (filterName === "contentTypeName" && exists === true) {
+                        cy.url().should('include', `contentType=${values}`)
+                    }
+                    else if (filterName === "contentTypeName" && exists === false) {
+                        cy.url().should('not.include', `contentType=${listValues}`)
+                    }
+                    if (filterName === "funnelStages" && exists === true) {
+                        cy.url().should('include', `funnelStage=${listValues}`)
+                    }
+                    else if (filterName === "funnelStages" && exists === false) {
+                        cy.url().should('not.include', `funnelStage=${listValues}`)
+                    }
+                    if (filterName === "industries" && exists === true) {
+                        cy.url().should('include', `industry=${listValues}`)
+                    }
+                    else if (filterName === "industries" && exists === false) {
+                        cy.url().should('not.include', `industry=${listValues}`)
+                    }
+                    if (filterName === "personas" && exists === true) {
+                        cy.url().should('include', `persona=${listValues}`)
+                    }
+                    else if (filterName === "personas" && exists === false) {
+                        cy.url().should('not.include', `persona=${listValues}`)
+                    }
+                    if (filterName === "businessUnits" && exists === true) {
+                        cy.url().should('include', `businessUnit=${listValues}`)
+                    }
+                    else if (filterName === "businessUnits" && exists === false) {
+                        cy.url().should('not.include', `businessUnit=${listValues}`)
+                    }
+                    if (filterName === "languages" && exists === true) {
+                        cy.url().should('include', `language=${listValues}`)
+                    }
+                    else if (filterName === "languages" && exists === false) {
+                        cy.url().should('not.include', `language=${listValues}`)
+                    }
+                }
+            })
+        })
+    }
 }

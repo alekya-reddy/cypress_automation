@@ -137,7 +137,8 @@ export class VexCX extends CommonCX {
             playAndpauseButton: "div:nth-of-type(1) > .bottom-icon"
         }
         this.widget = {
-            iframe: "iframe[id^='vex_widget_iframe']"
+            iframe: "iframe[id^='vex_widget_iframe']",
+            widgetContainer: ".p-tabview-nav"
         };
         this.landingPage = {
             block: ".pf-html-block",
@@ -418,6 +419,7 @@ export class VexCX extends CommonCX {
         let length = 0
         let arrayValues = [];
         let option
+        let splittedValues = []
 
         cy.get(`#vex_${filterName}`).should('be.visible', { timeout: 10000 }).click()
         cy.wait(1000)
@@ -432,14 +434,26 @@ export class VexCX extends CommonCX {
 
         indexes.forEach(index => {
             cy.get(`@optionValue${index}`).then(optionValue => {
+                var format = /[!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?]+/;
+
+                if (format.test(optionValue)) {
+                    optionValue = optionValue.replace(/[^\w\s]/gi, '')
+                }
                 option = optionValue.toLowerCase();
                 arrayValues = option.split(" ");
                 length = arrayValues.length;
+
                 if (length > 1) {
                     let i = 0;
                     arrayValues.forEach(value => {
                         if (i !== 0) {
-                            values = values + "-" + value
+                            splittedValues = values.split('')
+                            if (splittedValues[splittedValues.length - 1].includes("-")) {
+                                values = values + value
+                            }
+                            else {
+                                values = values + "-" + value
+                            }
                             i++;
                         }
                         else {
@@ -454,7 +468,6 @@ export class VexCX extends CommonCX {
                 listValues.push(values)
             }).then(() => {
                 if (indexes.length === listValues.length) {
-                    cy.log(listValues)
                     if (filterName === "topics" && exists === true) {
                         cy.url().should('include', `topic=${listValues}`)
                     }
@@ -517,9 +530,7 @@ export class VexCX extends CommonCX {
                             beforeSort[index] = listValues;
                         }).then(() => {
                             if (listingCount === index + 1) {
-                                cy.log(beforeSort)
                                 afterSort = beforeSort.sort()
-                                cy.log(afterSort)
                                 expect(beforeSort).to.equal(afterSort);
                             }
                         })

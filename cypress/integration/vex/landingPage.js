@@ -75,6 +75,10 @@ const testLandingPage = {
     get url(){
         return `${event.url}/${this.slug}`
     },
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/animal-dog-pet-cute.jpg"
+    },
     visibility: 'Public',
     blocks: [
         {
@@ -195,8 +199,27 @@ describe("VEX - Landing Page Editor", ()=>{
 
         // Add, edit landing pages 
         authoring.vex.addLandingPages([testLandingPage.name, "Edit me"])
+         //verify new column of page title, description and thumbnail has been added
+         cy.contains("th", "Page Title").should('be.visible')
+         cy.contains("th", "Thumbnail").should('be.visible')
+         cy.contains("th", "Page Description").should('be.visible')
+
         authoring.vex.editLandingPage(testLandingPage)
+        //verify that edited values visible on landing page
+         cy.contains("div",testLandingPage.pageTitle).should("exist")
+         cy.contains("div",testLandingPage.pageDescription).should("exist")
+         cy.get('img[src="https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
+
         authoring.vex.editLandingPage({name: "Edit me", newName: "Delete me"})
+        //verify helper text
+        cy.contains('td', testLandingPage.name).siblings("td").within(() => {
+            cy.contains("span", "Edit").click({force: true})
+        })
+        cy.contains("div", "Used for title tag, meta title and og title. Appears in search result when event link is shared on social media.").should("exist")
+        cy.contains("div", "Used for og image and appears when event link is shared on social media.")
+        cy.contains("div", "Used for og description and meta description. Appears in search result when event link is shared on social media.").should("exist")
+        cy.contains("button", "Submit").click()
+        cy.contains('.ant-modal-content', "Edit Landing Page").should('not.be.visible').should("exist")
 
         // Input validation for adding name 
         authoring.vex.addLandingPages(testLandingPage.name, false)
@@ -262,13 +285,16 @@ describe("VEX - Landing Page Editor", ()=>{
         })   
 
         // Visit it on consumption 
-        //check that description and page Title you have set on landing pages will show up in the <title> and <description> attribute
+        //check that description,thumbnail and page Title you have set on landing pages will show up in the <title> and <description> attribute
         cy.visit(testLandingPage.url)
         cy.wait(2000)
         cy.get('meta[name="twitter:title"]').should("have.attr", "content", testLandingPage.pageTitle);
         cy.get('meta[name="description"]').should("have.attr", "content", testLandingPage.pageDescription);
         cy.get('meta[property="og:title"]').should("have.attr", "content", testLandingPage.pageTitle); 
         cy.get('meta[property="og:description"]').should("have.attr", "content", testLandingPage.pageDescription);
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg");
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg");
+
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[0])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[2])
         consumption.vex.verifyLandingPageBlock(testLandingPage.blocks[3])

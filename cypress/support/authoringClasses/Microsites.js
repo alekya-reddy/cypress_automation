@@ -576,9 +576,8 @@ export class Microsites extends Common {
         })
     }
 
-    addLandingPages(list, verify) {
+    addLandingPages(list,verify) {
         const pages = [list].flat()
-
         this.tabToLandingPages()
         pages.forEach((page) => {
             cy.contains("button", "Add Page").click()
@@ -591,6 +590,22 @@ export class Microsites extends Common {
                 cy.containsExact(this.antTable.cell, page).should('exist')
             }
         })
+    }
+
+    clonePages(options) {
+        const name = options.name
+        const clone = options.clone
+        this.tabToLandingPages()
+
+        cy.contains("button", "Add Page").click()
+            cy.contains(this.antModal, "Add Page").within(() => {
+                cy.get(this.landingPages.nameInput).clear().type(name)
+        if(clone){
+         cy.get('span[class="ant-select-selection-item"]').click({force: true}).type(clone + "\n")  
+         cy.wait(200)
+                }
+                cy.contains("button", "Add Page").click()
+            })        
     }
 
     removeLandingPages(list, verify) {
@@ -620,12 +635,16 @@ export class Microsites extends Common {
         const visibility = config.visibility ? config.visibility.toLowerCase() : false
         const pageTitle = config.pageTitle
         const pageDescription = config.pageDescription
+        const thumbnail = config.thumbnail
         const verify = config.verify
 
         this.tabToLandingPages()
         cy.contains('td', name).siblings("td").within(() => {
-            cy.contains("span", "Edit").click()
+            cy.contains("span", "Edit").click({force: true})
         })
+        if (thumbnail){
+            this.selectThumbnail(thumbnail)
+        }
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
             if (newName) {
                 cy.get(this.landingPages.nameInput).clear().type(newName)
@@ -674,6 +693,22 @@ export class Microsites extends Common {
         cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
             cy.contains("button", "Set as Home Page").click({ force: true })
         })
+    }
+
+    selectThumbnail(config) {
+        const category = config.category // Values can be "Stock Images", "Thumbnail Images" or "Uncategorized"
+        const url = config.url
+        const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
+
+        cy.get(`button:contains('${selectImageText}')`).click()
+        cy.wait(1000)
+        cy.get(this.thumbnailSelector,{timeout:10000}).should('exist').within(() => {
+            cy.wait(1000)
+            cy.contains('li', category).click()
+            cy.get(`img[src*="${url}"]`).click()
+            cy.get(this.saveButton).click()
+         })
+        cy.get(`img[src*="${url}"]`).should('exist')
     }
 
     goToPageEditor(page) {

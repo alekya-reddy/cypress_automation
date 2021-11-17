@@ -9,6 +9,7 @@ export class Target extends Common {
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.editTrack = 'i[title="Edit Folder"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
         this.contentClick = "div[draggable='true']:nth-child(2)",
@@ -20,8 +21,11 @@ export class Target extends Common {
         this.visitorButton = "li:nth-of-type(8) > div[role='button']",
         this.visitorActivities = "ul[id='Visitors$Menu']>li:nth-child(1)>a",
         this.session = "div[data-qa-hook='select-tags select-tags-undefined']>span",
+        this.analyticsButton = "div[data-qa-hook='title-bar'] a",
+        this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
         this.analyticsRows = "div[class*='SimpleTable__body']",
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
+        this.canonicalUrlOverride="#canonicalUrlOverride"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -155,6 +159,9 @@ export class Target extends Common {
         const formsStrategyOptions = options.formsStrategyOptions
         /***********************************************************/
         const verify = options.verify
+
+        /******************** Search Engine Directive*/
+        const searchEngineDirective = options.searchEngineDirective
        
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -251,6 +258,10 @@ export class Target extends Common {
             }
 
             cy.get(this.closeModal).click()
+        }
+
+        if(searchEngineDirective){
+            this.selectSearchEngineDirective(searchEngineDirective)
         }
     }
 
@@ -550,6 +561,25 @@ export class Target extends Common {
             cy.get("div>input[name='videoStartTime']").clear().type(time)
             cy.contains("button", "Update").click()
         })
+    }
+
+    selectSearchEngineDirective(option){
+        cy.contains('label',"Search Engine Directive",{timeout:10000}).siblings('span').click()
+        cy.get(this.popover).within(()=>{
+         cy.get(this.dropdown.box).click()
+         cy.get(this.dropdown.option(option)).click()
+         cy.contains("button", "Update").click()
+     })
+    }
+
+    setCanonicalOverrideUrl(contentName,overrideUrl){
+        cy.contains('strong',contentName,{timeout:10000}).click()
+        cy.contains('label',"Canonical Url Override",{timeout:10000}).siblings('span').click()
+        cy.get(this.popover).within(()=>{
+          cy.get(this.canonicalUrlOverride).click()
+         cy.get(this.canonicalUrlOverride).type(overrideUrl)
+         cy.contains("button", "Update").click()
+     })
     }
 }
 
