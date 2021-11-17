@@ -405,7 +405,7 @@ export class VexCX extends CommonCX {
 
     searchSessionGroup(searchTerm) {
         // Must be within session group block before using this function
-        cy.get("input").clear().type(searchTerm)
+        cy.get(this.searchInputField).clear().type(searchTerm)
         cy.contains("button", "Search").click()
     }
 
