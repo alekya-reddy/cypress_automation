@@ -29,6 +29,7 @@ export class Website extends Common {
             cy.contains("button", "Save Website URL").click()
         })
         cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.wait(2000)
         cy.containsExact(this.websiteURLName, url).should("exist")
     }
 

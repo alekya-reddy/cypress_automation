@@ -190,12 +190,12 @@ describe('Campaign Tools Module User Role', function() {
         authoring.target.configure(target)
         authoring.target.deleteTrack(target.name)
 
-        // Target Analytics
+         // Target Analytics
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/target/analytics?showExcludedVisitors=false&knownVisitorsOnly=false&startDate=03/21/2021&endDate=04/20/2021`)
         cy.contains(authoring.common.pageTitleLocator, authoring.target.targetAnalyticsTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
-        // Recommend -- HAVE ACCESS
+         // Recommend -- HAVE ACCESS
         cy.visit(authoring.recommend.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.recommend.pageTitle).should("exist")
         authoring.recommend.deleteTrack(recommend.name)
@@ -203,7 +203,7 @@ describe('Campaign Tools Module User Role', function() {
         authoring.recommend.configure(recommend)
         authoring.recommend.deleteTrack(recommend.name)
 
-        // Recommend Analytics
+         // Recommend Analytics
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/recommend/analytics?showExcludedVisitors=false&knownVisitorsOnly=false&startDate=03/21/2021&endDate=04/20/2021`)
         cy.contains(authoring.common.pageTitleLocator, authoring.target.recommendAnalyticsTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
@@ -234,12 +234,15 @@ describe('Campaign Tools Module User Role', function() {
         cy.visit(authoring.website.pageUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("exist")
         authoring.website.deleteWebsite(website.url)
+        cy.viewport(1000, 2000)
         authoring.website.addWebsite(website.url)
         authoring.website.configureWebsite(website)
+        cy.viewport(1000, 2000)
         authoring.website.deleteWebsite(website.url)
 
-        // Website Analytics
+        // // Website Analytics
         cy.visit(authoring.website.websiteAnalyticsUrl)
+        cy.viewport(1000, 660)
         cy.contains(authoring.common.pageTitleLocator, authoring.website.websiteCampaignsPageTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
 
@@ -433,13 +436,13 @@ describe('Campaign Tools Module User Role', function() {
         // PA Website Tools
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa`)
         cy.contains("div", "You don't have permission to view this page.", {timeout: 30000})
-        // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/account-overview`)
-        // cy.contains("div", "You don't have permission to view this page.", {timeout: 30000})
-        // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/visitor-overview`)
-        // cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
-        // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/content-analysis`)
-        // cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
-        // cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/content-engagement`)
-        // cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
+        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/account-overview`)
+        cy.contains("div", "You don't have permission to view this page.", {timeout: 30000})
+        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/visitor-overview`)
+        cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
+        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/content-analysis`)
+        cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
+        cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/website-tools-pa/content-engagement`)
+        cy.contains("div", "You don't have permission to view this page.", {timeout: 10000})
     })
 })

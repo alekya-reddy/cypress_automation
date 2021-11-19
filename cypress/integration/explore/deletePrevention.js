@@ -17,6 +17,25 @@ const recommend = {
     contents: [youtubeContent.title]
 };
 
+const explore = {
+    name: 'exFolder',
+    experienceType: 'Target',
+    trackName: 'sharedTarget',
+    parentFolder: 'Root',
+    slug: 'exFolder.js',
+    get url(){
+        return `${authoring.common.baseUrl}/l/${this.slug}`
+    }
+}
+
+const folder = {
+    name: "Folder2"
+}
+
+const rootFolder = {
+    name: "Root"
+}
+
 const exploreTarget = {
     name: 'exTarget deletePrevention.js',
     experienceType: 'Target',
@@ -76,6 +95,30 @@ describe("Explore - Verify delete prevention", () => {
         authoring.explore.visit()
         authoring.explore.deleteExplore(exploreRecommend.name)
         authoring.recommend.deleteTrack(recommend.name) // includes verify
+    })
+
+    it("Verify drag and drop and root folder available as a option", () => {
+        authoring.common.login()
+        authoring.explore.visit()
+        authoring.explore.deleteExplore(explore.name)
+        authoring.explore.addExplore(explore)   
+        cy.go("back")    
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        })
+        cy.contains("a", explore.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('2')
+        }) 
+        cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains("a", explore.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('0')
+        })
     })
 })
 

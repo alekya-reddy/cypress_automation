@@ -9,7 +9,9 @@ export class Target extends Common {
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
-        this.editTrack = 'i[title="Edit Folder"]';
+        this.addFolder =  "button:contains('Add Folder')"
+        this.editFolder = 'i[title="Edit Folder"]';
+        this.editTrack = 'i[title="Edit Track"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
         this.contentClick = "div[draggable='true']:nth-child(2)",
@@ -76,7 +78,13 @@ export class Target extends Common {
             delayLabel: "label[for='delay']",
             delayInput: "input[name='delay']",
             delayDecrement: "span[class*='NumberInput__decrementButton']"
+        }
+        this.editTarget = {
+            nameInput: "#name",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
+        
     }
 
     visit(){
@@ -100,6 +108,29 @@ export class Target extends Common {
         cy.get(this.pageSearch).clear().type(name)
         cy.containsExact(this.table.experienceCellName, name,  {timeout:2000}).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
+    }
+
+    editTrackTarget(options){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const labels = options.labels
+        cy.get(this.editTrack).click()
+         cy.contains(this.modal, "Edit Track").within(()=>{
+            if (name) {
+                cy.get(this.editTarget.nameInput).clear().type(name)
+            }
+            if (parentFolder) {
+                cy.get(this.editTarget.dropdownSelect).eq(0).click()
+                cy.get(this.editTarget.dropdownSelectField).eq(0).type(parentFolder + "\n")
+            }  
+            if (labels) {
+                cy.get(this.editTarget.dropdownSelect).eq(1).click()
+                cy.get(this.editTarget.dropdownSelectField).eq(1).type(labels + "\n")
+            }    
+            cy.contains("button", "Save").click()
+
+         })
+
     }
 
     deleteTrack(name, verify){

@@ -48,6 +48,7 @@ export class Vex extends Common {
         this.pageTitle = 'input[name="landingExperience.pageTitle"]';
         this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
         this.eventSetupCheckbox = 'input[value="Event setup"]';
+        this.antCell = ".ant-table-cell";
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -55,7 +56,7 @@ export class Vex extends Common {
         this.sessionEditTags = "#edit-session-tags-configuration"
         this.clearSessionFilter = 'span[aria-label="close-circle"]'
         this.antselect = ".ant-select-selection-item";
-        this.clickEvent = "td[class*='ant-table-cell']>a";
+        this.clickEvent = "td[class*='ant-table-cell']>div>a";
         this.previewClick = "div[data-qa-hook='title-bar']>div:nth-child(3)>a";
         this.shareCell = ".share-cell";
         this.sessionUrlCell = ".url-cell";
@@ -280,7 +281,7 @@ export class Vex extends Common {
                 cy.wait(200)
                 this.eventSetup(true)  
             }
-
+           
             cy.contains('button', 'Add Virtual Event').click()
         })
 
@@ -289,6 +290,12 @@ export class Vex extends Common {
             cy.get(this.antModal).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
+    }
+
+    editfolder(name){
+        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
+            cy.contains("button", "Edit Folder").click()
+        })
     }
 
     eventSetup(setUp) {
@@ -340,7 +347,7 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(this.eventClick).eq(0).click()
+            cy.get(`a[id='configure-${eventName}']`).should('exist').click()
             cy.get(this.trashIcon).should('exist').click()
             cy.contains(this.modal, "Do you want to delete this Virtual Event?").within(() => {
                 cy.wait(2000)

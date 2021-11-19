@@ -14,6 +14,14 @@ const event2 = {
     slug: "cannot-change-me"
 }
 
+const folder = {
+    name: "Folder2"
+}
+
+const rootFolder = {
+    name: "Root"
+}
+
 const sessions = [
     {
         name: 'Session 1',
@@ -83,4 +91,33 @@ describe('VEX - Virtual Event', function() {
         // Not testing here, but when you enter blank event slug, it auto-generates a valid slug 
         // Not testing here, but any invalid event slug input that is not a duplicate, it would auto-generate a valid slug 
     })
+       
+       it('Confirm can drag and drop events to folder and root folder available as a option', function() {
+        authoring.common.login();
+        authoring.vex.visit();
+        authoring.vex.deleteVirtualEvent(event.name)
+        authoring.vex.addVirtualEvent(event)
+        authoring.vex.editfolder(event.name)
+        cy.contains("span","Save Folder").should("exist").click()
+
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        })
+
+        cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('2')
+        }) 
+
+        cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        })
+
+     })
 })
