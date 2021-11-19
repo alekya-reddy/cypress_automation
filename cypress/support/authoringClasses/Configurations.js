@@ -214,6 +214,23 @@ export class Configurations extends Common {
                 heroSubtitleFontWeight: "#heroSubtitleFontWeight",
                 heroSubtitleFontColor: "#heroSubtitleColor",
                 heroBackgroundColorPicker: "#heroBackgroundColor > div > span"
+            },
+            accessProtection: {
+                //LP=Landing Page
+                submitButtonRadiusLP: "input[name='submitButtonCornerRadius']",
+                submitButtonColorLP: "#submitButtonAuthoringColor",
+                headerTextSettingsLP: "#headerTextAppearance",
+                headerTextFontWeightLP: "#headerTextFontWeight",
+                headerTextFontColorLP: "#headerTextColor",
+                bodySettingsLP: "#authoringBodyTextAppearance",
+                bodyFontWeightLP: "#authoringBodyTextFontWeight",
+                bodyFontColorLP: "#authoringBodyTextColor",
+                emailAddressSettingsLP: "#authoringAddressAppearance",
+                emailAddressFontWeightLP: "#authoringAddressTextFontWeight",
+                emailAddressFontColorLP: "#authoringAddressTextColor",
+                submitButtonTextSettingsLP: "#submitButtonAppearance",
+                submitButtonTextWeightLP: "#buttonTextFontWeight",
+                submitButtonTextColorLP: "#buttonTextColor",
             }
         };
         this.languages = {
@@ -258,6 +275,16 @@ export class Configurations extends Common {
                 noResultsMessage: "#noResultsMessage",
                 saveSettings: "#save-virtual-event-settings"
         
+            },
+            accessProtection:{
+                //locators for Landing page/authoring
+                title: "#title",
+                emailSuccessMsg: "#emailSuccess",
+                emailFailedMsg: "#emailFailed",
+                unAuthorizedEmailMsg: "#unauthorizedEmail",
+                emailConfirmedMsg: "#confirmedAccess",
+                emailInstructionMsg: "#instructionEmailMessage",
+                helperMsg: "#helperMessage>textarea"
             }
         };
         this.forms = {
@@ -1569,8 +1596,8 @@ export class Configurations extends Common {
         const {name, code} = options
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
-        
-        cy.ifNoElementWithExactTextExists("div", name, 2000, ()=>{
+       
+        cy.ifNoElementWithExactTextExists("div", name, 4000, ()=>{
             this.clickAddLanguage()              
             cy.contains(this.modal, "Add Language").within(()=>{
                 cy.get(this.dropdown.input).type(name + "\n", {force: true})
@@ -1652,6 +1679,7 @@ export class Configurations extends Common {
     }
 //I have added hard wait to make this function work. In regression if it's still fail then will remove waits
     deleteLanguage(name, verify){
+        this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
         cy.wait(2000)
         cy.get(this.pageSidebar).within(sidebar => {
@@ -1778,6 +1806,7 @@ export class Configurations extends Common {
     
 
     searchLinksAndSharing(name) {
+        cy.wait(2000)
         cy.get(this.pageSidebar).within(() => {
             cy.get("input[name='search-experiences']").should("exist").type(name)
          })
@@ -1992,5 +2021,285 @@ export class Configurations extends Common {
 
     }
 
-}
+    configureAccessProtectionAppearance(options){
+        const {appearance,thumbnail,submitButtonColor,verify} = options
+        const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
+        const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
+        const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
+        const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
+        
+        this.goToCampaignAppearance(appearance, "access-protection")
+        if (thumbnail) {
+            cy.get(this.appearances.imagePicker).first().click()
+            this.pickThumbnail(thumbnail)
+        }
+        if(submitButtonColor){
+            const { r, g, b, a } = submitButtonColor
+            this.pickColor({button: this.appearances.accessProtection.submitButtonColorLP, r: r, g: g, b: b, a: a})
+        }
+        if(headerTextFontFamilyLP){
+            cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
+                cy.get(this.dropdown.input).type(headerTextFontFamilyLP + "\n", {force: true})
+            })
+        }
+        if(headerTextBoldFontLP == true || headerTextBoldFontLP == false){
+            cy.get(this.appearances.accessProtection.headerTextFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
+                if(headerTextBoldFontLP && !fontWeightClass.includes("containerActive") || !headerTextBoldFontLP && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.accessProtection.headerTextFontWeightLP).click()
+                }
+            })
+        }
+        if(headerTextFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
+                cy.get(this.appearances[size[headerTextFontSizeLP]]).click()
+            })
+        }
+        if(headerTextFontColorLP){
+            const { r, g, b, a } = headerTextFontColorLP
+            this.pickColor({button: this.appearances.accessProtection.headerTextFontColorLP, r: r, g: g, b: b, a: a})
+        }
+        if(bodyTextFamilyLP){
+            cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
+                cy.get(this.dropdown.input).type(bodyTextFamilyLP + "\n", {force: true})
+            })
+        }
+        if(bodyTextBoldFontLP == true || bodyTextBoldFontLP == false){
+            cy.get(this.appearances.accessProtection.bodyFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
+                if(bodyTextBoldFontLP && !fontWeightClass.includes("containerActive") || !bodyTextBoldFontLP && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.accessProtection.bodyFontWeightLP).click()
+                }
+            })
+        }
+        if(bodyTextFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
+                cy.get(this.appearances[size[bodyTextFontSizeLP]]).click()
+            })
+        }
+        if(bodyTextFontColorLP){
+            const { r, g, b, a } = bodyTextFontColorLP
+            this.pickColor({button: this.appearances.accessProtection.bodyFontColorLP, r: r, g: g, b: b, a: a})
+        }
+        if(emailAddressFamilyLP){
+            cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
+                cy.get(this.dropdown.input).type(emailAddressFamilyLP + "\n", {force: true})
+            })
+        }
+        if(emailAddressBoldFontLP == true || emailAddressBoldFontLP == false){
+            cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
+                if(emailAddressBoldFontLP && !fontWeightClass.includes("containerActive") || !emailAddressBoldFontLP && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).click()
+                }
+            })
+        }
+        if(emailAddressFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
+                cy.get(this.appearances[size[emailAddressFontSizeLP]]).click()
+            })
+        }
+        if(emailAddressFontColorLP){
+            const { r, g, b, a } =  emailAddressFontColorLP
+            this.pickColor({button: this.appearances.accessProtection.emailAddressFontColorLP, r: r, g: g, b: b, a: a})
+        }
+        if(submitButtonFontFamilyLP){
+            cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
+                cy.get(this.dropdown.input).type(submitButtonFontFamilyLP + "\n", {force: true})
+            })
+        }
+        if(submitButtonFontWeightLP == true || submitButtonFontWeightLP == false){
+            cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).invoke("attr", "class").then(fontWeightClass => {
+                if(submitButtonFontWeightLP && !fontWeightClass.includes("containerActive") || !submitButtonFontWeightLP && fontWeightClass.includes("containerActive")){
+                    cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).click()
+                }
+            })
+        }
+        if(submitButtonFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
+                cy.get(this.appearances[size[submitButtonFontSizeLP]]).click()
+            })
+        }
+        if(submitButtonTextFontColorLP){
+            const { r, g, b, a } =  submitButtonTextFontColorLP
+            this.pickColor({button: this.appearances.accessProtection.submitButtonTextColorLP, r: r, g: g, b: b, a: a})
+        }
+        if(submitButtonRadiusLP){
+            cy.get(this.appearances.accessProtection.submitButtonRadiusLP).type(`{selectall}${submitButtonRadiusLP}` + "\n", {force: true})
+        }
+    
+        cy.contains("button", "Save Access Protection Settings").click()
+        if(verify !== false){
+            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+            this.verifyAccessProtectionAppearance(options)
+        }       
+    }
 
+    verifyAccessProtectionAppearance(options){
+        const {submitButtonColor} = options
+        const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
+        const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
+        const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
+        const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
+
+        if(submitButtonColor){
+            const { r, g, b, a } = submitButtonColor
+            cy.get(this.appearances.accessProtection.submitButtonColorLP).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(headerTextFontFamilyLP){
+            cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", headerTextFontFamilyLP)
+            })
+        }
+        if(headerTextBoldFontLP == true || headerTextBoldFontLP == false){
+            const containOrNotContain = headerTextBoldFontLP ? "contain" : "not.contain"
+            cy.get(this.appearances.accessProtection.headerTextFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+        if(headerTextFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
+                cy.get(this.appearances[size[headerTextFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(headerTextFontColorLP){
+            const { r, g, b, a } = headerTextFontColorLP
+            cy.get(this.appearances.accessProtection.headerTextFontColorLP).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(bodyTextFamilyLP){
+            cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", bodyTextFamilyLP)
+            })
+        }
+        if(bodyTextBoldFontLP == true || bodyTextBoldFontLP == false){
+            const containOrNotContain = bodyTextBoldFontLP ? "contain" : "not.contain"
+            cy.get(this.appearances.accessProtection.bodyFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+        if(bodyTextFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
+                cy.get(this.appearances[size[bodyTextFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(bodyTextFontColorLP){
+            const { r, g, b, a } = bodyTextFontColorLP
+            cy.get(this.appearances.accessProtection.bodyFontColorLP).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(emailAddressFamilyLP){
+            cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", emailAddressFamilyLP)
+            })
+        }
+        if(emailAddressBoldFontLP == true || emailAddressBoldFontLP == false){
+            const containOrNotContain = emailAddressBoldFontLP ? "contain" : "not.contain"
+            cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+        if(emailAddressFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
+                cy.get(this.appearances[size[emailAddressFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+        if(emailAddressFontColorLP){
+            const { r, g, b, a } = emailAddressFontColorLP
+            cy.get(this.appearances.accessProtection.emailAddressFontColorLP).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(submitButtonFontFamilyLP){
+            cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
+                cy.get(this.dropdown.selectedValue).invoke("text").should("eq", submitButtonFontFamilyLP)
+            })
+        }
+    
+        if(submitButtonFontWeightLP == true || submitButtonFontWeightLP == false){
+            const containOrNotContain = submitButtonFontWeightLP ? "contain" : "not.contain"
+            cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
+        }
+    
+        if(submitButtonFontSizeLP){
+            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+            cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
+                cy.get(this.appearances[size[submitButtonFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
+            })
+        }
+    
+        if(submitButtonTextFontColorLP){
+            const { r, g, b, a } = submitButtonTextFontColorLP
+            cy.get(this.appearances.accessProtection.submitButtonTextColorLP).within(() => {
+                cy.get("span").invoke("attr", "style").then(style => {
+                    const backgroundColorStyle = a == 1 ? `background-color: rgb(${r}, ${g}, ${b})` : `background-color: rgba(${r}, ${g}, ${b}, ${a})`
+                    expect(style).to.include(backgroundColorStyle)
+                })
+            })
+        }
+        if(submitButtonRadiusLP){
+            cy.get(this.appearances.accessProtection.submitButtonRadiusLP).invoke("attr", "value").should("contain", submitButtonRadiusLP)
+        }
+    }
+
+    configureAccessProtectionLanguageOverride(config) {
+        const language = config.language
+        const title = config.title
+        const emailSuccess = config.emailSuccess
+        const emailFailed =config.emailFailed
+        const unAuthorizedEmail =config.unAuthorizedEmail
+        const emailConfirmMsg = config.emailConfirmMsg
+        const emailInstructionMsg = config.emailInstructionMsg
+        const helperMsg = config.helperMsg
+
+        this.visit.languages()
+        this.clicklanguage(language)
+        this.gotoLanguageTab("access-protection")
+        cy.wait(3000) //Languages-Access Protection Tab loading wait
+        if (title) 
+        {
+            cy.get(this.languages.accessProtection.title).clear().type(title)
+        }
+        if (emailSuccess) 
+        {
+            cy.get(this.languages.accessProtection.emailSuccessMsg).clear().type(emailSuccess)
+        }
+        if (emailFailed) 
+        {
+            cy.get(this.languages.accessProtection.emailFailedMsg).clear().type(emailFailed)
+        }
+        if (unAuthorizedEmail) 
+        {
+            cy.get(this.languages.accessProtection.unAuthorizedEmailMsg).clear().type(unAuthorizedEmail)
+        }
+        if (emailConfirmMsg) 
+        {
+            cy.get(this.languages.accessProtection.emailConfirmedMsg).clear().type(emailConfirmMsg)
+        }
+        if (emailInstructionMsg) 
+        {
+            cy.get(this.languages.accessProtection.emailInstructionMsg).clear().type(emailInstructionMsg)
+        }
+        if (helperMsg) 
+        {
+            cy.get(this.languages.accessProtection.helperMsg).clear().type(helperMsg)
+        }
+        cy.contains("button", "Save Access Protection Settings").click()
+        cy.contains(this.messages.recordSaved, {timeout: 1000}).should("exist")
+
+    } 
+}

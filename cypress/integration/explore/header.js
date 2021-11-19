@@ -17,11 +17,23 @@ const explore = {
     experienceType: 'Target',
     trackName: target.name,
     slug: 'header-js',
+    appearance: 'heroImages.js',
+    pageTitle: 'It is Title',
+    pageDescription: 'It is Description',
     get url(){
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 };
 
+const exploreWithThumbnail = {
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/animal-dog-pet-cute.jpg"
+    }
+}
+ const exploreWithDescription255 = {
+    pageDescription: 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz',
+ }
 describe("Explore - Header feature", () => {
 
     it("Set up if not already done", ()=>{
@@ -39,6 +51,22 @@ describe("Explore - Header feature", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
+        //verify helper text
+        cy.get(authoring.explore.pageSidebar.pageTitleLabel).trigger('mouseover')
+        cy.contains("Used for title tag, meta title and og title. Appears in search result when explore link is shared on social media.").should("exist")
+        cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).trigger('mouseover')
+        cy.contains("Used for og description and meta description. Appears in search result when explore link is shared on social media.").should("exist")
+        cy.get(authoring.explore.pageSidebar.thumbnail).trigger('mouseover')
+        cy.contains("Used for og image and appears when explore link is shared on social media.").should("exist")
+
+        //verify that description can't be more than 255 characters
+        cy.get(authoring.explore.pageSidebar.pageDescriptionLabel).siblings("span").click()
+        cy.get(authoring.common.popover).get(authoring.explore.popoverElements.pageDescriptionInput).clear().type(exploreWithDescription255.pageDescription + "\n")
+        cy.contains("button", "Update").click()
+        cy.contains('div', "Description must be fewer than 255 characters.").should("exist")
+        cy.contains("button", "Cancel").click()
+        authoring.explore.configureExplore(explore)
+
         // turn header toggle on and override headet title
         authoring.common.toggle(authoring.explore.pageSidebar.headerToggle, 'ON')
         authoring.explore.setHeaderOverrides('Automation Headline')
@@ -56,6 +84,9 @@ describe("Explore - Header feature", () => {
             cy.contains('button', 'Save Header Overrides').click()
         })
 
+        cy.get('#explore-seo-thumbnail').click()
+        authoring.common.pickThumbnail(exploreWithThumbnail.thumbnail)
+
         // verify on consumption that header title fallback to default value, which is 'Recommended Content' 
         cy.visit(explore.url)
         cy.contains(consumption.explore.headerTitle, 'Recommended Content')   
@@ -67,6 +98,16 @@ describe("Explore - Header feature", () => {
 
         cy.visit(explore.url)
         cy.get(consumption.explore.headerTitle).should('not.exist')
+        
+        cy.wait(2000)
+        cy.get('meta[property="og:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
+        cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/animal-dog-pet-cute.jpg"); 
+        cy.get('meta[name="twitter:description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[property="og:title"]').should("have.attr", "content", explore.pageTitle);  
+        cy.get('meta[name="description"]').should("have.attr", "content", explore.pageDescription); 
+        cy.get('meta[name="twitter:title"]').should("have.attr", "content", explore.pageTitle);
+
     })
 })
 

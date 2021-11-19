@@ -78,7 +78,7 @@ describe("PathAnalytics Dashboard", function() {
             it("Verify Analytics Page Loads", () => {
                 authoring.common.login()
                cy.visit(campaignTools.url+"/reports")
-               cy.get('div[data-qa-hook="path-analytics-tile"]', {timeout: 20000}).should("exist")
+               cy.contains('div', "Account Insights" ,{timeout: 20000}).should("exist")
                cy.contains('a',"Visitor Performance").should("exist").click()
                cy.wait(8000)
                cy.waitForIframeToLoad('iframe', 10000)
@@ -164,7 +164,7 @@ it("Verify Analytics Page Loads", () => {
    cy.wait(8000)
    cy.waitForIframeToLoad('iframe', 10000)
    cy.getIframeBody('iframe').within(() => {    
-   cy.contains('span',"Avg. SEO Compliance of Web Pages").should("exist")
+   cy.contains('span',"Avg SEO Compliance of Web Pages").should("exist")
    cy.contains('span',"Web Page Detail").should("exist")
 
    })
@@ -190,9 +190,9 @@ it("Verify Analytics Page Loads", () => {
    cy.wait(8000)
    cy.waitForIframeToLoad('iframe', 10000)
    cy.getIframeBody('iframe').within(() => {    
-   cy.contains('b',"PathFactory Website Tools").should("exist")
-   cy.contains('span',"Lift in Engagement Time").should("exist")
-   cy.contains('span',"Channel Journeys").should("exist")
+   cy.contains('b',"Recommendation Analytics").should("exist")
+   cy.contains('h3',"Overall Lift in Engagement").should("exist")
+   cy.contains('span',"Recommendation Type Breakdown - Page Views").should("exist")
 
       })
   })

@@ -40,8 +40,8 @@ describe("Explore - Change Public Title", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
-        // change public title and verify consumption
-        authoring.explore.setPublicTitle('Wonderful Title')
+        // change page title and verify consumption
+        authoring.explore.setPageTitle('Wonderful Title')
 
         cy.visit(explore.url)
         cy.title().should('eq', 'Wonderful Title')
@@ -49,12 +49,13 @@ describe("Explore - Change Public Title", () => {
         // go back to authoring and remove public title - explore hero Title should be shown
         authoring.explore.visit()
         authoring.explore.goToExplorePage(explore.name)
-        cy.get(authoring.explore.pageSidebar.publicTitleLabel).siblings("span").click()
-        cy.get(authoring.explore.popover).get(authoring.explore.popoverElements.publicTitleInput).clear()
+        cy.get(authoring.explore.pageSidebar.pageTitleLabel).siblings("span").click()
+        cy.get(authoring.explore.popover).get(authoring.explore.popoverElements.pageTitleInput).clear()
         cy.contains('button', 'Update').click()
 
         cy.visit(explore.url)
-        cy.title().should('eq', explore.heroTitle)
+        //cy.title().should('eq', explore.heroTitle)
+        cy.title().should('eq', explore.name)
 
     })
 })

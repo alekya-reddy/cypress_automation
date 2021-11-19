@@ -29,6 +29,7 @@ export class ClientHQ extends Common {
         this.oceToggle = '[data-qa-hook="enableOce"]'
         this.authoringToggle = 'div[data-qa-hook="active"]'
         this.consumptionToggle = 'div[data-qa-hook="offline"]'
+        this.contentIntelligence="[data-qa-hook='enableContentIntelligence']"
     }
 
     visit(){
@@ -48,7 +49,7 @@ export class ClientHQ extends Common {
         this.visitOrgConfig()
         this.toggle(toggle, on_off)
         cy.contains('Save').click({force: true})
-        cy.get('body').should('contain', 'Organization Updated Successfully!')
+        cy.get('body').should('contain', 'Organization Updated Successfully!',{timeout:20000})
     }
     
     clientHQToggleDeactive(toggle, on_off){

@@ -11,6 +11,10 @@ export class CommonCX {
         this.ciscoPasswordInput = "input[type='password']";
         this.ciscoNextButton="#login-button";
         this.ciscoLogIn="input[type='submit']";
+        this.accessProtectionLogo=".logo-img";
+        this.accessProtectionHeaderText=".image-title-container";
+        this.accessProtectionBodyText=".body-text-data";
+        this.accessProtectionSubmitButton="input[type='submit']";
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
         this.customFormIframe = "#qa-custom-form";

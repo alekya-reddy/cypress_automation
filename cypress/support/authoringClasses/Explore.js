@@ -10,7 +10,9 @@ export class Explore extends Common {
         this.shareExplore = 'i[title="share"]';
         this.previewExplore = 'i[title="preview"]';
         this.emailExplore = '#explore-show-email-button';
-        this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a'
+        this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a';
+        this.searchPage = 'input[name="page-search"]';
+        this.clearSearch = 'i[title="Clear search"]';
         
         this.createExploreModal = {
             nameInput: "#name",
@@ -25,7 +27,9 @@ export class Explore extends Common {
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
-            publicTitleLabel: "label:contains('Public Title')",
+            pageTitleLabel: "label:contains('Page Title')",
+            pageDescriptionLabel: "label:contains('Page Description')",
+            thumbnail: "#explore-seo-thumbnail",
             appearanceLabel: "label:contains('Appearance')",
             externalCodeLabel: "label:contains('External Code')",
             ctaToggle: 'div[data-qa-hook="ctaSection"]',
@@ -35,7 +39,8 @@ export class Explore extends Common {
         };
         this.popoverElements = {
             customUrlInput: "#slug",
-            publicTitleInput: "#publicTitle"
+            pageTitleInput: "#publicTitle",
+            pageDescriptionInput: "#pageDescription"
         };
         this.header = {
             headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
@@ -99,8 +104,8 @@ export class Explore extends Common {
         const trackName = options.trackName
         const parentFolder = options.parentFolder
 
-        cy.wait(3000)
-        cy.get(this.editExplorePageIcon).click()
+        cy.get(this.editExplorePageIcon).click({force:true})
+        cy.wait(2000)
         cy.contains(this.modal, "Edit Explore Page").within(()=>{
             if (name) {
                 cy.get(this.createExploreModal.nameInput).clear().type(name)
@@ -161,7 +166,7 @@ export class Explore extends Common {
     }
 
     configureExplore(options){
-        const { name, slug, appearance, publicTitle, externalCode, verify } = options
+        const { name, slug, appearance, pageTitle, pageDescription, thumbnail, externalCode, verify } = options
         // These toggle options should have values of "on" or "off"
         const { header, headerTitle, searchFunction, filters, ctaToggle, cta, selectFilters } = options
 
@@ -181,8 +186,16 @@ export class Explore extends Common {
             this.setAppearance(appearance, verify)
         }
 
-        if(publicTitle){
-            this.setPublicTitle(publicTitle)
+        if(pageTitle){
+            this.setPageTitle(pageTitle)
+        }
+
+        if(pageDescription){
+            this.setPageDescription(pageDescription)
+        }
+        if(thumbnail){
+            cy.get(this.pageSidebar.thumbnail).click()
+            this.pickThumbnail(thumbnail)
         }
 
         if(externalCode){
@@ -319,8 +332,10 @@ export class Explore extends Common {
 
     setHeaderOverrides(headerTitle) {
         cy.get("body").then($body => {
+            cy.wait(500)
             if ($body.find(this.header.headerNoOverrides).length > 0) {
-                cy.get(this.header.headerNoOverrides).click()
+                cy.wait(500)
+                cy.get(this.header.headerNoOverrides).click({force:true})
             }
             else {
                 cy.get(this.header.headerOverrides).click()
@@ -333,11 +348,20 @@ export class Explore extends Common {
         })
     }
 
-    setPublicTitle(title, verify){
-        cy.get(this.pageSidebar.publicTitleLabel).siblings("span").click()
-        cy.get(this.popover).get(this.popoverElements.publicTitleInput).clear().type(title + "\n")
+    setPageTitle(title, verify){
+        cy.get(this.pageSidebar.pageTitleLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.pageTitleInput).clear().type(title + "\n")
         if(verify !== false){
-            cy.get(this.pageSidebar.publicTitleLabel).siblings("span").should("contain", title)
+            cy.get(this.pageSidebar.pageTitleLabel).siblings("span").should("contain", title)
+        }
+    }
+
+    setPageDescription(description, verify){
+        cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").click()
+        cy.get(this.popover).get(this.popoverElements.pageDescriptionInput).clear().type(description)
+        cy.contains("button", "Update").click()
+        if(verify !== false){
+            cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").should("contain", description)
         }
     }
 

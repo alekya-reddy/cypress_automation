@@ -3,9 +3,63 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance({org: "automation-microsites", tld: "lookbookhq"})
 const consumption = createConsumptionInstance({org: "automation-microsites", tld: "lookbookhq"})
 
+const appearance = {
+    name: "accessProtectionAppearance.js",
+}
+const micrositeAppearanceSettings = {
+    appearance: "accessProtectionAppearance.js",
+    thumbnail: {
+        category: "Stock Images",
+        url: "/stock/sm/bench-forest-trees-path.jpg",
+    } ,
+    headerTextFontFamilyLP: "Overpass",
+    headerTextBoldFontLP: true,
+    headerTextFontSizeLP: "large",
+    headerTextFontColorLP: {r: 10, g: 200, b: 155, a: 0.5},
+
+    bodyTextFamilyLP: "Roboto",
+    bodyTextBoldFontLP: false,
+    bodyTextFontSizeLP: "medium",
+    bodyTextFontColorLP: {r: 111, g: 22, b: 3, a: 0.35},
+
+    emailAddressFamilyLP: "Tahoma",
+    emailAddressBoldFontLP: false,
+    emailAddressFontSizeLP: "large",
+    emailAddressFontColorLP: {r: 19, g: 197, b: 116, a: 1},
+
+    submitButtonFontFamilyLP: "Verdana",
+    submitButtonFontWeightLP: false,
+    submitButtonFontSizeLP: "small",
+    submitButtonTextFontColorLP: {r: 255, g: 11, b: 1, a: 1},
+    submitButtonRadiusLP: "10",
+    submitButtonColor: {r: 10, g: 200, b: 155, a: 0.5},
+    verify: true   
+}
+const colorConfigToCSS = (colorConfig) => {
+    const { r, g, b, a } = colorConfig
+    const CSS = a == 1 ? `rgb(${r}, ${g}, ${b})` : `rgba(${r}, ${g}, ${b}, ${a})`
+    return CSS;
+}
+const fontSizeToCSS_LandPage = {small: "13px", medium: "15px", large: "17px"}
+
+const fontWeightToCSS = (bold) => { return bold ? "700" : "400" }
+
+const language = {name: "accessprotection.js", code: "apmicro"}
+
+const micrositeLanguageSettings = {
+  language: language.name,
+  title: "Hey there!! Email confirmation is mandatory",
+  emailSuccess: "Success! An email has been sent to your inbox",
+  emailFailed: "Email is not authorized, please try again",
+  unAuthorizedEmail: "Stop! You are not authorized to access this page. ",
+  emailInstructionMsg: "Hey! Enter your email check your inbox for access instructions",
+}
+
 const microsite = {
     name: "accessProtection.js",
     slug: "accessprotection-js",
+    language: 'accessprotection.js',
+    appearance: 'accessProtectionAppearance.js',
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
@@ -13,7 +67,6 @@ const microsite = {
 const allVisitorsGroup = "All Visitors"
 const gmailAPGroup = "gmail AP group"
 const hotmailAPGroup = "hotmail AP group"
-const emailRequiredMsg = "Email confirmation is required"
 const emailNotAuthMsg = "Email is not authorized, please try again"
 const emailSuccessMsg = "Success! An email has been sent to your inbox"
 
@@ -72,6 +125,12 @@ describe("Microsites - Access Protection", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
+                authoring.configurations.deleteLanguage(language.name)
+                authoring.configurations.addNewLanguage(language)
+                authoring.configurations.configureAccessProtectionLanguageOverride(micrositeLanguageSettings)
+                authoring.configurations.deleteAppearance(appearance.name)
+                authoring.configurations.addNewAppearance(appearance)
+                authoring.configurations.configureAccessProtectionAppearance(micrositeAppearanceSettings)
                 authoring.target.addTrack(target)
                 authoring.target.configure(target)
                 authoring.recommend.addTrack(recommend)
@@ -183,13 +242,52 @@ describe("Microsites - Access Protection", () => {
         })
         cy.contains("button", "Save").click()
 })
+    //DEV-14558: Update design of access protection Language and Appearance 
+    //Note: Not checking the confirmation email validations as we are not automating email access related scenarios
+    //verify Access Protection-Appearance & Languae settings applied properly in Microsite authentication page.
     it("Microsite access protection settings should override the access protection settings of the individual track", () => {
-        const urls = [microsite.url, landingPage.url, target.micrositeUrl, recommend.micrositeUrl]
-        urls.forEach( url => {
+        const urls1 = [microsite.url, landingPage.url]
+        urls1.forEach( url => {
             cy.visit(url)
-            cy.contains(emailRequiredMsg).should("exist")
-            cy.url().should("not.eq", url).should("contain", `${authoring.common.baseUrl}/visitor_authentications`)
+            cy.get(consumption.common.accessProtectionLogo)
+                .should('have.attr', 'src',"https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")
+            cy.get(consumption.common.accessProtectionSubmitButton)
+                .should("have.css", "background-color", colorConfigToCSS(micrositeAppearanceSettings.submitButtonColor))
+                .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.submitButtonTextFontColorLP))
+                .should("have.css", "font-family", micrositeAppearanceSettings.submitButtonFontFamilyLP)
+                .should("have.css", "font-size", fontSizeToCSS_LandPage[micrositeAppearanceSettings.submitButtonFontSizeLP])
+            cy.get(consumption.common.trackProtectionEmailInput)
+                .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.emailAddressFontColorLP))
+                .should("have.css", "font-family", micrositeAppearanceSettings.emailAddressFamilyLP)
+                .should("have.css", "font-size", fontSizeToCSS_LandPage[micrositeAppearanceSettings.emailAddressFontSizeLP])
+            cy.get(consumption.common.accessProtectionBodyText)
+                .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.bodyTextFontColorLP))
+                .should("have.css", "font-family", micrositeAppearanceSettings.bodyTextFamilyLP)
+                .should("have.css", "font-size", fontSizeToCSS_LandPage[micrositeAppearanceSettings.bodyTextFontSizeLP])
+            cy.get(consumption.common.accessProtectionHeaderText)
+                .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.headerTextFontColorLP))
+                .should("have.css", "font-family", micrositeAppearanceSettings.headerTextFontFamilyLP)
+                .should("have.css", "font-size", fontSizeToCSS_LandPage[micrositeAppearanceSettings.headerTextFontSizeLP])
+                .should("have.css", "font-weight", fontWeightToCSS(micrositeAppearanceSettings.headerTextBoldFontLP))  
 
+            cy.url().should('include', `${authoring.common.baseUrl}/visitor_authentications/confirmations/new?visitor_auth_key=`)
+            cy.contains(micrositeLanguageSettings.title).should("exist")
+            cy.contains(micrositeLanguageSettings.emailInstructionMsg).should("exist")
+            cy.get(consumption.common.trackProtectionEmailInput).clear().type("random@gmail.com" + "\n")
+            cy.contains(micrositeLanguageSettings.emailFailed).should('exist')
+            cy.contains("a", "Go Back").click()
+            cy.get(consumption.common.trackProtectionEmailInput).clear().type("jimjam@hotmail.com" + "\n")
+            cy.contains(micrositeLanguageSettings.emailSuccess).should('exist')
+            cy.contains("a", "Go Back").click()
+            cy.get(consumption.common.trackProtectionEmailInput).clear().type("jimjam@pathfactory.com" + "\n")
+            cy.contains(micrositeLanguageSettings.emailSuccess).should('exist')
+        })
+        //NOTE: Not covering Access protection Language and Appearance validations for microsite tracs, as the validations will be done separately for respective tracks in their access protection file
+        const urls2 = [target.micrositeUrl, recommend.micrositeUrl]    
+        urls2.forEach( url => {
+            cy.visit(url)
+            cy.contains(micrositeLanguageSettings.title).should("exist")
+            cy.url().should("not.eq", url).should("contain", `${authoring.common.baseUrl}/visitor_authentications`)
             // Gmail email domain should not be authorized. Hotmail should be authorized
             cy.get(consumption.microsites.trackProtectionEmailInput).type("h8fdj092hy6b@gmail.com" + "\n")
             cy.contains(emailNotAuthMsg).should("exist")
@@ -213,10 +311,11 @@ describe("Microsites - Access Protection", () => {
                 type: "None"
             }
         })
+        const urls = [microsite.url, landingPage.url,target.micrositeUrl, recommend.micrositeUrl]
         urls.forEach( url => {
             cy.visit(url)
             cy.url().should("contain", url)
-            cy.contains(emailRequiredMsg).should("not.exist")
+            cy.contains(micrositeLanguageSettings.title).should("not.exist")
         })
     })
 })
