@@ -1,12 +1,12 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 
-const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
-const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: 'automation-vex', tld: 'lookbookhq' })
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' })
 
 const event = {
     name: 'sessionGroupSearch.js',
     slug: 'sessiongroupsearch-js',
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -15,10 +15,10 @@ const sessions = {
     sessionWithTopic: {
         name: "With Topic",
         slug: "with-topic",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
-        //topics: "General Use",
+        topics: "General Use",
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'
@@ -26,7 +26,7 @@ const sessions = {
     sessionWithDescription: {
         name: "With Description",
         slug: "with-description",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         description: "Battlestar Galactica",
@@ -37,7 +37,7 @@ const sessions = {
     sessionbyName: {
         name: "Search by name",
         slug: "by-name",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -47,7 +47,7 @@ const sessions = {
     loneSession: {
         name: "Alone in a group",
         slug: "alone-group",
-        get url(){
+        get url() {
             return `${event.url}/${this.slug}`
         },
         visibility: 'Public',
@@ -74,7 +74,7 @@ const sessionGroups = {
 const landingPage = {
     name: "Landing Page",
     slug: "landing-page",
-    get url(){
+    get url() {
         return `${event.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -103,8 +103,8 @@ const landingPage = {
 
 describe("VEX - Session group search", () => {
     it("Set up if not already done", () => {
-        cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
-            if(response.status == 404){ 
+        cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
                 authoring.common.login()
                 authoring.vex.visit()
                 authoring.vex.addVirtualEvent(event)
@@ -126,21 +126,20 @@ describe("VEX - Session group search", () => {
 
     it("Session group search should search sessions by name, topics and description", () => {
         cy.visit(event.url)
+        cy.wait(4000) // For landing page loading
         landingPage.blocks.forEach((block) => {
             consumption.vex.verifyLandingPageBlock(block)
         })
-
         // In Group A block, search by name, topic, then description 
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
             consumption.vex.searchSessionGroup(sessions.sessionbyName.name)
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("not.exist")
-
-            // Search by pressing Enter keyboard
-            cy.get("input").clear().type(sessions.sessionWithTopic.topics + "\n")
+            cy.get(consumption.vex.searchInputField).clear().type(sessions.sessionWithTopic.topics + "\n")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+            cy.get(consumption.vex.searchInputField).clear()
             cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
 
             consumption.vex.searchSessionGroup(sessions.sessionWithDescription.description)
@@ -160,20 +159,18 @@ describe("VEX - Session group search", () => {
     })
     it("Session group filter by topic should search sessions by topics", () => {
         cy.visit(event.url)
+        cy.wait(3000) //For Loading the page
         // In Group A block, search by topic filter
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
             cy.contains("Filter by Topic").click()
-            cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
-                // Confirm have correct option
-                cy.wrap(option).contains(sessions.sessionWithTopic.topics)
-                option[0].click()
-                // After click, dropdown should hold the text of the selected option
-                cy.contains("Topic: " + sessions.sessionWithTopic.topics).should("exist")
-            })
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")  
+            cy.wait(1000)
         })
+        cy.contains('div', sessions.sessionWithTopic.topics, { timeout: 1000 }).parent().should('be.visible').click()
+        cy.get(consumption.vex.topicFilter).should('have.contain', sessions.sessionWithTopic.topics)
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
+
         // Verify that filtering in one block does not affect content in a different blocks
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupB.name).within(() => {
             cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
@@ -183,23 +180,29 @@ describe("VEX - Session group search", () => {
         })
     })
 
-    it("Session group filter by topic and search should should work together", () => {
+    it("Session group filter by topic and search should work together", () => {
         cy.visit(event.url)
+        cy.wait(3000) //For loading the page
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupA.name).within(() => {
             cy.contains("Filter by Topic").click()
-            cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
-                option[0].click()
-            })
-            consumption.vex.searchSessionGroup(sessions.sessionWithTopic.topics)
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
-            // Verify that session group is empty when using topic filter and searching for name that doesn't exist
-            consumption.vex.searchSessionGroup("I don't exist anywhere")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
-            cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("not.exist")
+            cy.wait(1000)
         })
+        cy.get(consumption.vex.filterByTopicValue).contains(sessions.sessionWithTopic.topics).then(option => {
+            option[0].click()
+        })
+        consumption.vex.searchSessionGroup(sessions.sessionWithTopic.topics)
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("exist")
+        
+        // Verify that session group is empty when using topic filter and searching for name that doesn't exist
+        cy.contains('div', sessions.sessionWithTopic.topics, { timeout: 1000 }).parent().should('be.visible').click()
+        cy.get(consumption.vex.topicFilter).should('have.contain', sessions.sessionWithTopic.topics)
+        consumption.vex.searchSessionGroup("I don't exist anywhere")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionbyName.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithDescription.name).should("not.exist")
+        cy.contains(consumption.vex.sessionCardTitle, sessions.sessionWithTopic.name).should("not.exist")
+
         // Verify that filtering in one block does not affect content in a different blocks
         cy.contains(consumption.vex.sessionGroup, sessionGroups.groupB.name).within(() => {
             cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
@@ -208,4 +211,5 @@ describe("VEX - Session group search", () => {
             cy.contains(consumption.vex.sessionCardTitle, sessions.loneSession.name).should("exist")
         })
     })
+
 })

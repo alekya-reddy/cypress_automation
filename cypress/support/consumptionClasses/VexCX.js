@@ -29,7 +29,7 @@ export class VexCX extends CommonCX {
         this.vexFormTitle = ".pf-event-hero-form-title";
         this.vexFormDescription = ".pf-event-hero-form-description";
         this.supplementalTitle = ".pf-event-session-content > div:nth-child(1)";
-        this.filterByTopicValue = "#qa-virtual-topic-filter-topic > span";
+        this.filterByTopicValue = "li[class='p-multiselect-item']";
         this.sessionTime = ".css-1uk98e1";
         this.carouselArrow_color = "#qa-arrow-right";
         this.carouselArrow_bgColor = ".slick-next";
@@ -405,7 +405,7 @@ export class VexCX extends CommonCX {
 
     searchSessionGroup(searchTerm) {
         // Must be within session group block before using this function
-        cy.get("input").clear().type(searchTerm)
+        cy.get(this.searchInputField).clear().type(searchTerm)
         cy.contains("button", "Search").click()
     }
 
