@@ -19,6 +19,7 @@ export class Microsites extends Common {
         this.trashIcon = 'i[title="Delete Microsite"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
+        this.antCell = ".ant-table-cell";
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
@@ -180,6 +181,12 @@ export class Microsites extends Common {
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
 
     }
+     
+    editfolder(name){
+        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
+            cy.contains("button", "Edit Folder").click()
+        })
+    }
 
     removeMicrositefromFolder(name) {
         this.goToPage(this.pageTitle, this.pageUrl)
@@ -202,7 +209,7 @@ export class Microsites extends Common {
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
             cy.contains(this.micrositesPage.cardTitle, microsite, { timeout: 20000 }).should('exist')
-            cy.get(this.eventClick).eq(0).click()
+            cy.get(`a[id='configure-${microsite}']`).should('exist').click()
             cy.get(this.trashIcon).should('exist').click()
             cy.contains(this.modal, "Do you want to delete this Microsite?").within(() => {
                 cy.wait(2000)

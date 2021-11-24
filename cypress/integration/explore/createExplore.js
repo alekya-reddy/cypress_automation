@@ -6,6 +6,8 @@ const consumption = createConsumptionInstance({org: 'automation-explore', tld: '
 const contents = authoring.common.env.orgs["automation-explore"].resources
 const webContent = contents["Website Common Resource"]
 const youtubeContent = contents["Youtube Shared Resource"]
+const parentFolderName = ['Root']
+const childFolderName = ['AutomationFolderChild']
 
 const target = {
     name: 'sharedTarget',
@@ -68,6 +70,9 @@ describe("Explore - create new explore", () => {
         // Make sure Explore page is added to selected Track
         cy.contains("a", exploreTarget.name).click()
         cy.containsExact("h1", exploreTarget.name, {timeout: 10000}).should("exist")
+        authoring.explore.editExplore({parentFolder: childFolderName})
+        authoring.explore.editExplore({parentFolder: parentFolderName})
+        cy.contains("label","Folder").next().contains("a", "Root").should("exist")
 
         // Verify consumption
         cy.visit(exploreTarget.url)

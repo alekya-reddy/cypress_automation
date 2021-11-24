@@ -10,6 +10,10 @@ const microsite = {
     }
 }
 
+const microsite1 = {
+    name: "folderMicrosite",
+}
+
 const landingPage = {
     name: "Delete me",
     slug: "delete-me",
@@ -17,6 +21,14 @@ const landingPage = {
     get url(){
         return `${microsite.url}/${this.slug}`
     }
+}
+
+const folder = {
+    name: "Folder2"
+}
+
+const rootFolder = {
+    name: "Root"
 }
 
 describe("Microsites - Deleted microsites and landing pages", () => {
@@ -50,5 +62,34 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             expect(response.status).to.eq(404)
         })
+    })
+
+    it("Add to folder with drag and drop and root folder option available ", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.removeMicrosite(microsite1.name)
+        authoring.microsites.addMicrosite(microsite1)
+        authoring.microsites.editfolder(microsite1.name)
+        cy.contains("span","Save Folder").should("exist").click()
+
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        })
+
+        cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('2')
+        }) 
+
+        cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        })
+
     })
 })

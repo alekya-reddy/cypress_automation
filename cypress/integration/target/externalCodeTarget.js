@@ -9,6 +9,8 @@ const webContent = contents["Website Common Resource"]
 const targetLanguageName = {name: "Target External Language Name ", interceptCode: `<div id="vex_test3-ec">{{language.name}}</div>`}
 const targetLanguageCode = {name: "Target External Language Code", interceptCode: `<div id="vex_test4-ec">{{language.code}}</div>`}
 const testSpecificCodes = [targetLanguageName, targetLanguageCode]
+const childFolderName = ['AutomationFolderChild']
+const parentFolderName = ['Root']
 
 const target = {
     name: "target-externalcode.js",
@@ -29,6 +31,9 @@ const target = {
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
+}
+const target1 = {
+    name: "EditedTrack"
 }
 
 describe("Target - Language External Code and Forms", () => {
@@ -71,10 +76,22 @@ describe("Target - Language External Code and Forms", () => {
         cy.get(`div:contains("${target.language}")`).should("exist")
         cy.get(`div:contains("${"elg"}")`).should("exist")
         cy.waitForIframeToLoad(consumption.common.customFormIframe, "p", 10000)
+        cy.get('iframe[title="Content Window"]').should("exist")
         cy.getIframeBody(consumption.common.customFormIframe).within(()=>{
             cy.contains("p", target.language ).should("exist")
             cy.contains("p", "elg" ).should("exist")
         })
+    })
+
+    it("Check Root folder option as a Edit folder", () => {
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(target1.name)
+        authoring.target.addTrack(target1)  
+        authoring.target.editTrackTarget({parentFolder: childFolderName})
+        authoring.target.editTrackTarget({parentFolder:parentFolderName })
+        cy.contains("label","Folder").next().contains("a", "Root").should("exist")
+
     })
 
 })

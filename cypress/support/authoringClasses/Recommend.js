@@ -7,7 +7,9 @@ export class Recommend extends Common {
         this.pageTitle = "Recommend Tracks";
         this.recommendAnalyticsTitle = "Recommend Analytics Overview";
         this.deleteTrackIcon = "i[title='Delete Track']";
-        this.editTrack = 'i[title="Edit Folder"]';
+        this.addFolder =  "button:contains('Add Folder')"
+        this.editFolder = 'i[title="Edit Folder"]';
+        this.editTrack = 'i[title="Edit Track"]';
         this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.contentClick = "div[draggable='true']:nth-child(2)";
@@ -57,6 +59,11 @@ export class Recommend extends Common {
             delayInput: "input[name='delay']",
             delayDecrement: "span[class*='NumberInput__decrementButton']"
         };
+        this.editRecommend = {
+            nameInput: "#name",
+            dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
+            dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
+        };
     }
 
     visit(){
@@ -81,6 +88,28 @@ export class Recommend extends Common {
         cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
         cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
     }
+
+    editTrackRecommend(options){
+        const name = options.name
+        const parentFolder = options.parentFolder
+        const labels = options.labels
+   
+         cy.get(this.editTrack).click()
+         cy.contains(this.modal, "Edit Track").within(()=>{
+            if (name) {
+                cy.get(this.editRecommend.nameInput).clear().type(name)
+            }
+            if (parentFolder) {
+                cy.get(this.editRecommend.dropdownSelect).eq(0).click()
+                cy.get(this.editRecommend.dropdownSelectField).eq(0).type(parentFolder + "\n")
+            }  
+            if (labels) {
+                cy.get(this.editRecommend.dropdownSelect).eq(1).click()
+                cy.get(this.editRecommend.dropdownSelectField).eq(1).type(labels + "\n")
+            }    
+            cy.contains("button", "Save").click()
+         })
+   }
 
     deleteTrack(name, verify){
         this.goToPage(this.pageTitle, this.pageUrl)
