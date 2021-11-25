@@ -75,6 +75,7 @@ describe("Native Support For Limelight Video Test", function() {
        
         //check on consumption that video autoplay, start-time working
        cy.get(consumption.target.limeLightVideo.splashScreen).should("exist")
+       cy.wait(3000)
        cy.get(consumption.target.limeLightVideo.videoControlButton).should("exist")
        cy.get(consumption.target.limeLightVideo.videoTime).contains(time).should("exist")
        cy.wait(5000)
@@ -127,6 +128,7 @@ describe("Native Support For Limelight Video Test", function() {
         cy.go("back")
         cy.get(authoring.vex.previewClick).invoke('removeAttr', 'target')
         cy.get(authoring.vex.previewClick).click()
+        cy.wait(3000)
 
         //check on consumption side that video can play
         cy.get(consumption.vex.limelight.selectVideo).click()
@@ -173,6 +175,7 @@ describe("Native Support For Limelight Video Test", function() {
 
     it("Validate limelight is laoding on consumption page", () => {
     cy.visit(consumptionURL)
+    cy.wait(3000) 
     cy.get(consumption.websiteTools.featuredblock).contains("Featured").should("exist")
     cy.wait(3000)
     cy.get(consumption.websiteTools.featuredEvent).contains(videoTitle).parent().should("exist").click()

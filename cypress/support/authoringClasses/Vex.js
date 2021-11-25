@@ -82,7 +82,7 @@ export class Vex extends Common {
 
         this.privateRadio = "input[value='private']";
         this.publicRadio = "input[value='public']";
-        this.visibilityPublic = "span[class='ant-radio']>input[value='public']";
+        this.visibilityPublic = "span[class*='ant-radio']>input[value*='public']";
         this.selectVideoButton = "button:contains('Select On Demand Video')";
         this.selectLiveContentButton = "button:contains('Select Live Content Video')";
         this.startTimeInput = 'input[name="startTime"]';
