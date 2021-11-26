@@ -66,7 +66,7 @@ describe("Native Support For Limelight Video Test", function() {
         authoring.target.visit()
         authoring.target.goToTrack(target.name)
         authoring.target.addContentTarget(content.internalTitle)
-        cy.get(authoring.target.contentClick).click()
+        cy.contains('strong', "parmonic.js").click()
         cy.get('h5').contains('Title').should("exist")
         authoring.target.videoStartTime(time)
         cy.get(authoring.target.pagePreview.autoPlayLabel).should("exist")
@@ -84,7 +84,7 @@ describe("Native Support For Limelight Video Test", function() {
          //clean up
          authoring.target.visit()
          authoring.target.goToTrack(target.name)
-         cy.get(authoring.target.contentClick).click()
+         cy.contains('strong', "parmonic.js").click()
          cy.get(authoring.target.deleteContent).click()
          cy.get(authoring.target.modal).within(()=>{
              cy.get(authoring.target.removeButton).contains('Remove Item').click()
