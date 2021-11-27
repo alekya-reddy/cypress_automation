@@ -1,4 +1,5 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
+import { constants } from '../../support/constants.js';
 
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const consumption = createConsumptionInstance()
@@ -31,6 +32,13 @@ const microsites = {
 const robotText = {
   automation:"Automation@#$ 123// test",
   consumption:"Consumption@#$ 123// test"
+}
+
+const user = {
+  role: 'Customrole',
+  roleDescription: "Custom Robot File",
+  userName: constants.orgs[authoring.common.org].customUser,
+  password: constants.orgs[authoring.common.org].customUserPassword
 }
 
 const automationUrl= "https://automation."+ authoring.common.env.TEST_ENV +"-pathfactory.com/robots.txt"
@@ -130,7 +138,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
 
   })
 
-  it("Verify that robot file can be edited for custom org", function () {
+  it("Verify that robot file can be edited for consumption org", function () {
     authoring.common.login()
     cy.get(authoring.common.nameSetting).click()
     cy.get(1000)
@@ -151,6 +159,17 @@ describe("Reverse Proxy For Campaign Tools", function () {
     cy.visit(consumptionUrl)
     cy.wait(1000)
     cy.get("body").should("contain", robotText.consumption, { timeout: 3000 })
+  })
+
+  it("Verify that robot file can be edited for custom role", function () {
+    authoring.common.login(user.userName, user.password)
+    cy.get(authoring.common.robotInput).clear({force: true}).type(robotText.automation,{force: true})
+    cy.contains('button', "Save").click()
+    
+    cy.visit(automationUrl)
+    cy.wait(1000)
+    cy.get("body").should("contain", robotText.automation, { timeout: 3000 })
+
   })
 
 })
