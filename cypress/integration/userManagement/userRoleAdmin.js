@@ -10,6 +10,12 @@ const user = {
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
+// const user = {
+//     role: 'Customrole',
+//     userName: constants.orgs[authoring.common.org].customUser,
+//     password: constants.orgs[authoring.common.org].customUserPassword
+//   }
+
 const recommend = {
     name: 'Automation'
 }
@@ -27,6 +33,9 @@ const virtualEvent = {
 }
 const domainName = "pathfactory-qa-wp.com"
 const errorMsg = "You don't have permission to view this page."
+const userName1 = "admin-user"
+const userName2 = "admin-useradmin-useradmin-useradmin-useradmin-useradmin-useradmin-user"
+const userName3 = "qa13-()_ 123a uto"
 
 describe('Admin Role Permissions', function() {
     it(user.roleDescription, function(){
@@ -34,6 +43,24 @@ describe('Admin Role Permissions', function() {
        cy.get(authoring.common.nameSetting).click()
        cy.get("#user-management").should("exist").click()
        cy.contains('span', "qa-multiuser@pathfactory.com").click()
+
+       cy.contains('h5', "Username").next().click()
+       cy.get('input[name="username"]').click().type(userName1+ "\n")
+       cy.contains('button', "Save").click()
+       cy.contains('div', "has already been taken").should("exist")
+       cy.contains('button', "Cancel").click()
+       
+       cy.contains('h5', "Username").next().click()
+       cy.get('input[name="username"]').click().type(userName2+ "\n")
+       cy.wait(200)
+
+       cy.contains('h5', "Username").next().click()
+       cy.get('input[name="username"]').click().type(userName3+ "\n")
+       cy.wait(200)
+
+       cy.contains('h5', "Username").next().click()
+       cy.get('input[name="username"]').click().type("qa-multiuser"+ "\n")
+
        cy.contains('h5', "User Role").next().click()
        cy.get(authoring.common.editIconUserRoles).click()
        cy.get(authoring.common.userRolename).click().type("Admin"+ "\n")
@@ -43,11 +70,15 @@ describe('Admin Role Permissions', function() {
         authoring.common.logout()
         //login and check permissions
         authoring.common.login(user.userName, user.password)
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
+        cy.contains('div', "Added By").click()
+        cy.contains('span',"qa-automation").should("exist")
         cy.contains('a', "Content Library Insights").should("exist")
         cy.contains('button', "Add Content").should("exist")
         cy.get("#configurations").should("exist").should("exist")
 
         authoring.target.visit()
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
         cy.get("#AddTrackLink").should("exist")
         cy.contains('button', "Add Folder")
         cy.get(authoring.target.editTrack).should("exist")
@@ -61,6 +92,8 @@ describe('Admin Role Permissions', function() {
         cy.get(authoring.target.visitorActivities).should("exist").click()
 
         authoring.recommend.visit()
+        cy.wait(1000)
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
         cy.get("#AddTrackLink").should("exist")
         cy.contains('button', "Add Folder")
         cy.get(authoring.recommend.editTrack).should("exist")
@@ -73,7 +106,8 @@ describe('Admin Role Permissions', function() {
         cy.contains('li', "Visitor Engagement Summary").should("exist")
         cy.get(authoring.target.visitorActivities).should("exist").click()
      
-        authoring.explore.visit() 
+        authoring.explore.visit()
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
         cy.contains('button', "Create Explore Page", {timeout: 6000}).should("exist")
         cy.contains('button', "Add Folder").should("exist")
         cy.get(authoring.explore.editFolder).should("exist")
@@ -82,6 +116,12 @@ describe('Admin Role Permissions', function() {
         cy.contains("SESSIONS").should("not.exist")
         cy.contains('a', "Page Settings").should("exist")
         cy.contains('a', "View the Content Track Analytics").should("exist")
+        
+        authoring.microsites.visit()
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
+
+        authoring.vex.visit()
+        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
 
         authoring.website.visit()
         cy.contains('h1', "Website Campaigns", {timeout: 3000}).should("exist")
@@ -123,6 +163,20 @@ describe('Admin Role Permissions', function() {
 
     })
 
+
+    // it('Change User Role back to Original', function(){
+    //     authoring.common.login(user.userName, user.password)
+    //     cy.get("#user-management").should("exist").click()
+    //     cy.contains('span', "customrole@gmail.com").click()
+ 
+    //     cy.contains('h5', "Username").next().click()
+    //     cy.get('input[name="username"]').click().type("EditcustomRole"+ "\n")
+
+    //     cy.contains('h5', "Username").next().click()
+    //     cy.get('input[name="username"]').click().type("Customrole"+ "\n")
+    //     cy.contains('button', "Save").click()
+        
+    // })
     it('Change User Role back to Original', function(){
         authoring.common.login()
        cy.get(authoring.common.nameSetting).click()
