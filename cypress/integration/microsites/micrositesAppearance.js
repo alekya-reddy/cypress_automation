@@ -178,6 +178,7 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.setup(micrositeApp)
         authoring.microsites.addTracks({ target: target.name, recommend: recommend.name })
         authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions);
+        cy.wait(3000)
         authoring.microsites.saveSearchAndFiltersSettings();
         authoring.microsites.configureLandingPage(landingPage)
         Object.values(navigation).forEach((navItem) => {
@@ -191,6 +192,7 @@ describe("Microsites - Appeararnace", () => {
         // Configure microsite landing page appearnces and Turn off and hide navigation header in the Appearences > Microsite settings
         authoring.configurations.configureMicrositesAppearance(micrositeAppearanceSettings)
         // verify Microsite appearance preview in setting to reflect updated settings
+        cy.wait(3000)
         cy.get(authoring.configurations.appearances.microsites.searchFilterStylePreview)
             .should("have.css", "background-color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFilterBackgroundColor))
             .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.landingPageSearchFilterColor))
@@ -275,6 +277,7 @@ describe("Microsites - Appeararnace", () => {
 
         //Verify that the microsite appearance settings are applied correctly on consumption
         cy.visit(gridCarouselLandingPage.url)
+        cy.wait(5000)
         cy.contains("h4", target.name).parent().within(() => {
             cy.get(consumption.microsites.gridCard)
                 .should("have.css", "border-radius", micrositeAppearanceSettings.landingPageCardRadius + "px")
@@ -349,6 +352,7 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
         authoring.microsites.removeLandingPages(gridCarouselLandingPage.name)
         authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+        cy.wait(3000)
         authoring.microsites.configureLandingPage(gridCarouselLandingPage)
         authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
         cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
@@ -368,6 +372,7 @@ describe("Microsites - Appeararnace", () => {
         cy.visit(gridCarouselLandingPage.url)
 
         // Check the header appearance settings 
+        cy.wait(3000)
         cy.get(consumption.microsites.navigation.header).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor)).within(() => {
             cy.contains('a', navigation.landingPage.label).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
             cy.contains('a', navigation.target.label).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
@@ -376,6 +381,7 @@ describe("Microsites - Appeararnace", () => {
 
         //go to target track and verify appearance setting 
         cy.contains(consumption.microsites.navigation.menuItem, navigation.target.label).click()
+        cy.wait(3000)
         cy.get(consumption.target.flowActiveItem).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.primaryColor))
         cy.get(consumption.target.flowHeaderShare).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.primaryColor))
 
@@ -397,6 +403,7 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.editExistingCard(editCardConfiguration)
 
         cy.get('h4').invoke('css', 'font-size').then(builderFontSize => {
+            cy.wait(5000)
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
         })
 

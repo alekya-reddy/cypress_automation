@@ -1457,8 +1457,9 @@ export class Microsites extends Common {
             let fontSize = heading.fontSize
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
-                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+                cy.get("input[name='blocks.0.heading.fontSize']", {timeout:10000}).clear().type(fontSize)
             }
+            cy.contains('span','Heading').click()
         }
         if(cardConfiguration){
             let enableDescription=cardConfiguration.enableDescription
