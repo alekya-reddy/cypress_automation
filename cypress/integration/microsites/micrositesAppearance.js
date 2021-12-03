@@ -349,6 +349,7 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
         authoring.microsites.removeLandingPages(gridCarouselLandingPage.name)
         authoring.microsites.addLandingPages(gridCarouselLandingPage.name)
+        cy.wait(3000)
         authoring.microsites.configureLandingPage(gridCarouselLandingPage)
         authoring.microsites.goToPageEditor(gridCarouselLandingPage.name)
         cy.wait(1000) // need hard wait for landing page configurations to load from back-end. It's a blank page initially, so there is no UI indication when this is done.
@@ -397,6 +398,7 @@ describe("Microsites - Appeararnace", () => {
         authoring.microsites.editExistingCard(editCardConfiguration)
 
         cy.get('h4').invoke('css', 'font-size').then(builderFontSize => {
+            cy.wait(3000)
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
         })
 

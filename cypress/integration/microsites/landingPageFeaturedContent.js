@@ -193,7 +193,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         authoring.microsites.removeBlock(authoring.microsites.landingPages.trackRow + `:contains('${deleteBlock.name}')`)
 
         cy.contains("button", "Save").click()
-        cy.wait(1500)
+        cy.wait(2000)
 
         // VEX's landingPage.js also tests reordering of the blocks
         // We should also do that here since both follow different code paths (despite similar appearance) 
@@ -241,8 +241,8 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Test search
         consumption.microsites.searchMicrositeCard(trackWithTopics.contents[0])
         cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[0]).should("exist")
-        cy.contains(consumption.microsites.cardTitle, target.contents[0]).should("not.exist")
-        cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, trackWithTopics.contents[1]).should("not.exist")
+        cy.contains(consumption.microsites.cardTitle, recommend.contents[0]).should("not.exist")  
 
 
         // The deleted block should not exist
