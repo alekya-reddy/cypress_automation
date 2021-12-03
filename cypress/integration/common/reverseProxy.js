@@ -35,10 +35,9 @@ const robotText = {
 }
 
 const user = {
-  role: 'Customrole',
-  roleDescription: "Custom Robot File",
-  userName: constants.orgs[authoring.common.org].customUser,
-  password: constants.orgs[authoring.common.org].customUserPassword
+  role: 'qa-multiuser',
+  userName: constants.orgs[authoring.common.org].multiUser,
+  password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
 const automationUrl= "https://automation."+ authoring.common.env.TEST_ENV +"-pathfactory.com/robots.txt"
@@ -162,13 +161,23 @@ describe("Reverse Proxy For Campaign Tools", function () {
   })
 
   it("Verify that robot file can be edited for custom role", function () {
-    authoring.common.login(user.userName, user.password)
-    cy.get(authoring.common.robotInput).clear({force: true}).type(robotText.automation,{force: true})
-    cy.contains('button', "Save").click()
+    authoring.common.login()
+    cy.get(authoring.common.nameSetting).click()
+       cy.get("#user-management").should("exist").click()
+       cy.contains('span', "qa-multiuser@pathfactory.com").click()
+       cy.contains('h5', "User Role").next().click()
+       cy.get(authoring.common.editIconUserRoles).click()
+       cy.get(authoring.common.userRolename).click().type("Custom"+ "\n")
+       cy.contains('button', "Save").click()
+       
+      authoring.common.logout()
+      authoring.common.login(user.userName, user.password)
+      cy.get(authoring.common.robotInput).clear({force: true}).type(robotText.automation,{force: true})
+      cy.contains('button', "Save").click()
     
-    cy.visit(automationUrl)
-    cy.wait(1000)
-    cy.get("body").should("contain", robotText.automation, { timeout: 3000 })
+     cy.visit(automationUrl)
+     cy.wait(1000)
+     cy.get("body").should("contain", robotText.automation, { timeout: 3000 })
 
   })
 
