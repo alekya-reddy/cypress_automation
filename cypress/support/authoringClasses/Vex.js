@@ -49,6 +49,7 @@ export class Vex extends Common {
         this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
         this.eventSetupCheckbox = 'input[value="Event setup"]';
         this.antCell = ".ant-table-cell";
+        this.virtualEventsTab="#virtual-events";
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -254,7 +255,11 @@ export class Vex extends Common {
     }
 
     visit() {
-        cy.visit(this.vexUrl);
+        cy.visit(this.vexUrl,{timeout:120000});
+    }
+
+    waitForVexToLoad(){
+        cy.location('pathname', {timeout: 20000}).should('include', 'virtual-events');
     }
 
     addVirtualEvent(options, verify) {
@@ -2549,10 +2554,10 @@ export class Vex extends Common {
         const heading = config.heading
         const cardConfiguration = config.cardConfiguration
         let blockName = cardConfiguration.blockName
+        cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).click({force:true})
         cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).parent().within(() => {
-            //cy.get(this.pages.sessionGroupRow).should('be.visible',{timeout:10000}).click({force:true})
             cy.get(this.pages.editorMenu).within(() => {
-                cy.get(this.pages.menuBlock).eq(3).click({force:true})
+                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('be.visible',{timeout:10000}).click({force:true})
             })
         })
 
@@ -2560,8 +2565,10 @@ export class Vex extends Common {
             let fontSize = heading.fontSize
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
-                cy.get("input[name='blocks.0.heading.fontSize']").clear().type(fontSize)
+                cy.wait(3000)
+                cy.get("input[name='blocks.0.heading.fontSize']",{timeout:10000}).clear({force:true}).type(fontSize,{force:true})
             }
+            cy.contains('span','Heading').should('be.visible').click()
         }
 
         if(cardConfiguration){

@@ -120,6 +120,9 @@ const landingPage2 = {
 const editCardConfiguration = {
     heading: {
         fontSize: "50px"
+    },
+    cardConfiguration: {
+        blockName: session.name
     }
 } 
 describe('VEX - Virtual Event', function() {
@@ -183,7 +186,8 @@ describe('VEX - Virtual Event', function() {
 
         cy.get(authoring.configurations.appearances.vex.heading).invoke('attr','font-size').as('fontSize')
 
-        authoring.vex.visit()
+        cy.get(authoring.vex.virtualEventsTab,{timeout:10000}).click()
+        authoring.vex.waitForVexToLoad()
         authoring.vex.goToEventConfig(event.name)
         cy.contains('a', 'Preview Event').should('exist').should('have.attr', 'href', event.url)
         cy.contains('a', 'Appearance Setup').click()
@@ -360,6 +364,7 @@ describe('VEX - Virtual Event', function() {
                  expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
          })
  
+         cy.contains('Save', { timeout: 20000 }).should('be.visible').click()
          cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
 
         //Go to consumption side and verify carousal arrow is not present

@@ -956,10 +956,12 @@ export class Configurations extends Common {
             })
         }
         if(landingPageCardRadius){
-            cy.get(this.appearances.vex.cardRadius).type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
+            cy.get(this.appearances.vex.cardRadius).clear().type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
         }
         if(landingPageSearchFilterRadius){
-            cy.get(this.appearances.vex.searchFilterRadius).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+            cy.wait(1000)
+            cy.get(this.appearances.vex.searchFilterRadius).clear({force:true}).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+            cy.wait(1000)
         }
         if(landingPageSearchFilterFontFamily){
                 cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
