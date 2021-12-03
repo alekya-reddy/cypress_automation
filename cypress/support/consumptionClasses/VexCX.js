@@ -37,7 +37,7 @@ export class VexCX extends CommonCX {
         this.FilterByTopic = "#vex_topics";
         this.searchFilter = "#vex_search_button";
         this.searchInputField = "#vex_search_input";
-        this.sessionDescriptionStyle = "#jukebox-app>div>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)>div:nth-child(2)";
+        this.sessionDescriptionStyle = "#vex-session-description div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.checkbox = "div[class='p-checkbox-box']"
         this.topicFilter = "#vex_topics"
