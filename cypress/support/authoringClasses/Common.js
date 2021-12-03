@@ -51,6 +51,7 @@ export class Common {
         this.imperzonation = 'div[id="impersonation"]';
         this.orgDropdown = 'li[id="organization"]';
         this.orgValue = 'div[class="Select-value"]';
+        this.robotInput = 'textarea[class="ace_text-input"]';
         this.orgSave = 'button[id="save"]';
         this.editIconUserRoles = '.Select-value-icon';
         this.userRolename = 'div[class="Select-control"]';
