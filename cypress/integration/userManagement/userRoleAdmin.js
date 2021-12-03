@@ -10,12 +10,6 @@ const user = {
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
 
-// const user = {
-//     role: 'Customrole',
-//     userName: constants.orgs[authoring.common.org].customUser,
-//     password: constants.orgs[authoring.common.org].customUserPassword
-//   }
-
 const recommend = {
     name: 'Automation'
 }
@@ -34,8 +28,8 @@ const virtualEvent = {
 const domainName = "pathfactory-qa-wp.com"
 const errorMsg = "You don't have permission to view this page."
 const userName1 = "admin-user"
-const userName2 = "admin-useradmin-useradmin-useradmin-useradmin-useradmin-useradmin-user"
-const userName3 = "qa13-()_ 123a uto"
+const userName2 = "admin-useradmin-useradmin-useradmin-useradmin-useradmin-useradmin-user" //username longer than 20 char
+const userName3 = "qa13-()_ 123a uto" //usename with permission to add spaces and brackets
 
 describe('Admin Role Permissions', function() {
     it(user.roleDescription, function(){
@@ -44,6 +38,7 @@ describe('Admin Role Permissions', function() {
        cy.get("#user-management").should("exist").click()
        cy.contains('span', "qa-multiuser@pathfactory.com").click()
 
+    //Verify that admin can edit username and updated username appears as a hover text in campaignTools and vex added by column including content library
        cy.contains('h5', "Username").next().click()
        cy.get('input[name="username"]').click().type(userName1+ "\n")
        cy.contains('button', "Save").click()
@@ -107,6 +102,7 @@ describe('Admin Role Permissions', function() {
         cy.get(authoring.target.visitorActivities).should("exist").click()
      
         authoring.explore.visit()
+        cy.wait(2000)
         cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
         cy.contains('button', "Create Explore Page", {timeout: 6000}).should("exist")
         cy.contains('button', "Add Folder").should("exist")
@@ -164,19 +160,33 @@ describe('Admin Role Permissions', function() {
     })
 
 
-    // it('Change User Role back to Original', function(){
-    //     authoring.common.login(user.userName, user.password)
-    //     cy.get("#user-management").should("exist").click()
-    //     cy.contains('span', "customrole@gmail.com").click()
- 
-    //     cy.contains('h5', "Username").next().click()
-    //     cy.get('input[name="username"]').click().type("EditcustomRole"+ "\n")
+    it('Make admin user to custom and verify they can edit username', function(){
+        authoring.common.login()
+        cy.get(authoring.common.nameSetting).click()
+        cy.get("#user-management").should("exist").click()
+        cy.contains('span', "qa-multiuser@pathfactory.com").click()
 
-    //     cy.contains('h5', "Username").next().click()
-    //     cy.get('input[name="username"]').click().type("Customrole"+ "\n")
-    //     cy.contains('button', "Save").click()
+        cy.contains('h5', "User Role").next().click()
+        cy.get(authoring.common.editIconUserRoles).click()
+        cy.get(authoring.common.userRolename).click().type("Custom"+ "\n")
+        cy.contains('button', "Save").click()
+ 
+         // logout 
+         authoring.common.logout()
+         //login and check permissions
+         authoring.common.login(user.userName, user.password)
+         cy.get(authoring.common.nameSetting).click()
+        cy.get("#user-management").should("exist").click()
+        cy.contains('span', "customrole@gmail.com").click()
+
+        cy.contains('h5', "Username").next().click()
+        cy.get('input[name="username"]').click().type("customcanedit"+ "\n")
+        cy.wait(200)
+        cy.contains('h5', "Username").next().click()
+        cy.get('input[name="username"]').click().type("Customrole"+ "\n")
         
-    // })
+    })
+
     it('Change User Role back to Original', function(){
         authoring.common.login()
        cy.get(authoring.common.nameSetting).click()
