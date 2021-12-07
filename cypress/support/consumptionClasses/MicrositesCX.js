@@ -242,9 +242,9 @@ export class MicrositesCX extends CommonCX {
     }
 
     addingBlock(block) {
-        cy.get(this.blocks, { timeout: 10000 }).first().click()
-        cy.get(this.addBlockButtons, { timeout: 10000 }).first().click()
-        cy.contains("button", block, { timeout: 10000 }).should('be.visible').click()
+        cy.get(this.blocks, { timeout: 10000 }).first().click({force:true})
+        cy.get(this.addBlockButtons, { timeout: 10000 }).first().click({force:true})
+        cy.contains("button", block, { timeout: 10000 }).should('be.visible').click({force:true})
     }
 
     verifySearchAndFiltersAvailibility(options) {
