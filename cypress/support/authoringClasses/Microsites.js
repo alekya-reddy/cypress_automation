@@ -259,9 +259,10 @@ export class Microsites extends Common {
         }
 
         if (appearance) {
-            cy.contains(this.antRow, 'Appearance').within(() => {
-                cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance + '\n', { force: true })
-            })
+            cy.get("label[title='Appearance']").parent('div').siblings('div').within(() => {
+                    cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
+                })
+            cy.contains('div',appearance,{timeout:10000}).click({force:true})
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 

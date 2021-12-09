@@ -111,7 +111,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
     authoring.vex.goToEventConfig(vex.name)
     cy.containsExact("a", "Appearance Setup", { timeout: 20000 }).click()
     cy.get(authoring.vex.searchItem).should('be.visible').click({ force: true })
-    cy.get(authoring.vex.searchInput).type(appearance.name + "\n", {force: true})
+    cy.get(authoring.vex.searchInput).type(appearance.name , {force: true})
+    cy.wait(2000)
+    cy.contains('div',appearance.name,{timeout:10000}).click({force:true})
     cy.contains('button:visible', "Save").click()
 
     authoring.websiteTools.visit()
