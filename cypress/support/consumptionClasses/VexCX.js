@@ -65,7 +65,8 @@ export class VexCX extends CommonCX {
             play: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
             pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
             getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
-            paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) }
+            paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
+            audioMuteNotification:"div[id='video-tooltip']"
         };
         this.simuliveVideo = {
             vexCustomControl: 'div[class*="vex-session-custom-controls"]',
@@ -109,6 +110,7 @@ export class VexCX extends CommonCX {
             getCurrentTime: function (state) { cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function (state) { cy.invokeJS(this.videoPlayer, 'paused', state) }
         };
+
         this.zoom = {
             iframe: "iframe[src*='/api/virtual_event_sessions/']",
             container: '#zmmtg-root'
@@ -126,6 +128,7 @@ export class VexCX extends CommonCX {
             moderatorViewButton: "button:contains('Open Moderator View')"
         };
         this.limelight = {
+            videoPlayer: 'video',
             selectVideo: "div[class^='pf-event-session-card-title']",
             play1: "button[class='vjs-limelight-big-play']",
             pause: "button[title='Pause']",
@@ -158,10 +161,33 @@ export class VexCX extends CommonCX {
     }
 
     expectYoutube() {
+        let flag=false;
         cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 20000)
-        cy.getIframeBody(this.youtube.iframe).within(() => {
+        cy.getIframeBody(this.youtube.iframe).within(() => {   
             cy.get(this.youtube.videoPlayer).should('exist')
-        })
+            cy.get(this.youtube.videoPlayer).should('exist').click()
+        cy.get("div.ytp-chrome-bottom").then(controllers=>{
+            if(controllers.find("button[aria-label='Unmute (m)']").length>0){
+                flag=true;
+             }
+           })
+        }).then(()=>{
+            if(flag===true){
+                cy.log("inside")
+                cy.getIframeBody(this.youtube.iframe).within(() => {   
+                    cy.get("div.ytp-chrome-bottom").then(controllers=>{
+                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
+                        controllers.find("button[aria-label='Play (k)']").click()
+                    })
+                })
+                cy.get(this.youtube.audioMuteNotification).should('exist')
+                cy.pause()
+            }
+            else{
+                cy.get(this.youtube.audioMuteNotification).should('not.exist')
+            }
+      })
+       
     }
 
     expectSimulive() {
