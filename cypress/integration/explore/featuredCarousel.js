@@ -83,14 +83,11 @@ describe("Explore - create new explore", () => {
             cy.contains('div', recommend.contents[1]).should("not.exist")
             cy.contains('div', recommend.contents[2]).should("not.exist")
        })  
-       
+           
        cy.visit(exploreRecommend.url)
            cy.contains('div', recommend.contents[0]).should("not.exist")
            cy.contains('div', recommend.contents[1]).should("not.exist")
            cy.contains('div', recommend.contents[2]).should("not.exist")
-
-        
-
     })
 
 })
