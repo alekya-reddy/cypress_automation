@@ -218,10 +218,9 @@ export class VexCX extends CommonCX {
                         cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
                         cy.get(this.youtube.muteButton).should('be.visible',{timeout:10000}).click({force:true})
                         cy.get(this.youtube.playButton).should('be.visible',{timeout:10000}).click({force:true})
-                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.unmuteButton).should('be.visible',{timeout:10000}).click({force:true})
                     })
                 })
+                cy.get(this.youtube.audioMuteNotification).should('be.visible')
             }
       })
        
@@ -283,8 +282,9 @@ export class VexCX extends CommonCX {
         })
     }
 
-    audioNotificationOfWistia(){
+    expectWistia(){
         cy.wait(2000)
+        cy.get(this.wistia.videoPlayer).should('exist')
         cy.get(this.wistia.video).should('exist').click({force:true})
         cy.get(this.wistia.video).rightclick({force:true})
         cy.contains("Copy link and thumbnail").click()
@@ -296,8 +296,9 @@ export class VexCX extends CommonCX {
         cy.get(this.wistia.audioMuteNotification,{timeout:20000}).should('not.be.visible')
     }
 
-    audioNotificationOfBrightcove(){
+    expectBrightcove(){
         cy.wait(2000)
+            cy.get(this.brightcove.videoPlayer).should('exist')
             cy.get(this.brightcove.video).should('exist').click({force:true})
             cy.get(this.brightcove.video).rightclick({force:true})
             cy.get(this.brightcove.pauseButton,{timeout:10000}).should('exist').click({force:true})
@@ -308,10 +309,11 @@ export class VexCX extends CommonCX {
             cy.get(this.brightcove.audioMuteNotification,{timeout:20000}).should('not.be.visible')
     }
 
-    audioNotificationOfLimelight(){
+    expectLimelight(){
             cy.wait(2000)
+            cy.get(this.limelight.videoPlayer).should('exist')
             cy.get(this.limelight.play1).should('exist').click({force:true})
-            cy.get(this.limelight.pause,{timeout:10000}).should('exist').click({force:true})
+            //cy.get(this.limelight.pause,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.muteButton,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.play2,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.audioMuteNotification).should('be.visible')

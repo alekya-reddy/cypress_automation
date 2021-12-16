@@ -136,7 +136,7 @@ describe('VEX - Consumption', function () {
         })
     })
 
-    it('Videos from supported video hosting sites should display on VEX', function () {
+    it.only('Videos from supported video hosting sites should display on VEX', function () {
         sessions.forEach((session) => {
             if (session.name == 'Private') {
                 return; // Skip the private case here, will test in next it function 
@@ -157,20 +157,16 @@ describe('VEX - Consumption', function () {
                     consumption.vex.expectVidyard()
                     break;
                 case 'Wistia':
-                    cy.get(consumption.vex.wistia.videoPlayer).should('exist')
-                    consumption.vex.audioNotificationOfWistia()
+                    consumption.vex.expectWistia()
                     break;
                 case 'Embed Url Wistia':
-                    cy.get(consumption.vex.wistia.videoPlayer).should('exist')
-                    consumption.vex.audioNotificationOfWistia()
+                    consumption.vex.expectWistia()
                     break;
                 case 'Brightcove':
-                    cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
-                    consumption.vex.audioNotificationOfBrightcove()
+                    consumption.vex.expectBrightcove()
                     break;
                 case 'Limelight':
-                    cy.get(consumption.vex.limelight.videoPlayer).should('exist')
-                    consumption.vex.audioNotificationOfLimelight()
+                    consumption.vex.expectLimelight()
                     break;
             }
         })
