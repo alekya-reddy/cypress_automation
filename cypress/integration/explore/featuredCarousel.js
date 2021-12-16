@@ -5,15 +5,15 @@ const consumption = createConsumptionInstance({org: 'automation-explore', tld: '
 
 const contents = authoring.common.env.orgs["automation-explore"].resources
 const content1 = contents["3-featuredContentLayout.js"]
-const content2 = contents["Cup - Wikipedia"]
-const content3 = contents["Automation B2 Bpdf"]
+const content2 = contents["2-featuredContentLayout.js"]
+const content3 = contents["1-featuredContentLayout.js"]
 
 const recommend = {
     name: 'carouselRec',
-    contents: ["3-featuredContentLayout.js", "Cup - Wikipedia", "Do-Not-Edit Capybara - Shared Resource"]
+    contents: ["3-featuredContentLayout.js", "2-featuredContentLayout.js", "1-featuredContentLayout.js"]
 };
 
-const topics = ["Computing", "Software", "Marketing"]
+const topics = ["Topic1-featuredCarousel.js", "Topic2-featuredCarousel.js", "Topic3-featuredCarousel.js"]
 
 const exploreRecommend = {
     name: 'Carousel Feature',

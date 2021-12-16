@@ -371,11 +371,9 @@ export class Explore extends Common {
     }
     setFeaturedContent(assetName){
         cy.containsExact('div', "No Featured Content selected").siblings("div").click({force:true})
-        cy.wait(200)
-        cy.contains(this.modal, "Manage Featured Content").within(()=>{
+        cy.contains(this.modal, "Manage Featured Content", { timeout: 10000 }).within(()=>{
             cy.wait(200)
             cy.get(this.inputTopics).click().type(assetName + "\n")
-            cy.wait(200)
         })
     }
 
@@ -383,7 +381,6 @@ export class Explore extends Common {
         cy.containsExact('div', "Add Topic Carousel").siblings("div").click({force:true})
         cy.contains(this.modal, "Manage Topic Carousels").within(()=>{
             cy.get(this.inputTopics).click().type(topic + "\n")
-            cy.wait(200)
         })
     }
 
