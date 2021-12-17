@@ -425,6 +425,7 @@ describe('Campaign Tools Module User Role', function() {
         // CHECK PA
         // PA Campains Tools 
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools`)
+        cy.wait(1000)
         cy.contains("div", "You don't have permission to view this page.", {timeout: 30000})
         cy.visit(`${authoring.common.baseUrl}/authoring/content-library/path-analytics/campaign-tools/visitors`)
         cy.contains("div", "You don't have permission to view this page.", {timeout: 30000})

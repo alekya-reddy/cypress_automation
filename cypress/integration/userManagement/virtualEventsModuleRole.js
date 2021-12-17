@@ -141,8 +141,7 @@ describe('Virtual Events Module User Role', function() {
         authoring.vex.configureEvent(event)
         authoring.vex.configureAppearance(appearance)
         // check that usr doesn't have access to VEX Analytics
-        authoring.vex.goToAnalytics()
-        cy.contains("div", "You don't have permission to view this page.")
+        cy.containsExact("a", "Analytics", { timeout: 20000 }).should("not.exist")
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.configureLandingPage(landingPage)
         authoring.vex.deleteVirtualEvent(event.name)
