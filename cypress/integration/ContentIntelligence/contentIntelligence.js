@@ -98,7 +98,7 @@ describe("Content Intelligence", () => {
 
     })
 
-it("Content Intelligence tab and its options availability", () => {
+it("Verify Admin have Content Configuration and Strategy create/edit/delete permission", () => {
         authoring.common.login()
         authoring.common.login()
         authoring.clientHQ.visitOrgConfig()
@@ -121,11 +121,11 @@ it("Content Intelligence tab and its options availability", () => {
           cy.visit(authoring.contentIntelligence.contentStrategy)
           cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
           cy.contains('span', "Key Marketing Topics").should('exist').click()
-          cy.contains('button', "Add Topics").should('exist')
+          cy.contains('button', "Add Topics", { timeout: 20000 }).should('exist')
 
         })
 
-        it("Content Intelligence tab and its options availability", () => {
+        it("Verify Author have Content Configuration and Strategy create/edit/delete permission", () => {
                 
             authoring.common.login()
             // assign that role to the user
@@ -145,13 +145,13 @@ it("Content Intelligence tab and its options availability", () => {
           cy.contains('span',"+ Add Content Pool").should('exist')
 
           cy.visit(authoring.contentIntelligence.contentStrategy)
-          //cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
-        //   cy.contains('span', "Key Marketing Topics").should('exist').click()
-        //   cy.contains('button', "Add Topics").should('exist')
+          cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+          cy.contains('span', "Key Marketing Topics").should('exist').click()
+          cy.contains('button', "Add Topics").should('exist')
 
         })
 
-    it("Content Intelligence tab and its options availability", () => {
+    it("Custom role permission with ContentIntelligence checkbox disable", () => {
                 
             authoring.common.login()
             cy.visit(authoring.userManagement.userRoles.pageURL)
@@ -167,7 +167,7 @@ it("Content Intelligence tab and its options availability", () => {
             
         })
 
-        it("Content Intelligence tab and its options availability", () => {
+        it("Custom role permission with ContentIntelligence checkbox enable", () => {
             authoring.common.login()
             cy.visit(authoring.userManagement.userRoles.pageURL)
             authoring.userManagement.configureUserRole(role4)
@@ -184,7 +184,7 @@ it("Content Intelligence tab and its options availability", () => {
             
         })
 
-        it("Content Intelligence tab and its options availability", () => {
+        it("Custom role permission with ContentIntelligence checkbox enable", () => {
             authoring.common.login()
             cy.visit(authoring.userManagement.userRoles.pageURL)
             authoring.userManagement.configureUserRole(role5)

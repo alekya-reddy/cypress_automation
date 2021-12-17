@@ -310,7 +310,6 @@ export class UserManagement extends Common {
         const roles = [list].flat()
         // select user
         cy.get(this.pageBody).within(() => {
-            cy.wait(7000)
             cy.contains("span", userName, {timeout: 5000}).click()
         })
         // remove all existing roles
