@@ -313,10 +313,11 @@ export class VexCX extends CommonCX {
             cy.wait(2000)
             cy.get(this.limelight.videoPlayer).should('exist')
             cy.get(this.limelight.play1).should('exist').click({force:true})
-            //cy.get(this.limelight.pause,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.muteButton,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.play2,{timeout:10000}).should('exist').click({force:true})
             cy.get(this.limelight.audioMuteNotification).should('be.visible')
+            cy.get(this.vimeo.closeAudioNotification).click()
+            cy.get(this.vimeo.audioMuteNotification,{timeout:20000}).should('not.be.visible')
     }
 
     chat(config) {

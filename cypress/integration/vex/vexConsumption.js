@@ -136,7 +136,7 @@ describe('VEX - Consumption', function () {
         })
     })
 
-    it.only('Videos from supported video hosting sites should display on VEX', function () {
+    it('Videos from supported video hosting sites should display on VEX', function () {
         sessions.forEach((session) => {
             if (session.name == 'Private') {
                 return; // Skip the private case here, will test in next it function 
