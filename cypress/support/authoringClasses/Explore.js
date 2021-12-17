@@ -13,6 +13,10 @@ export class Explore extends Common {
         this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a';
         this.searchPage = 'input[name="page-search"]';
         this.clearSearch = 'i[title="Clear search"]';
+        this.inputTopics = 'div[class="Select-placeholder"]';
+        this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
+        this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
+        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i';
         
         this.createExploreModal = {
             nameInput: "#name",
@@ -364,6 +368,20 @@ export class Explore extends Common {
         if(verify !== false){
             cy.get(this.pageSidebar.pageDescriptionLabel).siblings("span").should("contain", description)
         }
+    }
+    setFeaturedContent(assetName){
+        cy.containsExact('div', "No Featured Content selected").siblings("div").click({force:true})
+        cy.contains(this.modal, "Manage Featured Content", { timeout: 10000 }).within(()=>{
+            cy.wait(200)
+            cy.get(this.inputTopics).click().type(assetName + "\n")
+        })
+    }
+
+    addTopicCarousel(topic){
+        cy.containsExact('div', "Add Topic Carousel").siblings("div").click({force:true})
+        cy.contains(this.modal, "Manage Topic Carousels").within(()=>{
+            cy.get(this.inputTopics).click().type(topic + "\n")
+        })
     }
 
     addCTAButton(config){
