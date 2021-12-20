@@ -41,6 +41,10 @@ export class UserManagement extends Common {
             WebsiteToolsAnalysticsView: "#path_analytics_website_tools-view"
 
         }
+        this.contentIntelligence = {
+            contentconfigurationsCRUD: "#content_intelligence_content_configurations-create-edit-delete",
+            contentstrategyCRUD: "#content_intelligence_content_strategy-create-edit-delete"
+        }
         this.contentLibrary = {
             contentLibraryInsightsView: "#content_library_insights-view",
             contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete"
@@ -111,11 +115,13 @@ export class UserManagement extends Common {
             campaignToolsAnalyticsView,
             vexAnalysticsView,
             WebsiteToolsAnalysticsView,
+            contentconfigurationsCRUD,
+            contentstrategyCRUD,
         } = options
 
         this.clickUserRole(roleName)
-        
         if(imageLibExtCodeAccProtectionAccess == true || imageLibExtCodeAccProtectionAccess == false){
+            cy.contains('a', "Platform Settings").click()
             cy.get(this.generalSettings.imageLibExtCodeAccProtection).invoke("attr", "class").then(checkboxClass => {
                 if(imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.imageLibExtCodeAccProtection).click()
@@ -132,6 +138,7 @@ export class UserManagement extends Common {
         }
    
         if(userExperienceSettingsCreateEditView == true || userExperienceSettingsCreateEditView == false){
+            cy.contains('a', "Platform Settings").click()
             cy.get(this.userExperienceSettingsCreateEditView).invoke("attr", "class").then(checkboxClass => {
                 if(userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.userExperienceSettingsCreateEditView).click()
@@ -140,6 +147,7 @@ export class UserManagement extends Common {
         }
 
         if(dataConfigurationSettings == true || dataConfigurationSettings == false){
+            cy.contains('a', "Platform Settings").click()
             cy.get(this.dataConfigurationSettings.webhooksVisitorActivityCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(dataConfigurationSettings && checkboxClass.includes("checkbox-container--unchecked") || !dataConfigurationSettings && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.dataConfigurationSettings.webhooksVisitorActivityCRUD).click()
@@ -164,6 +172,7 @@ export class UserManagement extends Common {
         }
 
         if(campaignToolsSettingsCRUD == true || campaignToolsSettingsCRUD == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.campaignTools.campaignToolsSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.campaignToolsSettingsCRUD).click()
@@ -194,6 +203,22 @@ export class UserManagement extends Common {
             })
         }
 
+        if(contentconfigurationsCRUD == true || contentconfigurationsCRUD == false){
+            cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
+                }       
+            })
+        }
+
+        if(contentstrategyCRUD == true || contentstrategyCRUD == false){
+            cy.get(this.contentIntelligence.contentstrategyCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(contentstrategyCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentstrategyCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentIntelligence.contentstrategyCRUD).click()
+                }       
+            })
+        }
+
         if(campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false){
             cy.get(this.campaignTools.campaignToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
@@ -219,6 +244,7 @@ export class UserManagement extends Common {
         }
 
         if(userManagementCRUD == true || userManagementCRUD == false){
+            cy.contains('a', "Administrative Controls").click()
             cy.get(this.administrativeControls.userManagementCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(userManagementCRUD && checkboxClass.includes("checkbox-container--unchecked") || !userManagementCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.administrativeControls.userManagementCRUD).click()
@@ -227,6 +253,7 @@ export class UserManagement extends Common {
         }
 
         if(organizationSettingsCRUD == true || organizationSettingsCRUD == false){
+            cy.contains('a', "Administrative Controls").click()
             cy.get(this.administrativeControls.organizationSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(organizationSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !organizationSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.administrativeControls.organizationSettingsCRUD).click()

@@ -1,6 +1,39 @@
-import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
+import { createAuthoringInstance } from '../../support/pageObject.js'
+import { constants } from '../../support/constants.js';
 
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
+
+const user = {
+    role: 'qa-multiuser',
+    roleDescription: "CI Permissions",
+    userName: constants.orgs[authoring.common.org].multiUser,
+    password: constants.orgs[authoring.common.org].multiUserPassword
+}
+const role1 = {
+    roleName: "Admin",
+}
+
+const role2 = {
+    roleName: "Author",
+}
+
+const role3 = {
+    roleName: "Custom",
+    contentconfigurationsCRUD : false,
+    contentstrategyCRUD : false
+}
+
+const role4 = {
+    roleName: "Custom",
+    contentconfigurationsCRUD : true,
+    contentstrategyCRUD : false
+}
+
+const role5 = {
+    roleName: "Custom",
+    contentconfigurationsCRUD : false,
+    contentstrategyCRUD : true
+}
 
 describe("Content Intelligence", () => {
 
@@ -65,5 +98,106 @@ describe("Content Intelligence", () => {
 
     })
 
+it("Verify Admin have Content Configuration and Strategy create/edit/delete permission", () => {
+        authoring.common.login()
+        authoring.common.login()
+        authoring.clientHQ.visitOrgConfig()
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.contentIntelligence, "ON")
+        // assign that role to the user
+        authoring.userManagement.visitUserListPage()
+        authoring.userManagement.assignUserRoles(user.userName, [role1.roleName])
+        
+          // logout 
+          authoring.common.logout()
+          // login and check permissions
+          authoring.common.login(user.userName, user.password)
+          cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+          cy.visit(authoring.contentIntelligence.contentConfigurations)
+          cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
+          cy.contains('span', "Add Segment").should('exist')
+          cy.contains('div', "Content Pools").click()
+          cy.contains('span',"+ Add Content Pool").should('exist')
 
+          cy.visit(authoring.contentIntelligence.contentStrategy)
+          cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+          cy.contains('span', "Key Marketing Topics").should('exist').click()
+          cy.contains('button', "Add Topics", { timeout: 20000 }).should('exist')
+
+        })
+
+        it("Verify Author have Content Configuration and Strategy create/edit/delete permission", () => {
+                
+            authoring.common.login()
+            // assign that role to the user
+            authoring.userManagement.visitUserListPage()
+            authoring.userManagement.assignUserRoles(user.userName, [role2.roleName])
+            
+            // logout 
+          authoring.common.logout()
+          // login and check permissions
+          authoring.common.login(user.userName, user.password)
+          cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+
+          cy.visit(authoring.contentIntelligence.contentConfigurations)
+          cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
+          cy.contains('span', "Add Segment").should('exist')
+          cy.contains('div', "Content Pools").click()
+          cy.contains('span',"+ Add Content Pool").should('exist')
+
+          cy.visit(authoring.contentIntelligence.contentStrategy)
+          cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+          cy.contains('span', "Key Marketing Topics").should('exist').click()
+          cy.contains('button', "Add Topics").should('exist')
+
+        })
+
+    it("Custom role permission with ContentIntelligence checkbox disable", () => {
+                
+            authoring.common.login()
+            cy.visit(authoring.userManagement.userRoles.pageURL)
+            authoring.userManagement.configureUserRole(role3)
+            authoring.userManagement.visitUserListPage()
+            authoring.userManagement.assignUserRoles(user.userName, [role3.roleName])
+
+            // logout 
+        authoring.common.logout()
+        // login and check permissions
+        authoring.common.login(user.userName, user.password)
+        cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('not.exist')
+            
+        })
+
+        it("Custom role permission with ContentIntelligence checkbox enable", () => {
+            authoring.common.login()
+            cy.visit(authoring.userManagement.userRoles.pageURL)
+            authoring.userManagement.configureUserRole(role4)
+            authoring.userManagement.visitUserListPage()
+            authoring.userManagement.assignUserRoles(user.userName, [role4.roleName])
+
+            // logout 
+            authoring.common.logout()
+        // login and check permissions
+            authoring.common.login(user.userName, user.password)
+            cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+            cy.visit(authoring.contentIntelligence.contentConfigurations)
+            cy.contains('h1','Content Configurations',{timeout:20000}).should('exist')
+            
+        })
+
+        it("Custom role permission with ContentIntelligence checkbox enable", () => {
+            authoring.common.login()
+            cy.visit(authoring.userManagement.userRoles.pageURL)
+            authoring.userManagement.configureUserRole(role5)
+            authoring.userManagement.visitUserListPage()
+            authoring.userManagement.assignUserRoles(user.userName, [role5.roleName])
+
+            // logout 
+            authoring.common.logout()
+        // login and check permissions
+            authoring.common.login(user.userName, user.password)
+            cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+            cy.visit(authoring.contentIntelligence.contentStrategy)
+            cy.contains("Content Strategy Overview", { timeout: 20000 }).should('exist')
+            
+        })
 })
