@@ -49,7 +49,7 @@ describe('Author Role Permissions', function() {
 
         authoring.target.visit()
         cy.get("#AddTrackLink").should("exist")
-        cy.contains('button', "Add Folder")
+        cy.contains('button', "Add Folder").should("exist")
         cy.get(authoring.target.editTrack).should("exist")
         cy.contains('a', target.name).click()
         cy.contains('button',"Add Content").should("exist")
@@ -62,7 +62,7 @@ describe('Author Role Permissions', function() {
       
         authoring.recommend.visit()
         cy.get("#AddTrackLink").should("exist")
-        cy.contains('button', "Add Folder")
+        cy.contains('button', "Add Folder").should("exist")
         cy.get(authoring.recommend.editTrack).should("exist")
         cy.contains('a', recommend.name).click()
         cy.contains('button',"Add Content").should("exist")

@@ -343,6 +343,7 @@ describe('General Settings User Role', function() {
         authoring.common.login()
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.clickUserRole(role.roleName)
+        cy.contains('a', "Platform Settings").click()
         cy.get(authoring.userManagement.generalSettings.contentTagsCreateEditView, {timeout: 4000}).click()
         cy.get(authoring.userManagement.generalSettings.contentTagsView, {timeout: 4000}).click()
 
