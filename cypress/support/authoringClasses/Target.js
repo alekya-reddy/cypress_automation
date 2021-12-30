@@ -55,11 +55,13 @@ export class Target extends Common {
             linksAndshareLabel: "label:contains('Links & Sharing')"
         };
         this.pagePreview = {
+            pagePreview:'[data-qa-hook="page-preview"]',
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
             itemDescription: "div[data-qa-hook='item-description']",
             videoStartTime: "label:contains('Video Start Time')",
-            autoPlayLabel: "div:contains('AutoPlay')"
+            autoPlayLabel: "div:contains('AutoPlay')",
+            captions:"[data-qa-hook='showCaption']"
         };
         
         this.popoverElements = {
@@ -171,6 +173,8 @@ export class Target extends Common {
         const accessProtection = options.accessProtection
         const externalCode = options.externalCode
         const content = options
+        const index=options.index
+        const singleContent=options.contents[index]
         /** All toggles should have value of 'on' or 'off' **/
         const flow = options.flow
         const signposts = options.signposts 
@@ -193,6 +197,8 @@ export class Target extends Common {
 
         /******************** Search Engine Directive*/
         const searchEngineDirective = options.searchEngineDirective
+        const captions=options.captions
+        const captionsLanguage=options.captionsLanguage
        
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -293,6 +299,11 @@ export class Target extends Common {
 
         if(searchEngineDirective){
             this.selectSearchEngineDirective(searchEngineDirective)
+        }
+
+        if(captions){
+            cy.contains('strong',singleContent,{timeout:20000}).click()
+            this.setCaptions(captionsLanguage,captions,verify)
         }
     }
 
@@ -612,5 +623,28 @@ export class Target extends Common {
          cy.contains("button", "Update").click()
      })
     }
+
+    setCaptions(captionsLanguage,captions, verify){
+        if(captions==='on' || captions==='ON'){
+            this.toggle(this.pagePreview.captions, captions)
+            //default should be english
+            cy.contains('label','Language').siblings("span").should("contain", "English")
+            cy.get(this.pagePreview.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(captionsLanguage)).click()
+                cy.contains("button", "Update").click()
+            })
+        }
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").should("contain", captionsLanguage)
+            })
+        }
+    } 
+
 }
 

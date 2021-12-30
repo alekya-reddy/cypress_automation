@@ -39,7 +39,9 @@ export class Recommend extends Common {
             headerToggle: '[data-qa-hook="header"]',
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
             exitOverride: "[data-qa-hook='Exit overrides']",
-            linksAndshareLabel: "label:contains('Links & Sharing')"
+            linksAndshareLabel: "label:contains('Links & Sharing')",
+            captions:"[data-qa-hook='showCaption']",
+            pagePreview:'[data-qa-hook="page-preview"]',
 
         };
         this.popoverElements = {
@@ -140,6 +142,10 @@ export class Recommend extends Common {
 
         /******************** Search Engine Directive*/
         const searchEngineDirective = options.searchEngineDirective
+        const captions=options.captions
+        const captionsLanguage=options.captionsLanguage
+        const index=options.index
+        const singleContent=options.contents[index]
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -222,6 +228,11 @@ export class Recommend extends Common {
 
         if(searchEngineDirective){
             this.selectSearchEngineDirective(searchEngineDirective)
+        }
+
+        if(captions){
+            cy.get(`img[alt='${singleContent}']`,{timeout:20000}).click()
+            this.setCaptions(captionsLanguage,captions,verify)
         }
     }
 
@@ -474,4 +485,26 @@ export class Recommend extends Common {
          cy.contains("button", "Update").click()
      })
     }
+
+    setCaptions(captionsLanguage,captions, verify){
+        if(captions==='on' || captions==='ON'){
+            this.toggle(this.pageSidebar.captions, captions)
+            //default should be english
+            cy.contains('label','Language').siblings("span").should("contain", "English")
+            cy.get(this.pageSidebar.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(captionsLanguage)).click()
+                cy.contains("button", "Update").click()
+            })
+        }
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").should("contain", captionsLanguage)
+            })
+        }
+    } 
 }
