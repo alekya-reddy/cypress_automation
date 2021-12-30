@@ -56,7 +56,7 @@ export class VexCX extends CommonCX {
         this.menuItem = ".rc-menu-item"
         this.cxheader = "div[class*='pf-event-header']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
-
+        this.submitButton="button[type='submit']"
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
@@ -70,7 +70,9 @@ export class VexCX extends CommonCX {
             playButton:"button[aria-label='Play (k)']",
             unmuteButton:"button[aria-label='Unmute (m)']",
             muteButton:"button[aria-label='Mute (m)']",
-            pauseButton:"button[aria-label='Pause (k)']"
+            pauseButton:"button[aria-label='Pause (k)']",
+            settings:'[aria-label="Settings"]',
+            menuContent:"div.ytp-menuitem-content"
         };
         this.simuliveVideo = {
             vexCustomControl: 'div[class*="vex-session-custom-controls"]',

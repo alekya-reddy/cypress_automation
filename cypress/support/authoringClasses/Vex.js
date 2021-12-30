@@ -923,6 +923,8 @@ export class Vex extends Common {
         const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
         const override=config.override
+        const captions=config.captions
+        const captionsLanguage=config.captionsLanguage
 
         if (!stayOnPage) {
             cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, () => {
@@ -1009,6 +1011,17 @@ export class Vex extends Common {
                     cy.contains("The page description for content must be 255 characters or less. Please type a shorter page description.").should('exist')
                 }
                 cy.get(this.pages.pageDescription).clear().type(description)
+            }
+        }
+
+        if(captions){
+            if(captions==='on' || captions==='ON'){
+                //default should be english
+                cy.contains('span','Video Caption').click()
+                cy.contains('label','Language').parent('div').siblings("div").find('span').should("contain", "English")
+                cy.contains('label','Language').parent("div[class*='ant-col']").siblings("div").find("span[class*='selection-item']").click()
+                cy.contains('label','Language').parent("div[class*='ant-col']").siblings("div").find("span[class*='selection-item']").type(captionsLanguage)
+                cy.contains(captionsLanguage).click()
             }
         }
 
