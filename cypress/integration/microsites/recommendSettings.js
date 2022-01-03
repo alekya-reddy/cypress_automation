@@ -184,7 +184,7 @@ describe("Microsites - Target Settings", () => {
         })
     })
 
-    it.only("Visit the recommend track of microsite which has subtitle enabled and disabled", () => {
+    it("Visit the recommend track of microsite which has subtitle enabled and disabled", () => {
         authoring.common.login()
 
          //Captions off from target track and checking in microsite consumption

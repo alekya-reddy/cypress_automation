@@ -93,7 +93,6 @@ const landingPage = {
 
 const captionsTracks = {
     config1: {
-        // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "targetSettingscaptions.js",
         slug: "target-config-captions",
         contents: ["Oracle Cloud captions"],
@@ -102,7 +101,6 @@ const captionsTracks = {
         index:"0"
     },
     config2: {
-        // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "targetSettingscaptions2.js",
         slug: "target-config-captions2",
         contents: ["Oracle Cloud captions"],
