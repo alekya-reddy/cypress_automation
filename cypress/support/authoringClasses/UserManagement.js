@@ -28,26 +28,32 @@ export class UserManagement extends Common {
             campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
             trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
             trackLabelsView: "#campaign_tools_track_labels-view",
-            campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view"
+            campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view",
+            campaignsToolsView:"#campaign_tools_module_access-view"
         }
         this.vex = {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
             vexModuleCRUD: "#virtual_events_module_access-create-edit-delete",
-            vexAnalysticsView: "#path_analytics_virtual_events-view"
+            vexAnalysticsView: "#path_analytics_virtual_events-view",
+            vexView: "#virtual_events_module_access-view"
 
         }
         this.websiteTools = {
             websiteToolsModuleCRUD: "#website_tools_module_access-create-edit-delete",
+            websiteToolsView: "#website_tools_module_access-view",
             WebsiteToolsAnalysticsView: "#path_analytics_website_tools-view"
 
         }
         this.contentIntelligence = {
             contentconfigurationsCRUD: "#content_intelligence_content_configurations-create-edit-delete",
-            contentstrategyCRUD: "#content_intelligence_content_strategy-create-edit-delete"
+            contentstrategyCRUD: "#content_intelligence_content_strategy-create-edit-delete",
+            contentConfigurationView: "#content_intelligence_content_configurations-view",
+            contentStratergyView: "#content_intelligence_content_strategy-view"
         }
         this.contentLibrary = {
             contentLibraryInsightsView: "#content_library_insights-view",
-            contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete"
+            contentLibraryFeatureAccessCRUD: "#content_library_feature_access-create-edit-delete",
+            contentLibraryView: "#content_library_feature_access-view"
         }
         this.administrativeControls = {
             organizationSettingsCRUD: "#org_settings-create-edit-delete",
@@ -104,12 +110,16 @@ export class UserManagement extends Common {
             trackLabelsView,
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
+            campaignsToolsView,
+            vexView,
             vexSettingsCRUD,
             vexModuleCRUD,
             websiteToolsModuleCRUD,
+            websiteToolsView,
             campaignToolsModuleCRUD,
             contentLibraryInsightsView,
             contentLibraryFeatureAccessCRUD,
+            contentLibraryView,
             userManagementCRUD,
             organizationSettingsCRUD,
             campaignToolsAnalyticsView,
@@ -117,6 +127,8 @@ export class UserManagement extends Common {
             WebsiteToolsAnalysticsView,
             contentconfigurationsCRUD,
             contentstrategyCRUD,
+            contentConfigurationView,
+            contentStratergyView
         } = options
 
         this.clickUserRole(roleName)
@@ -143,6 +155,15 @@ export class UserManagement extends Common {
             cy.get(this.userExperienceSettingsCreateEditView).invoke("attr", "class").then(checkboxClass => {
                 if(userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.userExperienceSettingsCreateEditView).click()
+                }       
+            })
+        }
+
+        if(contentLibraryView == true || contentLibraryView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.contentLibrary.contentLibraryView).invoke("attr", "class").then(checkboxClass => {
+                if(contentLibraryView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentLibrary.contentLibraryView).click()
                 }       
             })
         }
@@ -180,6 +201,15 @@ export class UserManagement extends Common {
                 }       
             })
         }
+        
+        if(campaignsToolsView == true || campaignsToolsView == false){
+            cy.contains('a', "Product Permissions").click()
+            cy.get(this.campaignTools.campaignsToolsView).invoke("attr", "class").then(checkboxClass => {
+                if(campaignsToolsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignsToolsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignsToolsView).click()
+                }       
+            })
+        }
 
         if(vexSettingsCRUD == true || vexSettingsCRUD == false){
             cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
@@ -195,11 +225,24 @@ export class UserManagement extends Common {
                 }       
             })
         }
-
+        if(vexView == true || vexView == false){
+            cy.get(this.vex.vexView).invoke("attr", "class").then(checkboxClass => {
+                if(vexView && checkboxClass.includes("checkbox-container--unchecked") || !vexView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.vex.vexView).click()
+                }       
+            })
+        }
         if(websiteToolsModuleCRUD == true || websiteToolsModuleCRUD == false){
             cy.get(this.websiteTools.websiteToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.websiteTools.websiteToolsModuleCRUD).click()
+                }       
+            })
+        }
+        if(websiteToolsView == true || websiteToolsView == false){
+            cy.get(this.websiteTools.websiteToolsView).invoke("attr", "class").then(checkboxClass => {
+                if(websiteToolsView && checkboxClass.includes("checkbox-container--unchecked") || !websiteToolsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.websiteTools.websiteToolsView).click()
                 }       
             })
         }
@@ -311,6 +354,7 @@ export class UserManagement extends Common {
         const roles = [list].flat()
         // select user
         cy.get(this.pageBody).within(() => {
+            cy.wait(2000)
             cy.contains("span", userName, {timeout: 5000}).click()
         })
         // remove all existing roles
