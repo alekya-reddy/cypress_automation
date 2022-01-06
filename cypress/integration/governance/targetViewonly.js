@@ -164,7 +164,6 @@ describe("View Only Permissions", () => {
         cy.contains('div', "Track Settings").should("exist")
 
         cy.contains('a', "Analytics").should("exist").click()
-        cy.pause()
         cy.contains('div', "Only from Explore Page").should("exist")
         cy.contains('div', "Visitors").should("exist")
         cy.contains('div', "Last 30 Days").should("exist")
