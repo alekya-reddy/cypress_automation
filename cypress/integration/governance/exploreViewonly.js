@@ -56,7 +56,9 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Labels").should("exist")
         cy.get(authoring.explore.editExplorePageIcon).should("not.exist")
         cy.get(authoring.explore.deleteExplorePageIcon).should("not.exist")
-        cy.contains('a', "Header").should("exist").click()
+        cy.viewport(1000, 4500)
+        cy.contains('a', "viewOnlyExplore").should("exist").click()
+        cy.viewport(2000, 2500)
         cy.get(authoring.explore.cloneExploreIcon).should("not.exist")
         cy.get(authoring.explore.sitemapUrl).should("not.exist")
 
@@ -96,6 +98,16 @@ describe("View Only Permissions", () => {
                 expect(afterclick).to.be.equal(beforeclick)
             })
         })
+
+        cy.contains('label', "Hero").should('be.visible').siblings().click()
+        cy.get(authoring.common.popover).should("not.exist")
+        cy.contains('label', "Body").should('be.visible').siblings().click()
+        cy.get(authoring.common.popover).should("not.exist")
+        cy.contains('label', "Footer").should('be.visible').siblings().click()
+        cy.get(authoring.common.popover).should("not.exist")
+        cy.get(authoring.explore.header.headerNoOverrides).should("exist").click()
+        cy.contains('h3', "Header Overrides for this Track").should("not.exist")
+
         cy.wait(2000)
         cy.contains('h5', "Hero").should('be.visible')
         cy.get(authoring.explore.pageSidebar.heroToggle).invoke('attr', 'class').then(beforeclick => {
@@ -185,8 +197,6 @@ describe("View Only Permissions", () => {
                 expect(afterclick).to.be.equal(beforeclick)
             })
         })
-
-        cy.viewport(2000, 2500)
         cy.contains('div', "scale image").should("not.exist")
         cy.get(authoring.explore.heroSubtitleLocatorDefault).should('be.visible').click()
         cy.get(authoring.explore.heroSubtitleInput).should("not.exist")
