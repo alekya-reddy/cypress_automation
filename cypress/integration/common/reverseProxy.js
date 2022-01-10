@@ -17,7 +17,6 @@ const newEvent = {
   url: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring/reverse-proxy",
 }
 
-
 const newSession = {
   name: "Reverse Proxy Session",
   newName: "New Reverse Proxy Session",
@@ -27,9 +26,6 @@ const newSession = {
   type: 'Live',
   video: 'Vimeo - Used in Cypress automation for VEX testing',
   url: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring/reverse-proxy/reverse-proxy",
-  url1: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring/reverse-proxy/reverse-proxy/singulair-pm-e",
-  url2: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring/reverse-proxy/reverse-proxy/spacex-wikipedia",
-  url3: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV +"-wp.com/test-authoring/reverse-proxy/reverse-proxy/screen-shot-2020-06-"
 }
 
 const landingPage = {
@@ -43,23 +39,7 @@ const landingPage = {
     pageDescription: "This is pageDescription",
     visibility: 'Public',
     setHome: true,
-    blocks: [
-        {
-            id: "HTML block",
-            type: "HTML",
-            content: `<h1>{{company.name | default: default text}}</h1><h2>{{visitor.email}}</h2>`,
-            className: "landingpageblock",
-        }
-    ]
-}
-
-const widget = {
-  name: "Chat",
-    code: `<h1>Hello world`, // typing <h1> will automatically add </h1>
-    newName: "New Name",
-    newCode: `<h1>Bye world`,
-    live: true,
-    onDemand: true
+    url: "https://reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring/reverse-proxy/reverse-proxy"
 }
 
 const contents = [
@@ -252,7 +232,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
 
   })
 
-  it("Configure Reverse-Proxy For VEX Landinng Page", function  () {
+  it.only("Configure Reverse-Proxy For VEX Landinng Page", function  () {
     authoring.common.login()
     cy.get(authoring.common.nameSetting).click()
     cy.get(10000)
@@ -283,19 +263,13 @@ describe("Reverse Proxy For Campaign Tools", function () {
     contents.forEach((content)=>{
       cy.containsExact(authoring.vex.supplementalContentCardTitle, content).should('exist');
   })
-
-    //Add Widget and configure
-    authoring.vex.addWidget('Chat')
-    authoring.vex.configureRocketChat(widget)
     authoring.vex.backToEvent(newEvent.name) 
-
     //Add edit and Configure Landingpage
     authoring.vex.addLandingPages([landingPage.name])
     authoring.vex.editLandingPage(landingPage)
-    //authoring.vex.configureLandingPage(landingPage)
   })
 
-  it("Reversr Proxy For Event and Session", function  () {
+  it.only("Reversr Proxy For Event and Session", function  () {
     cy.window().then(win => win.location.href = newEvent.url);
     
     cy.window().then(win => win.location.href = newSession.url);
@@ -304,18 +278,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
     cy.wait(2000)
 
     cy.contains(contents[0]).click()
-    cy.window().then(win => win.location.href = newSession.url1);
-    cy.wait(2000)
-
-    cy.go("back")
-    cy.contains(contents[1]).click()
-    cy.window().then(win => win.location.href = newSession.url2);
-    cy.wait(2000)
-
-    cy.go("back")
-    cy.contains(contents[2]).click()
-    cy.window().then(win => win.location.href = newSession.url3);
-
+    cy.window().then(win => win.location.href = landingPage.url);
   })
 
 })
