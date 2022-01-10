@@ -28,6 +28,7 @@ export class Target extends Common {
         this.analyticsRows = "div[class*='SimpleTable__body']",
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
         this.canonicalUrlOverride="#canonicalUrlOverride"
+        this.cloneTrack="[title='Clone Track']"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -173,8 +174,6 @@ export class Target extends Common {
         const accessProtection = options.accessProtection
         const externalCode = options.externalCode
         const content = options
-        const index=options.index
-        const singleContent=options.contents[index]
         /** All toggles should have value of 'on' or 'off' **/
         const flow = options.flow
         const signposts = options.signposts 
@@ -199,6 +198,9 @@ export class Target extends Common {
         const searchEngineDirective = options.searchEngineDirective
         const captions=options.captions
         const captionsLanguage=options.captionsLanguage
+
+        /**************Clone of track */
+        const cloneName=options.cloneName
        
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -302,8 +304,18 @@ export class Target extends Common {
         }
 
         if(captions){
+            const index= options.index
+            const singleContent=options.contents[index]
             cy.contains('strong',singleContent,{timeout:20000}).click()
             this.setCaptions(captionsLanguage,captions,verify)
+        }
+
+        if(cloneName){
+          cy.get(this.cloneTrack,{timeout:10000}).click()
+          cy.contains('h3',"Clone this Track",{timeout:10000}).should('be.visible')
+          cy.get(this.editTarget.nameInput).clear().type(cloneName)
+          cy.contains('button','Clone this Track').click()
+          cy.contains('form h3',"Clone this Track",{timeout:10000}).should('not.exist')
         }
     }
 
@@ -628,8 +640,8 @@ export class Target extends Common {
         if(captions==='on' || captions==='ON'){
             this.toggle(this.pagePreview.captions, captions)
             //default should be english
-            cy.contains('label','Language').siblings("span").should("contain", "English")
             cy.get(this.pagePreview.pagePreview).within(()=>{
+            cy.contains('label','Language').siblings("span").should("contain", "English")
                 cy.contains('label','Language').siblings("span").click()
             })
             cy.get(this.popover).within(()=>{

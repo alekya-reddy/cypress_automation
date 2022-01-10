@@ -11,32 +11,82 @@ const originalEvent = {
     }
 }
 
-const originalSession = [{
-    name: "ondemand session",
-    slug: "ondemandession",
-    visibility: 'Public',
-    description: 'Session description',
-    type: 'On Demand',
-    video: 'Oracle Cloud captions',
-    captions: 'on',
-    captionsLanguage: "German",
-},
-{
-    name: 'live session',
-    slug: 'livesession',
-    get url() { return `${event.url}/${this.slug}`; },
-    visibility: 'Public',
-    type: 'Live',
-    live: {
-        start: 'Jun 24, 2010 8:00pm',
-        end: 'Jun 24, 2040 8:00pm',
-        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-        type: 'Content Library',
+const originalSession = [
+    {
+        name: "ondemand session",
+        slug: "ondemandession",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
         video: 'Oracle Cloud captions',
+        captions: 'on',
+        captionsLanguage: "German",
     },
-    captions: 'on',
-    captionsLanguage: "German",
-}]
+    {
+        name: 'live session',
+        slug: 'livesession',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Oracle Cloud captions',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "German",
+        },
+        captionsLanguage: "German"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "German",
+        },
+        video: 'Oracle Cloud captions',
+        captions: 'on',
+        captionsLanguage: "French"
+    },
+    {
+        name: "ondemand session with captions off",
+        slug: "ondemandession",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'Oracle Cloud captions',
+        captions: 'off'
+    },
+    {
+        name: "Session with suppliment content",
+        slug: "sessionsupplimentcontent",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Oracle Cloud captions',
+        contents: [
+            'PDF - Used by Cypress automation for VEX testing',
+            'Website - Used by Cypress automation for VEX testing',
+            'Image - Used by Cypress automation for VEX testing'
+        ],
+        captions: 'on',
+        captionsLanguage: "German",
+    }
+]
 
 const landingPage = {
     name: "Landing-Page",
@@ -71,33 +121,48 @@ describe('VEX - Virtual Event', function () {
         originalSession.forEach(session => {
             authoring.vex.addSession(session.name)
             authoring.vex.configureSession(session)
-            cy.pause()
             cy.go('back')
         })
 
-        // Verify landing page blocks will now have carousel by default
+        // Verify captions enabled and disabled from sessions and verify in consumption
         authoring.vex.deleteLandingPages(landingPage.name)
         authoring.vex.addLandingPages(landingPage.name)
         authoring.vex.configureLandingPage(landingPage)
         authoring.vex.goToPageEditor(landingPage.name)
 
+        let i = 0;
         cy.visit(originalEvent.url)
         originalSession.forEach(session => {
+
             cy.contains(consumption.vex.sessionCardTitle, session.name, { timeout: 10000 }).click()
-            if(session.type==='Live'){
+            if (session.type === 'Live' && i == 0) {
                 cy.get(consumption.vex.emailInput).clear().type("test@gmail.com")
                 cy.get(consumption.vex.submitButton).click()
+                i++;
             }
             cy.waitForIframeToLoad(consumption.vex.youtube.iframe, consumption.vex.youtube.videoPlayer, 20000)
             cy.getIframeBody(consumption.vex.youtube.iframe).within(() => {
                 cy.get("div.ytp-chrome-bottom").then(() => {
                     cy.get(consumption.vex.youtube.videoPlayer).should('exist').trigger('mouseover')
                     cy.get(consumption.vex.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                    cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage).should('be.visible', { timeout: 10000 })
-                    cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage).should('be.visible', { timeout: 10000 }).click()
-                    cy.contains("Spanish").click()
-                    cy.contains(consumption.vex.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
-                    cy.go('back')
+                    if (session.name === 'ondemand session with captions off') {
+                        cy.wait(1000)
+                        cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.vex.youtube.menuContent).invoke('text').then(text => {
+                            if (text.includes("Off")) {
+                                cy.contains(consumption.vex.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
+                            }
+                            else {
+                                cy.contains(consumption.vex.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
+                            }
+                        })
+                    }
+                    else {
+                        cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage, { timeout: 10000 }).should('be.visible')
+                        cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage, { timeout: 10000 }).should('be.visible').click()
+                        cy.contains("Spanish").click()
+                        cy.contains(consumption.vex.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
+                        cy.go('back')
+                    }
                 })
             })
         })

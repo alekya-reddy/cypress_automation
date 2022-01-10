@@ -17,6 +17,7 @@ export class Recommend extends Common {
         this.recommendCell = 'div[data-qa-hook="table-cell-internal-title"]>span';
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
         this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
+        this.cloneTrack="[title='Clone Track']"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -144,8 +145,7 @@ export class Recommend extends Common {
         const searchEngineDirective = options.searchEngineDirective
         const captions=options.captions
         const captionsLanguage=options.captionsLanguage
-        const index=options.index
-        const singleContent=options.contents[index]
+        const cloneName=options.cloneName
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -231,9 +231,19 @@ export class Recommend extends Common {
         }
 
         if(captions){
+            const index=options.index
+            const singleContent=options.contents[index]
             cy.get(`img[alt='${singleContent}']`,{timeout:20000}).click()
             this.setCaptions(captionsLanguage,captions,verify)
         }
+
+        if(cloneName){
+            cy.get(this.cloneTrack,{timeout:10000}).click()
+            cy.contains('h3',"Clone this Track",{timeout:10000}).should('be.visible')
+            cy.get(this.editRecommend.nameInput).clear().type(cloneName)
+            cy.contains('button','Clone this Track').click()
+            cy.contains('form h3',"Clone this Track",{timeout:10000}).should('not.exist')
+          }
     }
 
     addExternalCode(list, verify){
