@@ -232,7 +232,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
 
   })
 
-  it.only("Configure Reverse-Proxy For VEX Landinng Page", function  () {
+  it("Configure Reverse-Proxy For VEX Landinng Page", function  () {
     authoring.common.login()
     cy.get(authoring.common.nameSetting).click()
     cy.get(10000)
@@ -269,7 +269,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
     authoring.vex.editLandingPage(landingPage)
   })
 
-  it.only("Reversr Proxy For Event and Session", function  () {
+  it("Reversr Proxy For Event and Session", function  () {
     cy.window().then(win => win.location.href = newEvent.url);
     
     cy.window().then(win => win.location.href = newSession.url);
