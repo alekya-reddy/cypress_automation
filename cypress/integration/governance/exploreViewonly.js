@@ -35,7 +35,7 @@ describe("View Only Permissions", () => {
 
         cy.contains('div', "Added By", { timeout: 30000 }).should('be.visible')
         cy.contains('div', "Label").should('be.visible')
-        cy.get('input[name="page-search"]').should("exist")
+        cy.get(authoring.common.orgSearch).should("exist")
         cy.contains('button', "Create Explore Page").should("not.exist")
         cy.contains('button', "Add Folder").should("not.exist")
         cy.get(authoring.target.editFolder).should("not.exist")
