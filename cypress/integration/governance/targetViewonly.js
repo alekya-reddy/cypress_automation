@@ -21,9 +21,7 @@ const role = {
 describe("View Only Permissions", () => {
 
     it("Target View Only Permissions", () => {
-        // Content intelligence & website tools are Enabled: show both Content configurations and Content strategy
         authoring.common.login()
-
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.configureUserRole(role)
         authoring.userManagement.visitUserListPage()
@@ -57,105 +55,40 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.popover).should("not.exist")
 
         cy.contains('h5', "Flow").should('be.visible')
-        cy.get(authoring.target.pageSidebar.flowToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.flowToggle).click()
-            cy.get(authoring.target.pageSidebar.flowToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.flowToggle)
+        
         cy.contains('label', "CTA").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
-        cy.contains('div', "no overrides").should('be.visible').click()
+        cy.contains('div', "Customize").should('be.visible').click()
         cy.get(authoring.common.popover).should("not.exist")
 
         cy.contains('h5', "Signposts").should('be.visible')
-        cy.get(authoring.target.pageSidebar.signpostsToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.signpostsToggle).click()
-            cy.get(authoring.target.pageSidebar.signpostsToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.signpostsToggle)
 
         cy.contains('h5', "Bottom bar").should('be.visible')
-        cy.get(authoring.target.pageSidebar.bottombarToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.bottombarToggle).click()
-            cy.get(authoring.target.pageSidebar.bottombarToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.bottombarToggle)
 
         cy.contains('h5', "Exit").should('be.visible')
-        cy.get(authoring.target.pageSidebar.exitToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.exitToggle).click()
-            cy.get(authoring.target.pageSidebar.exitToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.exitToggle)
 
         cy.contains('h5', "Inactivity").should('be.visible')
-        cy.get(authoring.target.pageSidebar.inactivityToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.inactivityToggle).click()
-            cy.get(authoring.target.pageSidebar.inactivityToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.inactivityToggle)
+
         cy.contains('h5', "Forms Strategy").should('be.visible')
-        cy.get(authoring.target.pageSidebar.formsStrategyToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.formsStrategyToggle).click()
-            cy.get(authoring.target.pageSidebar.formsStrategyToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.formsStrategyToggle)
 
         cy.contains('h5', "Cookie Message").should('be.visible')
-        cy.get(authoring.target.pageSidebar.cookieMessageToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.cookieMessageToggle).click()
-            cy.get(authoring.target.pageSidebar.cookieMessageToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.cookieMessageToggle)
 
         cy.contains('h5', "Cookie Consent").should('be.visible')
-        cy.get(authoring.target.pageSidebar.cookieConsentToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.cookieConsentToggle).click()
-            cy.get(authoring.target.pageSidebar.cookieConsentToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.cookieConsentToggle)
+    
         cy.contains('h5', "End Promoter").should('be.visible')
-        cy.get(authoring.target.pageSidebar.endPromoterToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.endPromoterToggle).click()
-            cy.get(authoring.target.pageSidebar.endPromoterToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.endPromoterToggle)
+
         cy.contains('h5', "Header").should('be.visible')
-        cy.get(authoring.target.pageSidebar.headerToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.pageSidebar.headerToggle).click()
-            cy.get(authoring.target.pageSidebar.headerToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.pageSidebar.headerToggle)
+       
         cy.contains(authoring.target.editTrack).should("not.exist")
         cy.contains(authoring.target.deleteTrackIcon).should("not.exist")
         cy.contains(authoring.target.cloneTrack).should("not.exist")
@@ -204,14 +137,7 @@ describe("View Only Permissions", () => {
 
         cy.contains('div', "AutoPlay").should('be.visible')
         cy.contains('div', "Show Same Channel Video").should('be.visible')
-        cy.get(authoring.target.relatedVideos).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.target.relatedVideos).click()
-            cy.get(authoring.target.relatedVideos).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.target.relatedVideos)
 
         cy.go("back")
         cy.contains('div', "Added By").should('be.visible')

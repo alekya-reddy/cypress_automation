@@ -20,10 +20,8 @@ const role = {
 
 describe("View Only Permissions", () => {
 
-    it("Target View Only Permissions", () => {
-        // Content intelligence & website tools are Enabled: show both Content configurations and Content strategy
+    it("Explore View Only Permissions", () => {
         authoring.common.login()
-
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.configureUserRole(role)
         authoring.userManagement.visitUserListPage()
@@ -90,14 +88,7 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.popover).should("not.exist")
 
         cy.contains('h5', "CTAs").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.ctaToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.ctaToggle).click()
-            cy.get(authoring.explore.pageSidebar.ctaToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.ctaToggle)
 
         cy.contains('label', "Hero").should('be.visible').siblings().click()
         cy.get(authoring.common.popover).should("not.exist")
@@ -110,93 +101,33 @@ describe("View Only Permissions", () => {
 
         cy.wait(2000)
         cy.contains('h5', "Hero").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.heroToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.heroToggle).click()
-            cy.get(authoring.explore.pageSidebar.heroToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.heroToggle)
 
         cy.contains('div', "Show Text").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.showTextToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.showTextToggle).click()
-            cy.get(authoring.explore.pageSidebar.showTextToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.showTextToggle)
+       
         cy.contains('h5', "Header").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.headerToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.headerToggle).click()
-            cy.get(authoring.explore.pageSidebar.headerToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.headerToggle)
+
         cy.contains('h5', "Featured Content").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.featuredContent).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.featuredContent).click()
-            cy.get(authoring.explore.pageSidebar.featuredContent).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.featuredContent)
 
         cy.contains('div', "no image overrides").should("not.exist")
         cy.contains('h5', "Search Function").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.searchToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.searchToggle).click()
-            cy.get(authoring.explore.pageSidebar.searchToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.searchToggle)
 
         cy.contains('h5', "FILTERS").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.filtersToggle).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.filtersToggle).click()
-            cy.get(authoring.explore.pageSidebar.filtersToggle).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.filtersToggle)
 
         cy.contains('h5', "Advanced Customization").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.advanceCustomization).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.advanceCustomization).click()
-            cy.get(authoring.explore.pageSidebar.advanceCustomization).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.advanceCustomization) 
 
         cy.contains('div', "Show Content Type").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.contentType).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.contentType).click()
-            cy.get(authoring.explore.pageSidebar.contentType).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.contentType)
 
         cy.contains('div', "Show Topics").should('be.visible')
-        cy.get(authoring.explore.pageSidebar.showTopics).invoke('attr', 'class').then(beforeclick => {
-            cy.log(beforeclick)
-            cy.get(authoring.explore.pageSidebar.showTopics).click()
-            cy.get(authoring.explore.pageSidebar.showTopics).invoke('attr', 'class').then(afterclick => {
-                cy.log(afterclick)
-                expect(afterclick).to.be.equal(beforeclick)
-            })
-        })
+        authoring.common.togglemethod(authoring.explore.pageSidebar.showTopics)
+     
         cy.contains('div', "scale image").should("not.exist")
         cy.get(authoring.explore.heroSubtitleLocatorDefault).should('be.visible').click()
         cy.get(authoring.explore.heroSubtitleInput).should("not.exist")
@@ -207,12 +138,3 @@ describe("View Only Permissions", () => {
 
     })
 })
-
-
-
-
-
-
-
-
-

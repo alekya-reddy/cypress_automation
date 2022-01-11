@@ -159,6 +159,17 @@ export class Common {
         })
     }
 
+    togglemethod(locator){
+        cy.get(locator).invoke('attr', 'class').then(beforeclick => {
+            cy.log(beforeclick)
+            cy.get(locator).click()
+            cy.get(locator).invoke('attr', 'class').then(afterclick => {
+                cy.log(afterclick)
+                expect(afterclick).to.be.equal(beforeclick);
+            })
+        }) 
+    }
+
     login(user = this.userName, password = this.password) {
         cy.viewport(1450, 1024)
         cy.visit(this.baseUrl + "/users/sign_in")
