@@ -52,6 +52,17 @@ const captionsTracks = {
             return `${authoring.common.baseUrl}/${this.slug}`
         }
     },
+    config6: {
+        name: "targetSettingscaptions5.js",
+        slug: "target-config-captions5",
+        contents: ["Video with no subtitles"],
+        captionsLanguage: "English",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
 }
 
 describe("Target - Video captions", () => {
@@ -108,7 +119,7 @@ describe("Target - Video captions", () => {
         authoring.common.login()
         authoring.target.visit()
         authoring.target.configure(captionsTracks.config3)
-        cy.contains('strong',captionsTracks.config1.contents[0],{timeout:20000}).click()
+        cy.contains('strong', captionsTracks.config1.contents[0], { timeout: 20000 }).click()
         cy.get(authoring.target.pagePreview.captions).invoke('css', 'background-color').then(val => {
             expect(val).to.equal('rgb(0, 169, 203)')
         })
@@ -129,44 +140,62 @@ describe("Target - Video captions", () => {
             })
         })
 
-         //Validate if the Selected language is not there for captions/Subtitles we show captions in default language in English
-         authoring.common.login()
-         authoring.target.visit()
-         authoring.target.deleteTrack(captionsTracks.config4.name)
-         authoring.target.addTrack(captionsTracks.config4)
-         authoring.target.configure(captionsTracks.config4)
- 
-         cy.visit(captionsTracks.config4.url)
- 
-         cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-         cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-             cy.get("div.ytp-chrome-bottom").then(() => {
-                 cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                 cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                 cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
-             })
-         })
+        //Validate if the Selected language is not there for captions/Subtitles we show captions in default language in English
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config4.name)
+        authoring.target.addTrack(captionsTracks.config4)
+        authoring.target.configure(captionsTracks.config4)
 
-          //Validate if the only auto-generated English Subtitles are present video will not show the subtitles.
-          authoring.common.login()
-          authoring.target.visit()
-          authoring.target.deleteTrack(captionsTracks.config5.name)
-          authoring.target.addTrack(captionsTracks.config5)
-          authoring.target.configure(captionsTracks.config5)
-  
-          cy.visit(captionsTracks.config5.url)
-          cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-          cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-              cy.get("div.ytp-chrome-bottom").then(() => {
-                  cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                  cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                  cy.wait(1000)
-                  cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.target.youtube.menuContent).invoke('text').then(text => {
-                      if (text.includes("Off")) {
-                          cy.contains(consumption.target.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
-                      }
-                  })
-              })
-          })
+        cy.visit(captionsTracks.config4.url)
+
+        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
+            cy.get("div.ytp-chrome-bottom").then(() => {
+                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
+                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
+                cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
+            })
+        })
+
+        //Validate if the only auto-generated English Subtitles are present video will not show the subtitles.
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config5.name)
+        authoring.target.addTrack(captionsTracks.config5)
+        authoring.target.configure(captionsTracks.config5)
+
+        cy.visit(captionsTracks.config5.url)
+        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
+            cy.get("div.ytp-chrome-bottom").then(() => {
+                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
+                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
+                cy.wait(1000)
+                cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.target.youtube.menuContent).invoke('text').then(text => {
+                    if (text.includes("Off")) {
+                        cy.contains(consumption.target.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
+                    }
+                })
+            })
+        })
+
+        //Validate If a Particular Youtube Video is not having any captions we will not show any captions even if Captions are enabled.
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config6.name)
+        authoring.target.addTrack(captionsTracks.config6)
+        authoring.target.configure(captionsTracks.config6)
+
+        cy.visit(captionsTracks.config6.url)
+        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
+            cy.get("div.ytp-chrome-bottom").then(() => {
+                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
+                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
+                cy.wait(1000)
+                cy.contains("div.ytp-menuitem-label", "Subtitles/CC").should('not.exist')
+            })
+        })
     })
 })
