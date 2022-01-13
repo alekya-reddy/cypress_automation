@@ -53,7 +53,7 @@ describe('Reporter Role Permissions', function() {
        cy.get("#TrackAnalyticsLink").should("exist")
        cy.contains('a', target.name).should("exist").click()
        cy.contains('h5',"Audience Filters").should("exist")
-       cy.contains('button',"Add Content").should("not.exist")
+       cy.contains('button',"Add Content to Track").should("not.exist")
        cy.contains('div', "Track Settings").should("not.exist")
 
        authoring.recommend.visit()
@@ -63,7 +63,7 @@ describe('Reporter Role Permissions', function() {
        cy.get("#TrackAnalyticsLink").should("exist")
        cy.contains('a', recommend.name).should("exist").click()
        cy.contains('h5',"Audience Filters").should("exist")
-       cy.contains('button',"Add Content").should("not.exist")
+       cy.contains('button',"Add Content to Track").should("not.exist")
        cy.contains('div', "Track Settings").should("not.exist")
        cy.contains('div', "Visitors").should("exist")
        cy.get('[role="menuitem"]:nth-of-type(6) div').trigger('mouseover')
