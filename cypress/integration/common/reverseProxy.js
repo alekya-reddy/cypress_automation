@@ -271,14 +271,16 @@ describe("Reverse Proxy For Campaign Tools", function () {
 
   it("Reversr Proxy For Event and Session", function  () {
     cy.window().then(win => win.location.href = newEvent.url);
-    
+    cy.url().should('contain', newEvent.url)
     cy.window().then(win => win.location.href = newSession.url);
+    cy.url().should('contain', newSession.url)
     cy.get(consumption.vex.emailInput).type("test@gmail.com")
     cy.contains("Submit").click()
     cy.wait(2000)
 
     cy.contains(contents[0]).click()
     cy.window().then(win => win.location.href = landingPage.url);
+    cy.url().should('contain', landingPage.url)
   })
 
 })
