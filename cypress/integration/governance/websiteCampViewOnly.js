@@ -21,7 +21,7 @@ const website = "http://scrumecommerce.com/test-page/automation/qa-analytics.htm
 
 describe("View Only Permissions", () => {
 
-    it("Target View Only Permissions", () => {
+    it("Web campaigns View Only Permissions", () => {
         // Content intelligence & website tools are Enabled: show both Content configurations and Content strategy
         authoring.common.login()
         cy.visit(authoring.userManagement.userRoles.pageURL)
