@@ -81,7 +81,7 @@ describe("Explore - Header feature", () => {
         cy.get(authoring.explore.header.headerOverrides).click()
         cy.get(authoring.explore.modal).within(() => {
             cy.get(authoring.explore.header.headerTitle).clear()
-            cy.contains('button', 'Save Header Overrides').click()
+            cy.contains('button', 'Save Header customization').click()
         })
 
         cy.get('#explore-seo-thumbnail').click()

@@ -347,9 +347,9 @@ export class Explore extends Common {
             }
         })
         cy.get(this.modal).within(() => {
-            cy.contains('h3', 'Header Overrides for this Track')
+            cy.contains('h3', 'Header customization for this Track')
             cy.get(this.header.headerTitle).clear().type(headerTitle)
-            cy.contains('button', 'Save Header Overrides').click()
+            cy.contains('button', 'Save Header customization').click()
         })
     }
 
