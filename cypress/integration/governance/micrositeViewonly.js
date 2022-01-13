@@ -76,13 +76,13 @@ describe("View Only Permissions", () => {
            cy.get(authoring.microsites.editmodal).should("not.exist")
 
            cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).click({force: true})
-           cy.get('span[class*="ant-checkbox-checked"]').should("not.exist")
+           cy.get(authoring.common.checkboxChecked).should("not.exist")
            cy.get(authoring.microsites.setupPage.contentTypeCheckbox).click({force: true})
-           cy.get('span[class*="ant-checkbox-checked"]').should("not.exist")
+           cy.get(authoring.common.checkboxChecked).should("not.exist")
            cy.get(authoring.microsites.setupPage.topicTagsCheckbox).click({force: true})
-           cy.get('span[class*="ant-checkbox-checked"]').should("not.exist")
+           cy.get(authoring.common.checkboxChecked).should("not.exist")
            cy.get(authoring.microsites.setupPage.showDescriptionCheckbox).click({force: true})
-           cy.get('span[class*="ant-checkbox-checked"]').should("not.exist")
+           cy.get(authoring.common.checkboxChecked).should("not.exist")
            cy.contains('button', "Save").should("not.exist")
            cy.contains('button', "Reset").should("not.exist")
 

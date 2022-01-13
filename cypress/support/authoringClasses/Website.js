@@ -12,6 +12,14 @@ export class Website extends Common {
         this.websiteURLName = `div[data-qa-hook="table-cell-url-patterns"] > span`;
         this.enabledToggle = `div[data-qa-hook="enabled"]`;
         this.websiteAnalytics = 'div[data-qa-hook="title-bar"]>div>div>div>div>a:nth-child(2)>div';
+        this.visitorTracking = 'div[data-qa-hook="disableWebsiteCampaignsTracking"]';
+        this.gdprCookie = 'div[data-qa-hook="gdprCookieConsentEnabled"]';
+        this.inpageEnabled = 'div[data-qa-hook="inPageEnabled"]';
+        this.bottombar = 'div[data-qa-hook="bottomBar"]';
+        this.cardToggle = 'div[data-qa-hook="card"]';
+        this.existToggle = 'div[data-qa-hook="exit"]';
+        this.inactivity = 'div[data-qa-hook="inactivity"]';
+        this.deleteButton = 'i[title="delete"]';
         this.pagePreview = {
         appearanceLabel: "label:contains('Appearance')",
         languageLabel: "label:contains('Language')",

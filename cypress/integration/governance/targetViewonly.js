@@ -41,6 +41,7 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('label', "Language").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
+        cy.viewport(1000, 4500)
         cy.contains('label', "Appearance").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('label', "External Code").should('be.visible').next().click()
@@ -53,7 +54,7 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('label', "Access Protection").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
-
+        cy.viewport(1400, 1100)
         cy.contains('h5', "Flow").should('be.visible')
         authoring.common.togglemethod(authoring.target.pageSidebar.flowToggle)
         
