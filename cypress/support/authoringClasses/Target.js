@@ -9,8 +9,12 @@ export class Target extends Common {
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.shareUrl = 'i[title="Share URL"]';
+        this.thumbnailSelect = 'i[title="Select a thumbnail"]';
+        this.cloneTrack = 'i[title="Clone Track"]';
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
+        this.deleteFolder = 'i[title="Delete Folder"]';
         this.editTrack = 'i[title="Edit Track"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
@@ -26,8 +30,10 @@ export class Target extends Common {
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
         this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
         this.analyticsRows = "div[class*='SimpleTable__body']",
-        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
-        this.canonicalUrlOverride="#canonicalUrlOverride"
+        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span",
+        this.canonicalUrlOverride="#canonicalUrlOverride",
+        this.relatedVideos = 'div[data-qa-hook="showRelatedVideos"]',
+        this.recentUpdateTab = 'div[id="recently-updated-tab"]',
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
