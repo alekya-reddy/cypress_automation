@@ -326,6 +326,20 @@ export class UserManagement extends Common {
                 }       
             })
         }
+        if(contentconfigurationsCRUD == true || contentconfigurationsCRUD == false){
+            cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
+                }       
+            })
+        }
+        if(contentConfigurationView == true || contentConfigurationView == false){
+            cy.get(this.contentIntelligence.contentConfigurationView).invoke("attr", "class").then(checkboxClass => {
+                if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !contentConfigurationView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.contentIntelligence.contentConfigurationView).click()
+                }       
+            })
+        }
 
         cy.contains("button", "Save").click()
         cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})

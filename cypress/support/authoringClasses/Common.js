@@ -41,7 +41,7 @@ export class Common {
         this.pageSidebar = "div[data-qa-hook='page-sidebar']";
         this.pagePreview = "div[data-qa-hook='page-preview']";
         this.pageContainer = "div[data-qa-hook='page-sidebar']>div>a";
-        this.nameSetting = 'li[id="settings"]';
+        this.nameSetting = 'button[id="settings"]';
         this.clientHq = "#organization-management";
         this.orgSearch = 'input[name="page-search"]';
         this.orgSelect = 'div[data-qa-hook="table-cell-name"]>a';
@@ -49,7 +49,7 @@ export class Common {
         this.orgModal = 'div[data-qa-hook="modal"]';
         this.orgButton = 'div[data-qa-hook="modal"]>div:nth-child(2)>button:nth-child(2)';
         this.imperzonation = 'div[id="impersonation"]';
-        this.orgDropdown = 'li[id="organization"]';
+        this.orgDropdown = 'a[id="organization"]';
         this.orgValue = 'div[class="Select-value"]';
         this.robotInput = 'textarea[class="ace_text-input"]';
         this.orgSave = 'button[id="save"]';
@@ -108,6 +108,7 @@ export class Common {
         this.antCheckboxContainer = ".ant-dropdown-menu-item";
         this.antCheckboxWrapper = ".ant-checkbox-wrapper";
         this.antCheckbox = ".ant-checkbox";
+        this.checkboxChecked = 'span[class*="ant-checkbox-checked"]';
         this.antDropdown = ".ant-dropdown";
         this.antPopover = ".ant-popover";
         this.antRow = ".ant-row";
@@ -162,7 +163,7 @@ export class Common {
     togglemethod(locator){
         cy.get(locator).invoke('attr', 'class').then(beforeclick => {
             cy.log(beforeclick)
-            cy.get(locator).click()
+            cy.get(locator).click({force: true})
             cy.get(locator).invoke('attr', 'class').then(afterclick => {
                 cy.log(afterclick)
                 expect(afterclick).to.be.equal(beforeclick);

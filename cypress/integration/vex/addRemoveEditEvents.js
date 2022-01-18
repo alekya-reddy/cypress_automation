@@ -104,6 +104,7 @@ describe('VEX - Virtual Event', function() {
             expect(text).to.equal('1')
         })
 
+        cy.contains('td', event.name).prev().click()
         cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
         cy.wait(1000)
