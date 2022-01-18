@@ -50,7 +50,8 @@ describe("Microsites - Added By and Search filter", ()=>{
               if(response.status == 404){ 
                   authoring.common.login()
                   authoring.microsites.visit()
-                  authoring.microsites.addMicrosite(Vex)
+                  authoring.microsites.removeMicrosite(Microsites.name)
+                  authoring.microsites.addMicrosite(Microsites)
         }
     })
                  authoring.common.login()

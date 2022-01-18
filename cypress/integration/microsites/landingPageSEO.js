@@ -132,6 +132,7 @@ describe('Microsites SEO attributes', function() {
         cy.get('meta[property="og:description"]').should("have.attr", "content", landingPage.pageDescription); 
         cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 
         cy.get('meta[property="og:image:width"]').should("have.attr", "content", "576"); 
+        cy.reload()
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/car-road-snow-winter.jpg"); 
         cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://img.qa-pathfactory.com/stock/sm/car-road-snow-winter.jpg"); 
         cy.get('meta[property="twitter:description"]').should("have.attr", "content", landingPage.pageDescription); 
