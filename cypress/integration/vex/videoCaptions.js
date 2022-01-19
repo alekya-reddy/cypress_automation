@@ -12,83 +12,83 @@ const originalEvent = {
 }
 
 const originalSession = [
-    // {
-    //     name: "ondemand session",
-    //     slug: "ondemandession",
-    //     visibility: 'Public',
-    //     description: 'Session description',
-    //     type: 'On Demand',
-    //     video: 'Oracle Cloud captions',
-    //     captions: 'on',
-    //     captionsLanguage: "German",
-    // },
-    // {
-    //     name: 'live session',
-    //     slug: 'livesession',
-    //     get url() { return `${event.url}/${this.slug}`; },
-    //     visibility: 'Public',
-    //     type: 'Live',
-    //     live: {
-    //         start: 'Jun 24, 2010 8:00pm',
-    //         end: 'Jun 24, 2040 8:00pm',
-    //         timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-    //         type: 'Content Library',
-    //         video: 'Oracle Cloud captions',
-    //         liveVideoCaptions: 'on',
-    //         captionsLanguage: "German",
-    //     },
-    //     captionsLanguage: "German"
-    // },
-    // {
-    //     name: "Live ended with on-demand",
-    //     slug: "ended-fallback",
-    //     get url() {
-    //         return `${event.url}/${this.slug}`
-    //     },
-    //     visibility: 'Public',
-    //     type: 'Live',
-    //     live: {
-    //         start: 'Jun 24, 2010 8:00pm',
-    //         end: 'Jun 24, 2011 8:00pm',
-    //         timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
-    //         type: 'Content Library',
-    //         video: 'Youtube - Used in Cypress automation for VEX testing',
-    //         liveVideoCaptions: 'on',
-    //         captionsLanguage: "German",
-    //     },
-    //     video: 'Oracle Cloud captions',
-    //     captions: 'on',
-    //     captionsLanguage: "French"
-    // },
-    // {
-    //     name: "ondemand session with captions off",
-    //     slug: "ondemandession",
-    //     visibility: 'Public',
-    //     description: 'Session description',
-    //     type: 'On Demand',
-    //     video: 'Oracle Cloud captions',
-    //     captions: 'off'
-    // },
-    // {
-    //     name: "Session with suppliment content",
-    //     slug: "sessionsupplimentcontent",
-    //     get url() {
-    //         return `${event.url}/${this.slug}`
-    //     },
-    //     visibility: 'Public',
-    //     type: 'On Demand',
-    //     video: 'Oracle Cloud captions',
-    //     contents: [
-    //         'PDF - Used by Cypress automation for VEX testing',
-    //         'Website - Used by Cypress automation for VEX testing',
-    //         'Image - Used by Cypress automation for VEX testing'
-    //     ],
-    //     captions: 'on',
-    //     captionsLanguage: "German",
-    // },
+    {
+        name: "ondemand session",
+        slug: "ondemandession",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'Oracle Cloud captions',
+        captions: 'on',
+        captionsLanguage: "German",
+    },
+    {
+        name: 'live session',
+        slug: 'livesession',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Oracle Cloud captions',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "German",
+        },
+        captionsLanguage: "German"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "German",
+        },
+        video: 'Oracle Cloud captions',
+        captions: 'on',
+        captionsLanguage: "French"
+    },
+    {
+        name: "ondemand session with captions off",
+        slug: "ondemandsessionwithcaptionsoff",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'Oracle Cloud captions',
+        captions: 'off'
+    },
+    {
+        name: "Session with suppliment content",
+        slug: "sessionsupplimentcontent",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Oracle Cloud captions',
+        contents: [
+            'PDF - Used by Cypress automation for VEX testing',
+            'Website - Used by Cypress automation for VEX testing',
+            'Image - Used by Cypress automation for VEX testing'
+        ],
+        captions: 'on',
+        captionsLanguage: "German",
+    },
     {
         name: 'live session with captions off',
-        slug: 'livesession',
+        slug: 'livesessionwithcaptionsoff',
         get url() { return `${event.url}/${this.slug}`; },
         visibility: 'Public',
         type: 'Live',
@@ -170,6 +170,7 @@ describe('VEX - Virtual Event', function () {
                                 cy.contains(consumption.vex.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
                             }
                         })
+                        cy.go('back')
                     }
                     else {
                         cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage, { timeout: 10000 }).should('be.visible')

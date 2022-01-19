@@ -234,7 +234,11 @@ export class Recommend extends Common {
             const index=options.index
             const singleContent=options.contents[index]
             cy.get(`img[alt='${singleContent}']`,{timeout:20000}).click()
-            this.setCaptions(captionsLanguage,captions,verify)
+            cy.get(this.pageSidebar.captions).invoke('css', 'background-color').then(val => {
+                if(val.includes('rgb(221, 221, 221)')){ //if radio button off
+                    this.setCaptions(captionsLanguage,captions,verify)
+                }
+            })
         }
 
         if(cloneName){

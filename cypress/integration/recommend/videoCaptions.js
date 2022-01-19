@@ -5,7 +5,6 @@ const consumption = createConsumptionInstance({org: 'automation-recommend', tld:
 
 const captionsTracks = {
     config1: {
-        // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "recommendSettingscaptions.js",
         slug: "recommend-config-captions",
         contents: ["Oracle Cloud captions"],
@@ -17,7 +16,6 @@ const captionsTracks = {
         }
     },
     config2: {
-        // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "recommendSettingscaptions2.js",
         slug: "recommend-config-captions2",
         contents: ["Oracle Cloud captions"],

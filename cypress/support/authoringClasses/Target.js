@@ -313,7 +313,11 @@ export class Target extends Common {
             const index= options.index
             const singleContent=options.contents[index]
             cy.contains('strong',singleContent,{timeout:20000}).click()
-            this.setCaptions(captionsLanguage,captions,verify)
+            cy.get(this.pagePreview.captions).invoke('css', 'background-color').then(val => {
+                if(val.includes('rgb(221, 221, 221)')){ //if radio button off
+                    this.setCaptions(captionsLanguage,captions,verify)
+                }
+            })
         }
 
         if(cloneName){
