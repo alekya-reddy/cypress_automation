@@ -7,15 +7,18 @@ export class Explore extends Common {
         this.pageTitle = "Explore Pages";
         this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         this.editFolder = 'i[title="Edit Folder"]';
+        this.emailIcon = 'i[title="email"]';   
         this.shareExplore = 'i[title="share"]';
         this.previewExplore = 'i[title="preview"]';
         this.emailExplore = '#explore-show-email-button';
         this.titleBar= 'div[data-qa-hook="title-bar"]>div>div>a';
+        this.sitemapUrl = 'div[data-qa-hook="title-bar"]>div>span:nth-child(4)>span>i';
         this.searchPage = 'input[name="page-search"]';
         this.clearSearch = 'i[title="Clear search"]';
         this.inputTopics = 'div[class="Select-placeholder"]';
         this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
         this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
+        this.recentUpdateTab = 'div[id="recently-updated-tab"]',
         this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i';
         
         this.createExploreModal = {
@@ -26,20 +29,28 @@ export class Explore extends Common {
         };
         this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
         this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
+        this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
         this.topicFilterSection = 'div[data-qa-hook="topic-filter-section"]',
         this.pageSidebar = {
             container: "div[data-qa-hook='page-sidebar']",
             customUrlLabel: "label:contains('URL Slug')",
+            searchEngine: "label:contains('Search Engine Directive')",
             pageTitleLabel: "label:contains('Page Title')",
             pageDescriptionLabel: "label:contains('Page Description')",
             thumbnail: "#explore-seo-thumbnail",
             appearanceLabel: "label:contains('Appearance')",
             externalCodeLabel: "label:contains('External Code')",
             ctaToggle: 'div[data-qa-hook="ctaSection"]',
+            heroToggle: 'div[data-qa-hook="heroSection"]',
+            showTextToggle: 'div[data-qa-hook="showText"]',
             headerToggle: 'div[data-qa-hook="header"]',
             searchToggle: 'div[data-qa-hook="displaySearchSection"]',
             filtersToggle: 'div[data-qa-hook="filtersSection"]',
+            featuredContent: 'div[data-qa-hook="displayFeaturedContent"]',
+            advanceCustomization: 'div[data-qa-hook="enableAdvancedCustomization"]',
+            contentType: 'div[data-qa-hook="showContentType"]',
+            showTopics: 'div[data-qa-hook="showTopics"]',
         };
         this.popoverElements = {
             customUrlInput: "#slug",
@@ -54,8 +65,10 @@ export class Explore extends Common {
         this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
         this.heroTitleInput = 'input[name="headerTitle"]',
         this.heroSubtitleLocatorDefault = 'h3[data-qa-hook="header-subtitle-default"]',
-        this.heroSubtitleLocator = 'div[data-qa-hook^="header-subtitle-show"]'
-        this.heroSubtitleInput = 'input[name="headerSubtitle"]'
+        this.headerTitle = 'h3[data-qa-hook="header-title-default"]',
+        this.heroSubtitleLocator = 'div[data-qa-hook^="header-subtitle-show"]',
+        this.heroSubtitleInput = 'input[name="headerSubtitle"]',
+        this.contentDescription = 'textarea[name="contentDescription"]',
         this.heroCTA = '#qa-cta-button-hero',
         this.bodyCTA = '#qa-cta-button-body',
         this.footerCTA = '#qa-cta-button-footer'
@@ -347,9 +360,9 @@ export class Explore extends Common {
             }
         })
         cy.get(this.modal).within(() => {
-            cy.contains('h3', 'Header Overrides for this Track')
+            cy.contains('h3', 'Header customization for this Track')
             cy.get(this.header.headerTitle).clear().type(headerTitle)
-            cy.contains('button', 'Save Header Overrides').click()
+            cy.contains('button', 'Save Header customization').click()
         })
     }
 

@@ -117,7 +117,7 @@ describe("VEX - Blacklist", ()=>{
         // Verify that can't visit by entering url with query string directly 
         cy.clearCookies()
         cy.visit(session.url + visitor.lb_email_query_string)
-        cy.contains(consumption.vex.messages.blacklisted, {timeout: 10000}).should('exist')
+        cy.contains(consumption.vex.messages.blacklistMessage, {timeout: 10000}).should('exist')
         cy.get(consumption.vex.jukeBoxApp).should('not.exist')
 
         // Clear cookies and verify that a non-black-listed user can still attend 

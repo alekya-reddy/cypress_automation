@@ -9,6 +9,10 @@ export class Microsites extends Common {
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
         this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
         this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+        this.editFolder = 'i[title="Edit Folder"]';
+        this.deleteFolder = 'i[title="Delete Folder"]';
+        this.editmodal = 'div[class="rc-virtual-list-holder-inner"]';
+        this.filtersToggle = 'button[aria-checked="false"]';
         this.clearSearch = 'i[title="Clear search"]',
         this.searchButton = 'input[name="page-search"]',
         this.noMicrositeFound = "No microsites found",
@@ -17,14 +21,18 @@ export class Microsites extends Common {
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = 'i[title="Delete Microsite"]';
+        this.cloneIcon = 'i[title="Clone Microsite"]';
+        this.copyIcon = 'div[class="ant-typography-copy"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
         this.antCell = ".ant-table-cell";
+        this.inputDisable = 'input[class="ant-input ant-input-disabled"]:nth-child(1)';
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
             nameInput: "input[name='name']"
         };
+        this.sharebutton = 'i[title="Share URL"]';
         this.cloneButton = "i[class*='Icon__fa-clone']";
         this.cloneOptions = {
             micrositeSetup: "input[value='Microsite setup']",
@@ -37,6 +45,7 @@ export class Microsites extends Common {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
             appearanceInput: "input[class='ant-select-selection-search-input']",
+            micrositeAppearance: "div[class='ant-select-item-option-content']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             contentTypeCheckbox: "input[name='config.displayContentType']",
             topicTagsCheckbox: "input[name='config.displayContentTopics']",
@@ -263,6 +272,7 @@ export class Microsites extends Common {
                     cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
                 })
             cy.contains('div',appearance,{timeout:10000}).click({force:true})
+            cy.get(this.setupPage.micrositeAppearance).click({force:true})
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 

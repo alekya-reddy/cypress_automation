@@ -7,7 +7,7 @@ export class Common {
         this.env = env;
         this.baseUrl = baseUrl; 
         this.loginUrl = `${this.baseUrl}/users/sign_in`; 
-        this.userNameInputLocator = '[id="login"]';
+        this.userNameInputLocator = '[id="login-data"]';
         this.passwordInputLocator = '[id="password"]';
         this.submitButtonLocator = '#input-button'; 
         this.pageTitleBar = '[data-qa-hook="title-bar"]';
@@ -157,6 +157,17 @@ export class Common {
                 cy.visit(pageUrl);
             }
         })
+    }
+
+    togglemethod(locator){
+        cy.get(locator).invoke('attr', 'class').then(beforeclick => {
+            cy.log(beforeclick)
+            cy.get(locator).click()
+            cy.get(locator).invoke('attr', 'class').then(afterclick => {
+                cy.log(afterclick)
+                expect(afterclick).to.be.equal(beforeclick);
+            })
+        }) 
     }
 
     login(user = this.userName, password = this.password) {

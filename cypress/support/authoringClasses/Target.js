@@ -9,8 +9,12 @@ export class Target extends Common {
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.deleteTrackIcon = "i[title='Delete Track']";
+        this.shareUrl = 'i[title="Share URL"]';
+        this.thumbnailSelect = 'i[title="Select a thumbnail"]';
+        this.cloneTrack = 'i[title="Clone Track"]';
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
+        this.deleteFolder = 'i[title="Delete Folder"]';
         this.editTrack = 'i[title="Edit Track"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
@@ -26,9 +30,11 @@ export class Target extends Common {
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
         this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
         this.analyticsRows = "div[class*='SimpleTable__body']",
-        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span"
-        this.canonicalUrlOverride="#canonicalUrlOverride"
         this.cloneTrack="[title='Clone Track']"
+        this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span",
+        this.canonicalUrlOverride="#canonicalUrlOverride",
+        this.relatedVideos = 'div[data-qa-hook="showRelatedVideos"]',
+        this.recentUpdateTab = 'div[id="recently-updated-tab"]',
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -414,14 +420,14 @@ export class Target extends Common {
         }
     }
     addContentTarget(content){
-        cy.contains("button", "Add Content").click()
+        cy.contains("button", "Add Content to Track").click()
         cy.get(this.contentPickerSearchBar).clear().type(content)
         cy.contains(this.contentPickerItem, content).click()
-        cy.get(this.modal).contains("button", "Add Content").click()
+        cy.get(this.modal).contains("button", "Add Content to Track").click()
     }
 
     addContent(contents, verify,position="Bottom"){
-        cy.contains("button", "Add Content").click()
+        cy.contains("button", "Add Content to Track").click()
         contents.forEach((content) => {
             cy.get(this.modal).within(()=>{
                 cy.get(this.contentPickerSearchBar).clear().type(content)
@@ -436,7 +442,7 @@ export class Target extends Common {
             cy.contains('label','Bottom of track').parent('div').find(this.addContentTo).click()
         }
 
-        cy.get(this.modal).contains("button", "Add Content").click()
+        cy.get(this.modal).contains("button", "Add Content to Track").click()
 
         if(verify !== false){
             cy.get(this.modal).should('not.exist')
@@ -494,7 +500,7 @@ export class Target extends Common {
             }
         })
 
-        cy.contains(this.modal, "Exit Overrides for this Track").should("exist").within(() => {
+        cy.contains(this.modal, "Exit customization for this Track").should("exist").within(() => {
             if(delay){
                 cy.get(this.exitOverride.delayLabel).parent().within(() => {
                     // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
@@ -509,11 +515,11 @@ export class Target extends Common {
                 cy.get(this.exitOverride.delayInput).type(delay)
             }
 
-            cy.contains("button", "Save Exit Overrides").click()
+            cy.contains("button", "Save Exit customization").click()
         })
 
         if(verify !== false){
-            cy.contains(this.modal, "Exit Overrides for this Track").should("not.exist")
+            cy.contains(this.modal, "Exit customization for this Track").should("not.exist")
             cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
                 if(delay){
                     cy.contains(`${delay} seconds`).should("exist")
@@ -579,7 +585,7 @@ export class Target extends Common {
 
     verifyAddContentTo(position){
         const message="Note: the default for this setting can be changed in the track edit window"
-        cy.contains("button", "Add Content").click()
+        cy.contains("button", "Add Content to Track").click()
     
         if(position==="bottom"){
         cy.contains('label','Bottom of track',{timeout:10000}).parent('div').find(this.addContentTo).should('have.attr', 'checked')

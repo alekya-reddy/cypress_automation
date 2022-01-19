@@ -353,14 +353,14 @@ export class Recommend extends Common {
     }
 
     addContent(contents, verify){
-        cy.contains("button", "Add Content").click()
+        cy.contains("button", "Add Content to Track").click()
         contents.forEach((content) => {
             cy.get(this.modal).within(()=>{
                 cy.get(this.contentPickerSearchBar).clear().type(content)
                 cy.contains(this.contentPickerItem, content).click()
             })
         })
-        cy.get(this.modal).contains("button", "Add Content").click()
+        cy.get(this.modal).contains("button", "Add Content to Track").click()
 
         if(verify !== false){
             cy.get(this.modal).should('not.exist')
@@ -403,7 +403,7 @@ export class Recommend extends Common {
             }
         })
 
-        cy.contains(this.modal, "Exit Overrides for this Track").should("exist").within(() => {
+        cy.contains(this.modal, "Exit customization for this Track").should("exist").within(() => {
             if(delay){
                 cy.get(this.exitOverride.delayLabel).parent().within(() => {
                     // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
@@ -418,11 +418,11 @@ export class Recommend extends Common {
                 cy.get(this.exitOverride.delayInput).type(delay)
             }
 
-            cy.contains("button", "Save Exit Overrides").click()
+            cy.contains("button", "Save Exit customization").click()
         })
 
         if(verify !== false){
-            cy.contains(this.modal, "Exit Overrides for this Track").should("not.exist")
+            cy.contains(this.modal, "Exit customization for this Track").should("not.exist")
             cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
                 if(delay){
                     cy.contains(`${delay} seconds`).should("exist")

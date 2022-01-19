@@ -67,12 +67,12 @@ export class VexCX extends CommonCX {
             getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
             paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
             audioMuteNotification:"div[id='video-tooltip']",
-            playButton:"button[aria-label='Play (k)']",
+            playButton:"button[title='Play (k)']",
             unmuteButton:"button[aria-label='Unmute (m)']",
-            muteButton:"button[aria-label='Mute (m)']",
-            pauseButton:"button[aria-label='Pause (k)']",
             settings:'[aria-label="Settings"]',
-            menuContent:"div.ytp-menuitem-content"
+            menuContent:"div.ytp-menuitem-content",
+            muteButton:"button[title='Mute (m)']",
+            pauseButton:"button[aria-label='Pause (k)']"
         };
         this.simuliveVideo = {
             vexCustomControl: 'div[class*="vex-session-custom-controls"]',
@@ -174,7 +174,8 @@ export class VexCX extends CommonCX {
         };
         this.messages = {
             maxAttendeesReached: "Unfortunately you are unable to join this session as the maximum number of attendees has been reached.",
-            blacklisted: "You are no longer eligible to access this event. Please contact your event administrator for more information"
+            blacklistMessage: "You are no longer eligible to access this event. Please contact your event administrator for more information",
+            blacklisted: "You are not eligible to access this event. Please contact your event administrator for more information."
         };
     }
 
