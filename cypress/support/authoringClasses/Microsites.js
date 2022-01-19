@@ -45,6 +45,7 @@ export class Microsites extends Common {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
             appearanceInput: "input[class='ant-select-selection-search-input']",
+            micrositeAppearance: "div[class='ant-select-item-option-content']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             contentTypeCheckbox: "input[name='config.displayContentType']",
             topicTagsCheckbox: "input[name='config.displayContentTopics']",
@@ -271,6 +272,7 @@ export class Microsites extends Common {
                     cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
                 })
             cy.contains('div',appearance,{timeout:10000}).click({force:true})
+            cy.get(this.setupPage.micrositeAppearance).click({force:true})
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 
