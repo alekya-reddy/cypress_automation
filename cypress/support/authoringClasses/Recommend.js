@@ -17,6 +17,7 @@ export class Recommend extends Common {
         this.recommendCell = 'div[data-qa-hook="table-cell-internal-title"]>span';
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
         this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
+        this.cloneTrack="[title='Clone Track']"
         this.createTrackModal = {
             nameInput: "input[name='name']"
         };
@@ -39,7 +40,9 @@ export class Recommend extends Common {
             headerToggle: '[data-qa-hook="header"]',
             exitNoOverride: "[data-qa-hook='Exit no overrides']",
             exitOverride: "[data-qa-hook='Exit overrides']",
-            linksAndshareLabel: "label:contains('Links & Sharing')"
+            linksAndshareLabel: "label:contains('Links & Sharing')",
+            captions:"[data-qa-hook='showCaption']",
+            pagePreview:'[data-qa-hook="page-preview"]',
 
         };
         this.popoverElements = {
@@ -140,6 +143,9 @@ export class Recommend extends Common {
 
         /******************** Search Engine Directive*/
         const searchEngineDirective = options.searchEngineDirective
+        const captions=options.captions
+        const captionsLanguage=options.captionsLanguage
+        const cloneName=options.cloneName
 
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -223,6 +229,25 @@ export class Recommend extends Common {
         if(searchEngineDirective){
             this.selectSearchEngineDirective(searchEngineDirective)
         }
+
+        if(captions){
+            const index=options.index
+            const singleContent=options.contents[index]
+            cy.get(`img[alt='${singleContent}']`,{timeout:20000}).click()
+            cy.get(this.pageSidebar.captions).invoke('css', 'background-color').then(val => {
+                if(val.includes('rgb(221, 221, 221)')){ //if radio button off
+                    this.setCaptions(captionsLanguage,captions,verify)
+                }
+            })
+        }
+
+        if(cloneName){
+            cy.get(this.cloneTrack,{timeout:10000}).click()
+            cy.contains('h3',"Clone this Track",{timeout:10000}).should('be.visible')
+            cy.get(this.editRecommend.nameInput).clear().type(cloneName)
+            cy.contains('button','Clone this Track').click()
+            cy.contains('form h3',"Clone this Track",{timeout:10000}).should('not.exist')
+          }
     }
 
     addExternalCode(list, verify){
@@ -474,4 +499,26 @@ export class Recommend extends Common {
          cy.contains("button", "Update").click()
      })
     }
+
+    setCaptions(captionsLanguage,captions, verify){
+        if(captions==='on' || captions==='ON'){
+            this.toggle(this.pageSidebar.captions, captions)
+            //default should be english
+            cy.contains('label','Language').siblings("span").should("contain", "English")
+            cy.get(this.pageSidebar.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(captionsLanguage)).click()
+                cy.contains("button", "Update").click()
+            })
+        }
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pageSidebar.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").should("contain", captionsLanguage)
+            })
+        }
+    } 
 }

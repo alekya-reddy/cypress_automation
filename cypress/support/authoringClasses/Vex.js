@@ -251,7 +251,9 @@ export class Vex extends Common {
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
         this.eventSessions = 'div.pf-event-sessions'
-        this.navItemRemove= 'span[aria-label="delete"]'
+        this.navItemRemove= 'span[aria-label="delete"]',
+        this.liveCaptions="[name='captionConfig.liveCaptionEnabled']",
+        this.onDemandCaptions="[name='captionConfig.onDemandCaptionEnabled']"
     }
 
     visit() {
@@ -923,6 +925,8 @@ export class Vex extends Common {
         const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
         const override=config.override
+        const captions=config.captions
+        const captionsLanguage=config.captionsLanguage
 
         if (!stayOnPage) {
             cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, () => {
@@ -1012,6 +1016,17 @@ export class Vex extends Common {
             }
         }
 
+        if(captions){
+            if(captions==='on' || captions==='ON'){
+                //default should be english
+                cy.get(this.onDemandCaptions).click()
+                cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
+                cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
+                cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
+                cy.contains("div.ant-select-item-option-content",captionsLanguage).click({forec:true})
+            }
+        }
+
         cy.get(this.saveButton).click()
         cy.contains(this.recordSavedMessage, { timeout: 20000 }).should("exist")
 
@@ -1091,6 +1106,9 @@ export class Vex extends Common {
         const webexLink = config.webexLink
         const video = config.video
         const isSimulive = config.isSimulive
+        const captions=config.liveVideoCaptions
+        const captionsLanguage=config.captionsLanguage
+
 
         if (start == 'now') {
             cy.get(this.startTimeEditInput(0)).click().clear()
@@ -1143,6 +1161,18 @@ export class Vex extends Common {
                 }
             })
         }
+
+        if(captions){
+            if(captions==='on' || captions==='ON'){
+                //default should be english
+                cy.get(this.liveCaptions).click()
+                cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
+                cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
+                cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
+                cy.contains("[class='rc-virtual-list-holder-inner'] div[label]",captionsLanguage).click()
+            }
+        }
+
     }
 
     pickDate(config) {

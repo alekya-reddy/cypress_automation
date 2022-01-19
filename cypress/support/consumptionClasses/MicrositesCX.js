@@ -41,6 +41,22 @@ export class MicrositesCX extends CommonCX {
         this.removeFilters = "div[class='chip'] > span"
         this.filterLabel = "div[class='chip']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
+        this.youtube = {
+            // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
+            iframe: 'iframe[title="YouTube video player"]',
+            videoPlayer: 'video',
+            play: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
+            pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
+            getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
+            paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
+            audioMuteNotification:"div[id='video-tooltip']",
+            playButton:"button[aria-label='Play (k)']",
+            unmuteButton:"button[aria-label='Unmute (m)']",
+            muteButton:"button[aria-label='Mute (m)']",
+            pauseButton:"button[aria-label='Pause (k)']",
+            settings:'[aria-label="Settings"]',
+            menuContent:"div.ytp-menuitem-content"
+        };
     }
 
     clickContent(options) {

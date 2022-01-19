@@ -30,6 +30,7 @@ export class Target extends Common {
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
         this.visitorRows = '[role="menuitem"]:nth-of-type(6) div',
         this.analyticsRows = "div[class*='SimpleTable__body']",
+        this.cloneTrack="[title='Clone Track']"
         this.targetAsset = "div[data-qa-hook='table-cell-identity']>span>div>span",
         this.canonicalUrlOverride="#canonicalUrlOverride",
         this.relatedVideos = 'div[data-qa-hook="showRelatedVideos"]',
@@ -61,11 +62,13 @@ export class Target extends Common {
             linksAndshareLabel: "label:contains('Links & Sharing')"
         };
         this.pagePreview = {
+            pagePreview:'[data-qa-hook="page-preview"]',
             contentTitleOverrideLabel: "label:contains('Content Title Override')",
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
             itemDescription: "div[data-qa-hook='item-description']",
             videoStartTime: "label:contains('Video Start Time')",
-            autoPlayLabel: "div:contains('AutoPlay')"
+            autoPlayLabel: "div:contains('AutoPlay')",
+            captions:"[data-qa-hook='showCaption']"
         };
         
         this.popoverElements = {
@@ -199,6 +202,11 @@ export class Target extends Common {
 
         /******************** Search Engine Directive*/
         const searchEngineDirective = options.searchEngineDirective
+        const captions=options.captions
+        const captionsLanguage=options.captionsLanguage
+
+        /**************Clone of track */
+        const cloneName=options.cloneName
        
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== name){
@@ -299,6 +307,25 @@ export class Target extends Common {
 
         if(searchEngineDirective){
             this.selectSearchEngineDirective(searchEngineDirective)
+        }
+
+        if(captions){
+            const index= options.index
+            const singleContent=options.contents[index]
+            cy.contains('strong',singleContent,{timeout:20000}).click()
+            cy.get(this.pagePreview.captions).invoke('css', 'background-color').then(val => {
+                if(val.includes('rgb(221, 221, 221)')){ //if radio button off
+                    this.setCaptions(captionsLanguage,captions,verify)
+                }
+            })
+        }
+
+        if(cloneName){
+          cy.get(this.cloneTrack,{timeout:10000}).click()
+          cy.contains('h3',"Clone this Track",{timeout:10000}).should('be.visible')
+          cy.get(this.editTarget.nameInput).clear().type(cloneName)
+          cy.contains('button','Clone this Track').click()
+          cy.contains('form h3',"Clone this Track",{timeout:10000}).should('not.exist')
         }
     }
 
@@ -618,5 +645,28 @@ export class Target extends Common {
          cy.contains("button", "Update").click()
      })
     }
+
+    setCaptions(captionsLanguage,captions, verify){
+        if(captions==='on' || captions==='ON'){
+            this.toggle(this.pagePreview.captions, captions)
+            //default should be english
+            cy.get(this.pagePreview.pagePreview).within(()=>{
+            cy.contains('label','Language').siblings("span").should("contain", "English")
+                cy.contains('label','Language').siblings("span").click()
+            })
+            cy.get(this.popover).within(()=>{
+                cy.get(this.dropdown.box).click()
+                cy.get(this.dropdown.option(captionsLanguage)).click()
+                cy.contains("button", "Update").click()
+            })
+        }
+        if(verify !== false){
+            cy.get(this.popover).should("not.exist")
+            cy.get(this.pagePreview.pagePreview).within(()=>{
+                cy.contains('label','Language').siblings("span").should("contain", captionsLanguage)
+            })
+        }
+    } 
+
 }
 
