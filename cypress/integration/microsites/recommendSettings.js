@@ -198,7 +198,7 @@ describe("Microsites - Target Settings", () => {
         authoring.microsites.addTracks({recommend:captionsTracks.config2.name})
         authoring.microsites.configureLandingPage(homePage2)
         cy.visit(homePage.url)
-        cy.contains(consumption.microsites.cardTitle,captionsTracks.config1.contents[0],{timeout:20000}).click()
+        cy.contains(consumption.microsites.cardTitle,captionsTracks.config2.contents[0],{timeout:20000}).click()
         cy.waitForIframeToLoad(consumption.microsites.youtube.iframe, consumption.microsites.youtube.videoPlayer, 20000)
         cy.getIframeBody(consumption.microsites.youtube.iframe).within(() => {   
             cy.get("div.ytp-chrome-bottom").then((controllers)=>{
