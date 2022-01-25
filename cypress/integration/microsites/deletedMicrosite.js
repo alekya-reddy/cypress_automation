@@ -75,7 +75,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
-
+        cy.contains('td', microsite1.name).prev().click()
         cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
         cy.wait(1000)
