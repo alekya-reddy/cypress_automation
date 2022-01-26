@@ -14,18 +14,22 @@ export class UserManagement extends Common {
         }
         this.generalSettings = {
             imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
+            imageLibExtCodeAccProtectionView: "#img_lib_ext_code_access_proc-view",
             contentTagsCreateEditView: "#content_tags-create-edit-delete",
             contentTagsView: "#content_tags-view"
         }
         this.dataConfigurationSettings = {
-            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete"
+            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete",
+            webhooksVisitorActivityView: "#data_configuration_settings-view",
         }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
         this.pageTitle = "User Management"
-        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete"
+        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete",
+        this.userExperienceSettingsCreateEditViewPermission = "#user_experience_settings-view",
         this.campaignTools = {
             campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
             campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
+            campaignToolsSettingsView: "#campaign_tools_settings-view",
             trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
             trackLabelsView: "#campaign_tools_track_labels-view",
             campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view",
@@ -103,13 +107,17 @@ export class UserManagement extends Common {
     configureUserRole(options) {
         const{
             roleName, 
-            imageLibExtCodeAccProtectionAccess, 
+            imageLibExtCodeAccProtectionAccess,
+            imageLibExtCodeAccProtectionView, 
             contentTagsCreateEditView, 
+            contentTagsView,
             userExperienceSettingsCreateEditView, 
+            userExperienceSettingsCreateEditViewPermission,
             dataConfigurationSettings,
             trackLabelsView,
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
+            campaignToolsSettingsView,
             campaignsToolsView,
             vexView,
             vexSettingsCRUD,
@@ -128,7 +136,9 @@ export class UserManagement extends Common {
             contentconfigurationsCRUD,
             contentstrategyCRUD,
             contentConfigurationView,
-            contentStratergyView
+            contentStratergyView,
+            webhooksVisitorActivityView,
+
         } = options
 
         this.clickUserRole(roleName)
@@ -140,12 +150,30 @@ export class UserManagement extends Common {
                 }       
             })
         } 
+
+        if(imageLibExtCodeAccProtectionView == true || imageLibExtCodeAccProtectionView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).invoke("attr", "class").then(checkboxClass => {
+                if(imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).click()
+                }       
+            })
+        } 
     
         if(contentTagsCreateEditView == true || contentTagsCreateEditView == false){
             cy.contains('a', "Platform Settings").click()
             cy.get(this.generalSettings.contentTagsCreateEditView).invoke("attr", "class").then(checkboxClass => {
                 if(contentTagsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.contentTagsCreateEditView).click()
+                }       
+            })
+        }
+
+        if(contentTagsView == true || contentTagsView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.contentTagsView).invoke("attr", "class").then(checkboxClass => {
+                if(contentTagsView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.contentTagsView).click()
                 }       
             })
         }
@@ -159,8 +187,16 @@ export class UserManagement extends Common {
             })
         }
 
-        if(contentLibraryView == true || contentLibraryView == false){
+        if(userExperienceSettingsCreateEditViewPermission == true || userExperienceSettingsCreateEditViewPermission == false){
             cy.contains('a', "Platform Settings").click()
+            cy.get(this.userExperienceSettingsCreateEditViewPermission).invoke("attr", "class").then(checkboxClass => {
+                if(userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.userExperienceSettingsCreateEditViewPermission).click()
+                }       
+            })
+        }
+
+        if(contentLibraryView == true || contentLibraryView == false){
             cy.get(this.contentLibrary.contentLibraryView).invoke("attr", "class").then(checkboxClass => {
                 if(contentLibraryView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.contentLibrary.contentLibraryView).click()
@@ -198,6 +234,15 @@ export class UserManagement extends Common {
             cy.get(this.campaignTools.campaignToolsSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.campaignToolsSettingsCRUD).click()
+                }       
+            })
+        }
+
+        if(campaignToolsSettingsView == true || campaignToolsSettingsView == false){
+            cy.contains('a', "Product Permissions").click()
+            cy.get(this.campaignTools.campaignToolsSettingsView).invoke("attr", "class").then(checkboxClass => {
+                if(campaignToolsSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignToolsSettingsView).click()
                 }       
             })
         }
@@ -337,6 +382,14 @@ export class UserManagement extends Common {
             cy.get(this.contentIntelligence.contentConfigurationView).invoke("attr", "class").then(checkboxClass => {
                 if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !contentConfigurationView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.contentIntelligence.contentConfigurationView).click()
+                }       
+            })
+        }
+
+        if(webhooksVisitorActivityView == true || webhooksVisitorActivityView == false){
+            cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).invoke("attr", "class").then(checkboxClass => {
+                if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !webhooksVisitorActivityView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).click()
                 }       
             })
         }

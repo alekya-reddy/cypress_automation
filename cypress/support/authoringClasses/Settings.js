@@ -86,6 +86,10 @@ export class Settings extends Common {
         cy.visit(this.oceAccount.pageUrl);
     }
 
+    visit() {
+        cy.visit(this.settings.pageUrl);
+    }
+
     configureCookieConsent(config){
         let option = config.option 
 

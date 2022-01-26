@@ -38,7 +38,11 @@ export class WebsiteTools extends Common {
         this.addButton = 'div[class="ant-modal-footer"]>button:nth-child(2)';
         this.trackOpen = '.ant-modal-body .ant-form-item:nth-of-type(2) .ant-select-selection-search-input';
         this.contentSelect = '.ant-modal-body .ant-form-item:nth-of-type(3) .ant-select-selection-search-input';
-        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i'    
+        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i' ;
+        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i' ;
+        this.dropDownModal = 'div[class="rc-virtual-list-holder-inner"]'; 
+        this.featuredHeadline = 'input[name="featuredConfigHeadline"]' ; 
+        this.leftNevigationSection = 'div[class="ant-steps ant-steps-vertical promoter-steps"]';   
 }
 
 addContentToFeatured(config){
