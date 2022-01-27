@@ -128,7 +128,7 @@ describe("Explore - Edit Slug", () => {
 
               //all Microsite page that has the string in name or slug will return as search results 
                cy.get(authoring.explore.searchPage).click().type(string.name)
-               cy.get('div[data-qa-hook="table-cell-name"]').should('exist').should('contain', string.name)
+               cy.get("td[class='ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last']").should('exist').should('contain', string.name)
    })
 
 })

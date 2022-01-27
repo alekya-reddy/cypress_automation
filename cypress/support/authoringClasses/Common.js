@@ -59,12 +59,12 @@ export class Common {
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",
-            experienceCellName: "div[data-qa-hook='table-cell-name']",
+            experienceCellName: "td[class*='ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last']",
             cellCode: "div[data-qa-hook='table-cell-code']",
             urlCell: "div[data-qa-hook='table-cell-url']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
-            addedByCell: 'div[data-qa-hook="table-cell-created-by"] > span',
-            folderCell: "div[data-qa-hook='table-cell-folder-name']"
+            addedByCell: 'td[class="ant-table-cell"] > div',
+            folderCell: 'td[class="ant-table-cell"]>a'
         };
         this.antTable = {
             cell: "td.ant-table-cell",
@@ -366,7 +366,7 @@ export class Common {
                     for (var j = 0; j < parseInt(folderCount); j++){
                         cy.get(this.table.addedByCell).eq(0).click()
                         if (cy.contains(this.pageTitleBar, 'Explore Pages')) {
-                            this.clickIcon('Edit Explore Page')
+                            cy.contains('span', "Edit Explore Page").click()
                             cy.contains(this.dropdown.box, folder).within(() => {
                                 cy.get(this.dropdown.clearValue).click()
                             })
