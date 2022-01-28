@@ -73,7 +73,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         })
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '0')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.contains("No items found.")
+        cy.contains('div',"No explore pages found").should("exist")
 
         authoring.explore.addExplore(explorePage)
         authoring.explore.configureExplore(explorePage)
@@ -95,7 +95,6 @@ describe("Explore - Create, Edit and Delete Folders", () => {
             cy.contains("Folder: AutomationFolderOne").should("exist")
             cy.contains("a", "AutomationFolderOne").click()
         })
-        cy.pause(20000)
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '2')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
         cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')
@@ -106,7 +105,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.folder.folderSelector('Root')).click()
         cy.get(authoring.explore.pageSearch).clear().type(existingExplorePage.name)
         cy.contains(authoring.common.table.folderCell, parentFolderName[0], {timeout: 1000}).should('exist')
-        cy.contains(`${authoring.common.table.folderCell} > a`, parentFolderName[0]).click({force:true})
+        cy.contains(`${authoring.common.table.folderCell}`, parentFolderName[0]).click({force:true})
         cy.containsExact(authoring.common.table.experienceCellName, explorePage.name).should('exist')
         cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('exist')
 
@@ -121,7 +120,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.folder.expandAllIcon).click({force:true})
         cy.get(authoring.common.folder.folderCount(childFolderName[0])).should('have.text', '0')
         cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
-        cy.contains("No items found.")
+        cy.contains('div',"No explore pages found").should("exist")
 
         // edit the folder name of the above existing page and verify filtering
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
@@ -149,7 +148,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.folder.folderSelector('Root')).click()
         cy.get(authoring.common.pageSearch).clear().type(explorePage.name)
         cy.contains(authoring.common.table.folderCell, childFolderName[0]).should('exist')
-        cy.contains(`${authoring.common.table.folderCell} > a`, childFolderName[0]).click({force:true})
+        cy.contains(`${authoring.common.table.folderCell}`, childFolderName[0]).click({force:true})
         cy.containsExact(authoring.common.table.experienceCellName, explorePage.name, {timeout: 1000}).should('exist')
         cy.containsExact(authoring.common.table.experienceCellName, existingExplorePage.name).should('not.exist')
 
@@ -165,7 +164,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
         })
         cy.get(authoring.common.folder.folderCount(parentFolderName[1])).should('have.text', '0')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[1])).click()
-        cy.contains("No items found.")
+        cy.contains('div',"No explore pages found").should("exist")
 
         // delete the second folder [empty]
         authoring.common.deleteFolder([parentFolderName[1]])
@@ -196,7 +195,7 @@ describe("Explore - Create, Edit and Delete Folders", () => {
 
         // delete the newly added page
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.contains("No items found.")
+        cy.contains('div',"No explore pages found").should("exist")
         cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
         authoring.explore.deleteExplore(explorePage.name)
 
