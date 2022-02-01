@@ -137,7 +137,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
 
   it("Reverse Proxy For Campaign Tools", function () {
     cy.visit(target.url)
-    cy.url().should('contain', target.url)
+    cy.url().should('contain', target.url, {timeout: 30000})
     cy.wait(1000)
     cy.get(consumption.target.contentFrame).should("exist")
 
@@ -224,6 +224,8 @@ describe("Reverse Proxy For Campaign Tools", function () {
        
       authoring.common.logout()
       authoring.common.login(user.userName, user.password)
+      cy.get(authoring.common.nameSetting).click()
+      cy.get(authoring.common.orgDropdown).click()
       cy.get(authoring.common.robotInput).clear({force: true}).type(robotText.automation,{force: true})
       cy.contains('button', "Save").click()
     

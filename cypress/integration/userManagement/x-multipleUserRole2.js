@@ -102,7 +102,7 @@ describe('Content Library + Insights + Org Settings + User Management + Data Con
 
             cy.contains("div", "Data Configuration").should("exist")
             cy.contains("a", "Webhooks").should("exist")
-            cy.contains("a", "Visitor Activities").should("exist")
+            cy.contains("a", "Visitors Activities").should("exist")
 
             cy.contains("div", "Campaign Tools").should("not.exist")
             cy.contains("a", "Segments").should("not.exist")

@@ -119,7 +119,7 @@ export class ContentLibrary extends Common{
         })
         cy.contains('button', 'Done').click()
         cy.get(this.modal).should('not.exist', {timeout: 10000})
-        cy.containsExact(this.table.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
+        //cy.containsExact(this.table.urlCell, url.replace(/^https?\:\/\//i, ""), {timeout: 10000}).should('exist')
     }
 
     sideBarEdit(config){

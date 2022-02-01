@@ -15,7 +15,7 @@ export class Target extends Common {
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
         this.deleteFolder = 'i[title="Delete Folder"]';
-        this.editTrack = 'i[title="Edit Track"]';
+        this.editTrack = 'span:contains("Edit Track")';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
         this.contentClick = "div[draggable='true']:nth-child(2)",

@@ -328,7 +328,7 @@ export class Configurations extends Common {
             scoreInput: `input[name="engagementScore"]`,
             deleteIcon: `i[class*="trash"]`
         }
-        this.dropdownMenuNav = ".dropdown-menu-nav"
+        this.dropdownMenuNav = 'ul[role="menu"]'
     }
 
     /*********************************************************************************/
@@ -691,7 +691,6 @@ export class Configurations extends Common {
         cy.wait(3000)
        cy.ifNoElementWithExactTextExists("div", name, 5000, ()=>{
             this.clickAddAppearance() 
-
             if(name){
                 cy.contains(this.modal, "Add Appearance").within(()=>{
                     cy.get(this.appearances.appearanceName).clear().type(name)
