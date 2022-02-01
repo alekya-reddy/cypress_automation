@@ -272,7 +272,7 @@ export class Microsites extends Common {
                     cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
                 })
             cy.contains('div',appearance,{timeout:10000}).click({force:true})
-            cy.get(this.setupPage.micrositeAppearance).click({force:true})
+            //cy.get(this.setupPage.micrositeAppearance).click()
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 

@@ -19,7 +19,7 @@ export class Explore extends Common {
         this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
         this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
         this.recentUpdateTab = 'div[id="recently-updated-tab"]',
-        this.editTopicCaousel = ' div[data-qa-hook="carousel-assets"]>div>span>div:nth-child(2)>span>i'
+        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i'
         
         this.createExploreModal = {
             nameInput: "#name",

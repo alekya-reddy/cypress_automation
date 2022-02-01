@@ -61,7 +61,7 @@ export class Common {
             cellName: "div[data-qa-hook='table-cell-name'] > span",
             experienceCellName: "td[class*='ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last']",
             cellCode: "div[data-qa-hook='table-cell-code']",
-            urlCell: "div[data-qa-hook='table-cell-url']",
+            urlCell: "div[data-qa-hook='table-cell-internal-title']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
             addedByCell: 'td[class="ant-table-cell"] > div',
             folderCell: 'td[class="ant-table-cell"]>a'
