@@ -294,7 +294,7 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.wait(2000) // To close the Add Event modal 
-            cy.get(this.antModal).should('not.be.visible')
+            cy.get(this.antModal,{timeout:20000}).should('not.be.visible')
             cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
         }
     }
@@ -652,7 +652,7 @@ export class Vex extends Common {
         const name = form.name
         const save = form.save == false ? false : true
         cy.wait(2000)
-        cy.contains(this.antRow, "Attendee Registration Form").within(() => {
+        cy.contains(this.antRow, "Attendee Registration Form",{timeout:20000}).within(() => {
             cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
@@ -760,7 +760,7 @@ export class Vex extends Common {
         cy.get(this.sessionName(sessionName), { timeout: 20000 }).parent().within(() => {
             cy.contains("a", "Configure").click()
         })
-        cy.get(this.pageTitleLocator).should('contain', sessionName, { timeout: 20000 });
+        cy.get(this.pageTitleLocator,{ timeout: 20000 }).should('contain', sessionName, { timeout: 20000 });
     }
 
     filterSessionType(options) {
@@ -875,7 +875,7 @@ export class Vex extends Common {
     }
 
     pickOnDemandVideo(content) {
-        cy.get(this.selectVideoButton).click();
+        cy.get(this.selectVideoButton,{timeout:20000}).click();
         cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
@@ -941,7 +941,7 @@ export class Vex extends Common {
         if (visibility == 'Private') {
             cy.get(this.privateRadio).filter('.ant-radio-input').click();
         } else if (visibility == 'Public') {
-            cy.get(this.publicRadio).click();
+            cy.get(this.publicRadio,{timeout:20000}).click();
         }
 
         if (slug) {
@@ -1023,7 +1023,7 @@ export class Vex extends Common {
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
-                cy.contains("div.ant-select-item-option-content",captionsLanguage).click({forec:true})
+                cy.get(`div[class*='ant-select-dropdown'][style] div[label='${captionsLanguage}']:visible`).click({force:true})
             }
         }
 
@@ -1488,7 +1488,7 @@ export class Vex extends Common {
     goToNavigation() {
         cy.url().then((url) => {
             if (!url.includes("/navigation")) {
-                cy.containsExact("a", "Navigation", { timeout: 10000 }).should("exist").click()
+                cy.containsExact("a", "Navigation", { timeout: 20000 }).should("exist").click()
             }
         })
     }
