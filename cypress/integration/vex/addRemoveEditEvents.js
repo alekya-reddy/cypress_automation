@@ -3,7 +3,7 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
-    name: '1 addRemoveEditEvents.js',
+    name: '2 addRemoveEditEvents.js',
     newName: 'newName addRemoveEditEvents.js',
     slug: 'test-1-1-slug',
     externalID: "someID"
@@ -113,6 +113,7 @@ describe('VEX - Virtual Event', function() {
         }) 
 
         cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains('td', event.name).prev().click()
         cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
         cy.wait(1000)
