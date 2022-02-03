@@ -37,6 +37,7 @@ export class UserManagement extends Common {
         }
         this.vex = {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
+            vexSettingsView: "#virtual_event_settings-view",
             vexModuleCRUD: "#virtual_events_module_access-create-edit-delete",
             vexAnalysticsView: "#path_analytics_virtual_events-view",
             vexView: "#virtual_events_module_access-view"
@@ -121,6 +122,7 @@ export class UserManagement extends Common {
             campaignsToolsView,
             vexView,
             vexSettingsCRUD,
+            vexSettingsView,
             vexModuleCRUD,
             websiteToolsModuleCRUD,
             websiteToolsView,
@@ -263,6 +265,13 @@ export class UserManagement extends Common {
                 }       
             })
         }
+        if(vexSettingsView == true || vexSettingsView == false){
+            cy.get(this.vex.vexSettingsView).invoke("attr", "class").then(checkboxClass => {
+                if(vexSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.vex.vexSettingsView).click()
+                }       
+            })
+        }
         if(vexModuleCRUD == true || vexModuleCRUD == false){
             cy.get(this.vex.vexModuleCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
@@ -387,6 +396,7 @@ export class UserManagement extends Common {
         }
 
         if(webhooksVisitorActivityView == true || webhooksVisitorActivityView == false){
+            cy.contains('a', "Platform Settings").click()
             cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).invoke("attr", "class").then(checkboxClass => {
                 if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !webhooksVisitorActivityView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).click()

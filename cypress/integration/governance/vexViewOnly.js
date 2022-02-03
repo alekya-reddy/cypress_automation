@@ -127,20 +127,16 @@ describe("View Only Permissions", () => {
         cy.contains('label', "Thumbnail").should("exist")
 
         cy.get(authoring.vex.radioButtonclick).invoke('attr', 'class').then(val => {
-            expect(val).to.equal(authoring.vex.disabledCheckbox)
+            expect(val).to.equal(authoring.vex.radioButtonDisable)
         })
 
         authoring.common.togglemethod(authoring.vex.sessionSlugInput)
         authoring.common.togglemethod(authoring.vex.engagementThresholdInput)
 
-        // cy.get(authoring.vex.liveRadio).parent().invoke('attr', 'class').then(val => {
-        //     expect(val).to.equal(authoring.vex.disabledCheckbox)
-        //  })
-
-        cy.get('input[value="On Demand]').parent().invoke('attr', 'class').then(val => {
-            cy.get('input[value="On Demand]').click()
-            expect(val).to.equal('ant-radio ant-radio-checked')
-        })
+        // cy.get('input[value="On Demand]').parent().invoke('attr', 'class').then(val => {
+        //     cy.get('input[value="On Demand]').click()
+        //     expect(val).to.equal('ant-radio ant-radio-checked')
+        // })
 
         cy.contains('’span', "Select On Demand Video").should("not.exist")
 
@@ -151,7 +147,7 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Select...").eq(0).click()
         cy.get(authoring.vex.dropDown).should("not.exist")
 
-        cy.contains('label', "Disallow Groups").should("exist").next().click()
+        cy.contains('label', "Disallow Groups").should("exist").click()
         cy.get(authoring.vex.dropDown).should("not.exist")
         cy.contains('button', "Save").should("not.exist")
         cy.contains('label', "Reset").should("not.exist")

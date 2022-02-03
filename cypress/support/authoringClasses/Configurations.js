@@ -75,6 +75,8 @@ export class Configurations extends Common {
             previewName: "div[data-qa-hook='preview-section-external-code-name']",
             deleteIcon: "i[title='Delete External Code']",
             globalToggle: "#qa-enable-external-code-globally > div:nth-child(2)",
+            globalToggleEnabled: "#qa-enable-external-code-globally",
+            thirdPartyCookieToggle: "#qa-enable-third-party-cookie"
         };
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {

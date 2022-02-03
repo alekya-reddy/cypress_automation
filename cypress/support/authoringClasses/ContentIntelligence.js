@@ -9,4 +9,8 @@ export class ContentIntelligence extends Common {
 
     }
 
+    visit(){
+        cy.visit(this.contentStrategy);
+    }
+
 }

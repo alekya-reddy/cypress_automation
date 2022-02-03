@@ -76,7 +76,8 @@ describe("View Only Permissions", () => {
           cy.contains('label', "Promoter Headline").should("exist")
           cy.contains('label', "Maximum Items").should("exist")
           cy.contains('label', "Scroll Distance").should("exist")
-          cy.contains('h5', "Bottom Bar Slots").should("not.exist")
+          cy.contains('h5', "Bottom Bar Slots").should("exist")
+
           
           cy.contains('div', "Card").should('be.visible')
           authoring.common.togglemethod(authoring.website.cardToggle)
