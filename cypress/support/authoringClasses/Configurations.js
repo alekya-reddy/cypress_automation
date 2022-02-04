@@ -9,6 +9,7 @@ export class Configurations extends Common {
             widgets: `${this.configRoute}/widgets`,
             externalCode: `${this.configRoute}/external-code`,
             appearances: `${this.configRoute}/appearance`,
+            guide: `${this.configRoute}/appearance/guide`,
             languages:`${this.configRoute}/language`,
             forms: `${this.configRoute}/forms`,
             images: `${this.configRoute}/images/content`,
@@ -90,6 +91,10 @@ export class Configurations extends Common {
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
             imagePicker: "i[title='Select a thumbnail']",
+            recommendationTabsColor: 'span[id="recommendationTabColor"]>div>span',
+            buttonBackgroundColorForGuide: 'span[id="headlineBackgroundColor"]>div>span',
+            ForYouTabForGuide: 'div[title="For You"]',
+            TrendingTabForGuide: 'div[title="Trending"]',
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
@@ -297,7 +302,8 @@ export class Configurations extends Common {
             ctaType: 'input[name="ctaType"]',
             ctaLabel: "#label",
             destinationLinkInput: "#destinationUrl",
-            destinationEmailInput: "#mailto"
+            destinationEmailInput: "#mailto",
+            editCTALable: 'div[data-qa-hook="preview-section-button-label"]>div>div>span>i'
         };
         this.imageLibrary = {};
         this.accessProtection = {};
