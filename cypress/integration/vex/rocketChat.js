@@ -11,7 +11,7 @@ const event = {
     }
 }
 const moderator = {email: "test@pathfactory.com"}
-const eventWithModerator = "https://automation-vex.qa-pathfactory.com/rocketchat-js/live-upcoming?lb_email=ha@pathfactory.com"
+const eventWithModerator = "https://automation-vex.qa-pathfactory.com/rocketchat-js/live-upcoming?lb_email=test@pathfactory.com"
 
 const sessions = [
     {

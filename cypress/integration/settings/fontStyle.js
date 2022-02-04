@@ -35,15 +35,5 @@ describe("Appearances controls for Guide", () => {
         cy.contains('label', "Thumbnail aspect ratio (height)").should("exist")
         cy.contains('label', "Image fallback").should("exist")
 
-
-
-
-
-
-        
-
-
-
-
     })
 })
