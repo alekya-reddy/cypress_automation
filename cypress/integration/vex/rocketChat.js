@@ -10,6 +10,8 @@ const event = {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
+const moderator = {email: "test@pathfactory.com"}
+const eventWithModerator = "https://automation-vex.qa-pathfactory.com/rocketchat-js/live-upcoming?lb_email=test@pathfactory.com"
 
 const sessions = [
     {
@@ -64,7 +66,29 @@ const sessions = [
         visibility: 'Public',
         type: 'On Demand',
         video: 'Youtube - Used in Cypress automation for VEX testing'
-    }
+    },
+    {
+        name: "Live Upcoming",
+        slug: "live-upcoming",
+        get url(){
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2029 8:00pm',
+            end: 'Jun 24, 2030 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Youtube - Used in Cypress automation for VEX testing',
+        },
+        rocketChat: {
+            addNew: true,
+            live: true,
+            onDemand: true
+        },
+    },
+    
 ]
 
 const form = {name: "Standard Form Short"}
@@ -166,5 +190,25 @@ describe("Vex - Rocket Chat Registration", ()=>{
         cy.visit(sessions[2].url)
         consumption.vex.expectYoutube()
         cy.get(consumption.vex.rocketChat.iframe).should("not.exist")
+    })
+
+    it("Ensure moderators should have early access to rocket chat and any additional widgets(VEX)", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionConfig("Live Upcoming")
+        authoring.vex.goToWidget()
+        authoring.vex.addWidget('Chat')
+        authoring.vex.goToChat()
+        authoring.vex.deleteModerators(moderator.email)
+        authoring.vex.addModerators(moderator.email)
+        cy.visit(eventWithModerator)
+        //ensure moderators are able to access the rocket chat prior to the event start 
+        consumption.vex.expectRocketChat()
+        cy.get(consumption.vex.rocketChat.moderatorViewButton).should('exist') 
+        cy.contains('li', "Profile").should('exist')
+       // Not going to test windows edit functions as all of this occurs within the rocket chat browser - this is 3rd party software
+       //ensure the moderators are able to access any widgets that have been set up prior to the event start
+        cy.contains('span', "temp1").should('exist').click()
     })
 })
