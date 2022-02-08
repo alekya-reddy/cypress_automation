@@ -5,7 +5,10 @@ export class ContentIntelligence extends Common {
         super(env, org, tld, userName, password, baseUrl);
         this.contentConfigurations = `${this.baseUrl}/authoring/content-library/content-configurations`;
         this.contentStrategy = `${this.baseUrl}/authoring/content-intelligence`;
-        this.contentIntelligenceTab="#content-intelligence"
+        this.contentIntelligenceTab="#content-intelligence",
+        this.topKeywordsTab = 'div[id="tab-panel"]',
+        this.modalContainer = 'div[class*="modal-container"]',
+        this.pageSearch = 'input[name="search"]'
 
     }
 

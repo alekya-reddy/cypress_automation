@@ -76,6 +76,44 @@ export class Settings extends Common {
             pageUrl:  `${this.settingsRoute}/search-engine-directive`,
             pageTitle: "Search Engine Directive",
         };
+        this.viewOnlySettingsLocators = {
+             backgroundImage: 'div[style*="background-image"]',
+             nameInput: 'textarea[name="name"]',
+             textInput: 'textarea[name="altText"]',
+             nameField: 'input[name="name"]',
+             contentTagSetting: 'svg[data-icon="setting"]',
+             tableListing: 'div[data-qa-hook="page-body"]>div>div',
+             pagePreview:'div[data-qa-hook="page-preview"]',
+             thumbnailSelect: 'i[title="Select a thumbnail"]',
+             valueSelector: 'span[class="Select-value-label"]',
+             colorInput: 'span[id="titleColor"]',
+             dynamicLogo: 'div[data-qa-hook="dynamicLogo"]',
+             backgroundImage: 'div[style*="background-image"]',
+             fontSize: 'input[name="cardCornerRadius"]',
+             emailMsgInput: 'input[name="emailMessage"]',
+             twitterCheckbox: 'label[for="twitterEnabled"]',
+             linkedinCheckbox: 'label[for="linkedinEnabled"]',
+             facebookCheckbox: 'label[for="facebookEnabled"]',
+             emailCheckbox: 'label[for="emailEnabled"]',
+             LikeCheckbox: 'label[for="likeEnabled"]',
+             downloadCheckbox: 'label[for="downloadEnabled"]',
+             checkboxUnchecked: 'div[class*="Checkbox__checkbox-container--unchecked"]',
+             tableContainer: 'div[class*="Table__table-container"]',
+             formNameInput: 'input[id="name"]',
+             cookieConsentToggle: 'div[data-qa-hook="enableCookieConsentMessage"]',
+             captureFirstName: 'input[id="captureFirstName"]',
+             captureLastName: 'input[id="captureLastName"]',
+             captureTitle: 'input[id="captureTitle"]',
+             captureCompany: 'input[id="captureCompany"]',
+             previewCTAs: 'div[data-qa-hook="preview-section-cta-name"]',
+             previewLabel: 'div[data-qa-hook="preview-section-button-label"]',
+
+
+
+
+
+
+        };
     }
 
     visitCookieConsent(){

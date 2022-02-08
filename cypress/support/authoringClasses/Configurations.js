@@ -306,13 +306,20 @@ export class Configurations extends Common {
         this.segments = {
             nameInput: "#name",
             editSegmentPreview: `div[data-qa-hook="segment-edit-card"]`,
-            deleteIcon: `i[title="Delete Segment"]`
+            deleteIcon: `i[title="Delete Segment"]`,
+            editSegments: 'i[title="Edit Segment"]',
+            cloneSegments: 'i[title="Clone Segment"]',
+            
         };
         this.routes = {
             nameInput: "#name",
             fallbackType: `input[name="fallbackDestinationType"]`,
             fallbackUrl: "#fallbackExternalUrl",
-            deleteIcon: `i[title="Delete Route"]`
+            deleteIcon: `i[title="Delete Route"]`,
+            analytics: 'i[title="Route Analytics"]',
+            editRoutes: 'i[title="Edit Route"]',
+            copyClipboard: 'i[title="Copy to Clipboard"]',
+            editMaping: 'i[title="Edit Mapping"]',
         };
         this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
         this.antModal = ".ant-modal-content";

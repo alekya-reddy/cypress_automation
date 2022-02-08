@@ -13,7 +13,8 @@ const user = {
 const role = {
     roleName: "Custom",
     contentstrategyCRUD: false,
-    contentStratergyView: true
+    contentStratergyView: true,
+    contentConfigurationView: true
 }
 
 describe("View Only Permissions", () => {
@@ -33,37 +34,36 @@ describe("View Only Permissions", () => {
            authoring.contentIntelligence.visit()
            cy.contains('p', "Use Content Intelligence to understand how your content aligns with your content strategy.").should("exist")
            cy.contains('dd', "Define the important topics that your content should be an authority on. We'll help you research these topics and assess the relevancy of your content to these topics.").should("exist")
-           cy.contains('p', "We'll highlight which of your content assets are the most relevant to an individual content asset or a Key Marketing Topic. These recommendations can be activated on your website with Website Tools.").should("exist")
+           cy.contains('dd', "We'll highlight which of your content assets are the most relevant to an individual content asset or a Key Marketing Topic. These recommendations can be activated on your website with Website Tools.").should("exist")
            cy.contains('span', "Key Marketing Topics").should("exist").click()
            cy.contains("button", "Add Topics").should("not.exist")
            cy.contains("option", " Select a category ").should("exist")
-           cy.get(authoring.common.orgSearch).should("exist")
+           cy.get(authoring.contentIntelligence.pageSearch).should("exist")
            cy.contains("option", " Sort ").should("exist")
            cy.contains("th", "Categories").should("exist")
            cy.contains("th", "Status").should("exist")
-           cy.contains("th", "Delete").should("exist")
-           cy.contains("span", "Next").should("exist")
+           cy.contains("th", "Delete").should("not.exist")
+           //cy.contains("span", "Next").should("exist")
            cy.contains("th", "Name").should("exist")
-           cy.contains('a', "Accessibility Testing").should("exist").click()
-           cy.wait(2000)
-           cy.contains("h2", "Accessibility Testing").should("exist")
+           cy.contains('a', "Marketing").should("exist").click({force:true})
+           cy.wait(4000)
+           cy.contains("h2", "Marketing").should("exist")
            cy.contains("a", "Relevant Content").should("exist")
            cy.contains("th", "Topic Relevancy Score").should("exist")
            cy.contains("th", "Top Keywords").should("exist")
            cy.contains("th", "URL").should("exist")
            cy.contains("th", "Content").should("exist")
-           cy.contains("button", "From Simple English Wikipedia, the free encyclopedia").should("exist").click()
-           cy.get('div[class*="modal-container"]').should("exist")
+           cy.contains("button", "B2B marketing in the on-demand economy").should("exist").click()
+           cy.get(authoring.contentIntelligence.modalContainer).should("exist")
            cy.contains("button", "Details").should("exist").click()
            cy.contains("dt", "Title").should("exist")
            cy.contains("th", "URL").should("exist")
-           cy.contains("th", "Language").should("exist")
-           cy.contains("th", "Reading Time").should("exist")
-           cy.contains("th", "Word Count").should("exist")
-           cy.contains("th", "Reading Ease").should("exist")
-           cy.contains("th", "Sentiment").should("exist")
-           cy.contains("th", "Sentence Count").should("exist")
-           cy.contains("th", "URL").should("exist")
+           cy.contains("dt", "Language").should("exist")
+           cy.contains("dt", "Reading Time").should("exist")
+           cy.contains("dt", "Word Count").should("exist")
+           cy.contains("dt", "Reading Ease").should("exist")
+           cy.contains("dt", "Sentiment").should("exist")
+           cy.contains("dt", "Sentence Count").should("exist")
 
            cy.contains("button", "Page Metadata").should("exist").click()
            cy.contains("h3", "Standard Meta Tags").should("exist")
@@ -73,7 +73,7 @@ describe("View Only Permissions", () => {
            cy.contains("span", "Select Content Pool").should("exist")
 
            cy.contains("button", "Top Keywords").should("exist")
-           cy.get('div[id="tab-panel"]').should("exist")
+           cy.get(authoring.contentIntelligence.topKeywordsTab).should("exist")
 
            cy.contains("a", "Google Search Engine Results").should("exist").click()
            cy.contains("a", "People Also Ask").should("exist")

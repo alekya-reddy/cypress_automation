@@ -133,11 +133,6 @@ describe("View Only Permissions", () => {
         authoring.common.togglemethod(authoring.vex.sessionSlugInput)
         authoring.common.togglemethod(authoring.vex.engagementThresholdInput)
 
-        // cy.get('input[value="On Demand]').parent().invoke('attr', 'class').then(val => {
-        //     cy.get('input[value="On Demand]').click()
-        //     expect(val).to.equal('ant-radio ant-radio-checked')
-        // })
-
         cy.contains('’span', "Select On Demand Video").should("not.exist")
 
         cy.contains('label', "Protection Type").should("exist")
