@@ -25,7 +25,7 @@ export class Microsites extends Common {
         this.copyIcon = 'div[class="ant-typography-copy"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
-        this.antCell = ".ant-table-cell";
+        this.antCell = 'td[class*="ant-table-cell"]';
         this.inputDisable = 'input[class="ant-input ant-input-disabled"]:nth-child(1)';
         this.micrositesPage = {
             card: this.antCard.container,
@@ -83,6 +83,8 @@ export class Microsites extends Common {
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
             micrositeCardTitle: ".pf-event-microsite-card-title > div div",
+            pageTd: 'td[class="ant-table-cell share-cell"]',
+            previewMicrosite: 'i[title="Preview"]',
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
             recommendRadio: "input[value='recommend']",
@@ -191,10 +193,34 @@ export class Microsites extends Common {
 
     }
      
-    editfolder(name){
-        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
-            cy.contains("button", "Edit Folder").click()
+    editfolder(options){
+        const name = options.name
+        const editedName = options.editedName
+        const Folder = options.Folder
+        cy.contains(this.antCell, name).siblings("td:contains('Edit Microsite')").within(() => {
+            cy.contains("span", "Edit Microsite").click()
         })
+        cy.get(this.antModal).within(() => {
+            cy.contains("div", "Edit Microsite").should("exist")
+
+            if (editedName) {
+                cy.get('input[name="name"]').eq(1).clear().type(editedName)
+            }
+            if (Folder) {
+                this.setFolder(folder)
+            }
+             cy.contains('button', "Save Microsite").should("exist").click()
+
+        })
+    }
+
+    setFolder(folder) {
+        cy.wait(5000)
+        cy.contains(this.antRow, "Folder").within(() => {
+            cy.get(this.antSelector).click()
+        })
+        cy.get(this.antDropSelect.options(folder)).click()
+        cy.get(`span[title='${folder}']`).should('exist')
     }
 
     removeMicrositefromFolder(name) {

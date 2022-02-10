@@ -38,8 +38,12 @@ const recommend = {
 }
 
 const featureBlock = {
-    name: "The Featured Content Block"
+    name: "The Featured Content Block",
+    contents: ["OverlayFeatures"]
 }
+
+const targetBlockLink= "https://automation-microsites.pathfactory-development.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.pathfactory-development.com%2Ftrack-ol-nt-js%2Ftarget-common-resource%2Fopenai"
+const featuredBlockLink = "https://automation-microsites.pathfactory-development.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.pathfactory-development.com%2Ftrack-ol-nt-js%2Ftulip%3Fx%3Dfihpdl"
 
 const landingPage = {
     name: "Main Page",
@@ -170,6 +174,7 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
         //  As we cannot test open new tab in cypress as a work around we are going to verify that content has the correct href link
         //  but when clicked on it should not change the current page url  
         cy.go("back")
+        cy.pause()
         cy.contains("button", "Save").should("exist")
         // Open content track is set to 'Open in a new tab' opttion
         blockNames.forEach((blockName) => {
@@ -260,4 +265,120 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
         cy.get(consumption.target.flowSidebar, {timeout: 2000}).should("exist") 
         cy.url().should("contain", target.micrositeUrl)
     })    
+
+    it("Open content track using Overlay, NewTab , SameTab", () =>{
+        const blockNames = [featureBlock.name, recommend.name, target.name ]
+        let selectOption = null
+        authoring.common.login()
+        authoring.microsites.visit() 
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(landingPage.name) 
+
+        blockNames.forEach((blockName) => {
+            cy.contains("h4", blockName).parents(authoring.microsites.landingPages.blockContainer).within(() => {
+                cy.get(authoring.microsites.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
+            }) 
+            cy.get(authoring.microsites.landingPages.openCard).invoke("val").then(($option) => { 
+                selectOption = $option  
+            })
+            cy.do(() => { 
+                if(selectOption == 'overlay'){
+                    cy.contains("button", "Cancel").click({force: true})
+                    cy.containsExact("h2", "Settings").should("not.exist")
+                }
+                else {
+                    cy.get(authoring.microsites.landingPages.openCard).select("Overlay on the same window")
+                    cy.contains("button", "Confirm").click({force: true})
+                    cy.containsExact("h2", "Settings").should("not.exist")
+                }
+            })    
+        })
+        cy.contains("button", "Save").click({force: true})
+        cy.go("back") 
+        cy.wait(3000)
+        cy.contains('td[title="Main Page"]', landingPage.name).siblings(authoring.microsites.landingPages.tableCell).within(() => {
+            cy.get(authoring.microsites.sharebutton).click()
+        })
+
+        cy.get(authoring.common.modal).within(() => {
+            cy.contains('span', "Track Name: ").should("exist")
+            cy.contains('div', "Select a track").type("Target Common Resource" + "\n")
+            cy.contains('span', "Overlay Starting Asset: ").should("exist")
+            cy.contains('div', "Select an asset").type("Website Common Resource" + "\n")
+            cy.contains('span', "Query String: ").should("exist")
+            cy.contains('div', "Select Query String").type("Eloqua" + "\n")
+            cy.get(authoring.microsites.landingPages.previewMicrosite).should("exist")
+            cy.get(authoring.microsites.landingPages.previewMicrosite).parent().parent().should("have.attr", "href", targetBlockLink)
+        })   
+
+        cy.visit(targetBlockLink)
+        
+        cy.get(consumption.microsites.overlay.modal).should("exist")
+        cy.waitForIframeToLoad(consumption.microsites.overlay.iframe, consumption.target.flowSidebar, 10000)
+        cy.getIframeBody(consumption.microsites.overlay.iframe).within(() => {
+            cy.get(consumption.target.flowSidebar).should("exist")
+        })
+        cy.get(consumption.microsites.overlay.close).click()
+        cy.get(consumption.microsites.overlay.modal).should("not.exist")  
+
+            cy.visit(microsite.url)
+            cy.containsExact("h4", target.name).should("exist").parent().within(()=>{
+                cy.get(consumption.microsites.cardTitle, {timeout: 2000}).eq(0).click()
+            }) 
+            cy.get(consumption.microsites.overlay.modal).should("exist")
+            cy.waitForIframeToLoad(consumption.microsites.overlay.iframe, consumption.target.flowSidebar, 10000)
+            cy.getIframeBody(consumption.microsites.overlay.iframe).within(() => {
+                cy.get(consumption.target.flowSidebar).should("exist")
+            })
+            cy.get(consumption.microsites.overlay.close).click()
+            cy.get(consumption.microsites.overlay.modal).should("not.exist")
+            
+        })
+
+        it("Open content track using Overlay, NewTab , SameTab", () =>{
+            const blockNames = [featureBlock.name, recommend.name, target.name ]
+            let selectOption = null
+            authoring.common.login()
+            authoring.microsites.visit() 
+            authoring.microsites.goToMicrositeConfig(microsite.name)
+            authoring.microsites.tabToLandingPages()        
+            cy.contains('td[title="Main Page"]', landingPage.name).siblings(authoring.microsites.landingPages.tableCell).within(() => {
+                cy.get(authoring.microsites.sharebutton).click()
+            })
+    
+            cy.get(authoring.common.modal).within(() => {
+                cy.contains('span', "Track Name: ").should("exist")
+                cy.contains('div', "Select a track").type("OverlayFeatures" + "\n")
+                cy.contains('span', "Overlay Starting Asset: ").should("exist")
+                cy.contains('div', "Select an asset").type("1-featuredContentLayout.js" + "\n")
+                cy.contains('span', "Query String: ").should("exist")
+                cy.contains('div', "Select Query String").type("Eloqua" + "\n")
+                cy.get(authoring.microsites.landingPages.previewMicrosite).should("exist")
+                cy.get(authoring.microsites.landingPages.previewMicrosite).parent().parent().should("have.attr", "href", featuredBlockLink)
+            })   
+    
+            cy.visit(featuredBlockLink)
+            cy.get(consumption.microsites.overlay.modal).should("exist")
+            cy.waitForIframeToLoad(consumption.microsites.overlay.iframe, consumption.target.flowSidebar, 10000)
+            cy.getIframeBody(consumption.microsites.overlay.iframe).within(() => {
+                cy.get(consumption.target.flowSidebar).should("exist")
+            })
+            cy.get(consumption.microsites.overlay.close).click()
+            cy.get(consumption.microsites.overlay.modal).should("not.exist") 
+
+            cy.visit(microsite.url)
+            cy.containsExact("h4", featureBlock.name).should("exist").parent().within(()=>{
+                cy.get(consumption.microsites.cardTitle, {timeout: 2000}).eq(0).click()
+            }) 
+            cy.get(consumption.microsites.overlay.modal).should("exist")
+            cy.waitForIframeToLoad(consumption.microsites.overlay.iframe, consumption.target.flowSidebar, 10000)
+            cy.getIframeBody(consumption.microsites.overlay.iframe).within(() => {
+                cy.get(consumption.target.flowSidebar).should("exist")
+            })
+            cy.get(consumption.microsites.overlay.close).click()
+            cy.get(consumption.microsites.overlay.modal).should("not.exist")
+
+        })
+    
 })
