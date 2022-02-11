@@ -104,9 +104,8 @@ describe("VEX - Create, Edit and Delete Folders", () => {
     it("Verify Edit Functionality", () => {
         authoring.common.login()
         authoring.vex.visit()
-        cy.wait(1000)
-        cy.contains('span', "Root").click()
-        cy.wait(1000)
+        cy.contains('span', "Root", {timeout: 20000}).click()
+        cy.wait(200)
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1)
         authoring.vex.editfolder(event1)

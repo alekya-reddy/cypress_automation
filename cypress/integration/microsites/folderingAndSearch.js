@@ -104,9 +104,8 @@ describe("VEX - Create, Edit and Delete Folders", () => {
     it("Verify Edit Functionality", () => {
         authoring.common.login()
         authoring.microsites.visit()
-        cy.wait(1000)
-        cy.contains('span', "Root").click()
-        cy.wait(1000)
+        cy.contains('span', "Root",{timeout: 20000}).click()
+        cy.wait(200)
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.addMicrosite(microsite1)
         authoring.microsites.editfolder(microsite1)

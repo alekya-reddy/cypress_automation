@@ -25,7 +25,6 @@ export class Microsites extends Common {
         this.copyIcon = 'div[class="ant-typography-copy"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
-        this.antCell = 'td[class*="ant-table-cell"]';
         this.inputDisable = 'input[class="ant-input ant-input-disabled"]:nth-child(1)';
         this.micrositesPage = {
             card: this.antCard.container,
@@ -83,7 +82,7 @@ export class Microsites extends Common {
             spacingInput: "input[name*='spacing.padding']",
             micrositeCard: ".microsite-session-card",
             micrositeCardTitle: ".pf-event-microsite-card-title > div div",
-            pageTd: 'td[class="ant-table-cell share-cell"]',
+            micrositeAntCell: 'td[class="ant-table-cell share-cell"]',
             previewMicrosite: 'i[title="Preview"]',
             privateRadio: "input[value='private']",
             publicRadio: "input[value='public']",
