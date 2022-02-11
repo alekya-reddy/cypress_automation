@@ -182,6 +182,7 @@ export class Microsites extends Common {
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
             cy.contains(this.micrositesPage.cardTitle, microsite, { timeout: 20000 }).should('exist')
+            cy.get(`a[id='configure-${microsite}']`).parents('td').prev('td').click()
             cy.get(`i[class*='delete-${microsite}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
                 cy.contains('Yes').click()
