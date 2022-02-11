@@ -42,7 +42,7 @@ export class Vex extends Common {
         this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.trashIcon = "i[class*='Icon__fa-trash']";
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'span[class="ant-select-selection-item"]>a';
         this.pageTitle = 'input[name="landingExperience.pageTitle"]';
@@ -325,7 +325,7 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${eventName}']`).should('exist').click()
+            cy.get(`i[class*='delete-${eventName}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })

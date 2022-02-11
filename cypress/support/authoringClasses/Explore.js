@@ -28,7 +28,7 @@ export class Explore extends Common {
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
         this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
-        this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
+        this.deleteExplorePageIcon = "i[class*='delete Icon__action']";
         this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
         this.topicFilterSection = 'div[data-qa-hook="topic-filter-section"]',
