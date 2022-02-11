@@ -4,28 +4,34 @@ const authoring = createAuthoringInstance({ org: 'automation-microsites', tld: '
 const parentFolderName = ['AutomationFolderOne']
 const childFolderName = ['AutomationFolderChild']
 
-const event1 = {
-    name: 'virtualEventfoldering.js',
+const microsite1 = {
+    name: 'micrositesFoldering.js',
+    editedName: 'editedMicrosites'
 }
 
-const event2 = {
+const microsite2 = {
     name: 'parentEvent.js',
     parentFolder: 'AutomationFolderOne',
 }
 
-const event3 = {
+const microsite3 = {
     name: 'childEvent.js',
     childFolder: 'AutomationFolderChild'
+}
+
+const microsite4 = {
+    name: 'editedMicrosites',
+    editedName: 'micrositesFoldering.js'
 }
 
 describe("VEX - Create, Edit and Delete Folders", () => {
     it("Create,Delete Folders and Events", () => {
         authoring.common.login()
         authoring.microsites.visit()
-        authoring.microsites.removeMicrositefromFolder(event3.name)
+        authoring.microsites.removeMicrositefromFolder(microsite3.name)
         authoring.common.deleteFolder(childFolderName)
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        authoring.microsites.removeMicrositefromFolder(event2.name)
+        authoring.microsites.removeMicrositefromFolder(microsite2.name)
         authoring.common.deleteFolder(parentFolderName)
 
         // create new folder
@@ -40,7 +46,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
         cy.contains("No microsites found")
       
-        authoring.microsites.addMicrosite(event2)
+        authoring.microsites.addMicrosite(microsite2)
         
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '1')
 
@@ -58,7 +64,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         // add virtual event into child folder
 
         cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
-        authoring.microsites.addMicrosite(event3)
+        authoring.microsites.addMicrosite(microsite3)
 
        //verify folder count
         cy.get(authoring.common.folder.folderToggle(parentFolderName[0])).click() // by clicking on parent folder it collapses child folder
@@ -69,7 +75,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
 
        //search for childefolder event in root folder and it should show up in all folders
         cy.get(authoring.common.folder.folderSelector('Root')).click()
-        cy.get(authoring.microsites.searchButton).clear().type(event3.name)
+        cy.get(authoring.microsites.searchButton).clear().type(microsite3.name)
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
         cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
         cy.get(authoring.microsites.eventVerification).should('exist')
@@ -77,22 +83,34 @@ describe("VEX - Create, Edit and Delete Folders", () => {
 
       //search for any root folder event in child folder and should give message for no events
         cy.get(authoring.microsites.folderbreadcrum).should('exist')
-        cy.get(authoring.microsites.searchButton).clear().type(event1.name)
+        cy.get(authoring.microsites.searchButton).clear().type(microsite1.name)
         cy.contains(authoring.microsites.noMicrositeFound).should('exist')
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
         cy.contains(authoring.microsites.noMicrositeFound).should('exist')
 
       //search for root folder event into parent folder and it should give message for no event found
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.get(authoring.microsites.searchButton).clear().type(event1.name)
+        cy.get(authoring.microsites.searchButton).clear().type(microsite1.name)
         cy.contains(authoring.microsites.noMicrositeFound).should('exist')
 
         // search for childfolder event into parent folder and it should exist
         cy.get(authoring.common.folder.folderSelector(parentFolderName[0])).click()
-        cy.get(authoring.microsites.searchButton).clear().type(event3.name)
+        cy.get(authoring.microsites.searchButton).clear().type(microsite3.name)
         cy.get(authoring.microsites.eventVerification).should('exist')
         cy.get(authoring.microsites.searchButton).clear()
 
+    })
+
+    it("Verify Edit Functionality", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        cy.contains('span', "Root",{timeout: 20000}).click()
+        cy.wait(200)
+        authoring.microsites.removeMicrosite(microsite1.name)
+        authoring.microsites.addMicrosite(microsite1)
+        authoring.microsites.editfolder(microsite1)
+        authoring.microsites.editfolder(microsite4)
+        
     })
 
 })

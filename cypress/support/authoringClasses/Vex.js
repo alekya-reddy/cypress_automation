@@ -299,9 +299,23 @@ export class Vex extends Common {
         }
     }
 
-    editfolder(name){
-        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
-            cy.contains("button", "Edit Folder").click()
+    editfolder(options){
+        const name = options.name
+        const editedName = options.editedName
+        const Folder = options.Folder
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
+        cy.get(this.antModal).within(() => {
+            cy.contains("div", "Edit Virtual Event").should("exist")
+
+            if (editedName) {
+                cy.get('input[name="name"]').clear().type(editedName)
+            }
+            if (Folder) {
+                this.setFolder(folder)
+            }
+             cy.contains('button', "Save Virtual Event").should("exist").click()
+
         })
     }
 
