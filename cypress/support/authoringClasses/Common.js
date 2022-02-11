@@ -19,6 +19,7 @@ export class Common {
         this.editPencil = 'i[class*="fa-pencil"]';
         this.popover = "div[data-qa-hook='popover']";
         this.modal = 'div[data-qa-hook="modal"]';
+        this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal-content"; 
