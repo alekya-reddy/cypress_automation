@@ -42,8 +42,8 @@ const featureBlock = {
     contents: ["OverlayFeatures"]
 }
 
-const targetBlockLink= "https://automation-microsites.pathfactory-development.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.pathfactory-development.com%2Ftrack-ol-nt-js%2Ftarget-common-resource%2Fopenai"
-const featuredBlockLink = "https://automation-microsites.pathfactory-development.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.pathfactory-development.com%2Ftrack-ol-nt-js%2Ftulip%3Fx%3Dfihpdl"
+const targetBlockLink= "https://automation-microsites.qa-pathfactory.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.qa-pathfactory.com%2Ftrack-ol-nt-js%2Ftarget-common-resource%2Fopenai"
+const featuredBlockLink = "https://automation-microsites.qa-pathfactory.com/track-ol-nt-js/?lb_email=~~eloqua..type--emailfield..syntax--EmailAddress..innerText--EmailAddress..encodeFor--url~~&overlay_url=https%3A%2F%2Fautomation-microsites.qa-pathfactory.com%2Ftrack-ol-nt-js%2Ftulip%3Fx%3DoVK7Ns"
 
 const landingPage = {
     name: "Main Page",
@@ -169,14 +169,14 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
         cy.get(consumption.microsites.overlay.close).click()
         cy.get(consumption.microsites.overlay.modal).should("not.exist")
 
-
         // // go to Authoring and change the settings to open content in new Tab 
         //  As we cannot test open new tab in cypress as a work around we are going to verify that content has the correct href link
         //  but when clicked on it should not change the current page url  
-        cy.go("back")
-        cy.pause()
-        cy.contains("button", "Save").should("exist")
         // Open content track is set to 'Open in a new tab' opttion
+        authoring.microsites.visit() 
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(landingPage.name)
         blockNames.forEach((blockName) => {
             cy.contains("h4", blockName).parents(authoring.microsites.landingPages.blockContainer).within(() => {
                 cy.get(authoring.microsites.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 

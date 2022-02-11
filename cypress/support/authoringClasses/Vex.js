@@ -303,14 +303,13 @@ export class Vex extends Common {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
-        cy.contains(this.antCell, name).siblings("td:contains('Edit Virtual Event')").within(() => {
-            cy.contains("span", "Edit Virtual Event").click()
-        })
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
         cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Virtual Event").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').eq(1).clear().type(editedName)
+                cy.get('input[name="name"]').clear().type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)

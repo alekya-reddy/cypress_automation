@@ -159,7 +159,6 @@ export class Microsites extends Common {
         cy.contains(this.antModal, "Add Microsite").within(() => {
             cy.get(this.micrositesPage.nameInput).clear().type(name)
 
-
             if (parentFolder) {
                 cy.get(this.createMicrositeModal.dropdownfolder).click({ force: true }).type(parentFolder + "\n")
             }
@@ -197,10 +196,9 @@ export class Microsites extends Common {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
-        cy.contains(this.antCell, name).siblings("td:contains('Edit Microsite')").within(() => {
-            cy.contains("span", "Edit Microsite").click()
-        })
-        cy.get(this.antModal).within(() => {
+            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
+          cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Microsite").should("exist")
 
             if (editedName) {
@@ -229,7 +227,8 @@ export class Microsites extends Common {
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, name, 20000, () => {
             cy.contains(this.micrositesPage.cardTitle, name, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${name}']`).should('exist').click()
+            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
                 cy.contains('Yes').click()
             })
