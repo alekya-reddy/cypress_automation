@@ -166,7 +166,7 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Assets").should("exist")
         cy.contains('span', "Forms").should("exist")
         cy.contains('span', "Folder").should("exist")
-        cy.contains('span', "Labels").should("exist")
+        cy.contains('th', "Labels").should("exist")
 
     })
 })
