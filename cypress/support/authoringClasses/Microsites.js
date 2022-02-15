@@ -20,12 +20,13 @@ export class Microsites extends Common {
         this.micrositeLink = 'span[class="ant-typography"]';
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.trashIcon = 'i[title="Delete Microsite"]';
+        this.trashIcon = 'i[class*="Icon__fa-trash"]';
         this.cloneIcon = 'i[title="Clone Microsite"]';
         this.copyIcon = 'div[class="ant-typography-copy"]';
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'div[class="ant-card-body"]>form>div:nth-child(1)';
         this.inputDisable = 'input[class="ant-input ant-input-disabled"]:nth-child(1)';
+        this.rootfolder = "#folder-toggle-root"
         this.micrositesPage = {
             card: this.antCard.container,
             cardTitle: this.antCard.title,
