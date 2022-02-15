@@ -225,7 +225,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
       authoring.common.logout()
       authoring.common.login(user.userName, user.password)
       cy.get(authoring.common.nameSetting).click()
-      cy.get(authoring.common.orgDropdown).click()
+      cy.get(authoring.common.orgDropdown, { timeout: 3000 }).click()
       cy.get(authoring.common.robotInput).clear({force: true}).type(robotText.automation,{force: true})
       cy.contains('button', "Save").click()
     

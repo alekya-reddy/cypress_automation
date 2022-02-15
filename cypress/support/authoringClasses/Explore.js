@@ -65,7 +65,7 @@ export class Explore extends Common {
         this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
         this.heroTitleInput = 'input[name="headerTitle"]',
         this.heroSubtitleLocatorDefault = 'h3[data-qa-hook="header-subtitle-default"]',
-        this.headerTitle = 'h3[data-qa-hook="header-title-default"]',
+        this.headerTitle = 'h3[data-qa-hook="body-title-default-show"]',
         this.heroSubtitleLocator = 'div[data-qa-hook^="header-subtitle-show"]',
         this.heroSubtitleInput = 'input[name="headerSubtitle"]',
         this.contentDescription = 'textarea[name="contentDescription"]',
@@ -360,9 +360,9 @@ export class Explore extends Common {
             }
         })
         cy.get(this.modal).within(() => {
-            cy.contains('h3', 'Header customization for this Track')
+            cy.contains('div', 'Header customization for this track')
             cy.get(this.header.headerTitle).clear().type(headerTitle)
-            cy.contains('button', 'Save Header customization').click()
+            cy.contains('button', 'Save Header Customization').click()
         })
     }
 

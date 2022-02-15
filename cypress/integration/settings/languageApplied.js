@@ -141,7 +141,7 @@ describe("Add Language and Verify LastUpdated Date", () => {
             cy.containsExact("div", vex.name).parent().click({force: true})
             cy.containsExact(authoring.common.pageTitleLocator, vex.name, {timeout: 5000})
             cy.go('back')
-
+            cy.reload()
            cy.containsExact("div", 'pathfactory-qa-wp.com/test').parent().click({force: true})
            cy.containsExact(authoring.common.pageTitleLocator, domainName, {timeout: 5000})
            cy.go('back')

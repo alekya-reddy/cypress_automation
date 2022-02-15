@@ -309,7 +309,7 @@ export class Vex extends Common {
             cy.contains("div", "Edit Virtual Event").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').clear().type(editedName)
+                cy.get('input[name="name"]').clear({force: true}).type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)
@@ -354,7 +354,8 @@ export class Vex extends Common {
         cy.get(this.pageSearch).clear().type(name)
         cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
             cy.contains(this.eventCardTitle, name, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${name}']`).should('exist').click()
+            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
