@@ -70,7 +70,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         cy.contains('span', "Root").click()
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.addMicrosite(microsite1)
-
+        cy.get(authoring.microsites.rootfolder).click()
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
@@ -90,6 +90,6 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
-
+        cy.contains('span', "Root").click() // Resetting the folder structure to root, orelse when next time script runs in the same session its trying to find and unable to delete the deletedMicrosite.js" in child folder 
     })
 })
