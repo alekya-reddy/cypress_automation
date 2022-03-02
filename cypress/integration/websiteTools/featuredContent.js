@@ -53,6 +53,7 @@ describe("Configure and Validate Content adding option with view options", () =>
             featuredContent.forEach((content)=>{
                 authoring.websiteTools.addContentToFeatured(content)
             })
+            cy.get(authoring.websiteTools.enterselectOption('contentPool')).type(contentpoolName +"\n",{force: true})
             cy.get(authoring.websiteTools.promoterList).click()
             cy.get(authoring.websiteTools.selectOption("both")).click()
             cy.contains("span","Save").click()
@@ -126,7 +127,7 @@ describe("Configure and Validate Content adding option with view options", () =>
         cy.get(consumption.websiteTools.featuredEvent).contains('What Buying a New Car Can Teach B2B Marketers about the Buyer’s Journey').should("exist")
         cy.get(consumption.websiteTools.featuredEvent).contains('Lb Battlecard Corporate Web').should("exist")
         cy.get(consumption.websiteTools.featuredEvent).contains('Australia - Wikipedia').should("exist").invoke('removeAttr', 'target').click()
-        cy.get("a").should("have.attr", "href", "#content")
+        cy.get("#content").should("exist")
 
     })    
     

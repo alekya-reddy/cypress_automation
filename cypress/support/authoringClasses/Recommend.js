@@ -9,7 +9,7 @@ export class Recommend extends Common {
         this.deleteTrackIcon = "i[class*='delete Icon__action']";
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
-        this.editTrack = 'i[title="Edit Track"]';
+        this.editTrack = 'i[class*="edit-for"]';
         this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.contentClick = "div[draggable='true']:nth-child(2)";
