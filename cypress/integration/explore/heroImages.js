@@ -49,8 +49,8 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
         authoring.configurations.gotoAppearanceTab("explore")
-        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
-        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Cover Image" + "\n")
+        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(1).click()
+        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(1).type("Cover Image" + "\n")
         cy.contains('label', 'Fixed').click()
 
         let backgroundColor = null
@@ -86,8 +86,8 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
         authoring.configurations.gotoAppearanceTab("explore")
-        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
-        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Branded" + "\n")
+        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(1).click()
+        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(1).type("Branded" + "\n")
         cy.contains("button", "Save Explore Settings").click()
 
         authoring.explore.visit()
@@ -114,8 +114,8 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
         authoring.configurations.gotoAppearanceTab("explore")
-        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
-        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Partnership" + "\n")
+        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(1).click()
+        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(1).type("Partnership" + "\n")
         cy.contains("button", "Save Explore Settings").click()
 
         authoring.explore.visit()
@@ -144,8 +144,8 @@ describe("Explore - Hero Image settings are applied to Explore page", () => {
         authoring.configurations.visit.appearances()
         authoring.configurations.clickAppearance(explore.appearance)
         authoring.configurations.gotoAppearanceTab("explore")
-        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(0).click()
-        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(0).type("Personalized" + "\n")
+        cy.get(authoring.explore.createExploreModal.dropdownSelect).eq(1).click()
+        cy.get(authoring.explore.createExploreModal.dropdownSelectField).eq(1).type("Personalized" + "\n")
         cy.contains('label', 'Fill').click()
         cy.contains("button", "Save Explore Settings").click()
 

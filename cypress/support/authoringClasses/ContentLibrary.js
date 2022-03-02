@@ -38,7 +38,8 @@ export class ContentLibrary extends Common{
             seoTitle: "#content-sidebar-seo-title",
             seoTitleInput: "textarea[name='seoTitle']",
             previewTargetTracks: "div[data-qa-hook='preview-section-target-tracks']",
-            experienceTagsLocator: "span[class^='ExperienceTags']"
+            experienceTagsLocator: "span[class^='ExperienceTags']",
+            usedInSectionArrow: 'div[class="ant-collapse-header"]',
         };
         this.advancedEditComponent = {
             publicTitleInput: "#title",

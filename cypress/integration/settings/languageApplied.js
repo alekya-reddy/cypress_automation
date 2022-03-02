@@ -32,6 +32,7 @@ const vex = {
 }
 const domainName = "pathfactory-qa-wp.com"
 const websitePath = "test"
+const contentpoolName = "Wordpress"
 
 describe("Add Language and Verify LastUpdated Date", () => {
     it("Add Language", () => {
@@ -114,13 +115,14 @@ describe("Add Language and Verify LastUpdated Date", () => {
         cy.contains("span","Guide").click()
         cy.contains("span","Concierge").click()
         cy.get(authoring.websiteTools.selectOpen).eq(1).type(language.name+ '\n')
+        cy.get(authoring.websiteTools.enterselectOption('contentPool')).type(contentpoolName +"\n",{force: true})
         cy.contains("span","Save").click()
     })
 
         it("Verify Added Appearance To Appearance Sidebar", () => {
             authoring.common.login()
             cy.visit(authoring.configurations.pageUrls.languages)
-
+            cy.reload()
             cy.get(authoring.configurations.languages.searchforLanguage).contains(language.name).click()
             cy.containsExact("div", recommend.name).parent().click({force: true})
             cy.containsExact(authoring.common.pageTitleLocator, recommend.name, {timeout: 5000})
@@ -137,7 +139,7 @@ describe("Add Language and Verify LastUpdated Date", () => {
             cy.containsExact("div", website.url).parent().click({force: true})
             cy.containsExact(authoring.common.pageTitleLocator, 'Website Campaigns', {timeout: 5000})
             cy.go('back')
- 
+
             cy.containsExact("div", vex.name).parent().click({force: true})
             cy.containsExact(authoring.common.pageTitleLocator, vex.name, {timeout: 5000})
             cy.go('back')

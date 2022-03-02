@@ -44,6 +44,7 @@ describe('Content Asset Title Override', function() {
         // add SEO Title 
         authoring.contentLibrary.openPreview(content)
         authoring.contentLibrary.addSEOTitle(seoTitle)
+        cy.get(authoring.contentLibrary.sidebarComponent.usedInSectionArrow).click()
         // add track content title override
         cy.get(authoring.contentLibrary.sidebarComponent.previewTargetTracks).within(()=>{
             cy.contains(authoring.contentLibrary.sidebarComponent.experienceTagsLocator, target.name).click()

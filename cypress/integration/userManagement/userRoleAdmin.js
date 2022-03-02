@@ -108,16 +108,16 @@ describe('Admin Role Permissions', function() {
         cy.contains('button', "Add Folder").should("exist")
         cy.get(authoring.explore.editFolder).should("exist")
         cy.contains('a', explore.name).click()
-        cy.get("#explore-show-analytics-button", {timeout: 9000}).should("exist").click()
+        cy.get("#explore-show-analytics-button", {timeout: 15000}).should("exist").click()
         cy.contains("SESSIONS").should("not.exist")
         cy.contains('a', "Page Settings").should("exist")
         cy.contains('a', "View the Content Track Analytics").should("exist")
         
         authoring.microsites.visit()
-        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
+        cy.contains('div', "qa-automation", {timeout: 15000}).trigger('mouseover').should('have.text', "qa-automation")
 
         authoring.vex.visit()
-        cy.contains('div', "qa-automation").trigger('mouseover').should('have.text', "qa-automation")
+        cy.contains('div', "qa-automation", {timeout: 15000}).trigger('mouseover').should('have.text', "qa-automation")
 
         authoring.website.visit()
         cy.contains('h1', "Website Campaigns", {timeout: 3000}).should("exist")
@@ -176,8 +176,9 @@ describe('Admin Role Permissions', function() {
          //login and check permissions
          authoring.common.login(user.userName, user.password)
          cy.get(authoring.common.nameSetting).click()
+         
         cy.get("#user-management").should("exist").click()
-        cy.contains('span', "customrole@gmail.com").click()
+        cy.contains('span', "customrole@gmail.com", {timeout: 15000}).click()
 
         cy.contains('h5', "Username").next().click()
         cy.get('input[name="username"]').click().type("customcanedit"+ "\n")
