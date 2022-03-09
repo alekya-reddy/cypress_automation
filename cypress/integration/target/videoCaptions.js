@@ -63,6 +63,59 @@ const captionsTracks = {
             return `${authoring.common.baseUrl}/${this.slug}`
         }
     },
+    config7: {
+        name: "targetSettingscaptions7.js",
+        slug: "target-config-captions7",
+        contents: ["Brightcove - Used in Cypress automation to test VEX"],
+        captionsLanguage: "Japanese",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config8: {
+        name: "targetSettingscaptions8.js",
+        slug: "target-config-captions8",
+        contents: ["Brightcove - Used in Cypress automation to test VEX"],
+        captions: "off",
+        index: "0",
+        verify: false,
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config9: {
+        name: "targetSettingscaptions7.js",
+        cloneName: "targetSettingscaptionsclone7.js"
+    },
+    config10: {
+        name: "targetSettingscaptions9.js",
+        slug: "target-config-captions9",
+        contents: ["Brightcove - Used in Cypress automation to test VEX"],
+        captionsLanguage: "Polish",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config11: {
+        name: "targetSettingscaptions10.js",
+        slug: "target-config-captions10",
+        contents: ["Brightcove video with no subtitles"],
+        captionsLanguage: "English",
+        captions: "on",
+        index: "0",
+        verify: false,
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config12: {
+        name: "targetSettingscaptions8.js",
+        cloneName: "targetSettingscaptionsclone8.js"
+    },
 }
 
 describe("Target - Video captions", () => {
@@ -198,4 +251,98 @@ describe("Target - Video captions", () => {
             })
         })
     })
+})
+
+    it("Visit the target track which has captions toggle enabled and language selection for Brightcove video", () => {
+        //Captions on for target track, selecting language and checking in consumption
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config7.name)
+        authoring.target.addTrack(captionsTracks.config7)
+        authoring.target.configure(captionsTracks.config7)
+
+        cy.visit(captionsTracks.config7.url)
+        consumption.vex.expectBrightcove()   
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+        cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })         
+
+        //Captions off for target track,and checking in consumption
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config8.name)
+        authoring.target.addTrack(captionsTracks.config8)
+        authoring.target.configure(captionsTracks.config8)
+        
+        cy.visit(captionsTracks.config8.url)
+        consumption.vex.expectBrightcove()
+            cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+            cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
+
+        //Clone the target track and validate captions are cloned
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config9.cloneName)
+        authoring.target.configure(captionsTracks.config9)
+        cy.contains('strong', captionsTracks.config7.contents[0], { timeout: 20000 }).click()
+        cy.get(authoring.target.pagePreview.captions).invoke('css', 'background-color').then(val => {
+            expect(val).to.equal('rgb(0, 169, 203)')
+        })
+        cy.get(authoring.target.pagePreview.pagePreview).within(() => {
+            cy.contains('label', 'Language').parent('div').find("span").should("contain", "Japanese")
+        })
+
+        cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
+            cy.visit(link)
+        })
+        consumption.vex.expectBrightcove()
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+        cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 }) 
+
+        //Clone the target track with captions off and validate details are cloned
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config12.cloneName)
+        authoring.target.configure(captionsTracks.config12)
+        cy.contains('strong', captionsTracks.config8.contents[0], { timeout: 20000 }).click()
+        cy.get(authoring.target.pagePreview.captions).invoke('css', 'background-color').then(val => {
+            expect(val).to.equal('rgb(221, 221, 221)')
+        })
+
+        cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
+            cy.visit(link)
+        })
+        consumption.vex.expectBrightcove()
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+        cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 }) 
+
+        //Validate if the Selected language is not having captions/Subtitles we show notification message
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config10.name)
+        authoring.target.addTrack(captionsTracks.config10)
+        authoring.target.configure(captionsTracks.config10)
+
+        cy.visit(captionsTracks.config10.url)
+        consumption.vex.expectBrightcove()
+                cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
+                cy.wait(1000)
+                cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
+                
+        //Validate If a Particular Brightcove Video is not having any captions we will not show any captions even if Captions are enabled and will display an notification.
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config11.name)
+        authoring.target.addTrack(captionsTracks.config11)
+        authoring.target.configure(captionsTracks.config11)
+
+        cy.visit(captionsTracks.config11.url)
+        consumption.vex.expectBrightcove()
+                cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
+                cy.wait(1000)
+                cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
+                
 })

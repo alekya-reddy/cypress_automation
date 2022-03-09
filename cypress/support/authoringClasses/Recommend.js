@@ -6,7 +6,7 @@ export class Recommend extends Common {
         this.pageUrl = `${this.baseUrl}/authoring/content-library/recommend`;
         this.pageTitle = "Recommend Tracks";
         this.recommendAnalyticsTitle = "Recommend Analytics Overview";
-        this.deleteTrackIcon = "i[title='Delete Track']";
+        this.deleteTrackIcon = "i[class*='delete Icon']";
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
         this.editTrack = 'span:contains("Edit Track")';
@@ -352,7 +352,7 @@ export class Recommend extends Common {
         })
 
         if(verify !== false){
-            cy.get(this.pageSidebar.customUrlLabel).siblings("span").should("contain", slug)
+             cy.get(this.pageSidebar.customUrlLabel,{timeout:10000}).siblings("span").should("contain", slug.toLowerCase())
         }
     }
 

@@ -131,6 +131,7 @@ export class VexCX extends CommonCX {
             pauseButton:'[title="Pause"]',
             video:"[class*='video-js']",
             audioMuteNotification:"div[id='video-tooltip']",
+            captionsCC:'[title="Captions"]',
         };
 
         this.zoom = {
