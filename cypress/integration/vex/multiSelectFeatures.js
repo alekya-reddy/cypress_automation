@@ -33,7 +33,7 @@ describe('Explore Multi-Select', function() {
                 cy.contains('label', "Search Engine Directive").should("exist")
                 cy.contains('label', "Appearance").should("exist")
                 cy.get(authoring.common.multiEditInput).eq(0).click()
-                cy.get(authoring.common.multiEditInputType).eq(0).type(SearchEngineValue + "\n")
+                cy.get(authoring.common.multiEditInputType).eq(0).type("Index, Follow" + "\n")
                 cy.get(authoring.common.multiEditInput).eq(1).click()
                 cy.get(authoring.common.multiEditInputType).eq(1).type(appearanceValue + "\n")      
                 cy.get(authoring.common.multiEditInput).eq(2).click()
