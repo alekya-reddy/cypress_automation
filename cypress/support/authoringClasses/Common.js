@@ -56,6 +56,7 @@ export class Common {
         this.orgSave = 'button[id="save"]';
         this.editIconUserRoles = '.Select-value-icon';
         this.userRolename = 'div[class="Select-control"]';
+        this.sharingDomainURLinput = 'input[name="sharingDomainUrl"]'
 
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common

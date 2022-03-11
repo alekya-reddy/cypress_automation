@@ -8,6 +8,7 @@ export class Website extends Common {
         this.pageTitle = "Website Promoters";
         this.websiteCampaignsPageTitle = "Website Campaigns";
         this.addWebsiteURLButton = "#AddWebsiteURLLink";
+        this.deleteWebsiteCampaigns = 'i[class*="Icon__fa-trash"]';
         this.newURLInput = "#urlPatterns";
         this.websiteURLName = `div[data-qa-hook="table-cell-url-patterns"] > span`;
         this.enabledToggle = `div[data-qa-hook="enabled"]`;
@@ -44,9 +45,11 @@ export class Website extends Common {
     deleteWebsite(url, verify){
         this.visit()
         cy.ifElementWithExactTextExists(this.websiteURLName, url, 10000, () => {          
-            cy.containsExact(this.websiteURLName, url).click({force: true})
-            cy.get(this.deleteIcon, {timeout: 20000}).click()
-            cy.contains(this.modal, "Are you sure you want to delete this?").contains("button", "Delete Website Track").click()
+            cy.containsExact(this.websiteURLName, url).within(() => {
+
+            cy.get(this.deleteWebsiteCampaigns, {timeout: 20000}).trigger('mouseover').should('have.text', "Delete Website Campaigns").click()
+            })
+            cy.contains("button", "Yes").click()
         })
 
         if(verify !== false){

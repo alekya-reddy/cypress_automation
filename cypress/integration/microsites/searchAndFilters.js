@@ -92,6 +92,7 @@ const targetBlock =
 {
     id: "Target Block",
     type: "track",
+    className: "class1, class2",
     track: target.name
 }
 
@@ -369,7 +370,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.deleteBlock(target.name)
     })
 
-    it("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
+    it.only("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)
@@ -384,6 +385,8 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
         cy.visit(microsite.url)
         cy.wait(10000)
+        //verify class block for track is visible and specified class name is also showing on consumption side
+        cy.get(authoring.microsites.landingPages.defaultClassonTrack).should("exist")
         cy.get(consumption.microsites.topicFilter).click()
         //Verify Topic Filter
         const content_topics = contentPages.contentWithTopicContentTypePersona.topics
