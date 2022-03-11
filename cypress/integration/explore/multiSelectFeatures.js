@@ -15,7 +15,7 @@ const explore3 = {
 }
 
 const folderName = "MultiSelectFeatures"
-const SearchEngineValue = "Index, Follow"
+const searchEngineValue = "Index, Follow"
 const appearanceValue = "Default"
 
     
@@ -40,19 +40,19 @@ describe('Explore Multi-Select', function() {
             })    
                 cy.contains('a', explore1.name).click()
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 
                 cy.go("back")
                 cy.contains('span', folderName).click()
                 cy.contains('a', explore2.name).click()
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
 
                 cy.go("back")
                 cy.contains('span', folderName).click()
                 cy.contains('a', explore3.name).click()
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
     })
              
     it('Move Option For Multi-Select In Target/Recommend', function() {

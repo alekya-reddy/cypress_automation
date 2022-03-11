@@ -15,7 +15,7 @@ const microsite3 = {
 }
 
 const folderName = "MultiSelectFeatures"
-const SearchEngineValue = "Index, Follow"
+const searchEngineValue = "Index, Follow"
 const appearanceValue = "Default"
 const languageValue = "English"
 
@@ -43,19 +43,19 @@ describe('Explore Multi-Select', function() {
             })    
                 cy.contains('a', microsite1.name).click()
                 cy.contains('div', "Appearance").next().should('have.text', "Default")
-                cy.contains('div', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', "English")
                 
                 cy.go("back")
                 cy.contains('a', microsite2.name).click()
                 cy.contains('div', "Appearance").next().should('have.text', "Default")
-                cy.contains('div', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', "English")
 
                 cy.go("back")
                 cy.contains('a', microsite3.name).click()
                 cy.contains('div', "Appearance").next().should('have.text', "Default")
-                cy.contains('div', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', "English")
     })
              

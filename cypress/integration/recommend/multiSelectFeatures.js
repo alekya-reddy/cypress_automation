@@ -15,7 +15,7 @@ const recommend3 = {
 }
 
 const folderName = "MultiSelectFeatures"
-const SearchEngineValue = "Index, Follow"
+const searchEngineValue = "Index, Follow"
 const appearanceValue = "Default"
 const languageValue = "English"
 const linksSharingValue = "Default"
@@ -50,21 +50,21 @@ describe('Target/Recommend Multi-Select', function() {
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
                 cy.contains('label', "Language").next().should('have.text', "English")
                 cy.contains('label', "Links & Sharing").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 
                 cy.go("back")
                 cy.contains('a', recommend2.name).click()
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
                 cy.contains('label', "Language").next().should('have.text', "English")
                 cy.contains('label', "Links & Sharing").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
 
                 cy.go("back")
                 cy.contains('a', recommend3.name).click()
                 cy.contains('label', "Appearance").next().should('have.text', "Default")
                 cy.contains('label', "Language").next().should('have.text', "English")
                 cy.contains('label', "Links & Sharing").next().should('have.text', "Default")
-                cy.contains('label', "Search Engine Directive").next().should('have.text', "Index, Follow")
+                cy.contains('label', "Search Engine Directive").next().should('have.text', searchEngineValue)
     })
              
     it('Move Option For Multi-Select In Target/Recommend', function() {

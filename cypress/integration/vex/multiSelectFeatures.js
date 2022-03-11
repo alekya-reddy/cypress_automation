@@ -15,7 +15,7 @@ const vex3 = {
 }
 
 const folderName = "MultiSelectFeatures"
-const SearchEngineValue = "Index, Follow"
+const searchEngineValue = "Index, Follow"
 const appearanceValue = "Default"
 const languageValue = "English"
 
@@ -42,18 +42,18 @@ describe('Explore Multi-Select', function() {
 
             })    
                 cy.contains('a', vex1.name).click()
-                cy.contains('div', "Search Engine Directive").next().should('have.text', SearchEngineValue)
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', languageValue)
                 
                 cy.go("back")
                 cy.contains('a', vex2.name).click()
-                cy.contains('div', "Search Engine Directive").next().should('have.text', SearchEngineValue)
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', languageValue)
 
 
                 cy.go("back")
                 cy.contains('a', vex3.name).click()
-                cy.contains('div', "Search Engine Directive").next().should('have.text', SearchEngineValue)
+                cy.contains('div', "Search Engine Directive").next().should('have.text', searchEngineValue)
                 cy.contains('div', "Language").next().should('have.text', languageValue)
     })
              

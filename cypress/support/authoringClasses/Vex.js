@@ -345,7 +345,7 @@ export class Vex extends Common {
                 cy.contains('Yes').click()
             })
         })
-        //cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
+        cy.containsExact(this.eventCardTitle, eventName).should('not.exist')
 
     }
 
