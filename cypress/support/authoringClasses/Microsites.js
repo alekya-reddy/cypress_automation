@@ -101,6 +101,7 @@ export class Microsites extends Common {
             searchAndFiltersBlockToggleOFF: "div[class*='OMAuq']",
             enableDescription: "input[name*='cardConfiguration.enableDescription']",
             defaultClassonTrack: 'div[class*="pf-track-block"]',
+            defaultClassonFeatured: 'div[class*="pf-featured-block"]'
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",

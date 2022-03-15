@@ -114,7 +114,9 @@ describe("Microsites - Landing page featured content block setup", () => {
         cy.visit(landingPage.url)
         consumption.microsites.verifyLandingPageBlock(featuredBlockCarousel)
         //verify class name added will show on consumption side into carousel layout
-        cy.get('div[class*="pf-featured-block automationClass"]').should("exist")
+       
+         cy.get('div[class*="pf-featured-block automationClass"]').should("exist")
+
         // Verify carousel layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
             // the featured content block does not show preview for carousel due to UI limitation so it will have normal cell-alignment
