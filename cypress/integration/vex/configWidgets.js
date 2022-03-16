@@ -39,8 +39,8 @@ const widget2 = {
 }
 
 const event = {
-    name: 'configWidgets.js',
-    slug: 'configwidgets-js',
+    name: 'configWidgets2.js',
+    slug: 'configwidgets2-js',
     get url(){
         return `${authoring.common.baseUrl}/${this.slug}`
     }
@@ -132,23 +132,28 @@ describe("Widget Configuration", ()=>{
         })
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tabs distribute evenly to widget if more than one widget tabs enabled.
-         cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
             let index = tabWidth.indexOf("px");
             let TotalWidgetTabWidth = tabWidth.substr(0, index)
-             cy.get('li').then(count=>{
-                const widgetCount = (Cypress.$(count).length)-1;
-                cy.get('li').each((count) => {
-                    if (count === widgetCount+1){
-                        return;
-                    };
-                    cy.get(count).invoke('css','width').then(actualWidth => {
-                        let parts = actualWidth.split("px");
-                        let actualWidgettabWidth = parts[0];
-                        expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
-                    })
-                  })
+            let widgetCount
+            cy.get('li').then(count=>{
+                widgetCount=count.length-1
+            })
+             cy.get('li').each(($el,index,$list)=>{
+                cy.wrap($el).invoke('attr', 'class').then(value=>{
+                    cy.log("value: "+value)
+                    if(value === 'p-tabview-ink-bar')
+                        return false;
+                        else{
+                            cy.wrap($el).invoke('css','width').then(actualWidth => {
+                                let parts = actualWidth.split("px");
+                                let actualWidgettabWidth = parts[0];
+                                expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
+                            })
+                        }
                 })
             })
+        })
         // Widgets that should not be present
         cy.contains("span", widget2.name).should("not.exist") // This is turned off for both demand and live, so should not exist
         cy.contains("span", widget.newName).should("not.exist") // This was deleted so should not exist 
