@@ -38,7 +38,8 @@ export class ContentLibrary extends Common{
             seoTitle: "#content-sidebar-seo-title",
             seoTitleInput: "textarea[name='seoTitle']",
             previewTargetTracks: "div[data-qa-hook='preview-section-target-tracks']",
-            experienceTagsLocator: "span[class^='ExperienceTags']"
+            experienceTagsLocator: "span[class^='ExperienceTags']",
+            usedInSectionArrow: 'div[class="ant-collapse-header"]',
         };
         this.advancedEditComponent = {
             publicTitleInput: "#title",
@@ -92,6 +93,30 @@ export class ContentLibrary extends Common{
         this.openPreview(config) // the openPreview method will add property contentExists 
         cy.get("body").then(()=>{
             if(config.contentExists){
+                cy.get(this.deleteIcon, {timeout: 5000}).click()
+                cy.get(this.deleteContentButton, {timeout: 5000}).click()
+            }
+        })
+        if(verify !== false && url){
+            let url_no_protocol = url.replace(/^https?:\/\//,'')
+            cy.waitFor({element: `a[href="${url}"]`, to: "not.exist", wait: 20000})
+            cy.containsExact(this.table.urlCell, url_no_protocol).should("not.exist")
+        } else if (verify !== false && internalTitle){
+            cy.ifNoElementWithExactTextExists(this.table.internalTitleCell, internalTitle, 10000, ()=>{}) // waits for content to disappear... could use waitFor, but that doesn't check exact text
+            cy.containsExact(this.table.internalTitleCell, internalTitle).should("not.exist")
+        }
+    }
+
+    deleteContent(config){
+        const internalTitle = config.internalTitle
+        const url = config.url 
+        const verify = config.verify
+
+        this.goToPage(this.pageTitle, this.pageUrl)
+        cy.get("body").then((body)=>{
+            cy.get(this.pageSearch, {timeout: 20000}).clear().type(url)
+            if(body.find(`div[class*='Table__table'] a[href='${url}']`).length>0){
+                cy.get("div[class*='Table__table'] [data-qa-hook='table-cell-thumbnail'] img:visible").eq(0).click()
                 cy.get(this.deleteIcon, {timeout: 5000}).click()
                 cy.get(this.deleteContentButton, {timeout: 5000}).click()
             }

@@ -14,6 +14,18 @@ const event2 = {
     slug: "cannot-change-me"
 }
 
+const event3 = {
+    name: "deleteEvent1.js"
+}
+
+const event4 = {
+    name: "deleteEvent2.js"
+}
+
+const event5 = {
+    name: "deleteEvent3.js"
+}
+
 const folder = {
     name: "Folder2"
 }
@@ -97,7 +109,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit();
         authoring.vex.deleteVirtualEvent(event.name)
         authoring.vex.addVirtualEvent(event)
-        authoring.vex.editfolder(event.name)
+        authoring.vex.editfolder(event)
         cy.contains("span","Save Folder").should("exist").click()
 
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
@@ -122,4 +134,25 @@ describe('VEX - Virtual Event', function() {
         })
 
      })
+     it('Verify Delete Option For Multi-Select', function() {
+        authoring.common.login();
+        authoring.vex.visit();
+        authoring.vex.addVirtualEvent(event3)
+        authoring.vex.addVirtualEvent(event4)
+        authoring.vex.addVirtualEvent(event5)
+        cy.contains('td', event3.name).prev().click()
+        cy.contains('td', event4.name).prev().click()
+        cy.contains('td', event5.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "3").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+        cy.contains('td', event3.name).should("not.exist")
+        cy.contains('td', event4.name).should("not.exist")
+        cy.contains('td', event5.name).should("not.exist")
+
+     })
+          
 })

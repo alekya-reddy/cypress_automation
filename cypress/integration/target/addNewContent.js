@@ -16,6 +16,23 @@ const target = {
     }
 }
 
+const target1 = {
+    name: "deleteTarget1.js",
+}
+
+const target2 = {
+    name: "deleteTarget2.js",
+}
+const target3 = {
+    name: "deleteTarget3.js",
+}
+
+const targetUsedInExplore = {
+    name: "DoNotDelete",
+}
+
+const ExploreFromTarget = "DoNotDelete"
+
 describe("Target - Add New content", () => {
     it("Validate add content to top or bottom of the target track", () => {
         let a = [],b=[],c=[],d=[];
@@ -111,4 +128,45 @@ describe("Target - Add New content", () => {
             expect(d.indexOf(webContent[4])).to.equal(4)
         })
     })
+        
+    it('Verify Delete Option For Multi-Select', function() {
+        authoring.common.login();
+        authoring.target.visit();
+        authoring.target.addTrack(target1)
+        authoring.target.addTrack(target2)
+        cy.go("back")
+        cy.contains('td', target1.name).prev().click()
+        cy.contains('td', target2.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "2").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+        cy.contains('td', target1.name).should("not.exist")
+        cy.contains('td', target2.name).should("not.exist")
+
+     })
+
+     it('Verify Delete Option And Error Msg For Multi-Select When Track has been used in Microsite/Explore', function() {
+        authoring.common.login();
+        authoring.target.visit();
+        authoring.target.addTrack(target3)
+        cy.go("back")
+        cy.contains('td', target3.name).prev().click()
+        cy.contains('td', targetUsedInExplore.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "2").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+            cy.contains('div', "Track(s) cannot be deleted").should("exist")
+            cy.contains('p', "Before you delete the following track(s), you need to remove it from the following Explore page(s) and/or Microsite(s) and/or Route(s):").should("exist")
+            cy.contains('li', "DoNotDelete").should("exist")
+            cy.contains('span', "OK").should("exist").click()
+        cy.contains('td', target3.name).should("not.exist")
+        cy.contains('td', targetUsedInExplore.name).should("exist")
+
+     })
 })

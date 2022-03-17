@@ -6,6 +6,7 @@ const childFolderName = ['AutomationFolderChild']
 
 const event1 = {
     name: 'virtualEventfoldering.js',
+    editedName: 'editedvirtualEventFoldering'
 }
 
 const event2 = {
@@ -16,6 +17,11 @@ const event2 = {
 const event3 = {
     name: 'childEvent.js',
     childFolder: 'AutomationFolderChild'
+}
+
+const event4 = {
+    name: 'editedvirtualEventFoldering',
+    editedName: 'virtualEventfoldering.js'
 }
 
 describe("VEX - Create, Edit and Delete Folders", () => {
@@ -93,6 +99,18 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.get(authoring.vex.eventVerification).should('exist')
         cy.get(authoring.vex.pageSearch).clear()
 
+    })
+          
+    it("Verify Edit Functionality", () => {
+        authoring.common.login()
+        authoring.vex.visit()
+        cy.contains('span', "Root", {timeout: 20000}).click()
+        cy.wait(200)
+        authoring.vex.deleteVirtualEvent(event1.name)
+        authoring.vex.addVirtualEvent(event1)
+        authoring.vex.editfolder(event1)
+        authoring.vex.editfolder(event4)
+        
     })
 
 })

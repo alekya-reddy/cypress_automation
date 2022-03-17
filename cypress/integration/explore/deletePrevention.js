@@ -46,6 +46,24 @@ const exploreTarget = {
     }
 };
 
+const explore2 = {
+    name: 'deleteExplore1.js',
+    experienceType: 'Target',
+    trackName: 'DELETE',
+}
+
+const explore3 = {
+    name: 'deleteExplore2.js',
+    experienceType: 'Recommend',
+    trackName: 'DELETE',
+}
+
+const explore4= {
+    name: 'deleteExplore3.js',
+    experienceType: 'Target',
+    trackName: 'cloneExplore.js',
+}
+
 const exploreRecommend = {
     name: 'exRecommend deletePrevention.js',
     experienceType: 'Recommend',
@@ -106,6 +124,8 @@ describe("Explore - Verify delete prevention", () => {
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
+
+        cy.contains('td', explore.name).prev().click()
         cy.contains("a", explore.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
         cy.wait(1000)
@@ -113,6 +133,7 @@ describe("Explore - Verify delete prevention", () => {
             expect(text).to.equal('2')
         }) 
         cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains('td', explore.name).prev().click()
         cy.contains("a", explore.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
         cy.wait(1000)
@@ -120,6 +141,27 @@ describe("Explore - Verify delete prevention", () => {
             expect(text).to.equal('0')
         })
     })
+    it('Verify Delete Option For Multi-Select', function() {
+        authoring.common.login();
+        authoring.explore.visit();
+        authoring.explore.addExplore(explore2)
+        authoring.explore.addExplore(explore3)
+        authoring.explore.addExplore(explore4)
+        cy.go("back")
+        cy.contains('td', explore2.name).prev().click()
+        cy.contains('td', explore3.name).prev().click()
+        cy.contains('td', explore4.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "3").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+        cy.contains('td', explore2.name).should("not.exist")
+        cy.contains('td', explore3.name).should("not.exist")
+        cy.contains('td', explore4.name).should("not.exist")
+
+     })
 })
 
 

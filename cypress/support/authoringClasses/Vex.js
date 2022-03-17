@@ -42,7 +42,7 @@ export class Vex extends Common {
         this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.trashIcon = "i[class*='Icon__fa-trash']";
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'span[class="ant-select-selection-item"]>a';
         this.pageTitle = 'input[name="landingExperience.pageTitle"]';
@@ -299,9 +299,23 @@ export class Vex extends Common {
         }
     }
 
-    editfolder(name){
-        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
-            cy.contains("button", "Edit Folder").click()
+    editfolder(options){
+        const name = options.name
+        const editedName = options.editedName
+        const Folder = options.Folder
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
+        cy.get(this.antModal).within(() => {
+            cy.contains("div", "Edit Virtual Event").should("exist")
+
+            if (editedName) {
+                cy.get('input[name="name"]:visible').clear({force: true}).type(editedName)
+            }
+            if (Folder) {
+                this.setFolder(folder)
+            }
+             cy.contains('button', "Save Virtual Event").should("exist").click()
+
         })
     }
 
@@ -325,7 +339,8 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${eventName}']`).should('exist').click()
+            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='delete-${eventName}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -339,7 +354,8 @@ export class Vex extends Common {
         cy.get(this.pageSearch).clear().type(name)
         cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
             cy.contains(this.eventCardTitle, name, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${name}']`).should('exist').click()
+            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })

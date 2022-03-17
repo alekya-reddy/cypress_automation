@@ -67,11 +67,10 @@ describe("Microsites - Deleted microsites and landing pages", () => {
     it("Add to folder with drag and drop and root folder option available ", () => {
         authoring.common.login()
         authoring.microsites.visit()
+        cy.contains('span', "Root").click()
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.addMicrosite(microsite1)
-        authoring.microsites.editfolder(microsite1.name)
-        cy.contains("span","Save Folder").should("exist").click()
-
+        cy.get(authoring.microsites.rootfolder).click()
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
@@ -84,12 +83,13 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         }) 
 
         cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains('td', microsite1.name).prev().click()
         cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
         cy.wait(1000)
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         })
-
+        cy.contains('span', "Root").click() // Resetting the folder structure to root, orelse when next time script runs in the same session its trying to find and unable to delete the deletedMicrosite.js" in child folder 
     })
 })
