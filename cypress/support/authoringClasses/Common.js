@@ -34,6 +34,10 @@ export class Common {
         this.anotherDeleteIcon = 'i[title="Delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
+        this.multiEditIcon = '#pf-multi-select-edit';
+        this.multiMoveIcon = '#pf-multi-select-move-to';
+        this.multiEditInput = 'input[class="ant-select-selection-search-input"]';
+        this.multiEditInputType = 'input[type="search"]';
         this.clearValueIcon = ".Select-clear";
         this.antNotification = "div[class^='ant-notification-notice']";
         this.antSelectItem = "span[class='ant-select-selection-item']";

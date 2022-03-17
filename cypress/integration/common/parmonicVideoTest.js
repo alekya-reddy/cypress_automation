@@ -35,6 +35,7 @@ const onDemandSession = 'onDemandSession'
 const domainName = "pathfactory-qa-wp.com"
 const websitePath = "automation-analytics"
 const targetElementID = "content"
+const contentpoolName = "Wordpress"
 const queryString = "?lb-mode=preview"
 const consumptionURL = "http://"+domainName+"/"+websitePath+"/"+queryString
 const videoTitle = "Mergers and Acquisitions and its impact on sales tax"
@@ -145,6 +146,7 @@ it("Limelight for WT", () => {
         cy.get(authoring.websiteTools.websitePath).type(websitePath)
         cy.contains("span","Guide").click()
         cy.contains("span","Concierge").click()
+        cy.get(authoring.websiteTools.enterselectOption('contentPool')).type(contentpoolName +"\n",{force: true})
         cy.get(authoring.websiteTools.targetElementID).type(targetElementID)
         cy.contains("span","Featured").click()
         featuredContent.forEach((content)=>{
