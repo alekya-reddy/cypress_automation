@@ -370,7 +370,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.deleteBlock(target.name)
     })
 
-    it.only("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
+    it("Verify multi-selection of Filters and Search functionality on contents on consumption page", () => {
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(microsite.name)

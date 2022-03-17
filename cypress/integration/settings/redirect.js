@@ -27,8 +27,8 @@ const incomingPath = "/l/newtrack$"
 const redirectPath = "/l/newtrack123$"
 const incomingPathEdited = "/l/newtrack$Edit"
 
-describe("Add Appearance and Verify LastUpdated Date", () => {
-    it("Add Appearance", () => {
+describe("Redirect should appear as a new tab within organization settings", () => {
+    it("verify add, edit and delete functionality for redirect rules", () => {
         authoring.common.login()
         cy.visit(authoring.settings.redirectRules.pageUrl)
         cy.get(authoring.common.pageTitleBar).contains('Redirect Rules').should("exist")
@@ -66,7 +66,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
 
     })
 
-    it(user.roleDescription, function(){
+    it("verify  Admin, and custom role  permission", function(){
     authoring.common.login()
     // create user role if do not exist
     authoring.userManagement.addNewUserRole(role1.roleName)
@@ -86,7 +86,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
 
     })
      
-    it(user.roleDescription, function(){
+    it("verify Governance create/ edit / delete  permission", function(){
         authoring.common.login()
         // create user role if do not exist
         authoring.userManagement.addNewUserRole(role2.roleName)
