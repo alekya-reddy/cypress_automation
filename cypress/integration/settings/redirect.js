@@ -53,7 +53,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
             cy.contains('span', "Delete").should("exist").click()          
         })
 
-        cy.get('div[class="ant-popover-inner-content"]').within(()=>{
+        cy.get(authoring.common.contentModal).within(()=>{
             cy.contains('span', "Delete").should("exist").click()            
         })
         

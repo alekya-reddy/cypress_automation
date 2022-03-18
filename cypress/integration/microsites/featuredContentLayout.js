@@ -198,7 +198,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Verify Grid layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
             //verify specific alignment selected gets applied to the cells
-            cy.get('div[class*="pf-microsite-grid"]').should("have.css", "justify-content", "center")
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "center")
 
         })     
 
@@ -223,7 +223,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Verify Grid layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
              //verify specific alignment selected gets applied to the cells
-            cy.get('div[class*="pf-microsite-grid"]').should("have.css", "justify-content", "right")
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "right")
 
         }) 
 
@@ -248,7 +248,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Verify Grid layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
              //verify specific alignment not selected will cathc by default normal
-            cy.get('div[class*="pf-microsite-grid"]').should("have.css", "justify-content", "normal")
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "normal")
 
         }) 
 
