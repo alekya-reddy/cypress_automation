@@ -71,11 +71,11 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.visit();
         //clone VEX and verify that changing their values doesn't affect original VEX
         authoring.vex.addVirtualEvent(event2)
-        cy.contains('a', "clonedEvent").click()
         cy.get(authoring.vex.pageTitle).should('have.value', event.pageTitle)
         cy.get(authoring.vex.pageDescription).contains(event.pageDescription).should("exist")
         cy.get('img[src*="/stock/sm/animal-dog-pet-cute.jpg"]').should("exist")
         authoring.vex.visit();
+        authoring.vex.goToEventConfig(event2.name)
         authoring.vex.configureEvent(event2)
 
         cy.visit(event2.url)

@@ -172,9 +172,7 @@ export class Microsites extends Common {
         cy.wait(3000)
     
         if (verify !== false) {
-
-            cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
     }
 
@@ -203,7 +201,7 @@ export class Microsites extends Common {
             cy.contains("div", "Edit Microsite").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').eq(1).clear().type(editedName)
+                cy.get('input[name="name"]').eq(0).clear().type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)
