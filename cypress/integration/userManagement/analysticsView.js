@@ -96,7 +96,7 @@ describe('Governanace Analytics for Tools', function() {
         cy.get(authoring.vex.analyticsButton).contains("Analytics").should("exist")
         cy.get(authoring.vex.analyticsButton).contains("Analytics").click({force: true})
         cy.wait(3000)
-        cy.get(authoring.vex.analyticsOverview).contains("Event Overview").should("exist")
+        cy.contains('div', "Event Session Overview").should("exist")
 
         authoring.websiteTools.visit()
         cy.contains(authoring.websiteTools.domainCard, domainName).within(()=>{
