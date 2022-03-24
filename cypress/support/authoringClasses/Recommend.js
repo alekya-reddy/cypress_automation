@@ -395,22 +395,42 @@ export class Recommend extends Common {
 
     configureTopicSidebar(config){
         const {ctaNumber,ctaName, location, buttonColor, fontColor} = config
-        //cy.get(this.pageSidebar.topicSidebarToggle).parents().eq(1).within(() => {
-            cy.contains("label", ctaNumber).siblings("span").click({force: true})
-       // })
-        cy.get(this.popover).within(()=>{
+        cy.get(this.pageSidebar.topicSidebarToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click()
+        })
+            cy.get(this.popover).within(()=>{
             if(Cypress.$(this.clearValueIcon).length > 0){
                 cy.get(this.clearValueIcon).click()
             }
-            //cy.get('div[class="Select-placeholder"]').type(ctaName + "\n", {force: true})
             cy.get(this.dropdown.box).eq(0).click()
             cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
             cy.get(this.dropdown.box).eq(1).click()
             cy.get(this.dropdown.input).eq(1).type(location + "\n", {force: true})
-            cy.get('input[name="buttonColor"]').type(buttonColor + "\n", {force: true})
+            cy.get('#buttonColor').type(buttonColor)
             cy.wait(100)
-            cy.get('input[name="fontColor"]').type(fontColor + "\n", {force: true})
+            cy.get('#fontColor').type(fontColor)
+            cy.wait(200)
+            cy.contains('button', 'Update').click()
+        })
+    }
+
+    configureTopicSidebar1(config){
+        const {ctaNumber,ctaName, location, buttonColor, fontColor} = config
+        cy.get(this.pageSidebar.sidebarToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click()
+        })
+            cy.get(this.popover).within(()=>{
+            if(Cypress.$(this.clearValueIcon).length > 0){
+                cy.get(this.clearValueIcon).click()
+            }
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(location + "\n", {force: true})
+            cy.get('#buttonColor').type(buttonColor)
             cy.wait(100)
+            cy.get('#fontColor').type(fontColor)
+            cy.wait(200)
             cy.contains('button', 'Update').click()
         })
     }

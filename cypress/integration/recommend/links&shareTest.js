@@ -28,8 +28,7 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
         authoring.configurations.deleteLinksAndSharing("linkAndShareFlow.js")
         authoring.configurations.addLinksAndSharing("linkAndShareFlow.js")
         cy.get('#emailSubject').type("Test Email Subject")
-        cy.get('label[for="emailEnabled"]').siblings('div').click()
-            
+        cy.get('label[for="emailEnabled"]').siblings('div').click()            
         cy.contains('Not added to any Recommend Tracks').should('exist')
         cy.contains('button', "Save").click()
         authoring.recommend.visit()
