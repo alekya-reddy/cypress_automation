@@ -47,7 +47,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.contains("No virtual events found")
       
         authoring.vex.addVirtualEvent(event2)
-        
+        cy.go("back")
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '1')
 
 
@@ -63,9 +63,9 @@ describe("VEX - Create, Edit and Delete Folders", () => {
 
         // add virtual event into child folder
 
-        cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
+        cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click({force:true})
         authoring.vex.addVirtualEvent(event3)
-
+        cy.go("back")
        //verify folder count
         cy.get(authoring.common.folder.folderToggle(parentFolderName[0])).click() // by clicking on parent folder it collapses child folder
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '2')
@@ -108,6 +108,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.wait(200)
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1)
+        cy.go("back")
         authoring.vex.editfolder(event1)
         authoring.vex.editfolder(event4)
         

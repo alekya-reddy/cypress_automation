@@ -294,8 +294,7 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.wait(2000) // To close the Add Event modal 
-            cy.get(this.antModal,{timeout:20000}).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
     }
 
@@ -303,6 +302,7 @@ export class Vex extends Common {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
+
         cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
         cy.get(`i[class*='edit-for-${name}']`).eq(0).click({force: true})
         cy.get(this.antModal).within(() => {
@@ -582,7 +582,6 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const thumbnail = config.thumbnail
 
-        this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null;
