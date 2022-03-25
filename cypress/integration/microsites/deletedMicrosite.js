@@ -69,7 +69,7 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         })
     })
 
-    it.only("Add to folder with drag and drop and root folder option available ", () => {
+    it("Add to folder with drag and drop and root folder option available ", () => {
         authoring.common.login()
         authoring.microsites.visit()
         cy.contains('span', folder.name).click()
@@ -82,7 +82,9 @@ describe("Microsites - Deleted microsites and landing pages", () => {
         cy.contains('td', microsite1.name).prev().click()
         cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
         cy.contains("div",folder2.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.reload()
         cy.wait(2000)
+        cy.contains('span', folder.name, {timeout:20000}).click()
         cy.contains("div",folder.name,{timeout:20000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('1')
         }) 
