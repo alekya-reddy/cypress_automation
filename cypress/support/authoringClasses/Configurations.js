@@ -14,6 +14,7 @@ export class Configurations extends Common {
             forms: `${this.configRoute}/forms`,
             images: `${this.configRoute}/images/content`,
             accessProtection: `${this.configRoute}/access-protection/email-and-domain`,
+            redirectTab: `${this.configRoute}/access-protection/email-and-domain`,
             contentTags: `${this.configRoute}/tags/topics`,
             linksAndSharings: `${this.configRoute}/sharing`,
             ctas: `${this.configRoute}/ctas`,

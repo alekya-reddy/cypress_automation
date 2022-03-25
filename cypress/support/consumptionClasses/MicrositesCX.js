@@ -4,6 +4,7 @@ export class MicrositesCX extends CommonCX {
     constructor(env, org, tld, baseUrl) {
         super(env, org, tld, baseUrl);
         this.grid = ".pf-microsite-grid";
+        this.gridLayout = 'div[class*="pf-microsite-grid"]';
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
         this.topicFilter = "#microsite_topics"

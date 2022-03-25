@@ -5,6 +5,7 @@ const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbook
 const event = {
     name: '2 addRemoveEditEvents.js',
     newName: 'newName addRemoveEditEvents.js',
+    editedName: 'edited addRemoveEditEvents.js',
     slug: 'test-1-1-slug',
     externalID: "someID"
 }
@@ -119,7 +120,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.deleteVirtualEvent(event0.name)
         authoring.vex.addVirtualEvent(event0)
         cy.go("back")
-
+         
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('2')
         })

@@ -302,14 +302,14 @@ export class Vex extends Common {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
-        cy.contains('tr', name).within(() => {
-        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
-        })
+
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).eq(0).click({force: true})
         cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Virtual Event").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').clear({force: true}).type(editedName)
+                cy.get('input[name="name"]').eq(0).clear({force: true}).type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)
@@ -340,7 +340,7 @@ export class Vex extends Common {
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
             cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='delete-${eventName}']`).should('exist').click({force:true})
+            cy.get(`i[class*='delete-${eventName}']`).eq(0).click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })

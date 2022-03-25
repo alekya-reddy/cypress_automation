@@ -38,11 +38,8 @@ describe("View Only Permissions", () => {
            cy.contains('div', "Settings").should('be.visible')
            cy.contains('div', "Analytics").should('be.visible')
            cy.contains('button', "Add Website URL").should("not.exist")
-           cy.contains('span', "Website URLs").should('be.visible')
-           cy.contains('span', "Enabled").should('be.visible')
-           cy.contains('span', "Promoters Enabled").should('be.visible')
-           cy.contains('span', website).should('be.visible').click()
-
+           cy.contains('a', website).should('be.visible').click()
+           cy.contains('h5', "Website URLS", {timeout: 20000}).should('be.visible')
            cy.contains('h5', "Enabled").should('be.visible')
            authoring.common.togglemethod(authoring.website.enabledToggle)
 

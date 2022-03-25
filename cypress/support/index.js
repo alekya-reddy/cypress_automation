@@ -25,4 +25,10 @@ beforeEach(() => {
     })
 })
 
+// To Disable screenshots up on fail tests - by default they are ON
+// Adding it here as this loades before any test files are evaluated.
+Cypress.Screenshot.defaults({
+    screenshotOnRunFailure: false
+  })
+
 
