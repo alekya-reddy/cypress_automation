@@ -582,7 +582,6 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const thumbnail = config.thumbnail
 
-       // this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null;
