@@ -1675,7 +1675,7 @@ export class Configurations extends Common {
         this.clicklanguage(name)
         this.gotoLanguageTab(tab)
         cy.wait(5000)
-        cy.get("#reset-settings",{timeout:10000}).should("be.visible").click()
+        cy.get("#reset-settings",{timeout:10000}).scrollIntoView().click()
         cy.wait(2000)
         cy.contains(this.modal, "Are you sure?",{timeout:10000}).within(()=>{
             cy.wait(2000)

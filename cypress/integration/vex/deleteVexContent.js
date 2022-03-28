@@ -73,7 +73,6 @@ describe('VEX - Virtual Event', function() {
         // Add event back and add sessions to it
         authoring.vex.visit();
         authoring.vex.addVirtualEvent(event)
-        authoring.vex.goToEventConfig(event.name)
         sessions.forEach((session)=>{
             authoring.vex.addSession(session.name)
             authoring.vex.configureSession(session)

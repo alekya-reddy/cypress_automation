@@ -2,7 +2,7 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 const event = {
-    name: 'configureSessions'
+    name: '2configureSessions'
 }
 
 
@@ -62,7 +62,6 @@ describe('VEX - Virtual Event', function() {
 
         // Set up: Add event, add session to it
         authoring.vex.addVirtualEvent(event)
-        authoring.vex.goToEventConfig(event.name)
         authoring.vex.addSession(session.name)
 
         // Verify that cannot set session to public without first setting an on demand video 

@@ -77,8 +77,6 @@ describe('VEX - User roles', function() {
             } else {
                 cy.contains(authoring.vex.pageTitleLocator, authoring.vex.virtualEventHomeTitle).should('not.exist')
             }
-
-            authoring.vex.goToEventConfig(event.name)
             if(user.eventsPageAccess){
                 cy.containsExact(authoring.vex.pageTitleLocator, event.name, {timeout: 20000}).should('exist')
             } else {
