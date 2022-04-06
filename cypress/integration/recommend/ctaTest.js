@@ -12,8 +12,8 @@ const recommend = {
 
 }
 
-
-    const cta0 = 
+const ctas =[
+     cta0 = 
         {
             ctaNumber: "CTA 1",
             ctaName: "formCTA",
@@ -21,8 +21,8 @@ const recommend = {
             buttonColor: "#04977d",
             fontColor: "#483d1e"
 
-        }
-        const cta1 = 
+        },
+         cta1 = 
         {
             ctaNumber: "CTA 2",
             ctaName: "linkCTA",
@@ -30,8 +30,8 @@ const recommend = {
             buttonColor: "#04977d",
             fontColor: "#483d1e"
 
-        }
-        const cta2 = 
+        },
+         cta2 = 
         {
             ctaNumber: "CTA 3",
             ctaName: "dynamicFieldMergeRecommend.js",
@@ -40,7 +40,7 @@ const recommend = {
             fontColor: "#483d1e"
 
         }
-
+    ]
 
 describe("Explore CTA buttons", () => {
 it("Add and delete CTA buttons", () => {
@@ -49,14 +49,14 @@ it("Add and delete CTA buttons", () => {
     authoring.recommend.goToTrack(recommend.name)
     // turn CTA toggle ON
     authoring.common.toggle(authoring.recommend.pageSidebar.topicSidebarToggle, 'ON')    
-    authoring.recommend.configureTopicSidebar(cta0)
+    authoring.recommend.multiplectas(ctas)
     //cy.contains('div', "+ Add CTA").click({force: true})
     cy.wait(100)
-    authoring.recommend.configureTopicSidebar(cta1)
-    cy.wait(100)
-    //cy.contains('div', "+ Add CTA").click({force: true})
-    cy.wait(100)
-    authoring.recommend.configureTopicSidebar(cta2)
+    // authoring.recommend.configureTopicSidebar(ctas.cta1)
+    // cy.wait(100)
+    // //cy.contains('div', "+ Add CTA").click({force: true})
+    // cy.wait(100)
+    // authoring.recommend.configureTopicSidebar(cta2)
 
 })
 it("Add and delete CTA buttons", () => {

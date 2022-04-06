@@ -393,6 +393,19 @@ export class Recommend extends Common {
         }
     }
 
+    multiplectas(config){
+        const{cta1, cta2, cta3} = config
+        if(cta1){
+            this.configureTopicSidebar(cta1)
+         }
+         if(cta2){
+            cy.contains('div', "+ Add CTA").click({force: true})
+            this.configureTopicSidebar(cta2)
+            cy.contains('div', "+ Add CTA").click({force: true})
+            this.configureTopicSidebar(cta3)
+         }
+    }
+
     configureTopicSidebar(config){
         const {ctaNumber,ctaName, location, buttonColor, fontColor} = config
         cy.get(this.pageSidebar.topicSidebarToggle).parents().eq(1).within(() => {
