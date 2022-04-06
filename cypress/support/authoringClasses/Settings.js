@@ -67,7 +67,7 @@ export class Settings extends Common {
             pageTitle: "6sense",
         };
         this.customQueryStrings = {
-            pageUrl:  `${this.settingsRoute}/custom-query-strings`,
+            pageUrl:  `${this.settingsRoute}/sharing-links`,
             pageTitle: "Custom Query Strings",
             nameInput: "#name",
             valueInput: "#queryStrings"

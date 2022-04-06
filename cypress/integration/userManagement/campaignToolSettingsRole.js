@@ -12,7 +12,7 @@ const user = {
 
 const role = {
     roleName: "Campaign Tool Settings Role.Js",
-    campaignToolsSettingsCRUD: true,
+    personalizationCreateEditView: true,
     trackLabelsCRUD: false,
     trackLabelsView: false
 }
