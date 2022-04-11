@@ -13,66 +13,51 @@ const recommend = {
 }
 
 const ctas =[
-     cta0 = 
         {
             ctaNumber: "CTA 1",
             ctaName: "formCTA",
             location: "Before assets",
             buttonColor: "#04977d",
-            fontColor: "#483d1e"
+            fontColor: "#483d1e",
+            addcta: true
 
-        },
-         cta1 = 
+        }, 
         {
             ctaNumber: "CTA 2",
             ctaName: "linkCTA",
             location: "After assets",
             buttonColor: "#04977d",
-            fontColor: "#483d1e"
+            fontColor: "#483d1e",
+            addcta: true
 
         },
-         cta2 = 
         {
             ctaNumber: "CTA 3",
             ctaName: "dynamicFieldMergeRecommend.js",
             location: "Before assets",
             buttonColor: "#04977d",
-            fontColor: "#483d1e"
+            fontColor: "#483d1e",
+            addcta: true
 
         }
     ]
 
 describe("Explore CTA buttons", () => {
-it("Add and delete CTA buttons", () => {
+it.only("Add and delete CTA buttons", () => {
     authoring.common.login()
     authoring.recommend.visit()
-    authoring.recommend.goToTrack(recommend.name)
-    // turn CTA toggle ON
-    authoring.common.toggle(authoring.recommend.pageSidebar.topicSidebarToggle, 'ON')    
-    authoring.recommend.multiplectas(ctas)
-    //cy.contains('div', "+ Add CTA").click({force: true})
-    cy.wait(100)
-    // authoring.recommend.configureTopicSidebar(ctas.cta1)
-    // cy.wait(100)
-    // //cy.contains('div', "+ Add CTA").click({force: true})
-    // cy.wait(100)
-    // authoring.recommend.configureTopicSidebar(cta2)
+    //authoring.recommend.goToTrack(recommend.name)
+    authoring.recommend.deleteTrack(recommend.name)
+    authoring.recommend.addTrack(recommend)
 
-})
-it("Add and delete CTA buttons", () => {
-    authoring.common.login()
-    authoring.recommend.visit()
-    authoring.recommend.goToTrack(recommend.name)
     // turn CTA toggle ON
     authoring.common.toggle(authoring.recommend.pageSidebar.sidebarToggle, 'ON')    
-    authoring.recommend.configureTopicSidebar1(cta0)
-    //cy.contains('div', "+ Add CTA").click({force: true})
-    cy.wait(100)
-    authoring.recommend.configureTopicSidebar1(cta1)
-    cy.wait(100)
-    //cy.contains('div', "+ Add CTA").click({force: true})
-    cy.wait(100)
-    authoring.recommend.configureTopicSidebar1(cta2)
+    ctas.forEach((cta)=>{
+
+    authoring.recommend.configureSidebarwithCtas(cta)
+
+    
+    })
 
 })
 })
