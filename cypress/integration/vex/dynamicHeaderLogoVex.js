@@ -32,7 +32,7 @@ const landingPage = {
 const company = {
     ip: "76.9.217.70",
     name: "PathFactory",
-    logo: "//logo.clearbit.com/pathfactory.com",
+    logo: "//logo.clearbit.com/gobolt.com",
 }
 
 const nonCompany = {

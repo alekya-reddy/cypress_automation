@@ -86,7 +86,7 @@ const landingPage2 = {
 
 const company = {
     ip: "76.9.217.70",
-    name: "PathFactory",
+    name: "Bolt Logistics",
     country: "Canada",
     city: "Toronto"
 }
@@ -313,10 +313,10 @@ describe("VEX - Dynamic Field Merge", () => {
         })
         // value in the field merge when visiting with spoofed pathfactory IP address
         cy.visit(event.url + `?lbhqip=${company.ip}&lb_email=${visitor}`)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - PathFactory test@gmail.com", { timeout: 20000 }).should('exist')
-        cy.contains(consumption.vex.eventHeroSubtitle, "Header SubTitle - PathFactory").should('exist')
-        cy.contains(consumption.vex.eventContentTitle, "VEX Content Title - PathFactory").should('exist')
-        cy.contains(consumption.vex.eventContentDescription, "VEX Content Description - PathFactory").should('exist')
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - Bolt Logistics test@gmail.com", { timeout: 20000 }).should('exist')
+        cy.contains(consumption.vex.eventHeroSubtitle, "Header SubTitle - Bolt Logistics").should('exist')
+        cy.contains(consumption.vex.eventContentTitle, "VEX Content Title - Bolt Logistics").should('exist')
+        cy.contains(consumption.vex.eventContentDescription, "VEX Content Description - Bolt Logistics").should('exist')
 
         // Verify that dynamic field merges are their default values when visiting with a spoofed IP address for which there is 
         // no available information
@@ -330,7 +330,7 @@ describe("VEX - Dynamic Field Merge", () => {
         cy.clearCookies()
         cy.visit(event.url)
         cy.wait(5000)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - default text", { timeout: 20000 }).should('exist')
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - Tech Mahindra", { timeout: 20000 }).should('exist')
     })
 
     it("Verify session status showing in dynamic field merge", () => {
