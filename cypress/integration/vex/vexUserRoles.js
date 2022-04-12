@@ -78,8 +78,10 @@ describe('VEX - User roles', function() {
                 cy.contains(authoring.vex.pageTitleLocator, authoring.vex.virtualEventHomeTitle).should('not.exist')
             }
             if(user.eventsPageAccess){
+                cy.get(`a[id='configure-${event.name}']`).should('exist').click()
                 cy.containsExact(authoring.vex.pageTitleLocator, event.name, {timeout: 20000}).should('exist')
             } else {
+                cy.get(`a[id='configure-${event.name}']`).should('exist').click()
                 cy.containsExact(authoring.vex.pageTitleLocator, event.name, {timeout: 20000}).should('exist')
                 cy.contains("span", "Preview Event").should("not.exist")
                 cy.waitFor({element: "#lk-dashboard-container", to: "exist", wait: 10000})
@@ -88,7 +90,6 @@ describe('VEX - User roles', function() {
             authoring.vex.visit()
             if(user.editPermission){
                 authoring.vex.addVirtualEvent(userAddedEvent, false)
-                cy.containsExact(authoring.vex.eventCardTitle, userAddedEvent.name, {timeout: 20000}).should('exist')
                 authoring.vex.deleteVirtualEvent(userAddedEvent.name)
             } else {
                 cy.contains("span", "Add Virtual Event").should("not.exist")
