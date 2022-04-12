@@ -20,7 +20,7 @@ const customMicrositeLanguage = {
     name: language.name,
     search: "Microsite Search",
     searchInputFieldPlaceholder: "Microsite Search Input",
-    filterByContentTypeTitle: "Microsite ContentType",
+    filterByContentTypeTitle: "Filter by Content Type",
     filterByLanguageTitle: "Microsite Language",
     filterByFunnelStageTitle: "Microsite FunnelStage",
     filterByBusinessUnitTitle: "Microsite BusinessUnit",
@@ -135,7 +135,6 @@ describe("Microsites - Language Configuration for Microsite", () => {
         cy.wait(2000)
         cy.get(authoring.configurations.languages.micrositeBuilder.searchButtonTitle).type(customMicrositeLanguage.search)
         cy.get(authoring.configurations.languages.micrositeBuilder.searchInputFieldPlaceholder).clear().type(customMicrositeLanguage.searchInputFieldPlaceholder)
-        cy.get(authoring.configurations.languages.micrositeBuilder.filterByContentTypeTitle).clear().type(customMicrositeLanguage.filterByContentTypeTitle)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByLanguageTitle).clear().type(customMicrositeLanguage.filterByLanguageTitle)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByFunnelStageTitle).clear().type(customMicrositeLanguage.filterByFunnelStageTitle)
         cy.get(authoring.configurations.languages.micrositeBuilder.filterByBusinessUnitTitle).clear().type(customMicrositeLanguage.filterByBusinessUnitTitle)
@@ -165,6 +164,7 @@ describe("Microsites - Language Configuration for Microsite", () => {
 
         //Verify the custom language configurations in Microsite consumption side 
         cy.visit(landingPage.url)
+        cy.wait(3000)
         cy.contains("div", customMicrositeLanguage.filterByContentTypeTitle).should("exist")
         cy.contains("div", customMicrositeLanguage.filterByLanguageTitle).should("exist")
         cy.contains("div", customMicrositeLanguage.filterByFunnelStageTitle).should("exist")

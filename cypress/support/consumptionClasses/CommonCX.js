@@ -52,7 +52,7 @@ export class CommonCX {
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
         };
-        this.ctaButton = "#qa-cta-button";
+        this.ctaButton = "#qa-cta-button-modal-trigger";
         this.overlay = {
             modal: "#lookbook-overlay-mask",
             close: "#lookbook-overlay-close span",
