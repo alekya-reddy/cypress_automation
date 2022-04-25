@@ -56,7 +56,7 @@ export class VexCX extends CommonCX {
         this.menuItem = ".rc-menu-item"
         this.cxheader = "div[class*='pf-event-header']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
-        this.submitButton="button[type='submit']"
+        this.submitButton = "button[type='submit']"
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
@@ -66,13 +66,13 @@ export class VexCX extends CommonCX {
             pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
             getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
             paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
-            audioMuteNotification:"div[id='video-tooltip']",
-            playButton:"button[title='Play (k)']",
-            unmuteButton:"button[aria-label='Unmute (m)']",
-            settings:'[aria-label="Settings"]',
-            menuContent:"div.ytp-menuitem-content",
-            muteButton:"button[title='Mute (m)']",
-            pauseButton:"button[aria-label='Pause (k)']"
+            audioMuteNotification: "div[id='video-tooltip']",
+            playButton: "button[title='Play (k)']",
+            unmuteButton: "[title='Unmute (m)']",
+            settings: '[aria-label="Settings"]',
+            menuContent: "div.ytp-menuitem-content",
+            muteButton: "button[title='Mute (m)']",
+            pauseButton: "button[aria-label='Pause (k)']"
         };
         this.simuliveVideo = {
             vexCustomControl: 'div[class*="vex-session-custom-controls"]',
@@ -90,10 +90,10 @@ export class VexCX extends CommonCX {
             pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
             getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
             paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
-            playButton:"[aria-label='Play']",
-            volumeButtons:"[class='volume'] div",
-            closeAudioNotification:"#video-tooltip-close-icon",
-            audioMuteNotification:"div[id='video-tooltip']",
+            playButton: "[aria-label='Play']",
+            volumeButtons: "[class='volume'] div",
+            closeAudioNotification: "#video-tooltip-close-icon",
+            audioMuteNotification: "div[id='video-tooltip']",
         };
         this.vidyard = {
             iframe: 'iframe[class*="vidyard-iframe"]',
@@ -112,12 +112,12 @@ export class VexCX extends CommonCX {
             pause: function () { cy.invokeJS(this.videoPlayer, 'pause()') },
             getCurrentTime: function (state) { cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function (state) { cy.invokeJS(this.videoPlayer, 'paused', state) },
-            unmuteButton:'[title="Unmute"]',
-            playButton:'[title="Play Video"]',
-            muteButton:'[title="Mute"]',
-            pauseButton:'[title="Pause"]',
-            video:"[class*='w-video-wrappe']",
-            audioMuteNotification:"div[id='video-tooltip']",
+            unmuteButton: '[title="Unmute"]',
+            playButton: '[title="Play Video"]',
+            muteButton: '[title="Mute"]',
+            pauseButton: '[title="Pause"]',
+            video: "[class*='w-video-wrappe']",
+            audioMuteNotification: "div[id='video-tooltip']",
         };
         this.brightcove = {
             videoPlayer: 'video',
@@ -125,12 +125,12 @@ export class VexCX extends CommonCX {
             pause: function () { cy.invokeJS(this.videoPlayer, 'pause()') },
             getCurrentTime: function (state) { cy.invokeJS(this.videoPlayer, 'currentTime', state) },
             paused: function (state) { cy.invokeJS(this.videoPlayer, 'paused', state) },
-            unmuteButton:'[title="Unmute"]',
-            playButton:'[title="Play Video"]',
-            muteButton:'[title="Mute"]',
-            pauseButton:'[title="Pause"]',
-            video:"[class*='video-js']",
-            audioMuteNotification:"div[id='video-tooltip']",
+            unmuteButton: '[title="Unmute"]',
+            playButton: '[title="Play Video"]',
+            muteButton: '[title="Mute"]',
+            pauseButton: '[title="Pause"]',
+            video: "[class*='video-js']",
+            audioMuteNotification: "div[id='video-tooltip']",
         };
 
         this.zoom = {
@@ -155,9 +155,9 @@ export class VexCX extends CommonCX {
             play1: "button[class='vjs-limelight-big-play']",
             pause: "button[title='Pause']",
             play2: "button[title='Play']",
-            unmuteButton:'[title="Unmute"]',
-            muteButton:'[title="Mute"]',
-            audioMuteNotification:"div[id='video-tooltip']",
+            unmuteButton: '[title="Unmute"]',
+            muteButton: '[title="Mute"]',
+            audioMuteNotification: "div[id='video-tooltip']",
         };
         this.parmonic = {
             selectVideo: "div[class^='pf-event-session-card-title']",
@@ -187,46 +187,50 @@ export class VexCX extends CommonCX {
     }
 
     expectYoutube() {
-        let flag=false;
+        let flag = false;
         cy.waitForIframeToLoad(this.youtube.iframe, this.youtube.videoPlayer, 20000)
-        cy.getIframeBody(this.youtube.iframe).within(() => {   
+        cy.getIframeBody(this.youtube.iframe).within(() => {
             cy.get(this.youtube.videoPlayer).should('exist')
             cy.get(this.youtube.videoPlayer).should('exist').click()
-        cy.get("div.ytp-chrome-bottom").then(controllers=>{
-            if(controllers.find(this.youtube.unmuteButton).length>0){
-                flag=true;
-             }
-           })
-        }).then(()=>{
-            if(flag===true){
-                cy.getIframeBody(this.youtube.iframe).within(() => {   
-                    cy.get("div.ytp-chrome-bottom").then(controllers=>{
+            cy.get("div.ytp-chrome-bottom").then(controllers => {
+                if (controllers.find(this.youtube.unmuteButton).length > 0) {
+                    flag = true;
+                }
+            })
+        }).then(() => {
+            if (flag === true) {
+                cy.getIframeBody(this.youtube.iframe).within(() => {
+                    cy.get("div.ytp-chrome-bottom").then(controllers => {
                         cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.playButton).should('be.visible',{timeout:10000}).click({force:true})
+                        cy.get(this.youtube.playButton).should('be.visible', { timeout: 10000 }).click({ force: true })
                     })
                 })
                 cy.get(this.youtube.audioMuteNotification).should('be.visible')
-                cy.getIframeBody(this.youtube.iframe).within(() => {   
-                    cy.get("div.ytp-chrome-bottom").then(controllers=>{
+                cy.getIframeBody(this.youtube.iframe).within(() => {
+                    cy.get("div.ytp-chrome-bottom").then(controllers => {
                         cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.unmuteButton).should('be.visible',{timeout:10000}).click({force:true})
+                        cy.get(this.youtube.unmuteButton).should('be.visible', { timeout: 10000 }).click({ force: true })
                     })
                 })
-                cy.get(this.youtube.audioMuteNotification,{timeout:20000}).should('not.be.visible')
+                cy.get(this.youtube.audioMuteNotification, { timeout: 20000 }).should('not.be.visible')
             }
-            else{
+            else {
                 cy.get(this.youtube.audioMuteNotification).should('not.be.visible')
-                cy.getIframeBody(this.youtube.iframe).within(() => {   
-                    cy.get("div.ytp-chrome-bottom").then(controllers=>{
+                cy.getIframeBody(this.youtube.iframe).within(() => {
+                    cy.get("div.ytp-chrome-bottom").then(controllers => {
                         cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.muteButton).should('be.visible',{timeout:10000}).click({force:true})
-                        cy.get(this.youtube.playButton).should('be.visible',{timeout:10000}).click({force:true})
+                        if (controllers.find(this.youtube.unmuteButton).length > 0) {
+                            cy.get(this.youtube.unmuteButton).should('be.visible', { timeout: 10000 }).click({ force: true })
+                        }
+                        else
+                            cy.get(this.youtube.muteButton).should('be.visible', { timeout: 10000 }).click({ force: true })
+                        cy.get(this.youtube.playButton).should('be.visible', { timeout: 10000 }).click({ force: true })
                     })
                 })
                 cy.get(this.youtube.audioMuteNotification).should('be.visible')
             }
-      })
-       
+        })
+
     }
 
     expectSimulive() {
@@ -244,7 +248,7 @@ export class VexCX extends CommonCX {
         cy.getIframeBody(this.vimeo.iframe).within(() => {
             cy.wait(2000)
             cy.get(this.vimeo.videoPlayer).should('exist')
-            cy.get("[class*='vp-shade vp-shade-invisible']").click({force:true})
+            cy.get("[class*='vp-shade vp-shade-invisible']").click({ force: true })
             cy.wait(2000)
             cy.get("[class='volume'] div").eq(0).click('bottomLeft')
             cy.get(this.vimeo.playButton).click()
@@ -253,13 +257,13 @@ export class VexCX extends CommonCX {
         cy.getIframeBody(this.vimeo.iframe).within(() => {
             cy.wait(2000)
             cy.get(this.vimeo.videoPlayer).should('exist')
-            cy.get("[class*='vp-shade vp-shade-invisible']").click({force:true})
+            cy.get("[class*='vp-shade vp-shade-invisible']").click({ force: true })
             cy.wait(2000)
             cy.get("[class='volume'] div").eq(0).click()
             cy.get(this.vimeo.playButton).click()
         })
         cy.get(this.vimeo.closeAudioNotification).click()
-        cy.get(this.vimeo.audioMuteNotification,{timeout:20000}).should('not.be.visible')
+        cy.get(this.vimeo.audioMuteNotification, { timeout: 20000 }).should('not.be.visible')
     }
 
     expectVidyard() {
@@ -285,42 +289,42 @@ export class VexCX extends CommonCX {
         })
     }
 
-    expectWistia(){
+    expectWistia() {
         cy.wait(2000)
         cy.get(this.wistia.videoPlayer).should('exist')
-        cy.get(this.wistia.video).should('exist').click({force:true})
-        cy.get(this.wistia.video).rightclick({force:true})
+        cy.get(this.wistia.video).should('exist').click({ force: true })
+        cy.get(this.wistia.video).rightclick({ force: true })
         cy.contains("Copy link and thumbnail").click()
-        cy.get(this.wistia.pauseButton,{timeout:10000}).should('exist').click({force:true})
-        cy.get(this.wistia.muteButton,{timeout:10000}).should('exist').click({force:true})
-        cy.get(this.wistia.playButton,{timeout:10000}).should('exist').click({force:true})
+        cy.get(this.wistia.pauseButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.wistia.muteButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.wistia.playButton, { timeout: 10000 }).should('exist').click({ force: true })
         cy.get(this.wistia.audioMuteNotification).should('be.visible')
-        cy.get(this.wistia.unmuteButton,{timeout:10000}).should('exist').click({force:true})
-        cy.get(this.wistia.audioMuteNotification,{timeout:20000}).should('not.be.visible')
+        cy.get(this.wistia.unmuteButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.wistia.audioMuteNotification, { timeout: 20000 }).should('not.be.visible')
     }
 
-    expectBrightcove(){
+    expectBrightcove() {
         cy.wait(2000)
-            cy.get(this.brightcove.videoPlayer).should('exist')
-            cy.get(this.brightcove.video).should('exist').click({force:true})
-            cy.get(this.brightcove.video).rightclick({force:true})
-            cy.get(this.brightcove.pauseButton,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.brightcove.muteButton,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.brightcove.playButton,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.brightcove.audioMuteNotification).should('be.visible')
-            cy.get(this.brightcove.unmuteButton,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.brightcove.audioMuteNotification,{timeout:20000}).should('not.be.visible')
+        cy.get(this.brightcove.videoPlayer).should('exist')
+        cy.get(this.brightcove.video).should('exist').click({ force: true })
+        cy.get(this.brightcove.video).rightclick({ force: true })
+        cy.get(this.brightcove.pauseButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.brightcove.muteButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.brightcove.playButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.brightcove.audioMuteNotification).should('be.visible')
+        cy.get(this.brightcove.unmuteButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.brightcove.audioMuteNotification, { timeout: 20000 }).should('not.be.visible')
     }
 
-    expectLimelight(){
-            cy.wait(2000)
-            cy.get(this.limelight.videoPlayer).should('exist')
-            cy.get(this.limelight.play1).should('exist').click({force:true})
-            cy.get(this.limelight.muteButton,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.limelight.play2,{timeout:10000}).should('exist').click({force:true})
-            cy.get(this.limelight.audioMuteNotification).should('be.visible')
-            cy.get(this.vimeo.closeAudioNotification).click()
-            cy.get(this.vimeo.audioMuteNotification,{timeout:20000}).should('not.be.visible')
+    expectLimelight() {
+        cy.wait(2000)
+        cy.get(this.limelight.videoPlayer).should('exist')
+        cy.get(this.limelight.play1).should('exist').click({ force: true })
+        cy.get(this.limelight.muteButton, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.limelight.play2, { timeout: 10000 }).should('exist').click({ force: true })
+        cy.get(this.limelight.audioMuteNotification).should('be.visible')
+        cy.get(this.vimeo.closeAudioNotification).click()
+        cy.get(this.vimeo.audioMuteNotification, { timeout: 20000 }).should('not.be.visible')
     }
 
     chat(config) {
