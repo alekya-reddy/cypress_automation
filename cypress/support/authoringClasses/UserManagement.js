@@ -200,14 +200,16 @@ export class UserManagement extends Common {
         }
 
         if(trackLabelsView == true || trackLabelsView == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.campaignTools.trackLabelsView).invoke("attr", "class").then(checkboxClass => {
                 if(trackLabelsView && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.trackLabelsView).click()
                 }       
             })
         }
-
+        
         if(trackLabelsCRUD == true || trackLabelsCRUD == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.campaignTools.trackLabelsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(trackLabelsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.trackLabelsCRUD).click()
