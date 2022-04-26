@@ -46,12 +46,12 @@ if (Cypress.env('TEST_ENV') == 'prod') {
 }
 
 const event = { 
-    name: 'vexUserRoles.js'
+    name: 'vexUserRoles2.js'
 }
 
 
 const userAddedEvent = {
-name: "User Added Event"
+name: "User Added Event2"
 }
 
 // Bare bones test for now. Will update as user roles become more defined. 
