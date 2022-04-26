@@ -220,7 +220,6 @@ export class VexCX extends CommonCX {
                     cy.get("div.ytp-chrome-bottom").then(controllers => {
                         cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
                         if (controllers.find(this.youtube.unmuteButton).length > 0) {
-                            cy.get(this.youtube.unmuteButton).should('be.visible', { timeout: 10000 }).click({ force: true })
                         }
                         else
                             cy.get(this.youtube.muteButton).should('be.visible', { timeout: 10000 }).click({ force: true })
