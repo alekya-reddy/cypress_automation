@@ -1916,7 +1916,7 @@ export class Configurations extends Common {
 
     addRoute(options) {
         const {name, type, destination} = options
-        cy.contains("button", "Create Route").click()
+        cy.contains("button", "Create Destination Route").click()
         cy.get(this.modal).within(()=>{
             cy.get(this.routes.nameInput).clear().type(name)
             cy.get(this.routes.fallbackType).parent().contains(type).click()
@@ -1926,7 +1926,7 @@ export class Configurations extends Common {
             else {
                 cy.get(this.dropdown.input).type(destination + "\n", {force: true})
             }
-            cy.contains("button", "Create Route").click()
+            cy.contains("button", "Create Destination Route").click()
         })
         cy.waitFor({element: this.modal, to: "not.exist"})
         cy.contains("h4", name).should("exist") 

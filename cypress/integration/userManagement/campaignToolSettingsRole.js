@@ -12,7 +12,7 @@ const user = {
 
 const role = {
     roleName: "Campaign Tool Settings Role.Js",
-    campaignToolsSettingsCRUD: true,
+    personalizationCreateEditView: true,
     trackLabelsCRUD: false,
     trackLabelsView: false
 }
@@ -57,7 +57,7 @@ describe('Campaign Tool Settings User Role', function() {
         cy.get("#configurations").click()
 
         cy.get(authoring.configurations.dropdownMenuNav).within(() => {
-            cy.contains("div", "General").should("not.exist")
+            cy.contains("div", "General").should("exist")
             cy.contains("a", "Image Library").should("not.exist")
             cy.contains("a", "External Code").should("not.exist")
             cy.contains("a", "Access Protection").should("not.exist")
@@ -74,11 +74,13 @@ describe('Campaign Tool Settings User Role', function() {
             cy.contains("a", "Webhooks").should("not.exist")
             cy.contains("a", "Visitor Activities").should("not.exist")
 
-            cy.contains("div", "Campaign Tools").should("exist")
+            cy.contains("div", "Campaign Tools").should("not.exist")
+            cy.contains("a", "Personalization").should("exist").click()
+            cy.wait(200)
             cy.contains("a", "Segments").should("exist")
-            cy.contains("a", "Routes").should("exist")
+            cy.contains("a", "Destination Routes").should("exist")
+            cy.contains("a", "Collection Rules").should("exist")
             cy.contains("a", "Track Labels").should("not.exist")
-
             cy.contains("div", "Virtual Events").should("not.exist")
             cy.contains("a", "Widgets").should("not.exist")
 
