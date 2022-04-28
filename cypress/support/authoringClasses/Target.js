@@ -8,7 +8,7 @@ export class Target extends Common {
         this.targetAnalyticsTitle = "Target Analytics Overview";
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
-        this.deleteTrackIcon = "i[class*='delete Icon__action']";
+        this.deleteTrackIcon = "i[class*='delete Icon']";
         this.shareUrl = 'i[title="Share URL"]';
         this.thumbnailSelect = 'i[title="Select a thumbnail"]';
         this.cloneTrack = 'i[title="Clone Track"]';
