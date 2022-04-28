@@ -163,8 +163,8 @@ describe("Target - Video captions", () => {
 
     })
 })
-    it.only("Visit the target track which has captions toggle enabled and language selection for Brightcove video", () => {
-        //Captions on for target track, selecting language and checking in consumption
+    it.only("Visit the recommend track which has captions toggle enabled and language selection for Brightcove video", () => {
+        //Captions on for recommend track, selecting language and checking in consumption
         authoring.common.login()
         authoring.recommend.visit()
         authoring.recommend.deleteTrack(captionsTracks.config4.name)
@@ -177,7 +177,7 @@ describe("Target - Video captions", () => {
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
         
-        //Captions off for target track,and checking in consumption
+        //Captions off for recommend track,and checking in consumption
         authoring.common.login()
         authoring.recommend.visit()
         authoring.recommend.deleteTrack(captionsTracks.config5.name)
@@ -190,7 +190,7 @@ describe("Target - Video captions", () => {
             cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
 
-        //Clone the target track and validate captions are cloned
+        //Clone the recommend track and validate captions are cloned
         authoring.common.login()
         authoring.recommend.visit()
         authoring.recommend.deleteTrack(captionsTracks.config6.cloneName)
@@ -211,7 +211,7 @@ describe("Target - Video captions", () => {
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
         
-        //Clone the target track with captions off and validate details are cloned
+        //Clone the recommend track with captions off and validate details are cloned
         authoring.common.login()
         authoring.recommend.visit()
         authoring.recommend.deleteTrack(captionsTracks.config7.cloneName)
