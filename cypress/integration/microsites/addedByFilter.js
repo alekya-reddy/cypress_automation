@@ -84,6 +84,7 @@ describe("Microsites - Added By and Search filter", ()=>{
         authoring.microsites.addMicrosite(microsite2)
         authoring.microsites.addMicrosite(microsite3)
         authoring.microsites.addMicrosite(microsite4)
+        cy.go("back")
         cy.contains('td', microsite2.name).prev().click()
         cy.contains('td', microsite3.name).prev().click()
         cy.contains('td', microsite4.name).prev().click()

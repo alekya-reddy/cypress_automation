@@ -19,6 +19,7 @@ export class Common {
         this.editPencil = 'i[class*="fa-pencil"]';
         this.popover = "div[data-qa-hook='popover']";
         this.modal = 'div[data-qa-hook="modal"]';
+        this.contentModal = 'div[class="ant-popover-inner-content"]';
         this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
@@ -34,6 +35,10 @@ export class Common {
         this.anotherDeleteIcon = 'i[title="Delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
+        this.multiEditIcon = '#pf-multi-select-edit';
+        this.multiMoveIcon = '#pf-multi-select-move-to';
+        this.multiEditInput = 'input[class="ant-select-selection-search-input"]';
+        this.multiEditInputType = 'input[type="search"]';
         this.clearValueIcon = ".Select-clear";
         this.antNotification = "div[class^='ant-notification-notice']";
         this.antSelectItem = "span[class='ant-select-selection-item']";
@@ -56,6 +61,7 @@ export class Common {
         this.orgSave = 'button[id="save"]';
         this.editIconUserRoles = '.Select-value-icon';
         this.userRolename = 'div[class="Select-control"]';
+        this.sharingDomainURLinput = 'input[name="sharingDomainUrl"]'
 
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common

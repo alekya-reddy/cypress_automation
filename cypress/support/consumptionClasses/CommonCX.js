@@ -11,8 +11,8 @@ export class CommonCX {
         this.ciscoPasswordInput = "input[type='password']";
         this.ciscoNextButton="#login-button";
         this.ciscoLogIn="input[type='submit']";
-        this.accessProtectionLogo=".logo-img";
-        this.accessProtectionHeaderText=".image-title-container";
+        this.accessProtectionLogo="[aria-label='background image']";
+        this.accessProtectionHeaderText="[class='title-container']";
         this.accessProtectionBodyText=".body-text-data";
         this.accessProtectionSubmitButton="input[type='submit']";
         this.modal = "#qa-modal";
@@ -52,7 +52,7 @@ export class CommonCX {
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
         };
-        this.ctaButton = "#qa-cta-button";
+        this.ctaButton = "#qa-cta-button-modal-trigger";
         this.overlay = {
             modal: "#lookbook-overlay-mask",
             close: "#lookbook-overlay-close span",

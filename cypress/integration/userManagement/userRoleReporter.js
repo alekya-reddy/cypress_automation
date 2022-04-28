@@ -89,10 +89,6 @@ describe('Reporter Role Permissions', function() {
        cy.contains('span', "Website Script Tag").should("not.exist")
        cy.contains('div',"Clicks", {timeout: 25000}).should("exist")
        cy.contains('div',"Promoter Impressions").should("exist")
-       cy.contains('div',"Content Impressions").should("exist")
-       cy.contains('div',"Promoter Click Rate").should("exist")
-       cy.contains('div',"Content Click Rate").should("exist")
-
        cy.get(authoring.common.nameSetting).click()
        cy.get(authoring.common.clientHq).should("not.exist")
        cy.get("#user-management").should("not.exist")

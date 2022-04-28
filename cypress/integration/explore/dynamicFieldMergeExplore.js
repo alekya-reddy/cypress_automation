@@ -41,14 +41,14 @@ const explore = {
 
 const company = {
     ip: "76.9.217.70",
-    name: "PathFactory",
+    name: "Bolt Logistics",
 }
 
 const nonCompany = {
     ip: "171.117.159.107",
 }
 
-const ctaURLwithIP = `https://google.com?company_name=${company.name}&lbhqip=${company.ip}`
+const ctaURLwithIP = `https://google.com?company_name=Bolt%20Logistics&lbhqip=${company.ip}`
 const ctaURLwithoutIP = `https://google.com?company_name=&lbhqip=${nonCompany.ip}`
 
 describe("Explore - Dynamic Merge Field", () => {

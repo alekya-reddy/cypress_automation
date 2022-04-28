@@ -109,7 +109,7 @@ describe("Reverse Proxy For Campaign Tools", function () {
     cy.get(authoring.common.nameSetting).click()
     cy.get(1000)
     cy.get(authoring.common.orgDropdown).click()
-    cy.get(authoring.common.orgValue).type("reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring" + "\n")
+    cy.get(authoring.common.sharingDomainURLinput).parent('div').type("reverseproxy.pathfactory-" + authoring.common.env.TEST_ENV + "-wp.com/test-authoring" + "\n")
     cy.wait(1000)
     cy.get(authoring.common.orgSave).click()
     cy.wait(500)

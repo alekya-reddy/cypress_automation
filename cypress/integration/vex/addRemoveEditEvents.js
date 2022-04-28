@@ -3,15 +3,21 @@ import { createAuthoringInstance } from '../../support/pageObject.js';
 const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
 
 const event = {
-    name: '2 addRemoveEditEvents.js',
+    name: '3 addRemoveEditEvents.js',
     newName: 'newName addRemoveEditEvents.js',
+    editedName: 'edited addRemoveEditEvents.js',
     slug: 'test-1-1-slug',
     externalID: "someID"
 }
 
 const event2 = {
-    name: "2 addRemoveEditEvents.js",
+    name: "4 addRemoveEditEvents.js",
     slug: "cannot-change-me"
+}
+
+const event0 = {
+    name: "5 addRemoveEditEvents.js",
+    parentFolder: "folder2"
 }
 
 const event3 = {
@@ -32,6 +38,10 @@ const folder = {
 
 const rootFolder = {
     name: "Root"
+}
+
+const folder2 = {
+    name: "drag&drop"
 }
 
 const sessions = [
@@ -94,7 +104,6 @@ describe('VEX - Virtual Event', function() {
         // Add another event and check the validation for event slug 
         authoring.vex.deleteVirtualEvent(event2.name)
         authoring.vex.addVirtualEvent(event2)
-        authoring.vex.goToEventConfig(event2.name)
         cy.get(authoring.vex.eventSlugInput, {timeout: 10000}).clear().type(event.slug)
         cy.contains("button", "Save").click()
         cy.contains(authoring.vex.messages.saveFailed).should('exist')
@@ -107,30 +116,30 @@ describe('VEX - Virtual Event', function() {
        it('Confirm can drag and drop events to folder and root folder available as a option', function() {
         authoring.common.login();
         authoring.vex.visit();
-        authoring.vex.deleteVirtualEvent(event.name)
-        authoring.vex.addVirtualEvent(event)
-        authoring.vex.editfolder(event)
-        cy.contains("span","Save Folder").should("exist").click()
-
+        cy.contains("span", folder.name,{timeout:10000}).click()
+        authoring.vex.deleteVirtualEvent(event0.name)
+        authoring.vex.addVirtualEvent(event0)
+        cy.go("back")
+         
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
-            expect(text).to.equal('1')
+            expect(text).to.equal('2')
         })
 
-        cy.contains('td', event.name).prev().click()
-        cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.contains('td', event0.name).prev().click()
+        cy.contains("a", event0.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder2.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.wait(1000)
+        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        }) 
+
+        cy.contains("span", folder2.name,{timeout:10000}).click()
+        cy.contains('td', event0.name).prev().click()
+        cy.contains("a", event0.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
         cy.wait(1000)
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('2')
-        }) 
-
-        cy.contains("span", folder.name,{timeout:10000}).click()
-        cy.contains('td', event.name).prev().click()
-        cy.contains("a", event.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
-        cy.wait(1000)
-        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
-            expect(text).to.equal('1')
         })
 
      })
@@ -140,6 +149,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event3)
         authoring.vex.addVirtualEvent(event4)
         authoring.vex.addVirtualEvent(event5)
+        cy.go("back")
         cy.contains('td', event3.name).prev().click()
         cy.contains('td', event4.name).prev().click()
         cy.contains('td', event5.name).prev().click()

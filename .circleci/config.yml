@@ -13,7 +13,7 @@ workflows:
   staging-tues-thurs:
     triggers:
       - schedule:
-          cron: "0 5 * * 2,4"
+          cron: "0 5 * * 1"
           filters:
             branches:
               only:
@@ -42,7 +42,7 @@ workflows:
   staging-governance-tues-thurs:
     triggers:
       - schedule:
-          cron: "0 3 * * 2,4"
+          cron: "0 3 * * 1"
           filters:
             branches:
               only:
@@ -56,7 +56,7 @@ workflows:
   qa-sat-mon:
     triggers:
       - schedule:
-          cron: "0 5 * * 1,6"
+          cron: "0 5 * * 4,6"
           filters:
             branches:
               only:
@@ -85,7 +85,7 @@ workflows:
   qa-governance-sat-mon:
     triggers:
       - schedule:
-          cron: "0 3 * * 1,6"
+          cron: "0 3 * * 4,6"
           filters:
             branches:
               only:

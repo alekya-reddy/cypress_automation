@@ -92,13 +92,16 @@ export class Microsites extends Common {
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             carouselArrow: ".pf-microsite-carousel-arrow",
             landingPageLayout: "select[id*='landingPageLayout']",
+            cellAlignment: "select[id*='cellAlignment']",
             openCard: "select[id*='cardLink']",
             Filter_Topic: "#microsite_topics",
             searchFilter: "#microsite_search_button",
             searchInputField: "#microsite_search_input",
             searchAndFiltersBlockToggleON: "div[class*='lxjoI']",
             searchAndFiltersBlockToggleOFF: "div[class*='OMAuq']",
-            enableDescription: "input[name*='cardConfiguration.enableDescription']"
+            enableDescription: "input[name*='cardConfiguration.enableDescription']",
+            defaultClassonTrack: 'div[class*="pf-track-block"]',
+            defaultClassonFeatured: 'div[class*="pf-featured-block"]'
         };
         this.navigation = {
             addButton: "button:contains('Add Navigation Item')",
@@ -172,9 +175,7 @@ export class Microsites extends Common {
         cy.wait(3000)
     
         if (verify !== false) {
-
-            cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
     }
 
@@ -203,7 +204,7 @@ export class Microsites extends Common {
             cy.contains("div", "Edit Microsite").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').eq(1).clear().type(editedName)
+                cy.get('input[name="name"]').eq(0).clear().type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)
@@ -814,6 +815,7 @@ export class Microsites extends Common {
         const businessUnitFilter = config.businessUnitFilter
         const card = config.card
         const layout = config.layout
+        const cellAlignment = config.cellAlignment
         const openContentTrack = config.openContentTrack
         const verify = config.verify // Do not verify if using HEX color for any color pickers
         const searchConfiguration = config.searchConfiguration
@@ -923,6 +925,9 @@ export class Microsites extends Common {
             cy.containsExact("div", "Spacing").click()
             cy.get(this.landingPages.spacingInput).clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
+        }
+        if (cellAlignment){
+                cy.get(this.landingPages.cellAlignment).select(cellAlignment)
         }
         if (topicFilter) {
             this.configureFilter("Topic Filter", topicFilter)

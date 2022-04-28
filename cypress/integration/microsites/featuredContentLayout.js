@@ -43,6 +43,8 @@ const featuredBlockCarousel = {
     type: "featured",
     name: "The Featured Content Block Carousel",
     layout: "Carousel",
+    className: "automationClass",
+    cellAlignment: "Right",
     contents: [
         {
             trackType: targetTrack.trackType,
@@ -111,9 +113,14 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Check consumption
         cy.visit(landingPage.url)
         consumption.microsites.verifyLandingPageBlock(featuredBlockCarousel)
+        //verify class name added will show on consumption side into carousel layout
+       
+         cy.get('div[class*="pf-featured-block automationClass"]').should("exist")
 
         // Verify carousel layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
+            // the featured content block does not show preview for carousel due to UI limitation so it will have normal cell-alignment
+            cy.containsExact("h4", featuredBlockCarousel.name).should("have.css", "justify-content", "normal")
             cy.get(consumption.microsites.cardTitle).eq(0).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
@@ -153,6 +160,8 @@ describe("Microsites - Landing page featured content block setup", () => {
 
         // Verify Grid layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
+            //grid layout having more than 3 contents will simply work same as before
+            cy.containsExact("h4", featuredBlockCarousel.name).should("have.css", "justify-content", "normal")
             cy.get(consumption.microsites.cardTitle).eq(0).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
@@ -160,4 +169,89 @@ describe("Microsites - Landing page featured content block setup", () => {
             cy.get(consumption.microsites.cardTitle).eq(4).should("be.visible")
         })
     })
+    it("Verify Grid layout for Cell Alignment", () => {
+          
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(landingPage.name)
+        cy.containsExact("h4", featuredBlockCarousel.name).click({force: true})
+        authoring.microsites.removeFeaturedContent({
+            block: featuredBlockCarousel.name,
+            content: targetTrack.contents[1]
+        }, false)
+        authoring.microsites.removeFeaturedContent({
+            block: featuredBlockCarousel.name,
+            content: targetTrack.contents[0]
+        }, false)
+        cy.get(authoring.microsites.landingPages.editorMenu).within(()=>{
+            cy.get(authoring.microsites.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
+        })
+        cy.get(authoring.microsites.landingPages.cellAlignment).select("Center")
+        cy.contains("button", "Confirm").click({force: true})
+        cy.contains(" The assets will render in a carousel in the live experience").should("not.exist")
+        cy.contains("button", "Save").click()
+
+        cy.visit(landingPage.url)
+
+        // Verify Grid layout
+        cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
+            //verify specific alignment selected gets applied to the cells
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "center")
+
+        })     
+
+    })
+
+    it("Verify Grid layout for Cell Alignment", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(landingPage.name)
+        cy.containsExact("h4", featuredBlockCarousel.name).click({force: true})
+        cy.get(authoring.microsites.landingPages.editorMenu).within(()=>{
+            cy.get(authoring.microsites.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
+        })
+        cy.get(authoring.microsites.landingPages.cellAlignment).select("Right")
+        cy.contains("button", "Confirm").click({force: true})
+        cy.contains("button", "Save").click()
+
+        cy.visit(landingPage.url)
+
+        // Verify Grid layout
+        cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
+             //verify specific alignment selected gets applied to the cells
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "right")
+
+        }) 
+
+    })
+
+    it("Verify Grid layout for Cell Alignment", () => {
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.goToMicrositeConfig(microsite.name)
+        authoring.microsites.tabToLandingPages()
+        authoring.microsites.goToPageEditor(landingPage.name)
+        cy.containsExact("h4", featuredBlockCarousel.name).click({force: true})
+        cy.get(authoring.microsites.landingPages.editorMenu).within(()=>{
+            cy.get(authoring.microsites.landingPages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
+        })
+        cy.get(authoring.microsites.landingPages.cellAlignment).select("Left")
+        cy.contains("button", "Confirm").click({force: true})
+        cy.contains("button", "Save").click()
+
+        cy.visit(landingPage.url)
+
+        // Verify Grid layout
+        cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
+             //verify specific alignment not selected will cathc by default normal
+            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "normal")
+
+        }) 
+
+    })
+
 })

@@ -194,7 +194,6 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         authoring.vex.visit() 
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1)
-        authoring.vex.goToEventConfig(event1.name)
         cy.wait(5000)
         cy.contains(authoring.common.antRow, "Search Engine Directive").within(()=>{
             cy.get(authoring.common.antSelectItem).should('have.contain', "Index, Follow")

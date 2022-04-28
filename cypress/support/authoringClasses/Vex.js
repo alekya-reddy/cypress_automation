@@ -294,8 +294,7 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.wait(2000) // To close the Add Event modal 
-            cy.get(this.antModal,{timeout:20000}).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
     }
 
@@ -303,13 +302,14 @@ export class Vex extends Common {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
+
         cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
-        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
+        cy.get(`i[class*='edit-for-${name}']`).eq(0).click({force: true})
         cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Virtual Event").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]:visible').clear({force: true}).type(editedName)
+                cy.get('input[name="name"]').eq(0).clear({force: true}).type(editedName)
             }
             if (Folder) {
                 this.setFolder(folder)
@@ -339,8 +339,8 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='delete-${eventName}']`).should('exist').click({force:true})
+            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click({force:true})
+            cy.get(`i[class*='delete-${eventName}']`).eq(0).click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -582,7 +582,6 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const thumbnail = config.thumbnail
 
-        this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null;
@@ -659,6 +658,7 @@ export class Vex extends Common {
         cy.wait(5000)
         cy.contains(this.antRow, "Language").within(() => {
             cy.get(this.antSelector).click()
+            cy.get(this.antSelector).type(language)
         })
         cy.get(this.antDropSelect.options(language)).click()
         cy.get(`span[title='${language}']`).should('exist')
@@ -2603,7 +2603,7 @@ export class Vex extends Common {
         cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).click({force:true})
         cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).parent().within(() => {
             cy.get(this.pages.editorMenu).within(() => {
-                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('be.visible',{timeout:10000}).click({force:true})
+                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('exist',{timeout:10000}).click({force:true})
             })
         })
 
@@ -2614,7 +2614,7 @@ export class Vex extends Common {
                 cy.wait(3000)
                 cy.get("input[name='blocks.0.heading.fontSize']",{timeout:10000}).clear({force:true}).type(fontSize,{force:true})
             }
-            cy.contains('span','Heading').should('be.visible').click()
+            cy.contains('span','Heading').should('exist',{timeout:10000}).click({force:true})
         }
 
         if(cardConfiguration){

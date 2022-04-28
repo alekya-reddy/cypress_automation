@@ -13,7 +13,8 @@ const user =
 
 const role = {
     roleName: "Organization Settings Role.Js",
-    organizationSettingsCRUD: true
+    organizationSettingsCRUD: true,
+    personalizationCreateEditView:false
 }
 
 const queryString = {

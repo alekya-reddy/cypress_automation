@@ -101,6 +101,7 @@ describe("Microsites - Form strategy", () => {
     it("Visit target and recommend tracks and verify the form strategy settings configured for them", () => {
         // Fill the form on target track - form should show up right away, and should be dismissable
         cy.visit(landingPage.url)
+        cy.wait(4000)
         consumption.microsites.clickContent({track: tracks.target.name, content: webContent.title})
         cy.url().should("eq", `${microsite.url}/${tracks.target.slug}/${webContent.slug}`)
         cy.contains(consumption.target.modal + ":visible", "Fill This Out to Continue", {timeout: 10000}).should("exist").within(() => {

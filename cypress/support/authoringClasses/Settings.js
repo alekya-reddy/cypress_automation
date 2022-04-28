@@ -4,6 +4,10 @@ export class Settings extends Common {
     constructor(env, org, tld, userName, password, baseUrl){
         super(env, org, tld, userName, password, baseUrl);
         this.settingsRoute = `${this.baseUrl}/authoring/content-library/settings/organization`;
+        this.redirectCells ='tr[class*="ant-table-row ant-table-row-level"]';
+        this.incomingPath = 'input[name="fromPathRule"]';
+        this.redirectPath = 'input[name="toPathRule"]';
+        
         this.cookieConsent = {
             pageUrl: `${this.settingsRoute}/cookie-consent`,
             pageTitle: "Cookie Consent",
@@ -63,7 +67,7 @@ export class Settings extends Common {
             pageTitle: "6sense",
         };
         this.customQueryStrings = {
-            pageUrl:  `${this.settingsRoute}/custom-query-strings`,
+            pageUrl:  `${this.settingsRoute}/sharing-links`,
             pageTitle: "Custom Query Strings",
             nameInput: "#name",
             valueInput: "#queryStrings"
@@ -76,6 +80,10 @@ export class Settings extends Common {
             pageUrl:  `${this.settingsRoute}/search-engine-directive`,
             pageTitle: "Search Engine Directive",
         };
+        this.redirectRules = {
+            pageUrl:  `${this.settingsRoute}/redirect-rules`,
+            pageTitle: "Redirect Rules",
+        }
     }
 
     visitCookieConsent(){
@@ -84,6 +92,10 @@ export class Settings extends Common {
 
     visitoceAccount(){
         cy.visit(this.oceAccount.pageUrl);
+    }
+
+    visitredirectRule(){
+        cy.visit(this.redirectRules.pageUrl);
     }
 
     configureCookieConsent(config){

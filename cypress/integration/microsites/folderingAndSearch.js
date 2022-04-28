@@ -47,7 +47,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.contains("No microsites found")
       
         authoring.microsites.addMicrosite(microsite2)
-        
+        cy.go("back")
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '1')
 
 
@@ -63,9 +63,9 @@ describe("VEX - Create, Edit and Delete Folders", () => {
 
         // add virtual event into child folder
 
-        cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click()
+        cy.get(authoring.common.folder.folderSelector(childFolderName[0])).click({force:true})
         authoring.microsites.addMicrosite(microsite3)
-
+        cy.go("back")
        //verify folder count
         cy.get(authoring.common.folder.folderToggle(parentFolderName[0])).click() // by clicking on parent folder it collapses child folder
         cy.get(authoring.common.folder.folderCount(parentFolderName[0])).should('have.text', '2')
@@ -108,6 +108,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.wait(200)
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.addMicrosite(microsite1)
+        cy.go("back")
         authoring.microsites.editfolder(microsite1)
         authoring.microsites.editfolder(microsite4)
         

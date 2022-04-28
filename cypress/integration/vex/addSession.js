@@ -27,8 +27,8 @@ const videos = [
 ]
 
 const event = {
-    name: 'addSession.js',
-    slug: 'addSession-js',
+    name: '2addSession.js',
+    slug: '2addSession-js',
     get url(){ return `${consumption.common.baseUrl}/${this.slug}`; },
 }
 describe('VEX - Virtual Event', function() {
