@@ -119,7 +119,7 @@ const captionsTracks = {
     config13: {
         name: "targetSettingscaptions13.js",
         slug: "target-config-captions13",
-        contents: ["Oracle Cloud captions"],
+        contents: ["The New Vimeo Player - used in cypress"],
         captionsLanguage: "German",
         captions: "on",
         index: "0",
@@ -130,7 +130,7 @@ const captionsTracks = {
     config14: {
         name: "targetSettingscaptions14.js",
         slug: "target-config-captions14",
-        contents: ["Oracle Cloud captions"],
+        contents: ["The New Vimeo Player - used in cypress"],
         captions: "off",
         index: "0",
         verify: false,
@@ -145,7 +145,7 @@ const captionsTracks = {
     config16: {
         name: "targetSettingscaptions16.js",
         slug: "target-config-captions16",
-        contents: ["Oracle Cloud captions"],
+        contents: ["The New Vimeo Player - used in cypress"],
         captionsLanguage: "Polish",
         captions: "on",
         index: "0",
@@ -405,7 +405,7 @@ describe("Target - Video captions", () => {
 
     })
 
-    it("Visit the target track which has subtitle enabled and disabled for Vimeo videos", () => {
+    it.only("Visit the target track which has subtitle enabled and disabled for Vimeo videos", () => {
         //Captions off from target track and checking in consumption
         authoring.common.login()
         authoring.target.visit()
@@ -414,21 +414,20 @@ describe("Target - Video captions", () => {
         authoring.target.configure(captionsTracks.config13)
 
         cy.visit(captionsTracks.config13.url)
-        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-            cy.get("div.ytp-chrome-bottom").then(() => {
-                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                cy.wait(1000)
-                cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.target.youtube.menuContent).invoke('text').then(text => {
-                    if (text.includes("Off")) {
-                        cy.contains(consumption.target.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
-                    }
-                    else {
-                        cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
-                    }
-                })
-            })
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.pause()
+            // cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.target.youtube.menuContent).invoke('text').then(text => {
+            //     if (text.includes("Off")) {
+            //         cy.contains(consumption.target.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
+            //     }
+            //     else {
+            //         cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
+            //     }
+            // })
         })
 
 
