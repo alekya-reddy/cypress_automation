@@ -152,7 +152,7 @@ describe("Recommend - Access Protection", () => {
         cy.visit(recommend.url)
         //verify Access Protection-Appearance & Languae settings applied properly in Recom Track authentication page.
         cy.get(consumption.common.accessProtectionLogo)
-            .should('have.attr', 'src',"https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")
+            .should("have.css", "background-image", "url('https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg')")
         cy.get(consumption.common.accessProtectionSubmitButton)
             .should("have.css", "background-color", colorConfigToCSS(recomAppearanceSettings.submitButtonColor))
             .should("have.css", "color", colorConfigToCSS(recomAppearanceSettings.submitButtonTextFontColorLP))

@@ -345,11 +345,11 @@ describe("Microsites - tracks setup", () => {
         cy.go('back');
 
          //Verifying the Overriden content Description for a Featured Content block at block level->set to true on consumption
-        cy.get(consumption.microsites.cardTitle).within(()=>{
+        cy.get(consumption.microsites.cardTitle, { timeout: 2000 }).within(()=>{
             cy.contains('div',recommend2.contentDescriptionOverRide).should('exist')
         })
 
-        cy.get(consumption.microsites.cardTitle).within(()=>{
+        cy.get(consumption.microsites.cardTitle, { timeout: 2000 }).within(()=>{
             cy.contains('div',recommend2.contentDescriptionOverRide).should('exist').click()
         })
 

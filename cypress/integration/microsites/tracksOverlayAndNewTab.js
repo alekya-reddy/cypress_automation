@@ -313,7 +313,7 @@ describe("Microsites - open content tracks - overlay , newtab , sametab", () => 
         })   
 
         cy.visit(targetBlockLink)
-        
+        cy.get(consumption.microsites.cardTitle, {timeout: 10000}).eq(0).click()
         cy.get(consumption.microsites.overlay.modal).should("exist")
         cy.waitForIframeToLoad(consumption.microsites.overlay.iframe, consumption.target.flowSidebar, 10000)
         cy.getIframeBody(consumption.microsites.overlay.iframe).within(() => {
