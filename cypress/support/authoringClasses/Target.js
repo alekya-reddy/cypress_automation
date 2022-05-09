@@ -658,6 +658,7 @@ export class Target extends Common {
                 cy.get(this.dropdown.box).click()
                 cy.get(this.dropdown.option(captionsLanguage)).click()
                 cy.contains("button", "Update").click()
+                cy.pause()
             })
         }
         if(verify !== false){
