@@ -75,7 +75,7 @@ describe('User Experience Settings User Role', function() {
 
             cy.contains("div", "Data Configuration").should("exist")
             cy.contains("a", "Webhooks").should("exist")
-            cy.contains("a", "Visitor Activities",{timeout: 10000}).should("exist")
+            //cy.contains("a", "Visitor Activities",{timeout: 10000}).should("exist")
 
             cy.contains("div", "Campaign Tools").should("not.exist")
             cy.contains("a", "Segments").should("not.exist")
@@ -157,9 +157,9 @@ describe('User Experience Settings User Role', function() {
         cy.visit(authoring.websiteTools.websiteToolsUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.pageTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
-        cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
         // // COG
         // images

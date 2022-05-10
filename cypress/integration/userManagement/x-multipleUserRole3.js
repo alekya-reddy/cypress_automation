@@ -174,7 +174,7 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
         cy.get("#configurations").should("exist")
         cy.get("#configurations").click()
         cy.get(authoring.configurations.dropdownMenuNav).within(() => {
-            cy.contains("div", "General").should("not.exist")
+            cy.contains("div", "General").should("exist")
 
             cy.contains("a", "Image Library").should("not.exist")
             cy.contains("a", "External Code").should("not.exist")
@@ -192,9 +192,9 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
             cy.contains("a", "Webhooks").should("not.exist")
             cy.contains("a", "Visitor Activities").should("not.exist")
 
-            cy.contains("div", "Campaign Tools").should("exist")
-            cy.contains("a", "Segments").should("exist")
-            cy.contains("a", "Routes").should("exist")
+            cy.contains("div", "Campaign Tools").should("not.exist")
+            cy.contains("a", "Segments").should("not.exist")
+            cy.contains("a", "Routes").should("not.exist")
             cy.contains("a", "Track Labels").should("not.exist")
 
             cy.contains("div", "Virtual Events").should("not.exist")
@@ -292,9 +292,9 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
         cy.visit(authoring.websiteTools.websiteToolsUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.pageTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
-        cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
         // // COG
         // images

@@ -121,9 +121,9 @@ describe('User Management User Role', function() {
         cy.visit(authoring.websiteTools.websiteToolsUrl)
         cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.pageTitle).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")
-        cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
-        cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // cy.visit(authoring.websiteTools.websiteToolsContentConfigurationsUrl)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.websiteTools.contentConfigurationsTitle).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
 
         // // COG
