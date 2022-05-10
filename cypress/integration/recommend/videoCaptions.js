@@ -163,7 +163,7 @@ describe("Target - Video captions", () => {
 
     })
 })
-    it.only("Visit the recommend track which has captions toggle enabled and language selection for Brightcove video", () => {
+    it("Visit the recommend track which has captions toggle enabled and language selection for Brightcove video", () => {
         //Captions on for recommend track, selecting language and checking in consumption
         authoring.common.login()
         authoring.recommend.visit()

@@ -42,7 +42,6 @@ describe("Configure and validate CTAs in Guide Promoter", () => {
         consumption.websiteTools.modifyIframeBlockingCode()
         cy.visit(consumptionURL)
         cy.wait(4000)
-        //cy.pause()
         cy.get(consumption.websiteTools.guidecta).click()
         cy.get(consumption.websiteTools.qaModal).should('exist')
     })

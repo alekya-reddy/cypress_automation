@@ -105,7 +105,7 @@ export class Settings extends Common {
         cy.get(this.cookieConsent.cookieConsentSelect).click()
         cy.get(this.dropdown.option(option)).click()
         cy.contains("button", "Save").click()
-        cy.contains(this.messages.recordSaved).should('exist')
+        cy.contains(this.messages.recordSaved,{timeout:20000}).should('exist')
     }
 
     addAPIConfigurations(name) {

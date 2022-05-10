@@ -27,7 +27,7 @@ describe("Add form and validate sidebar with VEX", () => {
         //Ensure that added VEX shows on form sidebar and clicking on it will redirect to it's configuartion page
         authoring.configurations.visit.forms()
         cy.reload()
-        cy.contains(authoring.common.table.cellName, form.name, { timeout: 5000 }).click()
+        cy.contains(authoring.common.table.cellName, form.name, { timeout: 20000 }).click()
         cy.get('h5').contains('Virtual Events').next().click()
 
         cy.get(authoring.vex.pageControl).should('exist')
@@ -35,9 +35,9 @@ describe("Add form and validate sidebar with VEX", () => {
         authoring.vex.deleteVirtualEvent(event.name)
         authoring.configurations.visit.forms()
         cy.reload()
-        cy.contains(authoring.common.table.cellName, form.name, { timeout: 5000 }).click()
+        cy.contains(authoring.common.table.cellName, form.name, { timeout: 20000 }).click()
         cy.contains('Not added to any Virtual Events').should('exist')
 
- })
+    })
 
 })
