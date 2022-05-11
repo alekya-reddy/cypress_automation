@@ -46,9 +46,6 @@ describe("Content Intelligence", () => {
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsToggle, "ON")
         cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
 
-        cy.visit(authoring.contentIntelligence.contentConfigurations)
-        cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
-
         cy.visit(authoring.contentIntelligence.contentStrategy)
         cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
         
@@ -74,9 +71,6 @@ describe("Content Intelligence", () => {
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.contentIntelligence, "ON")
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsV2Toggle, "OFF")
         authoring.clientHQ.clientHQToggle(authoring.clientHQ.websiteToolsToggle, "OFF")
-
-        cy.visit(authoring.contentIntelligence.contentConfigurations)
-        cy.contains('h1','Content Configurations',{timeout:20000}).should('exist')
 
         cy.visit(authoring.contentIntelligence.contentStrategy)
         cy.contains("Content Strategy Overview", { timeout: 20000 }).should('exist')
@@ -112,12 +106,6 @@ it("Verify Admin have Content Configuration and Strategy create/edit/delete perm
           // login and check permissions
           authoring.common.login(user.userName, user.password)
           cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-          cy.visit(authoring.contentIntelligence.contentConfigurations)
-          cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
-          cy.contains('span', "Add Segment").should('exist')
-          cy.contains('div', "Content Pools").click()
-          cy.contains('span',"+ Add Content Pool").should('exist')
-
           cy.visit(authoring.contentIntelligence.contentStrategy)
           cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
           cy.contains('span', "Key Marketing Topics").should('exist').click()
@@ -137,17 +125,9 @@ it("Verify Admin have Content Configuration and Strategy create/edit/delete perm
           // login and check permissions
           authoring.common.login(user.userName, user.password)
           cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-
-          cy.visit(authoring.contentIntelligence.contentConfigurations)
-          cy.contains('h1','Content Configurations',{timeout:10000}).should('exist')
-          cy.contains('span', "Add Segment").should('exist')
-          cy.contains('div', "Content Pools").click()
-          cy.contains('span',"+ Add Content Pool").should('exist')
-
           cy.visit(authoring.contentIntelligence.contentStrategy)
           cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
           cy.contains('span', "Key Marketing Topics").should('exist').click()
-          cy.contains('button', "Add Topics").should('exist')
 
         })
 
@@ -177,11 +157,7 @@ it("Verify Admin have Content Configuration and Strategy create/edit/delete perm
             // logout 
             authoring.common.logout()
         // login and check permissions
-            authoring.common.login(user.userName, user.password)
-            cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-            cy.visit(authoring.contentIntelligence.contentConfigurations)
-            cy.contains('h1','Content Configurations',{timeout:20000}).should('exist')
-            
+
         })
 
         it("Custom role permission with ContentIntelligence checkbox enable", () => {
