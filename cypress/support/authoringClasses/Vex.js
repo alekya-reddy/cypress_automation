@@ -634,7 +634,7 @@ export class Vex extends Common {
             this.setCookieConsent(cookieConsent)
         }
 
-        cy.contains('button', 'Save').click();
+        cy.contains('button', 'Save',{timeout:20000}).click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 

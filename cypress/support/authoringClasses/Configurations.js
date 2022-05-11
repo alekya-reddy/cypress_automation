@@ -613,12 +613,12 @@ export class Configurations extends Common {
         cy.contains("button", "Add Form").click()
         cy.get(this.forms.nameInput).clear().type(name + "\n")
         cy.waitFor({element: this.modal, to: "not.exist"})
-        cy.containsExact(this.table.cellName, name).should("exist")
+        cy.containsExact(this.table.cellName, name,{timeout:20000}).should("exist")
     }
 
     deleteForm(name){
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 20000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()
             cy.contains("button", "Delete Form").click()
