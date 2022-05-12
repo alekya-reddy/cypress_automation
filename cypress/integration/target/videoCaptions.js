@@ -120,7 +120,7 @@ const captionsTracks = {
         name: "targetSettingscaptions13.js",
         slug: "target-config-captions13",
         contents: ["The New Vimeo Player - used in cypress"],
-        captionsLanguage: "German",
+        captionsLanguage: "English",
         captions: "on",
         index: "0",
         get url() {
@@ -146,7 +146,7 @@ const captionsTracks = {
         name: "targetSettingscaptions16.js",
         slug: "target-config-captions16",
         contents: ["The New Vimeo Player - used in cypress"],
-        captionsLanguage: "Polish",
+        captionsLanguage: "German",
         captions: "on",
         index: "0",
         get url() {
@@ -409,25 +409,17 @@ describe("Target - Video captions", () => {
         //Captions off from target track and checking in consumption
         authoring.common.login()
         authoring.target.visit()
-        authoring.target.deleteTrack(captionsTracks.config13.name)
-        authoring.target.addTrack(captionsTracks.config13)
-        authoring.target.configure(captionsTracks.config13)
+        authoring.target.deleteTrack(captionsTracks.config14.name)
+        authoring.target.addTrack(captionsTracks.config14)
+        authoring.target.configure(captionsTracks.config14)
 
-        cy.visit(captionsTracks.config13.url)
+        cy.visit(captionsTracks.config14.url)
         cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
         cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
             cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
             cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
             cy.wait(1000)
-            cy.pause()
-            // cy.contains("div.ytp-menuitem-label", "Subtitles/CC").parents("div.ytp-menuitem").find(consumption.target.youtube.menuContent).invoke('text').then(text => {
-            //     if (text.includes("Off")) {
-            //         cy.contains(consumption.target.youtube.menuContent, "Off").should('be.visible', { timeout: 10000 })
-            //     }
-            //     else {
-            //         cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
-            //     }
-            // })
+            cy.contains("div.vp-menu-option-label","None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
         })
 
 
@@ -441,16 +433,12 @@ describe("Target - Video captions", () => {
 
         cy.visit(captionsTracks.config13.url)
 
-        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-            cy.get("div.ytp-chrome-bottom").then(() => {
-                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                cy.contains(consumption.target.youtube.menuContent, captionsTracks.config1.captionsLanguage).should('be.visible', { timeout: 10000 })
-                cy.contains(consumption.target.youtube.menuContent, captionsTracks.config1.captionsLanguage).should('be.visible', { timeout: 10000 }).click()
-                cy.contains("Spanish").click()
-                cy.contains(consumption.target.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
-            })
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config13.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
         })
 
         //Clone the target track and validate captions are cloned
@@ -462,21 +450,21 @@ describe("Target - Video captions", () => {
             expect(val).to.equal('rgb(0, 169, 203)')
         })
         cy.get(authoring.target.pagePreview.pagePreview).within(() => {
-            cy.contains('label', 'Language').parent('div').find("span").should("contain", "German")
+            cy.contains('label', 'Language').parent('div').find("span").should("contain", "English")
         })
 
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
             cy.visit(link)
         })
 
-        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-            cy.get("div.ytp-chrome-bottom").then(() => {
-                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                cy.contains(consumption.target.youtube.menuContent, captionsTracks.config1.captionsLanguage).should('be.visible', { timeout: 10000 })
-            })
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config13.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
         })
+
 
         //Validate if the Selected language is not there for captions/Subtitles we show captions in default language in English
         authoring.common.login()
@@ -487,13 +475,13 @@ describe("Target - Video captions", () => {
 
         cy.visit(captionsTracks.config16.url)
 
-        cy.waitForIframeToLoad(consumption.target.youtube.iframe, consumption.target.youtube.videoPlayer, 20000)
-        cy.getIframeBody(consumption.target.youtube.iframe).within(() => {
-            cy.get("div.ytp-chrome-bottom").then(() => {
-                cy.get(consumption.target.youtube.videoPlayer).should('exist').trigger('mouseover')
-                cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
-                cy.contains(consumption.target.youtube.menuContent, "English").should('be.visible', { timeout: 10000 })
-            })
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config13.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+            cy.pause()
         })
 
         //Validate if the only auto-generated English Subtitles are present video will not show the subtitles.
