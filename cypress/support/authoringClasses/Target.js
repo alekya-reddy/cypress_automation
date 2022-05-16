@@ -84,10 +84,18 @@ export class Target extends Common {
             formLabel: "label[for='formId']",
             timeOnTrackInput: "input[name='showAfterTime']"
         };
+        this.endPromoter = {
+            ctaLabel : 'label[for="callToActionId"]',
+            delayLabel: "label[for='delay']",
+            delayInput: "input[name='delay']",
+            delayDecrement: "span[class*='NumberInput__decrementButton']",
+        };
         this.exitOverride = {
             delayLabel: "label[for='delay']",
             delayInput: "input[name='delay']",
-            delayDecrement: "span[class*='NumberInput__decrementButton']"
+            delayDecrement: "span[class*='NumberInput__decrementButton']",
+            manNumberlabel: "label[for='maxItems']",
+            maxNumberInput: "input[name='maxItems']",
         }
         this.editTarget = {
             nameInput: "#name",
@@ -475,26 +483,70 @@ export class Target extends Common {
     }
 
     configureEndPromoter(endPromoterOptions, verify){
-        const { link } = endPromoterOptions
-
+        const { link, ctaLabel, cta, delay } = endPromoterOptions
+        
         if(link){
             cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
                 cy.contains("label", "Link").siblings("span").click()
             })
             cy.get(this.popover).within(() => {
-                cy.get(this.popoverElements.endPromoterLinkInput).clear().type(link + "\n")
+                cy.get(this.popoverElements.endPromoterLinkInput).clear().type(link)
             })
+            cy.contains("button", "Update").click()
+            cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
+                cy.contains("label", "Link").siblings("span").should("contain", link)
+            })
+        }
 
-            if(verify !== false){
+        if(ctaLabel){
+            cy.contains("label", "CTA Label").siblings("span").click()
+            cy.get('#cta').clear().type(ctaLabel)
+            cy.contains("button", "Update").click()
+        }
+
+            if(cta){
+                cy.wait(100)
+                cy.contains('label', "Type").siblings("span").click()
+                cy.wait(100)
+                cy.get('input[name="type"]').eq(1).click()
+                cy.wait(100)
+                cy.contains('button', "Update").click({force:true})
+                //cy.contains('label', "CTA").siblings("span").click()
+                cy.get('#emptyTextInput').parent('span').click()
+                cy.wait(100)
+                cy.get(this.endPromoter.ctaLabel).parent().within(() => {
+                    cy.get("input").type(cta + "\n", {force:true})
+                })
+                cy.contains('button', "Update").click()
                 cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
-                    cy.contains("label", "Link").siblings("span").should("contain", link)
+                    cy.contains("label", "cta").siblings("span").should("contain", cta)
                 })
             }
-        }
+
+            if(delay){
+                cy.wait(100)
+                cy.contains("label", "Delay").siblings("span").click()
+                    // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
+                    // This makes it impossible to set it to zero without using the decrement button
+                    cy.angryClick({
+                        clickElement: this.endPromoter.delayDecrement,
+                        checkElement: "input[value='0']",
+                        repeat: 60,
+                        interval: 0
+                    })
+                cy.get(this.endPromoter.delayInput).type(delay)
+                cy.contains("button", "Update").click()
+
+            } 
     }
 
     configureExit(exitOptions, verify){
-        const { delay } = exitOptions
+        const {promoterHeadline} = exitOptions
+        const {message} = exitOptions
+        const {item} = exitOptions
+        const {form} = exitOptions
+        const {delay} = exitOptions
+        const {maxNumber} = exitOptions
 
         cy.get(this.pageSidebar.exitToggle).parents().eq(1).within(() => {
             if(Cypress.$(this.pageSidebar.exitNoOverride).length > 0){
@@ -504,22 +556,67 @@ export class Target extends Common {
             }
         })
 
-        cy.contains(this.modal, "Exit customization for this Track").should("exist").within(() => {
-            if(delay){
-                cy.get(this.exitOverride.delayLabel).parent().within(() => {
+        cy.wait(1000)
+        cy.contains(this.modal, "Exit customization for this track").should("exist").within(() => {
+            cy.contains('span', "Promoter Headline").should("exist")
+            cy.contains('span', "Message").should("exist")
+            if(promoterHeadline){
+            cy.get('#title').type(promoterHeadline)
+            }
+            if(message){
+                cy.wait(1000)
+            cy.get('#message').clear().type(message)
+            }
+
+            if(item){
+                cy.get('label[for="featuredItemId"]').parent().within(() => {
+                    if(Cypress.$(this.clearValueIcon).length > 0){
+                        cy.get(this.clearValueIcon).click()
+                    }
+                    cy.get("input").type(item + "\n", {force: true})
+                })
+
+            }
+
+
+            if(form){
+                cy.log("in")
+                cy.wait(100)
+                cy.contains('label', "Form").click({force:true})
+                cy.wait(100)
+                cy.get(this.formsStrategy.formLabel).parent().within(() => {
+                    cy.get("input").type(form + "\n", {force: true})
+                })
+            }
+                      if(delay){
+                        cy.get(this.exitOverride.delayLabel).parent().within(() => {
+                            // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
+                            // This makes it impossible to set it to zero without using the decrement button
+                            cy.angryClick({
+                                clickElement: this.exitOverride.delayDecrement,
+                                checkElement: "input[value='0']",
+                                repeat: 60,
+                                interval: 0
+                            })
+                        })
+                        cy.get(this.exitOverride.delayInput).type(delay)
+                    }  
+
+              if(maxNumber){
+                cy.get(this.exitOverride.manNumberlabel).parent().within(() => {
                     // This is only necessary because there's an annoying bug where if you clear out the delay, it resets to 5
                     // This makes it impossible to set it to zero without using the decrement button
                     cy.angryClick({
                         clickElement: this.exitOverride.delayDecrement,
                         checkElement: "input[value='0']",
                         repeat: 60,
-                        interval: 0
+                        interval: 1
                     })
                 })
-                cy.get(this.exitOverride.delayInput).type(delay)
+                cy.get(this.exitOverride.maxNumberInput).type(maxNumber)
             }
 
-            cy.contains("button", "Save Exit customization").click()
+            cy.contains("button", "Save Exit Customization").click()
         })
 
         if(verify !== false){
