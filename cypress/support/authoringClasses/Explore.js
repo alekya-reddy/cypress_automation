@@ -19,7 +19,8 @@ export class Explore extends Common {
         this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
         this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
         this.recentUpdateTab = 'div[id="recently-updated-tab"]',
-        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i'
+        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i',
+        
         
         this.createExploreModal = {
             nameInput: "#name",
@@ -27,7 +28,7 @@ export class Explore extends Common {
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
-        this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
+        this.editExplorePageIcon = "i[title='Edit Explore Page']";
         this.deleteExplorePageIcon = "i[class*='delete Icon__action']";
         this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
@@ -51,11 +52,12 @@ export class Explore extends Common {
             advanceCustomization: 'div[data-qa-hook="enableAdvancedCustomization"]',
             contentType: 'div[data-qa-hook="showContentType"]',
             showTopics: 'div[data-qa-hook="showTopics"]',
+            openContentTrack: "label:contains('Open Content Track')",
         };
         this.popoverElements = {
             customUrlInput: "#slug",
             pageTitleInput: "#publicTitle",
-            pageDescriptionInput: "#pageDescription"
+            pageDescriptionInput: "#pageDescription",
         };
         this.header = {
             headerNoOverrides: 'div[data-qa-hook="Header no overrides"]',
@@ -76,7 +78,7 @@ export class Explore extends Common {
             backgroundImage: '#hero-background-image',
             brandImage: '#hero-brand-image',
             partnerImage: '#hero-partner-image',
-            personalizedImage: '#hero-personalized-image'
+            personalizedImage: '#hero-personalized-image',
         }
     }
 
@@ -290,6 +292,19 @@ export class Explore extends Common {
 
         if(verify !== false){
             cy.get(this.pageSidebar.customUrlLabel, {timeout: 10000}).siblings("span").should("contain", slug)
+        }
+    }
+
+    setOpenContentTrack(openContent, verify){
+        cy.get(this.pageSidebar.openContentTrack).siblings("span").click()
+        cy.get(this.popover).within(()=>{
+            cy.get(this.dropdown.box).click()
+            cy.get(this.dropdown.option(openContent)).click()
+            cy.contains("button", "Update").click()
+        })
+
+        if(verify !== false){
+            cy.get(this.pageSidebar.openContentTrack, {timeout: 10000}).siblings("span").should("contain", openContent)
         }
     }
 

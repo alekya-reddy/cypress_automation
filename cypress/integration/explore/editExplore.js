@@ -31,6 +31,10 @@ const recommendExplore = {
     name: 'editExplore.js',
     experienceType: 'Recommend',
     trackName: recommend.name,
+    slug: 'editexplore-js',
+    get url(){
+        return `${authoring.common.baseUrl}/l/${this.slug}`
+    }
 };
 
 describe("Edit explore page", () => {
@@ -60,7 +64,7 @@ describe("Edit explore page", () => {
             cy.contains(consumption.explore.body.card, targetContent).should("not.exist")
         })
         recommend.contents.forEach(recommendContent => {
-            cy.contains(consumption.explore.body.card, recommendContent).should("exist")
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("exist")
         })
 
         authoring.explore.visit()
@@ -71,7 +75,7 @@ describe("Edit explore page", () => {
         // Verify consumption
         cy.visit(targetExplore.url)
         target.contents.forEach(targetContent => {
-            cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            cy.contains(consumption.explore.body.card, targetContent, { timeout:10000 }).should("exist")
         })
         recommend.contents.forEach(recommendContent => {
             cy.contains(consumption.explore.body.card, recommendContent).should("not.exist")
@@ -79,4 +83,124 @@ describe("Edit explore page", () => {
 
     })
 
-})
+    it("Verify the Explore page is opening in OverLay for both Recommend and Target Tracs", () => {
+        authoring.common.login()
+        authoring.explore.visit()
+        authoring.explore.goToExplorePage(recommendExplore.name)
+        authoring.explore.editExplore(targetExplore)
+    
+        cy.contains(authoring.explore.pageSidebar.container, `Target Track: ${target.name}`)
+            authoring.explore.setOpenContentTrack("Overlay on the same window")
+
+        // Verify consumption
+        cy.visit(targetExplore.url)
+        target.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("exist")
+        })
+        recommend.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
+            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
+            cy.get(consumption.explore.overlay.modal).should("exist")
+        })
+
+        authoring.explore.visit()
+        authoring.explore.goToExplorePage(targetExplore.name)
+        authoring.explore.editExplore(recommendExplore)
+
+        cy.contains(authoring.explore.pageSidebar.container, `Recommend Track: ${recommend.name}`)
+        authoring.explore.setOpenContentTrack("Overlay on the same window")
+
+        // Verify consumption
+        cy.visit(targetExplore.url)
+        target.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
+        })
+        recommend.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
+            cy.get(consumption.explore.overlay.modal).should("exist")
+        })
+
+    })
+
+    it("Verify the Explore page to Redirect in the same window for both Target and Recommend", () => {
+        authoring.common.login()
+        authoring.explore.visit()
+        authoring.explore.goToExplorePage(recommendExplore.name)
+        authoring.explore.editExplore(targetExplore)
+    
+        cy.contains(authoring.explore.pageSidebar.container, `Target Track: ${target.name}`)
+            authoring.explore.setOpenContentTrack("Redirect in the same window")
+            cy.pause()
+
+        // Verify consumption
+        cy.visit(targetExplore.url)
+        target.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("exist")
+        })
+        recommend.contents.forEach(recommendContent => {
+            cy.url("contains", "sharedresource?x=wNmH_P&lx=Wg5PmI", {timrout:10000}).should("exist")
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
+            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
+            cy.url("contains", "sharedresource?x=wNmH_P&lx=Wg5PmI", {timrout:10000}).should("exist")
+        })
+    
+        authoring.explore.visit()
+        authoring.explore.goToExplorePage(targetExplore.name)
+        authoring.explore.editExplore(recommendExplore)
+
+        cy.contains(authoring.explore.pageSidebar.container, `Recommend Track: ${recommend.name}`)
+        authoring.explore.setOpenContentTrack("Redirect in the same window")
+    
+        // Verify consumption
+        cy.visit(targetExplore.url)
+        target.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
+        })
+
+        recommend.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            cy.get(consumption.explore.hero.assetTitle, {timeout: 10000}).click()
+            cy.url("contains", "commonresource?x=oSOpYa&lx=Wg5PmI", {timrout:10000}).should("exist")
+        })
+
+    })
+
+        it("Verify the Explore page to Open in new tab", () => {
+            authoring.common.login()
+            authoring.explore.visit()
+            authoring.explore.goToExplorePage(recommendExplore.name)
+            authoring.explore.editExplore(targetExplore)
+        
+            cy.contains(authoring.explore.pageSidebar.container, `Target Track: ${target.name}`)
+                authoring.explore.setOpenContentTrack("Open in a new tab")
+    
+            // Verify consumption
+            cy.visit(targetExplore.url)
+            target.contents.forEach(targetContent => {
+                cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            })
+            recommend.contents.forEach(recommendContent => {
+                cy.contains(consumption.explore.body.card, recommendContent, { timeout:20000 }).should("not.exist")
+                cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click()
+                cy.url().should("contains", targetExplore.url)
+            })
+    
+            authoring.explore.visit()
+            authoring.explore.goToExplorePage(targetExplore.name)
+            authoring.explore.editExplore(recommendExplore)
+            cy.contains(authoring.explore.pageSidebar.container, `Recommend Track: ${recommend.name}`)
+            authoring.explore.setOpenContentTrack("Open in a new tab")
+    
+            // Verify consumption
+            cy.visit(targetExplore.url)
+            target.contents.forEach(recommendContent => {
+                cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
+            })
+            recommend.contents.forEach(targetContent => {
+                cy.contains(consumption.explore.body.card, targetContent).should("exist")
+                cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click()
+                cy.url().should("contains", recommendExplore.url)
+            })
+        })
+    })

@@ -156,7 +156,6 @@ it("Verify Admin have Content Configuration and Strategy create/edit/delete perm
 
             // logout 
             authoring.common.logout()
-        // login and check permissions
 
         })
 
