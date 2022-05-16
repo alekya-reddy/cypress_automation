@@ -69,13 +69,9 @@ describe("View Only Permissions", () => {
            cy.get("#configurations").should("exist").click()
            cy.contains("a", "Image Library").should("exist").click()
            cy.contains("button", "Add Images").should("not.exist")
-           cy.get(authoring.settings.viewOnlySettingsLocators.backgroundImage).click()
-           cy.contains("h5", "Image Name").should("exist")
-           cy.contains("h5", "Image Name").next().click()
            cy.get(authoring.settings.viewOnlySettingsLocators.nameInput).should("not.exist")
-           cy.contains("h5", "Alt Text").should("exist")
-           cy.contains("h5", "Alt Text").next().click()
-           cy.get('textarea[name="altText"]').should("not.exist")
+           cy.contains("a", "Hero Images").should("exist").click()
+           cy.contains("button", "Add Images").should("not.exist")
            cy.get(authoring.common.deleteIcon).should("not.exist")
 
            //External Code View Permission
@@ -181,9 +177,6 @@ describe("View Only Permissions", () => {
            authoring.common.togglemethod(authoring.settings.viewOnlySettingsLocators.dynamicLogo)
            authoring.common.togglemethod(authoring.common.checkboxContainer) 
            cy.contains("a", "Virtual Event").should("exist").click()
-           cy.get(authoring.settings.viewOnlySettingsLocators.fontSize).invoke('attr', 'value').then(val => {
-           expect(val).to.equal('5')
-        })
        
         //Links & Sharing View Only Permissions
        cy.get("#configurations").should("exist").click()
@@ -225,6 +218,7 @@ describe("View Only Permissions", () => {
        cy.get("#configurations").should("exist").click()
        cy.contains("a", "Forms").should("exist").click()
        cy.contains("button", "Add Form").should("not.exist")
+       cy.wait(2000)
        cy.get(authoring.settings.viewOnlySettingsLocators.tableContainer).should("exist")
        cy.contains('div', "Automation").should("exist").click()
        cy.contains("h5", "Form Name").click()
@@ -314,7 +308,7 @@ describe("View Only Permissions", () => {
     
   })
 
-  it("Segments View Only Permissions", () => {
+  it("Segments/Routes View Only Permissions", () => {
     authoring.common.login()
     cy.visit(authoring.userManagement.userRoles.pageURL)
     authoring.userManagement.configureUserRole(role5)
@@ -326,8 +320,7 @@ describe("View Only Permissions", () => {
        // login and check permissions
        authoring.common.login(user.userName, user.password)
        cy.visit(authoring.contentLibrary.pageUrl)
-       cy.get("#configurations").should("exist").click()
-       cy.contains("a", "Segments").should("exist").click()
+       cy.visit(authoring.configurations.pageUrls.segments)
        cy.contains("button", "Create Segment").should("not.exist")
        cy.contains('div', "Expand All Segments Filters").should("exist")
        cy.get(authoring.configurations.segments.deleteIcon).should("not.exist") 
@@ -335,8 +328,7 @@ describe("View Only Permissions", () => {
        cy.get(authoring.configurations.segments.editSegments).should("not.exist") 
        cy.get(authoring.common.orgSearch).should("exist")
 
-       cy.get("#configurations").should("exist").click()
-       cy.contains("a", "Routes").should("exist").click()
+       cy.visit(authoring.configurations.pageUrls.routes)
        cy.contains("button", "Create Route").should("not.exist")
        cy.get(authoring.configurations.routes.analytics).should("not.exist")
        cy.get(authoring.configurations.routes.editRoutes).should("not.exist")
@@ -346,7 +338,6 @@ describe("View Only Permissions", () => {
        cy.get(authoring.configurations.routes.editMaping).should("not.exist")
        cy.contains("button", "Add Mapping").should("not.exist")
        cy.get(authoring.common.orgSearch).should("exist")
-       //cy.get('div[draggable="true"]').should("not.exist")
 
   })
 

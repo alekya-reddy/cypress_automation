@@ -37,15 +37,15 @@ describe("View Only Permissions", () => {
            cy.contains('dd', "We'll highlight which of your content assets are the most relevant to an individual content asset or a Key Marketing Topic. These recommendations can be activated on your website with Website Tools.").should("exist")
            cy.contains('span', "Key Marketing Topics").should("exist").click()
            cy.contains("button", "Add Topics").should("not.exist")
+           cy.reload()
            cy.contains("option", " Select a category ").should("exist")
            cy.get(authoring.contentIntelligence.pageSearch).should("exist")
            cy.contains("option", " Sort ").should("exist")
            cy.contains("th", "Categories").should("exist")
            cy.contains("th", "Status").should("exist")
            cy.contains("th", "Delete").should("not.exist")
-           //cy.contains("span", "Next").should("exist")
            cy.contains("th", "Name").should("exist")
-           cy.contains('a', "Marketing").should("exist").click({force:true})
+           cy.contains('a', "Account Based Marketing").should("exist").click({force:true})
            cy.wait(4000)
            cy.contains("h2", "Marketing").should("exist")
            cy.contains("a", "Relevant Content").should("exist")
@@ -74,27 +74,10 @@ describe("View Only Permissions", () => {
 
            cy.contains("button", "Top Keywords").should("exist")
            cy.get(authoring.contentIntelligence.topKeywordsTab).should("exist")
-
+           cy.reload()
            cy.contains("a", "Google Search Engine Results").should("exist").click()
            cy.contains("a", "People Also Ask").should("exist")
-           cy.contains("a", "Top Search Results").should("exist")
-
-
-
-
-
-
-
-           
-
-
-
-
-
-
-
-           
-
+           cy.contains("a", "Top Search Results").should("exist") 
 
     })
 })
