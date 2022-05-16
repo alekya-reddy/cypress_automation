@@ -108,11 +108,6 @@ export class Settings extends Common {
              previewCTAs: 'div[data-qa-hook="preview-section-cta-name"]',
              previewLabel: 'div[data-qa-hook="preview-section-button-label"]',
 
-
-
-
-
-
         };
     }
 

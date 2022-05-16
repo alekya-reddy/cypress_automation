@@ -136,8 +136,6 @@ describe("View Only Permissions", () => {
         cy.contains('’span', "Select On Demand Video").should("not.exist")
 
         cy.contains('label', "Protection Type").should("exist")
-        cy.get('span[title="None"]').click()
-        cy.get().should("not.exist")
         cy.contains('label', "Groups").should("exist")
         cy.contains('span', "Select...").eq(0).click()
         cy.get(authoring.vex.dropDown).should("not.exist")
