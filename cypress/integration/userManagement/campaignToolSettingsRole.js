@@ -78,7 +78,7 @@ describe('Campaign Tool Settings User Role', function() {
             cy.contains("a", "Personalization").should("exist").click()
             cy.wait(200)
             cy.contains("a", "Segments").should("exist")
-            //cy.contains("a", "Destination Routes").should("exist")
+            cy.contains("a", "Destination Routes").should("exist")
             cy.contains("a", "Collection Rules").should("exist")
             cy.contains("a", "Track Labels").should("not.exist")
             cy.contains("div", "Virtual Events").should("not.exist")
