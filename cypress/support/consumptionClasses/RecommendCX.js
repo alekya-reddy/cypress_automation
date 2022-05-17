@@ -26,5 +26,21 @@ export class RecommendCX extends CommonCX {
             settings:'[aria-label="Settings"]',
             menuContent:"div.ytp-menuitem-content"
         };
+
+        this.vimeo = {
+            // Playing around on the dev console on regular browser, I'm blocked from accessing iframe due to cross-frame issue. I'm amazed I can bypass that through Cypess
+            iframe: 'iframe[src*="vimeo"]',
+            videoPlayer: 'video',
+            play: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
+            pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
+            getCurrentTime: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'currentTime', undefined, state) },
+            paused: function (state) { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'paused', undefined, state) },
+            playButton: "[aria-label='Play']",
+            volumeButtons: "[class='volume'] div",
+            closeAudioNotification: "#video-tooltip-close-icon",
+            audioMuteNotification: "div[id='video-tooltip']",
+            captions:"[aria-label='Choose captions']",
+            message:"[id='video-captions']"
+        };
     } 
 }

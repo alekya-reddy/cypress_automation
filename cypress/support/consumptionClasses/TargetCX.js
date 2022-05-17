@@ -62,7 +62,8 @@ export class TargetCX extends CommonCX {
             volumeButtons: "[class='volume'] div",
             closeAudioNotification: "#video-tooltip-close-icon",
             audioMuteNotification: "div[id='video-tooltip']",
-            captions:"[aria-label='Choose captions']"
+            captions:"[aria-label='Choose captions']",
+            message:"[id='video-captions']"
         };
     } 
 }
