@@ -19,7 +19,7 @@ export class Explore extends Common {
         this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
         this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
         this.recentUpdateTab = 'div[id="recently-updated-tab"]',
-        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i';
+        this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i'
         
         this.createExploreModal = {
             nameInput: "#name",
@@ -28,7 +28,7 @@ export class Explore extends Common {
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
         this.editExplorePageIcon = 'i[title="Edit Explore Page"]';
-        this.deleteExplorePageIcon = 'i[title="Delete Explore Page"]';
+        this.deleteExplorePageIcon = "i[class*='delete Icon__action']";
         this.cloneExploreIcon = 'i[title="Clone Explore Page"]';
         this.topicFilterDropdown = 'div[data-qa-hook="topic-filter-dropdown"]',
         this.topicFilterSection = 'div[data-qa-hook="topic-filter-section"]',
@@ -65,7 +65,7 @@ export class Explore extends Common {
         this.heroTitleLocator = 'div[data-qa-hook="header-title-show"]';
         this.heroTitleInput = 'input[name="headerTitle"]',
         this.heroSubtitleLocatorDefault = 'h3[data-qa-hook="header-subtitle-default"]',
-        this.headerTitle = 'h3[data-qa-hook="header-title-default"]',
+        this.headerTitle = 'h3[data-qa-hook="body-title-default-show"]',
         this.heroSubtitleLocator = 'div[data-qa-hook^="header-subtitle-show"]',
         this.heroSubtitleInput = 'input[name="headerSubtitle"]',
         this.contentDescription = 'textarea[name="contentDescription"]',
@@ -163,7 +163,7 @@ export class Explore extends Common {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.get(this.pageSearch).clear().type(name)
         cy.get("body").then($body => {
-            if ($body.find(`a[title='${name}']`).length > 0) {
+            if ($body.find(`a[id='configure-${name}']`).length > 0) {
                 cy.containsExact(this.table.experienceCellName, name).should("exist").within(() => {cy.get("a").click()})
                 cy.contains(this.pageTitleLocator, name, {timeout: 20000}).should("exist")
         
@@ -360,9 +360,9 @@ export class Explore extends Common {
             }
         })
         cy.get(this.modal).within(() => {
-            cy.contains('h3', 'Header customization for this Track')
+            cy.contains('div', 'Header customization for this track')
             cy.get(this.header.headerTitle).clear().type(headerTitle)
-            cy.contains('button', 'Save Header customization').click()
+            cy.contains('button', 'Save Header Customization').click()
         })
     }
 

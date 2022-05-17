@@ -42,6 +42,7 @@ const vex = {
 
 const domainName = "pathfactory-qa-wp.com"
 const websitePath = "test"
+const contentpoolName = "Wordpress"
 
 
 describe("Add Appearance and Verify LastUpdated Date", () => {
@@ -134,6 +135,7 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.contains("span","Guide").click()
         cy.contains("span","Concierge").click()
         cy.get(authoring.websiteTools.selectOpen).eq(0).type(appearance.name+ '\n')
+        cy.get(authoring.websiteTools.enterselectOption('contentPool')).type(contentpoolName +"\n",{force: true})
         cy.contains("span","Save").click()
 
  })

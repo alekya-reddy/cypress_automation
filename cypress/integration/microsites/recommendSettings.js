@@ -77,8 +77,8 @@ const captionsTracks = {
         // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "recommendSettingscaptions.js",
         slug: "recommend-config-captions",
-        contents: ["Oracle Cloud captions"],
-        captionsLanguage: "German",
+        contents: ["How To Translate Your YouTube Video in to ANY Language!"],
+        captionsLanguage: "French",
         captions:"on",
         index:"0"
     },
@@ -86,7 +86,7 @@ const captionsTracks = {
         // Testing Flow promoter, cta forms, form strategy, and end promoter 
         name: "recommendSettingscaptions2.js",
         slug: "recommend-config-captions2",
-        contents: ["Oracle Cloud captions"],
+        contents: ["How To Translate Your YouTube Video in to ANY Language!"],
         captions:"off",
         index:"0",
         verify:false
@@ -238,8 +238,8 @@ describe("Microsites - Target Settings", () => {
                 cy.get(consumption.microsites.youtube.settings).should('be.visible',{timeout:10000}).click({force:true})
                 cy.contains(consumption.microsites.youtube.menuContent,captionsTracks.config1.captionsLanguage).should('be.visible',{timeout:10000})
                 cy.contains(consumption.microsites.youtube.menuContent,captionsTracks.config1.captionsLanguage).should('be.visible',{timeout:10000}).click()
-                cy.contains("Spanish").click()
-                cy.contains(consumption.microsites.youtube.menuContent,"Spanish").should('be.visible',{timeout:10000})
+                cy.contains("Hindi").click()
+                cy.contains(consumption.microsites.youtube.menuContent,"Hindi").should('be.visible',{timeout:10000})
             })
         })
 

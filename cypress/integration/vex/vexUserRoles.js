@@ -46,12 +46,12 @@ if (Cypress.env('TEST_ENV') == 'prod') {
 }
 
 const event = { 
-    name: 'vexUserRoles.js'
+    name: 'vexUserRoles2.js'
 }
 
 
 const userAddedEvent = {
-name: "User Added Event"
+name: "User Added Event2"
 }
 
 // Bare bones test for now. Will update as user roles become more defined. 
@@ -77,11 +77,11 @@ describe('VEX - User roles', function() {
             } else {
                 cy.contains(authoring.vex.pageTitleLocator, authoring.vex.virtualEventHomeTitle).should('not.exist')
             }
-
-            authoring.vex.goToEventConfig(event.name)
             if(user.eventsPageAccess){
+                cy.get(`a[id='configure-${event.name}']`).should('exist').click()
                 cy.containsExact(authoring.vex.pageTitleLocator, event.name, {timeout: 20000}).should('exist')
             } else {
+                cy.get(`a[id='configure-${event.name}']`).should('exist').click()
                 cy.containsExact(authoring.vex.pageTitleLocator, event.name, {timeout: 20000}).should('exist')
                 cy.contains("span", "Preview Event").should("not.exist")
                 cy.waitFor({element: "#lk-dashboard-container", to: "exist", wait: 10000})
@@ -90,7 +90,6 @@ describe('VEX - User roles', function() {
             authoring.vex.visit()
             if(user.editPermission){
                 authoring.vex.addVirtualEvent(userAddedEvent, false)
-                cy.containsExact(authoring.vex.eventCardTitle, userAddedEvent.name, {timeout: 20000}).should('exist')
                 authoring.vex.deleteVirtualEvent(userAddedEvent.name)
             } else {
                 cy.contains("span", "Add Virtual Event").should("not.exist")

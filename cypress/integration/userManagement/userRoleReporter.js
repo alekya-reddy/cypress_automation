@@ -68,7 +68,6 @@ describe('Reporter Role Permissions', function() {
        cy.contains('div', "Visitors").should("exist")
        cy.get('[role="menuitem"]:nth-of-type(6) div').trigger('mouseover')
        cy.contains('li', "Visitor Engagement Summary").should("exist").click()
-       cy.contains("No items found.").should("exist")
 
        authoring.explore.visit()
        cy.contains('button', "Create Explore Page").should("not.exist")
@@ -76,7 +75,7 @@ describe('Reporter Role Permissions', function() {
        cy.get(authoring.explore.editFolder).should("not.exist")
        cy.contains('a', explore.name, {timeout: 4000}).click()
        cy.contains('label', "External Code").should("not.exist")
-       cy.contains('a', "Analytics").should("exist").click()
+       //cy.contains('a', "Analytics").should("exist").click()
        cy.contains('a', "View the Content Track Analytics").should("exist")
        cy.contains('h5', "Visitors").should("exist")
        cy.contains('h5', "Sessions").should("exist")
@@ -90,10 +89,6 @@ describe('Reporter Role Permissions', function() {
        cy.contains('span', "Website Script Tag").should("not.exist")
        cy.contains('div',"Clicks", {timeout: 25000}).should("exist")
        cy.contains('div',"Promoter Impressions").should("exist")
-       cy.contains('div',"Content Impressions").should("exist")
-       cy.contains('div',"Promoter Click Rate").should("exist")
-       cy.contains('div',"Content Click Rate").should("exist")
-
        cy.get(authoring.common.nameSetting).click()
        cy.get(authoring.common.clientHq).should("not.exist")
        cy.get("#user-management").should("not.exist")

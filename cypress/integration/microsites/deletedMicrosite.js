@@ -12,6 +12,7 @@ const microsite = {
 
 const microsite1 = {
     name: "folderMicrosite",
+    parentFolder: "Folder2"
 }
 
 const landingPage = {
@@ -24,11 +25,15 @@ const landingPage = {
 }
 
 const folder = {
-    name: "Folder2"
+    name: "folder2"
 }
 
 const rootFolder = {
     name: "Root"
+}
+
+const folder2 = {
+    name: "drag&drop"
 }
 
 describe("Microsites - Deleted microsites and landing pages", () => {
@@ -67,29 +72,31 @@ describe("Microsites - Deleted microsites and landing pages", () => {
     it("Add to folder with drag and drop and root folder option available ", () => {
         authoring.common.login()
         authoring.microsites.visit()
+        cy.contains('span', folder.name).click()
         authoring.microsites.removeMicrosite(microsite1.name)
         authoring.microsites.addMicrosite(microsite1)
-        authoring.microsites.editfolder(microsite1.name)
-        cy.contains("span","Save Folder").should("exist").click()
-
+        cy.go("back")
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
-            expect(text).to.equal('1')
+            expect(text).to.equal('2')
         })
         cy.contains('td', microsite1.name).prev().click()
         cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.contains("div",folder2.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.reload()
+        cy.wait(2000)
+        cy.contains('span', folder.name, {timeout:20000}).click()
+        cy.contains("div",folder.name,{timeout:20000}).siblings('div').invoke('text').then(text=>{
+            expect(text).to.equal('1')
+        }) 
+
+        cy.contains("span", folder2.name,{timeout:10000}).click()
+        cy.contains('td', microsite1.name).prev().click()
+        cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
+        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
         cy.wait(1000)
         cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
             expect(text).to.equal('2')
-        }) 
-
-        cy.contains("span", folder.name,{timeout:10000}).click()
-        cy.contains("a", microsite1.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",rootFolder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
-        cy.wait(1000)
-        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
-            expect(text).to.equal('1')
         })
-
+        cy.contains('span', "Root").click() // Resetting the folder structure to root, orelse when next time script runs in the same session its trying to find and unable to delete the deletedMicrosite.js" in child folder 
     })
 })

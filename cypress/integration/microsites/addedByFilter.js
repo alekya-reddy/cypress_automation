@@ -2,13 +2,25 @@ import { createAuthoringInstance ,createConsumptionInstance} from '../../support
 
 const authoring = createAuthoringInstance({org: 'automation-microsites', tld: 'lookbookhq'})
 
-const event = {
+const microsite = {
     name: 'AddedbyfilterTest.js'
 }
-const nonexistingevent = 'noevent'
+const nonexistingmicrosite = 'noevent'
 
-const event1 = {
+const microsite1 = {
     name: 'AddedByFilterAuthor.js'
+}
+
+const microsite2 = {
+    name: 'deleteMicrosite2.js'
+}
+
+const microsite3 = {
+    name: 'deleteMicrosite3.js'
+}
+
+const microsite4 = {
+    name: 'deleteMicrosite4.js'
 }
 
 const Microsites = {
@@ -30,17 +42,17 @@ describe("Microsites - Added By and Search filter", ()=>{
         //This will check added by and search filter functionality together
         cy.get(authoring.microsites.clickAddedBy).click()
         cy.get(authoring.microsites.addedbyButton).contains('cy-admin').click()
-        cy.get(authoring.microsites.searchButton).click().type(event.name)
-        cy.contains(event.name).should('exist')
+        cy.get(authoring.microsites.searchButton).click().type(microsite.name)
+        cy.contains(microsite.name).should('exist')
         cy.get(authoring.microsites.addedBycancel).click()
         cy.get(authoring.microsites.clearSearch).click()
         cy.get(authoring.microsites.clickAddedBy).click()
         cy.get(authoring.microsites.addedbyButton).contains('cy-author').click()
-        cy.get(authoring.microsites.searchButton).click().type(event1.name)
-        cy.contains(event1.name).should('exist')
+        cy.get(authoring.microsites.searchButton).click().type(microsite1.name)
+        cy.contains(microsite1.name).should('exist')
         cy.get(authoring.microsites.clearSearch).click()
         //This is to verify no microsites found msg by  
-        cy.get(authoring.microsites.searchButton).click().type(nonexistingevent)
+        cy.get(authoring.microsites.searchButton).click().type(nonexistingmicrosite)
         cy.contains(authoring.microsites.noMicrositeFound).should('exist')
         
 })
@@ -65,5 +77,27 @@ describe("Microsites - Added By and Search filter", ()=>{
                  cy.get(authoring.microsites.searchButton).click().type(string.name)
                  cy.get('tr[class="ant-table-row ant-table-row-level-0"]').should('exist').should('contain', string.name)
     })
+
+    it('Verify Delete Option For Multi-Select', function() {
+        authoring.common.login();
+        authoring.microsites.visit();
+        authoring.microsites.addMicrosite(microsite2)
+        authoring.microsites.addMicrosite(microsite3)
+        authoring.microsites.addMicrosite(microsite4)
+        cy.go("back")
+        cy.contains('td', microsite2.name).prev().click()
+        cy.contains('td', microsite3.name).prev().click()
+        cy.contains('td', microsite4.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "3").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+        cy.contains('td', microsite2.name).should("not.exist")
+        cy.contains('td', microsite3.name).should("not.exist")
+        cy.contains('td', microsite4.name).should("not.exist")
+
+     })
 
 })

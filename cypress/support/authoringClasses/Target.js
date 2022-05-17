@@ -8,14 +8,14 @@ export class Target extends Common {
         this.targetAnalyticsTitle = "Target Analytics Overview";
         this.targetAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
-        this.deleteTrackIcon = "i[title='Delete Track']";
+        this.deleteTrackIcon = "i[class*='delete Icon']";
         this.shareUrl = 'i[title="Share URL"]';
         this.thumbnailSelect = 'i[title="Select a thumbnail"]';
         this.cloneTrack = 'i[title="Clone Track"]';
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
         this.deleteFolder = 'i[title="Delete Folder"]';
-        this.editTrack = 'i[title="Edit Track"]';
+        this.editTrack = 'i[class*="edit-for"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
         this.contentClick = "div[draggable='true']:nth-child(2)",

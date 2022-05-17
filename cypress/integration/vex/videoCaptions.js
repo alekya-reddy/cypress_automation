@@ -20,7 +20,7 @@ const originalSession = [
         type: 'On Demand',
         video: 'Oracle Cloud captions',
         captions: 'on',
-        captionsLanguage: "German",
+        captionsLanguage: "French",
     },
     {
         name: 'live session',
@@ -35,9 +35,9 @@ const originalSession = [
             type: 'Content Library',
             video: 'Oracle Cloud captions',
             liveVideoCaptions: 'on',
-            captionsLanguage: "German",
+            captionsLanguage: "French",
         },
-        captionsLanguage: "German"
+        captionsLanguage: "French"
     },
     {
         name: "Live ended with on-demand",
@@ -54,7 +54,7 @@ const originalSession = [
             type: 'Content Library',
             video: 'Youtube - Used in Cypress automation for VEX testing',
             liveVideoCaptions: 'on',
-            captionsLanguage: "German",
+            captionsLanguage: "French",
         },
         video: 'Oracle Cloud captions',
         captions: 'on',
@@ -84,7 +84,7 @@ const originalSession = [
             'Image - Used by Cypress automation for VEX testing'
         ],
         captions: 'on',
-        captionsLanguage: "German",
+        captionsLanguage: "French",
     },
     {
         name: 'live session with captions off',
@@ -175,8 +175,8 @@ describe('VEX - Virtual Event', function () {
                     else {
                         cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage, { timeout: 10000 }).should('be.visible')
                         cy.contains(consumption.vex.youtube.menuContent, session.captionsLanguage, { timeout: 10000 }).should('be.visible').click()
-                        cy.contains("Spanish").click()
-                        cy.contains(consumption.vex.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
+                        cy.contains("Hindi").click()
+                        cy.contains(consumption.vex.youtube.menuContent, "Hindi").should('be.visible', { timeout: 10000 })
                         cy.go('back')
                     }
                 })

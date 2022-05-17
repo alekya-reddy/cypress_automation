@@ -36,6 +36,20 @@ const recommend2 = {
     name: "EditedTrack"
 }
 
+const recommend3 = {
+    name: "deleteRecommend1.js",
+}
+
+const recommend4 = {
+    name: "deleteRecommend2.js",
+}
+
+const recommendUsedInExplore = {
+    name: "DoNotDelete",
+}
+
+const ExploreFromRecommend = "DoNotDelete"
+
 describe("Recommend - Language External Code and Forms", () => {
     it("Setup if not already done", ()=>{
         cy.request({url: recommend.url, failOnStatusCode: false}).then((response)=>{
@@ -94,5 +108,31 @@ describe("Recommend - Language External Code and Forms", () => {
         cy.contains("label","Folder").next().contains("a", "Root").should("exist")
 
     })
+        
+      
+     it('Verify Delete Option And Error Msg For Multi-Select When Track has been used in Microsite/Explore', function() {
+        authoring.common.login();
+        authoring.recommend.visit();
+        authoring.recommend.addTrack(recommend3)
+        authoring.recommend.addTrack(recommend4)
+        cy.go("back")
+        cy.contains('td', recommend3.name).prev().click()
+        cy.contains('td', recommend4.name).prev().click()
+        cy.contains('td', recommendUsedInExplore.name).prev().click()
+        cy.contains('h5', " Select: ").should("exist")
+        cy.contains('h5', "3").should("exist")
+        cy.contains('button', " Delete").should("exist").click()
+        cy.get(authoring.common.modalBody).within(()=>{
+            cy.contains('span', "Yes").should("exist").click()
+        })
+            cy.contains('div', "Track(s) cannot be deleted").should("exist")
+            cy.contains('p', "Before you delete the following track(s), you need to remove it from the following Explore page(s) and/or Microsite(s) and/or Route(s):").should("exist")
+            cy.contains('li', "DoNotDelete").should("exist")
+            cy.contains('span', "OK").should("exist").click()
+        cy.contains('td', recommend3.name).should("not.exist")
+        cy.contains('td', recommend4.name).should("not.exist")
+        cy.contains('td', recommendUsedInExplore.name).should("exist")
+
+     })
     
 })

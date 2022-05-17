@@ -4,6 +4,10 @@ export class Settings extends Common {
     constructor(env, org, tld, userName, password, baseUrl){
         super(env, org, tld, userName, password, baseUrl);
         this.settingsRoute = `${this.baseUrl}/authoring/content-library/settings/organization`;
+        this.redirectCells ='tr[class*="ant-table-row ant-table-row-level"]';
+        this.incomingPath = 'input[name="fromPathRule"]';
+        this.redirectPath = 'input[name="toPathRule"]';
+        
         this.cookieConsent = {
             pageUrl: `${this.settingsRoute}/cookie-consent`,
             pageTitle: "Cookie Consent",
@@ -63,7 +67,7 @@ export class Settings extends Common {
             pageTitle: "6sense",
         };
         this.customQueryStrings = {
-            pageUrl:  `${this.settingsRoute}/custom-query-strings`,
+            pageUrl:  `${this.settingsRoute}/sharing-links`,
             pageTitle: "Custom Query Strings",
             nameInput: "#name",
             valueInput: "#queryStrings"
@@ -109,6 +113,10 @@ export class Settings extends Common {
              previewLabel: 'div[data-qa-hook="preview-section-button-label"]',
 
         };
+        this.redirectRules = {
+            pageUrl:  `${this.settingsRoute}/redirect-rules`,
+            pageTitle: "Redirect Rules",
+        }
     }
 
     visitCookieConsent(){
@@ -119,10 +127,6 @@ export class Settings extends Common {
         cy.visit(this.oceAccount.pageUrl);
     }
 
-    visit() {
-        cy.visit(this.settings.pageUrl);
-    }
-
     configureCookieConsent(config){
         let option = config.option 
 
@@ -130,7 +134,7 @@ export class Settings extends Common {
         cy.get(this.cookieConsent.cookieConsentSelect).click()
         cy.get(this.dropdown.option(option)).click()
         cy.contains("button", "Save").click()
-        cy.contains(this.messages.recordSaved).should('exist')
+        cy.contains(this.messages.recordSaved,{timeout:20000}).should('exist')
     }
 
     addAPIConfigurations(name) {

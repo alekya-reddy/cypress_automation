@@ -11,8 +11,8 @@ export class CommonCX {
         this.ciscoPasswordInput = "input[type='password']";
         this.ciscoNextButton="#login-button";
         this.ciscoLogIn="input[type='submit']";
-        this.accessProtectionLogo=".logo-img";
-        this.accessProtectionHeaderText=".image-title-container";
+        this.accessProtectionLogo="[aria-label='background image']";
+        this.accessProtectionHeaderText="[class='title-container']";
         this.accessProtectionBodyText=".body-text-data";
         this.accessProtectionSubmitButton="input[type='submit']";
         this.modal = "#qa-modal";
@@ -52,7 +52,7 @@ export class CommonCX {
             closeModal: "#qa-modal-close",
             toggle: "#optIn"
         };
-        this.ctaButton = "#qa-cta-button";
+        this.ctaButton = "#qa-cta-button-modal-trigger";
         this.overlay = {
             modal: "#lookbook-overlay-mask",
             close: "#lookbook-overlay-close span",
@@ -82,8 +82,17 @@ export class CommonCX {
 
     checkPersistentCookie(wait){
         let expectedExpiry = new Date()
+        let date = new Date()
         expectedExpiry.setFullYear(expectedExpiry.getFullYear() + 2)
         expectedExpiry = expectedExpiry.toLocaleDateString()
+        const year=expectedExpiry.split('/')[2]
+        //To check leap year then subtract one day
+            const leap = new Date(year, 1, 29).getDate() === 29;
+            if (leap) {
+                date.setFullYear(date.getFullYear() + 2)
+                date.setDate(date.getDate() - 1)                
+                expectedExpiry = date.toLocaleDateString()
+            }
 
         // need to wait a few seconds for the cookie to be set properly, otherwise you'll get an expiry that's set 20 years in future 
         for(let i = 0 ; i <= wait ; i += 500){

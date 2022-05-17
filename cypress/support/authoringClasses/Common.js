@@ -19,6 +19,8 @@ export class Common {
         this.editPencil = 'i[class*="fa-pencil"]';
         this.popover = "div[data-qa-hook='popover']";
         this.modal = 'div[data-qa-hook="modal"]';
+        this.contentModal = 'div[class="ant-popover-inner-content"]';
+        this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
         this.antModal = ".ant-modal-content"; 
@@ -33,6 +35,10 @@ export class Common {
         this.anotherDeleteIcon = 'i[title="Delete"]';
         this.modal = 'div[data-qa-hook="modal"]';
         this.clearSearchIcon = 'i[title="Clear search"]';
+        this.multiEditIcon = '#pf-multi-select-edit';
+        this.multiMoveIcon = '#pf-multi-select-move-to';
+        this.multiEditInput = 'input[class="ant-select-selection-search-input"]';
+        this.multiEditInputType = 'input[type="search"]';
         this.clearValueIcon = ".Select-clear";
         this.antNotification = "div[class^='ant-notification-notice']";
         this.antSelectItem = "span[class='ant-select-selection-item']";
@@ -55,16 +61,17 @@ export class Common {
         this.orgSave = 'button[id="save"]';
         this.editIconUserRoles = '.Select-value-icon';
         this.userRolename = 'div[class="Select-control"]';
+        this.sharingDomainURLinput = 'input[name="sharingDomainUrl"]'
 
         this.table = {
             // Table cell div data-qa-hooks are reused so often that we should just place them all into common
             cellName: "div[data-qa-hook='table-cell-name'] > span",
-            experienceCellName: "div[data-qa-hook='table-cell-name']",
+            experienceCellName: "td[class*='ant-table-cell ant-table-cell-fix-left ant-table-cell-fix-left-last']",
             cellCode: "div[data-qa-hook='table-cell-code']",
-            urlCell: "div[data-qa-hook='table-cell-url']",
+            urlCell: "div[data-qa-hook='table-cell-internal-title']",
             internalTitleCell: "div[data-qa-hook='table-cell-internal-title']",
-            addedByCell: 'div[data-qa-hook="table-cell-created-by"] > span',
-            folderCell: "div[data-qa-hook='table-cell-folder-name']"
+            addedByCell: 'td[class="ant-table-cell"] > div',
+            folderCell: 'td[class="ant-table-cell"]>a'
         };
         this.antTable = {
             cell: "td.ant-table-cell",
@@ -366,7 +373,7 @@ export class Common {
                     for (var j = 0; j < parseInt(folderCount); j++){
                         cy.get(this.table.addedByCell).eq(0).click()
                         if (cy.contains(this.pageTitleBar, 'Explore Pages')) {
-                            this.clickIcon('Edit Explore Page')
+                            cy.contains('span', "Edit Explore Page").click()
                             cy.contains(this.dropdown.box, folder).within(() => {
                                 cy.get(this.dropdown.clearValue).click()
                             })

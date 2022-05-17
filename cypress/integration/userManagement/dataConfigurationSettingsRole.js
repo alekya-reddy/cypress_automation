@@ -75,7 +75,7 @@ describe('User Experience Settings User Role', function() {
 
             cy.contains("div", "Data Configuration").should("exist")
             cy.contains("a", "Webhooks").should("exist")
-            cy.contains("a", "Visitor Activities").should("exist")
+            cy.contains("a", "Visitor Activities",{timeout: 10000}).should("exist")
 
             cy.contains("div", "Campaign Tools").should("not.exist")
             cy.contains("a", "Segments").should("not.exist")

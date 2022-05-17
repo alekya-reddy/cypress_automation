@@ -69,7 +69,7 @@ describe("View Only Permissions", () => {
         cy.go("back")
         cy.contains('label', "Folder: ").should('be.visible').next().click()
         cy.get(authoring.common.pageBody).should("exist")
-        cy.contains('a', "Header").should("exist").click()
+        cy.contains('a', "viewOnlyExplore").should("exist").click()
         cy.contains('label', "Target Track: ").should('be.visible')
         cy.contains('div', "Signpost Promoter").should('be.visible').click()
         cy.contains('div', "Track Settings").should("exist")
@@ -98,7 +98,8 @@ describe("View Only Permissions", () => {
         // cy.get(authoring.common.popover).should("not.exist")
         // cy.get(authoring.explore.header.headerNoOverrides).should("exist").click()
         // cy.contains('h3', "Header Overrides for this Track").should("not.exist")
-
+        //cy.get(authoring.explore.header.headerNoOverrides).should("exist").click()
+ 
         cy.wait(2000)
         cy.contains('h5', "Hero").should('be.visible')
         authoring.common.togglemethod(authoring.explore.pageSidebar.heroToggle)

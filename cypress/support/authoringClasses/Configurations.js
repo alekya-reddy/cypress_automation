@@ -9,10 +9,12 @@ export class Configurations extends Common {
             widgets: `${this.configRoute}/widgets`,
             externalCode: `${this.configRoute}/external-code`,
             appearances: `${this.configRoute}/appearance`,
+            guide: `${this.configRoute}/appearance/guide`,
             languages:`${this.configRoute}/language`,
             forms: `${this.configRoute}/forms`,
             images: `${this.configRoute}/images/content`,
             accessProtection: `${this.configRoute}/access-protection/email-and-domain`,
+            redirectTab: `${this.configRoute}/access-protection/email-and-domain`,
             contentTags: `${this.configRoute}/tags/topics`,
             linksAndSharings: `${this.configRoute}/sharing`,
             ctas: `${this.configRoute}/ctas`,
@@ -92,6 +94,10 @@ export class Configurations extends Common {
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
             imagePicker: "i[title='Select a thumbnail']",
+            recommendationTabsColor: 'span[id="recommendationTabColor"]>div>span',
+            buttonBackgroundColorForGuide: 'span[id="headlineBackgroundColor"]>div>span',
+            ForYouTabForGuide: 'div[title="For You"]',
+            TrendingTabForGuide: 'div[title="Trending"]',
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
@@ -299,7 +305,8 @@ export class Configurations extends Common {
             ctaType: 'input[name="ctaType"]',
             ctaLabel: "#label",
             destinationLinkInput: "#destinationUrl",
-            destinationEmailInput: "#mailto"
+            destinationEmailInput: "#mailto",
+            editCTALable: 'div[data-qa-hook="preview-section-button-label"]>div>div>span>i'
         };
         this.imageLibrary = {};
         this.accessProtection = {};
@@ -337,7 +344,7 @@ export class Configurations extends Common {
             scoreInput: `input[name="engagementScore"]`,
             deleteIcon: `i[class*="trash"]`
         }
-        this.dropdownMenuNav = ".dropdown-menu-nav"
+        this.dropdownMenuNav = 'ul[role="menu"]'
     }
 
     /*********************************************************************************/
@@ -615,12 +622,12 @@ export class Configurations extends Common {
         cy.contains("button", "Add Form").click()
         cy.get(this.forms.nameInput).clear().type(name + "\n")
         cy.waitFor({element: this.modal, to: "not.exist"})
-        cy.containsExact(this.table.cellName, name).should("exist")
+        cy.containsExact(this.table.cellName, name,{timeout:20000}).should("exist")
     }
 
     deleteForm(name){
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 20000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()
             cy.contains("button", "Delete Form").click()
@@ -700,7 +707,6 @@ export class Configurations extends Common {
         cy.wait(3000)
        cy.ifNoElementWithExactTextExists("div", name, 5000, ()=>{
             this.clickAddAppearance() 
-
             if(name){
                 cy.contains(this.modal, "Add Appearance").within(()=>{
                     cy.get(this.appearances.appearanceName).clear().type(name)
@@ -1678,7 +1684,7 @@ export class Configurations extends Common {
         this.clicklanguage(name)
         this.gotoLanguageTab(tab)
         cy.wait(5000)
-        cy.get("#reset-settings",{timeout:10000}).should("be.visible").click()
+        cy.get("#reset-settings",{timeout:10000}).scrollIntoView().click()
         cy.wait(2000)
         cy.contains(this.modal, "Are you sure?",{timeout:10000}).within(()=>{
             cy.wait(2000)
@@ -1919,7 +1925,7 @@ export class Configurations extends Common {
 
     addRoute(options) {
         const {name, type, destination} = options
-        cy.contains("button", "Create Route").click()
+        cy.contains("button", "Create Destination Route").click()
         cy.get(this.modal).within(()=>{
             cy.get(this.routes.nameInput).clear().type(name)
             cy.get(this.routes.fallbackType).parent().contains(type).click()
@@ -1929,7 +1935,7 @@ export class Configurations extends Common {
             else {
                 cy.get(this.dropdown.input).type(destination + "\n", {force: true})
             }
-            cy.contains("button", "Create Route").click()
+            cy.contains("button", "Create Destination Route").click()
         })
         cy.waitFor({element: this.modal, to: "not.exist"})
         cy.contains("h4", name).should("exist") 

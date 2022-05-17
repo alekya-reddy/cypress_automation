@@ -209,6 +209,14 @@ describe('User Experience Settings User Role', function() {
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("exist")
         authoring.configurations.deleteCTA(cta.name)
         authoring.configurations.addCTA(cta)
+        //Increase the character limit for CTA
+        cy.contains('div', cta.name).should("exist").click()
+        cy.get(authoring.configurations.ctas.editCTALable).should('exist').click()
+        cy.get('input[id="label"]').type("charactersmorethan40charactersmorethan40charactersmorethan40" + "\n")
+        cy.contains('div', "The name is too long (maximum is 40 characters).").should("exist")
+        cy.get('input[id="label"]').type(cta.label)
+        cy.contains('button', "Save").click()
+        cy.contains('div', cta.name).should("exist").click()
         authoring.configurations.deleteCTA(cta.name)
 
         // // Data Configuration

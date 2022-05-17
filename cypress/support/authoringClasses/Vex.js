@@ -42,7 +42,7 @@ export class Vex extends Common {
         this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
-        this.trashIcon = 'i[title="Delete Virtual Event"]';
+        this.trashIcon = "i[class*='Icon__fa-trash']";
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
         this.analyticsOverview = 'span[class="ant-select-selection-item"]>a';
         this.pageTitle = 'input[name="landingExperience.pageTitle"]';
@@ -318,14 +318,28 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.wait(2000) // To close the Add Event modal 
-            cy.get(this.antModal).should('not.be.visible')
-            cy.contains(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
     }
 
-    editfolder(name){
-        cy.containsExact(this.antCell, name).siblings("td:contains('Edit Folder')").within(() => {
-            cy.contains("button", "Edit Folder").click()
+    editfolder(options){
+        const name = options.name
+        const editedName = options.editedName
+        const Folder = options.Folder
+
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).eq(0).click({force: true})
+        cy.get(this.antModal).within(() => {
+            cy.contains("div", "Edit Virtual Event").should("exist")
+
+            if (editedName) {
+                cy.get('input[name="name"]').eq(0).clear({force: true}).type(editedName)
+            }
+            if (Folder) {
+                this.setFolder(folder)
+            }
+             cy.contains('button', "Save Virtual Event").should("exist").click()
+
         })
     }
 
@@ -349,7 +363,8 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${eventName}']`).should('exist').click()
+            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click({force:true})
+            cy.get(`i[class*='delete-${eventName}']`).eq(0).click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -363,7 +378,8 @@ export class Vex extends Common {
         cy.get(this.pageSearch).clear().type(name)
         cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
             cy.contains(this.eventCardTitle, name, { timeout: 20000 }).should('exist')
-            cy.get(`button[id='delete-${name}']`).should('exist').click()
+            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -590,7 +606,6 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const thumbnail = config.thumbnail
 
-        this.goToEventConfig(event);
         cy.get(this.pageTitleLocator).should('contain', event)
 
         newEventName ? cy.get(this.eventNameInput).clear().type(newEventName) : null;
@@ -643,7 +658,7 @@ export class Vex extends Common {
             this.setCookieConsent(cookieConsent)
         }
 
-        cy.contains('button', 'Save').click();
+        cy.contains('button', 'Save',{timeout:20000}).click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 
@@ -667,6 +682,7 @@ export class Vex extends Common {
         cy.wait(5000)
         cy.contains(this.antRow, "Language").within(() => {
             cy.get(this.antSelector).click()
+            cy.get(this.antSelector).type(language)
         })
         cy.get(this.antDropSelect.options(language)).click()
         cy.get(`span[title='${language}']`).should('exist')
@@ -676,7 +692,7 @@ export class Vex extends Common {
         const name = form.name
         const save = form.save == false ? false : true
         cy.wait(2000)
-        cy.contains(this.antRow, "Attendee Registration Form").within(() => {
+        cy.contains(this.antRow, "Attendee Registration Form",{timeout:20000}).within(() => {
             cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
@@ -784,7 +800,7 @@ export class Vex extends Common {
         cy.get(this.sessionName(sessionName), { timeout: 20000 }).parent().within(() => {
             cy.contains("a", "Configure").click()
         })
-        cy.get(this.pageTitleLocator).should('contain', sessionName, { timeout: 20000 });
+        cy.get(this.pageTitleLocator,{ timeout: 20000 }).should('contain', sessionName, { timeout: 20000 });
     }
 
     filterSessionType(options) {
@@ -899,7 +915,7 @@ export class Vex extends Common {
     }
 
     pickOnDemandVideo(content) {
-        cy.get(this.selectVideoButton).click();
+        cy.get(this.selectVideoButton,{timeout:20000}).click();
         cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
@@ -965,7 +981,7 @@ export class Vex extends Common {
         if (visibility == 'Private') {
             cy.get(this.privateRadio).filter('.ant-radio-input').click();
         } else if (visibility == 'Public') {
-            cy.get(this.publicRadio).click();
+            cy.get(this.publicRadio,{timeout:20000}).click();
         }
 
         if (slug) {
@@ -1047,7 +1063,7 @@ export class Vex extends Common {
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
-                cy.contains("div.ant-select-item-option-content",captionsLanguage).click({forec:true})
+                cy.get(`div[class*='ant-select-dropdown'][style] div[label='${captionsLanguage}']:visible`).click({force:true})
             }
         }
 
@@ -1512,7 +1528,7 @@ export class Vex extends Common {
     goToNavigation() {
         cy.url().then((url) => {
             if (!url.includes("/navigation")) {
-                cy.containsExact("a", "Navigation", { timeout: 10000 }).should("exist").click()
+                cy.containsExact("a", "Navigation", { timeout: 20000 }).should("exist").click()
             }
         })
     }
@@ -2611,7 +2627,7 @@ export class Vex extends Common {
         cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).click({force:true})
         cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).parent().within(() => {
             cy.get(this.pages.editorMenu).within(() => {
-                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('be.visible',{timeout:10000}).click({force:true})
+                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('exist',{timeout:10000}).click({force:true})
             })
         })
 
@@ -2622,7 +2638,7 @@ export class Vex extends Common {
                 cy.wait(3000)
                 cy.get("input[name='blocks.0.heading.fontSize']",{timeout:10000}).clear({force:true}).type(fontSize,{force:true})
             }
-            cy.contains('span','Heading').should('be.visible').click()
+            cy.contains('span','Heading').should('exist',{timeout:10000}).click({force:true})
         }
 
         if(cardConfiguration){

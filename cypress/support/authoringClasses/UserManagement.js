@@ -16,7 +16,9 @@ export class UserManagement extends Common {
             imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
             imageLibExtCodeAccProtectionView: "#img_lib_ext_code_access_proc-view",
             contentTagsCreateEditView: "#content_tags-create-edit-delete",
-            contentTagsView: "#content_tags-view"
+            contentTagsView: "#content_tags-view",
+            personalizationCreateEditView: "#personalization-create-edit-delete",
+            personalizationView: "#personalization-view",
         }
         this.dataConfigurationSettings = {
             webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete",
@@ -62,7 +64,8 @@ export class UserManagement extends Common {
         }
         this.administrativeControls = {
             organizationSettingsCRUD: "#org_settings-create-edit-delete",
-            userManagementCRUD: "#user_management-create-edit-delete"
+            userManagementCRUD: "#user_management-create-edit-delete",
+            redirectRulesCRUD: "#redirect_rules-create-edit-delete"
         }
 
     }
@@ -112,6 +115,8 @@ export class UserManagement extends Common {
             imageLibExtCodeAccProtectionView, 
             contentTagsCreateEditView, 
             contentTagsView,
+            personalizationCreateEditView,
+            personalizationView,
             userExperienceSettingsCreateEditView, 
             userExperienceSettingsCreateEditViewPermission,
             dataConfigurationSettings,
@@ -132,6 +137,7 @@ export class UserManagement extends Common {
             contentLibraryView,
             userManagementCRUD,
             organizationSettingsCRUD,
+            redirectRulesCRUD,
             campaignToolsAnalyticsView,
             vexAnalysticsView,
             WebsiteToolsAnalysticsView,
@@ -176,6 +182,21 @@ export class UserManagement extends Common {
             cy.get(this.generalSettings.contentTagsView).invoke("attr", "class").then(checkboxClass => {
                 if(contentTagsView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.contentTagsView).click()
+
+        if(personalizationCreateEditView == true || personalizationCreateEditView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.personalizationCreateEditView).invoke("attr", "class").then(checkboxClass => {
+                if(personalizationCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !personalizationCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.personalizationCreateEditView).click()
+                }       
+            })
+        }
+
+        if(personalizationView == true || personalizationView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.personalizationView).invoke("attr", "class").then(checkboxClass => {
+                if(personalizationView && checkboxClass.includes("checkbox-container--unchecked") || !personalizationView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.personalizationView).click()
                 }       
             })
         }
@@ -216,14 +237,16 @@ export class UserManagement extends Common {
         }
 
         if(trackLabelsView == true || trackLabelsView == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.campaignTools.trackLabelsView).invoke("attr", "class").then(checkboxClass => {
                 if(trackLabelsView && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.trackLabelsView).click()
                 }       
             })
         }
-
+        
         if(trackLabelsCRUD == true || trackLabelsCRUD == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.campaignTools.trackLabelsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(trackLabelsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.campaignTools.trackLabelsCRUD).click()
@@ -259,6 +282,7 @@ export class UserManagement extends Common {
         }
 
         if(vexSettingsCRUD == true || vexSettingsCRUD == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.vex.vexSettingsCRUD).click()
@@ -273,6 +297,7 @@ export class UserManagement extends Common {
             })
         }
         if(vexModuleCRUD == true || vexModuleCRUD == false){
+            cy.contains('a', "Product Permissions").click()
             cy.get(this.vex.vexModuleCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.vex.vexModuleCRUD).click()
@@ -355,6 +380,15 @@ export class UserManagement extends Common {
             cy.get(this.administrativeControls.organizationSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(organizationSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !organizationSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.administrativeControls.organizationSettingsCRUD).click()
+                }       
+            })
+        }
+
+        if(redirectRulesCRUD == true || redirectRulesCRUD == false){
+            cy.contains('a', "Administrative Controls").click()
+            cy.get(this.administrativeControls.redirectRulesCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(redirectRulesCRUD && checkboxClass.includes("checkbox-container--unchecked") || !redirectRulesCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.administrativeControls.redirectRulesCRUD).click()
                 }       
             })
         }

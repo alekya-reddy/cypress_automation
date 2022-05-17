@@ -21,7 +21,7 @@ const newRole = {
     roleName: "New 123 Role",
     imageLibExtCodeAccProtectionAccess: true,
     userManagementCRUD: true,
-    campaignToolsSettingsCRUD: true,
+    personalizationCreateEditView: true,
     vexModuleCRUD: true
 }
 
