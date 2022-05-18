@@ -5,7 +5,7 @@ const authoring = createAuthoringInstance()
 
 const user = {
     role: 'qa-multiuser',
-    roleDescription: "CI Permissions",
+    roleDescription: "WebsiteTools Permissions",
     userName: constants.orgs[authoring.common.org].multiUser,
     password: constants.orgs[authoring.common.org].multiUserPassword
 }
