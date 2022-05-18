@@ -46,7 +46,7 @@ const ctas =[
     ]
 
 describe("Explore CTA buttons", () => {
-it("Add and delete CTA buttons", () => {
+it.only("Add and delete CTA buttons", () => {
     authoring.common.login()
     authoring.recommend.visit()
     //authoring.recommend.goToTrack(recommend.name)
@@ -54,13 +54,10 @@ it("Add and delete CTA buttons", () => {
     authoring.recommend.addTrack(recommend)
     authoring.recommend.configure(recommend)
 
-
     // turn CTA toggle ON
     authoring.common.toggle(authoring.recommend.pageSidebar.sidebarToggle, 'ON')    
     ctas.forEach((cta)=>{
-
     authoring.recommend.configureSidebarwithCtas(cta)
-
     })
 
     cy.visit(recommend.url) 
@@ -94,8 +91,7 @@ it("Add and delete CTA buttons", () => {
     expect(win.getComputedStyle($el[0]).width).to.eq('119.945px')
                                                 
                      })
-          })
-
+               })
       })
 
       it("Add and delete CTA buttons", () => {
@@ -106,9 +102,7 @@ it("Add and delete CTA buttons", () => {
         // turn CTA toggle ON
         authoring.common.toggle(authoring.recommend.pageSidebar.topicSidebarToggle, 'ON')    
         ctas.forEach((cta)=>{
-    
         authoring.recommend.configureTopicSidebarwithCtas(cta)
-    
         })
     
         cy.visit(recommend.url) 
