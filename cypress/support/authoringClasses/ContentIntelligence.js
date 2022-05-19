@@ -6,8 +6,15 @@ export class ContentIntelligence extends Common {
         this.contentConfigurations = `${this.baseUrl}/authoring/content-library/content-configurations`;
         this.websiteContentLibrary = `${this.baseUrl}/authoring/website-content-library`;
         this.contentStrategy = `${this.baseUrl}/authoring/content-intelligence`;
-        this.contentIntelligenceTab="#content-intelligence"
+        this.contentIntelligenceTab="#content-intelligence",
+        this.topKeywordsTab = 'div[id="tab-panel"]',
+        this.modalContainer = 'div[class*="modal-container"]',
+        this.pageSearch = 'input[name="search"]'
 
+    }
+
+    visit(){
+        cy.visit(this.contentStrategy);
     }
 
 }

@@ -34,7 +34,7 @@ describe("View Only Permissions", () => {
         authoring.target.visit()
         cy.contains('span', "Root").should('be.visible')
         cy.contains('a', "Flow Promoter").click()
-        cy.wait(2000)
+        cy.wait(4000)
         cy.contains('label', "Custom URL").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('label', "Search Engine Directive").should('be.visible').next().click()
@@ -128,7 +128,7 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Share").should("not.exist")
         cy.contains('span', "Preview").should("not.exist")
         cy.contains(authoring.target.deleteContent).should("not.exist")
-        //cy.contains('button', "Open in Cont. Library ").should("not.exist") //if contentLibrary permission is on then it will shows up
+        cy.contains('button', "Open in Cont. Library ").should("exist")
         cy.contains('label', "PDF Start Page").should("not.exist")
         cy.contains('label', "Open In New Page").should("not.exist")
 
@@ -167,6 +167,5 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Forms").should("exist")
         cy.contains('th', "Folder").should("exist")
         cy.contains('th', "Labels").should("exist")
-
     })
 })

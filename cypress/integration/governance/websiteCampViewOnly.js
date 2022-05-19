@@ -17,7 +17,7 @@ const role = {
     campaignToolsAnalyticsView: true
 }
 
-const website = "http://scrumecommerce.com/test-page/automation/qa-analytics.html"
+const website = "http://pathfactory-qa-wp.com/automation-analytics"
 
 describe("View Only Permissions", () => {
 
@@ -37,9 +37,11 @@ describe("View Only Permissions", () => {
            cy.contains('span', "Website Script Tag").should('be.visible')
            cy.contains('div', "Settings").should('be.visible')
            cy.contains('div', "Analytics").should('be.visible')
-           cy.contains('button', "Add Website URL").should("not.exist")
+           cy.contains('button', "Add Website URL").should("not.exist"
+           cy.contains('span', "Enabled").should('be.visible')
+           cy.contains('span', "Promoters Enabled").should('be.visible')
            cy.contains('a', website).should('be.visible').click()
-           cy.contains('h5', "Website URLS", {timeout: 20000}).should('be.visible')
+
            cy.contains('h5', "Enabled").should('be.visible')
            authoring.common.togglemethod(authoring.website.enabledToggle)
 
@@ -74,10 +76,7 @@ describe("View Only Permissions", () => {
           cy.contains('label', "Maximum Items").should("exist")
           cy.contains('label', "Scroll Distance").should("exist")
           cy.contains('h5', "Bottom Bar Slots").should("exist")
-          cy.contains('span', "Add a Track").should("not.exist")
-
-          
-          cy.contains('div', "Card").should('be.visible')
+      
           authoring.common.togglemethod(authoring.website.cardToggle)
         
           cy.contains('label', "Promoter Headline").should("exist")
