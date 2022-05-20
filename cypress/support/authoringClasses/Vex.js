@@ -50,6 +50,30 @@ export class Vex extends Common {
         this.eventSetupCheckbox = 'input[value="Event setup"]';
         this.antCell = ".ant-table-cell";
         this.virtualEventsTab="#virtual-events";
+        this.inputModal = 'div[class="ant-picker-body"]';
+        this.virtualEventsTab="#virtual-events";
+        this.headerTitleLocator = 'div[data-qa-hook="header-title-show"]';
+        this.headerTitleInput = 'input[name="headerTitle"]';
+        this.heroSubtitleLocatorDefault = 'div[data-qa-hook="header-subtitle-default"]';
+        this.headersubTitleInput = 'input[name="headerSubtitle"]';
+        this.contentTitleDefault = 'div[data-qa-hook="content-title-default"]';
+        this.contentTitleInput = 'input[name="contentTitle"]';
+        this.contentDescription = 'div[data-qa-hook="content-description-default"]';
+        this.contentDescriInput = 'div[contenteditable="true"]';
+        this.copyToClipboard = 'td[class="ant-table-cell share-cell"]>span>span>i';
+        this.pageNumber = 'li[class="ant-pagination-simple-pager"]';
+        this.radioButtonclick = 'div[class="ant-radio-group ant-radio-group-outline"]>label:nth-child(2)';
+        this.radioButtonDisable = 'ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-disabled';
+        this.serachFilterToggle = 'div[class="ant-switch-handle"]';
+        this.toggleChecked = 'button[class="ant-switch ant-switch-checked"]';
+        this.analyticsOverviewDropdown = 'div[class="ant-select-item-option-content"]';
+        this.editfolder = 'i[title="Edit Folder"]',
+        this.copyVex = 'span[aria-label="copy"]', 
+        this.dropDownModal = 'div[class="rc-virtual-list-holder-inner"]';
+        this.searchButton = '#vex_search_button';
+        this.eventSessions = 'div.pf-event-sessions';
+        this.navItemRemove= 'span[aria-label="delete"]';
+        this.navItemEdit= 'span[aria-label="edit"]';
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -634,7 +658,7 @@ export class Vex extends Common {
             this.setCookieConsent(cookieConsent)
         }
 
-        cy.contains('button', 'Save').click();
+        cy.contains('button', 'Save',{timeout:20000}).click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 

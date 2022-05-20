@@ -38,7 +38,21 @@ export class WebsiteTools extends Common {
         this.addButton = 'div[class="ant-modal-footer"]>button:nth-child(2)';
         this.trackOpen = '.ant-modal-body .ant-form-item:nth-of-type(2) .ant-select-selection-search-input';
         this.contentSelect = '.ant-modal-body .ant-form-item:nth-of-type(3) .ant-select-selection-search-input';
-        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i'    
+        this.pencilIcon = 'div[data-qa-hook="title-bar"]>div>span>i' ;
+        this.dropDownModal = 'div[class="rc-virtual-list-holder-inner"]'; 
+        this.featuredHeadline = 'input[name="featuredConfigHeadline"]' ; 
+        this.leftNevigationSection = 'div[class="ant-steps ant-steps-vertical promoter-steps"]';        
+        this.viewOnlyLocators = {
+            searchWT: 'input[placeholder="Search for existing property"]',
+            titlebar: 'div[data-qa-hook="title-bar"]>div>span',
+            domainCardInput: 'input[id="domain-card-edit-input"]',
+            enabledToggle: 'input[name="enabled"]',
+            recommendationsEnabled: 'input[name="recommendationsEnabled"]',
+            inpageEnabled: 'button[data-qa-hook="toggle-websiteToolsInPageEnabled"]',
+            websitePathID: 'input[id="websitePath"]',
+            promotorConfiguration: 'div[id="promoterConfig"]>label>span',
+            maximumItemsbutton: 'span[class*="NumberInput__decrementButton"]',
+        };
 }
 
 addContentToFeatured(config){

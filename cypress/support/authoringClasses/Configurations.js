@@ -77,6 +77,8 @@ export class Configurations extends Common {
             previewName: "div[data-qa-hook='preview-section-external-code-name']",
             deleteIcon: "i[title='Delete External Code']",
             globalToggle: "#qa-enable-external-code-globally > div:nth-child(2)",
+            globalToggleEnabled: "#qa-enable-external-code-globally",
+            thirdPartyCookieToggle: "#qa-enable-third-party-cookie"
         };
         // The following are empty, but gives you an idea of how I want locators organized in this class 
         this.appearances = {
@@ -311,13 +313,20 @@ export class Configurations extends Common {
         this.segments = {
             nameInput: "#name",
             editSegmentPreview: `div[data-qa-hook="segment-edit-card"]`,
-            deleteIcon: `i[title="Delete Segment"]`
+            deleteIcon: `i[title="Delete Segment"]`,
+            editSegments: 'i[title="Edit Segment"]',
+            cloneSegments: 'i[title="Clone Segment"]',
+            
         };
         this.routes = {
             nameInput: "#name",
             fallbackType: `input[name="fallbackDestinationType"]`,
             fallbackUrl: "#fallbackExternalUrl",
-            deleteIcon: `i[title="Delete Route"]`
+            deleteIcon: `i[title="Delete Route"]`,
+            analytics: 'i[title="Route Analytics"]',
+            editRoutes: 'i[title="Edit Route"]',
+            copyClipboard: 'i[title="Copy to Clipboard"]',
+            editMaping: 'i[title="Edit Mapping"]',
         };
         this.rightSidebarPreview = "div[data-qa-hook='page-preview']";
         this.antModal = ".ant-modal-content";
@@ -613,12 +622,12 @@ export class Configurations extends Common {
         cy.contains("button", "Add Form").click()
         cy.get(this.forms.nameInput).clear().type(name + "\n")
         cy.waitFor({element: this.modal, to: "not.exist"})
-        cy.containsExact(this.table.cellName, name).should("exist")
+        cy.containsExact(this.table.cellName, name,{timeout:20000}).should("exist")
     }
 
     deleteForm(name){
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 20000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()
             cy.contains("button", "Delete Form").click()

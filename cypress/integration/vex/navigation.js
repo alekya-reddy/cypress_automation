@@ -265,7 +265,9 @@ describe("VEX - Navigation Builder", ()=>{
             nav1.forEach((navItem)=>{
                 if(navItem.type == "Session" || navItem.type == "Landing Page"){
                     if(navItem.reference.visibility == "Public"){
-                        cy.contains("a", navItem.label).should('exist').should("have.attr", "href", `/${event.slug}/${navItem.reference.slug}`)
+                        cy.contains("a", navItem.label).should('exist').invoke('attr','href').then(val=>{
+                            expect(val).to.contains(`/${event.slug}/${navItem.reference.slug}`)
+                        })
                     } else {
                         cy.contains("a", navItem.label).should("not.exist")
                     }

@@ -14,19 +14,24 @@ export class UserManagement extends Common {
         }
         this.generalSettings = {
             imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
+            imageLibExtCodeAccProtectionView: "#img_lib_ext_code_access_proc-view",
             contentTagsCreateEditView: "#content_tags-create-edit-delete",
             contentTagsView: "#content_tags-view",
             personalizationCreateEditView: "#personalization-create-edit-delete",
             personalizationView: "#personalization-view",
         }
         this.dataConfigurationSettings = {
-            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete"
+            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete",
+            webhooksVisitorActivityView: "#data_configuration_settings-view",
         }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
         this.pageTitle = "User Management"
-        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete"
+        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete",
+        this.userExperienceSettingsCreateEditViewPermission = "#user_experience_settings-view",
         this.campaignTools = {
             campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
+            campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
+            campaignToolsSettingsView: "#campaign_tools_settings-view",
             trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
             trackLabelsView: "#campaign_tools_track_labels-view",
             campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view",
@@ -34,6 +39,7 @@ export class UserManagement extends Common {
         }
         this.vex = {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
+            vexSettingsView: "#virtual_event_settings-view",
             vexModuleCRUD: "#virtual_events_module_access-create-edit-delete",
             vexAnalysticsView: "#path_analytics_virtual_events-view",
             vexView: "#virtual_events_module_access-view"
@@ -105,17 +111,23 @@ export class UserManagement extends Common {
     configureUserRole(options) {
         const{
             roleName, 
-            imageLibExtCodeAccProtectionAccess, 
+            imageLibExtCodeAccProtectionAccess,
+            imageLibExtCodeAccProtectionView, 
             contentTagsCreateEditView, 
+            contentTagsView,
             personalizationCreateEditView,
             personalizationView,
             userExperienceSettingsCreateEditView, 
+            userExperienceSettingsCreateEditViewPermission,
             dataConfigurationSettings,
             trackLabelsView,
             trackLabelsCRUD,
+            campaignToolsSettingsCRUD,
+            campaignToolsSettingsView,
             campaignsToolsView,
             vexView,
             vexSettingsCRUD,
+            vexSettingsView,
             vexModuleCRUD,
             websiteToolsModuleCRUD,
             websiteToolsView,
@@ -132,7 +144,9 @@ export class UserManagement extends Common {
             contentconfigurationsCRUD,
             contentstrategyCRUD,
             contentConfigurationView,
-            contentStratergyView
+            contentStratergyView,
+            webhooksVisitorActivityView,
+
         } = options
 
         this.clickUserRole(roleName)
@@ -141,6 +155,15 @@ export class UserManagement extends Common {
             cy.get(this.generalSettings.imageLibExtCodeAccProtection).invoke("attr", "class").then(checkboxClass => {
                 if(imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.imageLibExtCodeAccProtection).click()
+                }       
+            })
+        } 
+
+        if(imageLibExtCodeAccProtectionView == true || imageLibExtCodeAccProtectionView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).invoke("attr", "class").then(checkboxClass => {
+                if(imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).click()
                 }       
             })
         } 
@@ -153,6 +176,12 @@ export class UserManagement extends Common {
                 }       
             })
         }
+
+        if(contentTagsView == true || contentTagsView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.generalSettings.contentTagsView).invoke("attr", "class").then(checkboxClass => {
+                if(contentTagsView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.generalSettings.contentTagsView).click()
 
         if(personalizationCreateEditView == true || personalizationCreateEditView == false){
             cy.contains('a', "Platform Settings").click()
@@ -181,8 +210,16 @@ export class UserManagement extends Common {
             })
         }
 
-        if(contentLibraryView == true || contentLibraryView == false){
+        if(userExperienceSettingsCreateEditViewPermission == true || userExperienceSettingsCreateEditViewPermission == false){
             cy.contains('a', "Platform Settings").click()
+            cy.get(this.userExperienceSettingsCreateEditViewPermission).invoke("attr", "class").then(checkboxClass => {
+                if(userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.userExperienceSettingsCreateEditViewPermission).click()
+                }       
+            })
+        }
+
+        if(contentLibraryView == true || contentLibraryView == false){
             cy.get(this.contentLibrary.contentLibraryView).invoke("attr", "class").then(checkboxClass => {
                 if(contentLibraryView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.contentLibrary.contentLibraryView).click()
@@ -216,6 +253,24 @@ export class UserManagement extends Common {
                 }       
             })
         }
+
+        if(campaignToolsSettingsCRUD == true || campaignToolsSettingsCRUD == false){
+            cy.contains('a', "Product Permissions").click()
+            cy.get(this.campaignTools.campaignToolsSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
+                if(campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignToolsSettingsCRUD).click()
+                }       
+            })
+        }
+
+        if(campaignToolsSettingsView == true || campaignToolsSettingsView == false){
+            cy.contains('a', "Product Permissions").click()
+            cy.get(this.campaignTools.campaignToolsSettingsView).invoke("attr", "class").then(checkboxClass => {
+                if(campaignToolsSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.campaignTools.campaignToolsSettingsView).click()
+                }       
+            })
+        }
         
         if(campaignsToolsView == true || campaignsToolsView == false){
             cy.contains('a', "Product Permissions").click()
@@ -231,6 +286,13 @@ export class UserManagement extends Common {
             cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
                 if(vexSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.vex.vexSettingsCRUD).click()
+                }       
+            })
+        }
+        if(vexSettingsView == true || vexSettingsView == false){
+            cy.get(this.vex.vexSettingsView).invoke("attr", "class").then(checkboxClass => {
+                if(vexSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.vex.vexSettingsView).click()
                 }       
             })
         }
@@ -363,6 +425,15 @@ export class UserManagement extends Common {
             cy.get(this.contentIntelligence.contentConfigurationView).invoke("attr", "class").then(checkboxClass => {
                 if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !contentConfigurationView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.contentIntelligence.contentConfigurationView).click()
+                }       
+            })
+        }
+
+        if(webhooksVisitorActivityView == true || webhooksVisitorActivityView == false){
+            cy.contains('a', "Platform Settings").click()
+            cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).invoke("attr", "class").then(checkboxClass => {
+                if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !webhooksVisitorActivityView && checkboxClass.includes("checkbox-container--checked")) {
+                    cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).click()
                 }       
             })
         }
