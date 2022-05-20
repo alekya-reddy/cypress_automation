@@ -222,8 +222,7 @@ describe("recommend - Video captions", () => {
         authoring.recommend.configure(captionsTracks.config4)
 
         cy.visit(captionsTracks.config4.url + "/index-html")
-        // consumption.vex.expectBrightcove()
-        // cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+       
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
 
@@ -235,8 +234,7 @@ describe("recommend - Video captions", () => {
         authoring.recommend.configure(captionsTracks.config5)
 
         cy.visit(captionsTracks.config5.url + "/index-html")
-        // consumption.vex.expectBrightcove()
-        // cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+       
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
 
@@ -256,8 +254,7 @@ describe("recommend - Video captions", () => {
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
             cy.visit(link)
         })
-        // consumption.vex.expectBrightcove()
-        // cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+       
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
 
@@ -274,8 +271,7 @@ describe("recommend - Video captions", () => {
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
             cy.visit(link)
         })
-        // consumption.vex.expectBrightcove()
-        // cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+        
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
 
@@ -287,7 +283,7 @@ describe("recommend - Video captions", () => {
         authoring.recommend.configure(captionsTracks.config8)
 
         cy.visit(captionsTracks.config8.url + '/index-html')
-        // consumption.vex.expectBrightcove()
+     
         cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
         cy.wait(1000)
         cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
@@ -300,7 +296,7 @@ describe("recommend - Video captions", () => {
         authoring.recommend.configure(captionsTracks.config9)
 
         cy.visit(captionsTracks.config9.url + '/index-html-1')
-        // consumption.vex.expectBrightcove()
+       
         cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
         cy.wait(1000)
         cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
