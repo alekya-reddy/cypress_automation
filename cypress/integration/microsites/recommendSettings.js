@@ -52,6 +52,14 @@ const microsite2 = {
     }
 }
 
+const microsite3 = {
+    name: "captionsTarget3.js",
+    slug: "captionstarget3-js",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 
 const landingPage = {
     name: "Main Page",
@@ -90,6 +98,22 @@ const captionsTracks = {
         captions:"off",
         index:"0",
         verify:false
+    },
+    config3: {
+        name: "recommendSettingscaptions3.js",
+        slug: "recommend-config-captions3",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captionsLanguage: "English",
+        captions:"on",
+        index:"0"
+    },
+    config4: {
+        name: "recommendSettingscaptions4.js",
+        slug: "recommend-config-captions4",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captions:"off",
+        index:"0",
+        verify:false
     }
 }
 
@@ -119,6 +143,37 @@ const homePage2 = {
         {
             type: "track",
             track: captionsTracks.config2.name
+        }
+    ]
+}
+
+const homePage3 = {
+    name: "Home Page",
+    slug: "home-page3",
+    get url(){
+        return `${microsite3.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "track",
+            track: captionsTracks.config3.name
+        }
+    ]
+}
+
+
+const homePage4 = {
+    name: "Home Page",
+    slug: "home-page4",
+    get url(){
+        return `${microsite3.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "track",
+            track: captionsTracks.config4.name
         }
     ]
 }
@@ -184,7 +239,7 @@ describe("Microsites - Target Settings", () => {
         })
     })
 
-    it("Visit the recommend track of microsite which has subtitle enabled and disabled", () => {
+    it("Visit the recommend track of microsite which has subtitle enabled and disabled for youtube videos", () => {
         authoring.common.login()
 
          //Captions off from target track and checking in microsite consumption
@@ -241,6 +296,53 @@ describe("Microsites - Target Settings", () => {
                 cy.contains("Hindi").click()
                 cy.contains(consumption.microsites.youtube.menuContent,"Hindi").should('be.visible',{timeout:10000})
             })
+        })
+
+    })
+
+    it("Visit the recommend track of microsite which has subtitle enabled and disabled for vimeo videos", () => {
+        authoring.common.login()
+
+         //Captions off from target track and checking in microsite consumption
+        authoring.microsites.removeMicrosite(microsite3.name)
+        authoring.recommend.visit()
+        authoring.recommend.deleteTrack(captionsTracks.config4.name)
+        authoring.recommend.addTrack(captionsTracks.config4)
+        authoring.recommend.configure(captionsTracks.config4)
+        authoring.microsites.addMicrosite(microsite3)
+        authoring.microsites.setup(microsite3)
+        authoring.microsites.addTracks({recommend:captionsTracks.config4.name})
+        authoring.microsites.configureLandingPage(homePage4)
+        cy.visit(homePage4.url)
+        cy.contains(consumption.microsites.cardTitle,captionsTracks.config4.contents[0],{timeout:20000}).click()
+        cy.waitForIframeToLoad(consumption.microsites.vimeo.iframe, consumption.microsites.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.microsites.vimeo.iframe).within(() => {
+            cy.get(consumption.microsites.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.microsites.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label","None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+        //Captions on from target track and checking in microsite consumption
+        authoring.common.login()
+        authoring.microsites.removeMicrosite(microsite3.name)
+        authoring.recommend.visit()
+        authoring.recommend.deleteTrack(captionsTracks.config3.name)
+        authoring.recommend.addTrack(captionsTracks.config3)
+        authoring.recommend.configure(captionsTracks.config3)
+        authoring.microsites.addMicrosite(microsite3)
+        authoring.microsites.setup(microsite3)
+        authoring.microsites.addTracks({recommend:captionsTracks.config3.name})
+        authoring.microsites.configureLandingPage(homePage3)
+        cy.visit(homePage3.url)
+        cy.contains(consumption.microsites.cardTitle,captionsTracks.config3.contents[0],{timeout:20000}).click()
+
+        cy.waitForIframeToLoad(consumption.microsites.vimeo.iframe, consumption.microsites.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.microsites.vimeo.iframe).within(() => {
+            cy.get(consumption.microsites.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.microsites.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config3.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
         })
 
     })

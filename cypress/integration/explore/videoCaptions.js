@@ -26,6 +26,28 @@ const captionsTracks = {
             return `${authoring.common.baseUrl}/${this.slug}`
         }
     },
+    config3: {
+        name: "targetSettingscaptions3.js",
+        slug: "target-config-captions3",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captionsLanguage: "English",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config4: {
+        name: "targetSettingscaptions4.js",
+        slug: "target-config-captions4",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captions: "off",
+        index: "0",
+        verify: false,
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
 }
 
 const explorePage = {
@@ -48,8 +70,28 @@ const explorePage2 = {
     }
 };
 
+const explorePage3 = {
+    name: 'explorecaptions3.js',
+    experienceType: 'Target',
+    trackName: captionsTracks.config3.name,
+    slug: 'explorecaptions3-js',
+    get url(){
+        return `${authoring.common.baseUrl}/l/${this.slug}`
+    }
+};
+
+const explorePage4 = {
+    name: 'explorecaptions4.js',
+    experienceType: 'Target',
+    trackName: captionsTracks.config4.name,
+    slug: 'explorecaptions4-js',
+    get url(){
+        return `${authoring.common.baseUrl}/l/${this.slug}`
+    }
+};
+
 describe("Explore - Video captions", () => {
-    it("Visit the explore page of track which has subtitle enabled and disabled", () => {
+    it("Visit the explore page of track which has subtitle enabled and disabled for youtube video", () => {
         //Captions off from target track and checking in explore page consumption
          authoring.common.login()
         authoring.explore.visit()
@@ -102,5 +144,48 @@ describe("Explore - Video captions", () => {
                 cy.contains(consumption.explore.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
             })
         })
+    })
+
+    it("Visit the explore page of track which has subtitle enabled and disabled for Vimeo video", () => {
+        //Captions off from target track and checking in explore page consumption
+         authoring.common.login()
+        authoring.explore.visit()
+        authoring.explore.deleteExplore(explorePage4.name)
+        authoring.target.deleteTrack(captionsTracks.config4.name)
+        authoring.target.addTrack(captionsTracks.config4)
+        authoring.target.configure(captionsTracks.config4)
+        authoring.explore.addExplore(explorePage4)
+        authoring.explore.configureExplore(explorePage4)
+        cy.visit(explorePage4.url)
+        cy.contains('div',captionsTracks.config4.contents[0]).click()
+
+        cy.waitForIframeToLoad(consumption.explore.vimeo.iframe, consumption.explore.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.explore.vimeo.iframe).within(() => {
+            cy.get(consumption.explore.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.explore.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label","None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+        //Captions on from target track and checking in explore page consumption
+        authoring.common.login()
+        authoring.explore.visit()
+        authoring.explore.deleteExplore(explorePage3.name)
+        authoring.target.deleteTrack(captionsTracks.config3.name)
+        authoring.target.addTrack(captionsTracks.config3)
+        authoring.target.configure(captionsTracks.config3)
+        authoring.explore.addExplore(explorePage3)
+        authoring.explore.configureExplore(explorePage3)
+        cy.visit(explorePage3.url)
+        cy.contains('div',captionsTracks.config3.contents[0]).click()
+
+        cy.waitForIframeToLoad(consumption.explore.vimeo.iframe, consumption.explore.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.explore.vimeo.iframe).within(() => {
+            cy.get(consumption.explore.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.explore.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config3.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
     })
 })
