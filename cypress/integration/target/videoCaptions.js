@@ -8,7 +8,7 @@ const captionsTracks = {
         name: "targetSettingscaptions.js",
         slug: "target-config-captions",
         contents: ["Oracle Cloud captions"],
-        captionsLanguage: "German",
+        captionsLanguage: "French",
         captions: "on",
         index: "0",
         get url() {
@@ -116,10 +116,61 @@ const captionsTracks = {
         name: "targetSettingscaptions8.js",
         cloneName: "targetSettingscaptionsclone8.js"
     },
+    config13: {
+        name: "targetSettingscaptions13.js",
+        slug: "target-config-captions13",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captionsLanguage: "English",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config14: {
+        name: "targetSettingscaptions14.js",
+        slug: "target-config-captions14",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captions: "off",
+        index: "0",
+        verify: false,
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config15: {
+        name: "targetSettingscaptions13.js",
+        cloneName: "targetSettingscaptionsclone13.js"
+    },
+    config16: {
+        name: "targetSettingscaptions16.js",
+        slug: "target-config-captions16",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captionsLanguage: "German",
+        defaultLanguage:"Deutsch",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    },
+    config17: {
+        name: "targetSettingscaptions18.js",
+        slug: "target-config-captions18",
+        contents: ["Vimeo - without captions"],
+        captionsLanguage: "English",
+        captions: "on",
+        index: "0",
+        get url() {
+            return `${authoring.common.baseUrl}/${this.slug}`
+        }
+    }
 }
 
+const captionsNotSupportMessage="Selected language is not supported. Caption is being displayed in the default language if supported by the player."
+
 describe("Target - Video captions", () => {
-    it("Visit the target track which has subtitle enabled and disabled", () => {
+    it("Visit the target track which has subtitle enabled and disabled for youtube videos", () => {
         //Captions off from target track and checking in consumption
         authoring.common.login()
         authoring.target.visit()
@@ -163,8 +214,8 @@ describe("Target - Video captions", () => {
                 cy.get(consumption.target.youtube.settings).should('be.visible', { timeout: 10000 }).click({ force: true })
                 cy.contains(consumption.target.youtube.menuContent, captionsTracks.config1.captionsLanguage).should('be.visible', { timeout: 10000 })
                 cy.contains(consumption.target.youtube.menuContent, captionsTracks.config1.captionsLanguage).should('be.visible', { timeout: 10000 }).click()
-                cy.contains("Spanish").click()
-                cy.contains(consumption.target.youtube.menuContent, "Spanish").should('be.visible', { timeout: 10000 })
+                cy.contains("Hindi").click()
+                cy.contains(consumption.target.youtube.menuContent, "Hindi").should('be.visible', { timeout: 10000 })
             })
         })
 
@@ -177,7 +228,7 @@ describe("Target - Video captions", () => {
             expect(val).to.equal('rgb(0, 169, 203)')
         })
         cy.get(authoring.target.pagePreview.pagePreview).within(() => {
-            cy.contains('label', 'Language').parent('div').find("span").should("contain", "German")
+            cy.contains('label', 'Language').parent('div').find("span").should("contain", "French")
         })
 
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
@@ -251,7 +302,6 @@ describe("Target - Video captions", () => {
             })
         })
     })
-})
 
     it("Visit the target track which has captions toggle enabled and language selection for Brightcove video", () => {
         //Captions on for target track, selecting language and checking in consumption
@@ -262,10 +312,8 @@ describe("Target - Video captions", () => {
         authoring.target.configure(captionsTracks.config7)
 
         cy.visit(captionsTracks.config7.url)
-        consumption.vex.expectBrightcove()   
-        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
-        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })         
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
 
         //Captions off for target track,and checking in consumption
         authoring.common.login()
@@ -273,11 +321,9 @@ describe("Target - Video captions", () => {
         authoring.target.deleteTrack(captionsTracks.config8.name)
         authoring.target.addTrack(captionsTracks.config8)
         authoring.target.configure(captionsTracks.config8)
-        
+
         cy.visit(captionsTracks.config8.url)
-        consumption.vex.expectBrightcove()
-            cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
-            cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
+        cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
         cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
 
         //Clone the target track and validate captions are cloned
@@ -296,10 +342,9 @@ describe("Target - Video captions", () => {
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
             cy.visit(link)
         })
-        consumption.vex.expectBrightcove()
-        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
+       
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
-        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 }) 
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'Japanese').should('be.visible', { timeout: 10000 })
 
         //Clone the target track with captions off and validate details are cloned
         authoring.common.login()
@@ -314,10 +359,8 @@ describe("Target - Video captions", () => {
         cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
             cy.visit(link)
         })
-        consumption.vex.expectBrightcove()
-        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover')
         cy.get(consumption.vex.brightcove.captionsCC).should('be.visible', { timeout: 10000 }).click({ force: true })
-        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 }) 
+        cy.contains("div[class*='vjs-captions-button'] li[aria-checked='true']", 'captions off').should('be.visible', { timeout: 10000 })
 
         //Validate if the Selected language is not having captions/Subtitles we show notification message
         authoring.common.login()
@@ -327,11 +370,10 @@ describe("Target - Video captions", () => {
         authoring.target.configure(captionsTracks.config10)
 
         cy.visit(captionsTracks.config10.url)
-        consumption.vex.expectBrightcove()
-                cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
-                cy.wait(1000)
-                cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
-                
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
+        cy.wait(1000)
+        cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
+
         //Validate If a Particular Brightcove Video is not having any captions we will not show any captions even if Captions are enabled and will display an notification.
         authoring.common.login()
         authoring.target.visit()
@@ -340,9 +382,103 @@ describe("Target - Video captions", () => {
         authoring.target.configure(captionsTracks.config11)
 
         cy.visit(captionsTracks.config11.url)
-        consumption.vex.expectBrightcove()
-                cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
-                cy.wait(1000)
-                cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
-                
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist')
+        cy.wait(1000)
+        cy.contains("#video-captions", 'Selected language is not supported. Caption is being displayed in the default language if supported by the player.').should('be.visible', { timeout: 10000 })
+
+    })
+
+    it("Visit the target track which has subtitle enabled and disabled for Vimeo videos", () => {
+        //Captions off from target track and checking in consumption
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config14.name)
+        authoring.target.addTrack(captionsTracks.config14)
+        authoring.target.configure(captionsTracks.config14)
+
+        cy.visit(captionsTracks.config14.url)
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label","None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+
+        //Captions on from target track and checking in consumption
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config13.name)
+        authoring.target.deleteTrack(captionsTracks.config15.cloneName)
+        authoring.target.addTrack(captionsTracks.config13)
+        authoring.target.configure(captionsTracks.config13)
+
+        cy.visit(captionsTracks.config13.url)
+
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config13.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+        //Clone the target track and validate captions are cloned
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.configure(captionsTracks.config15)
+        cy.contains('strong', captionsTracks.config13.contents[0], { timeout: 20000 }).click()
+        cy.get(authoring.target.pagePreview.captions).invoke('css', 'background-color').then(val => {
+            expect(val).to.equal('rgb(0, 169, 203)')
+        })
+        cy.get(authoring.target.pagePreview.pagePreview).within(() => {
+            cy.contains('label', 'Language').parent('div').find("span").should("contain", "English")
+        })
+
+        cy.contains('a', 'Preview').invoke('attr', 'href').then(link => {
+            cy.visit(link)
+        })
+
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config13.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+
+        //Validate if the Selected language is not there for captions/Subtitles we show captions in default language of video
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config16.name)
+        authoring.target.addTrack(captionsTracks.config16)
+        authoring.target.configure(captionsTracks.config16)
+
+        cy.visit(captionsTracks.config16.url)
+
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config16.defaultLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+        //Validate if the Selected language is not there for captions/Subtitles we show captions in default language along with the message
+        authoring.common.login()
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config17.name)
+        authoring.target.addTrack(captionsTracks.config17)
+        authoring.target.configure(captionsTracks.config17)
+
+        cy.visit(captionsTracks.config17.url)
+        cy.contains(consumption.target.vimeo.message,captionsNotSupportMessage,{timeout:10000}).should('be.visible')
+        cy.waitForIframeToLoad(consumption.target.vimeo.iframe, consumption.target.youtube.videoPlayer, 20000)
+        cy.getIframeBody(consumption.target.vimeo.iframe).within(() => {
+            cy.get(consumption.target.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.target.vimeo.captions, { timeout: 10000 }).should('not.exist')
+        })
+    })
 })

@@ -68,6 +68,14 @@ const microsite2 = {
     }
 }
 
+const microsite3 = {
+    name: "captionsTarget3.js",
+    slug: "captionstarget3-js",
+    get url(){
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const landingPage = {
     name: "Main Page",
     slug: "main-page",
@@ -107,6 +115,22 @@ const captionsTracks = {
         captions:"off",
         index:"0",
         verify:false
+    },
+    config3: {
+        name: "targetSettingscaptions3.js",
+        slug: "target-config-captions3",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captionsLanguage: "English",
+        captions:"on",
+        index:"0"
+    },
+    config4: {
+        name: "targetSettingscaptions4.js",
+        slug: "target-config-captions4",
+        contents: ["The New Vimeo Player - used in cypress"],
+        captions:"off",
+        index:"0",
+        verify:false
     }
 }
 
@@ -127,7 +151,7 @@ const homePage = {
 
 const homePage2 = {
     name: "Home Page",
-    slug: "home-page",
+    slug: "home-page2",
     get url(){
         return `${microsite2.url}/${this.slug}`
     },
@@ -140,6 +164,36 @@ const homePage2 = {
     ]
 }
 
+const homePage3 = {
+    name: "Home Page",
+    slug: "home-page3",
+    get url(){
+        return `${microsite3.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "track",
+            track: captionsTracks.config3.name
+        }
+    ]
+}
+
+
+const homePage4 = {
+    name: "Home Page",
+    slug: "home-page4",
+    get url(){
+        return `${microsite3.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    blocks: [
+        {
+            type: "track",
+            track: captionsTracks.config4.name
+        }
+    ]
+}
 describe("Microsites - Target Settings", () => {
     it("Setup Microsite and target tracks if not already done", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
@@ -225,7 +279,7 @@ describe("Microsites - Target Settings", () => {
         cy.get(consumption.target.bottombarTitle).should("exist")
     })
 
-    it("Visit the target track of microsite which has subtitle enabled and disabled", () => {
+    it("Visit the target track of microsite which has subtitle enabled and disabled for youtube videos", () => {
         authoring.common.login()
 
          //Captions off from target track and checking in microsite consumption
@@ -238,7 +292,8 @@ describe("Microsites - Target Settings", () => {
         authoring.microsites.setup(microsite2)
         authoring.microsites.addTracks({target:captionsTracks.config2.name})
         authoring.microsites.configureLandingPage(homePage2)
-        cy.visit(homePage.url)
+
+        cy.visit(homePage2.url)
         cy.contains(consumption.microsites.cardTitle,captionsTracks.config2.contents[0],{timeout:20000}).click()
         cy.waitForIframeToLoad(consumption.microsites.youtube.iframe, consumption.microsites.youtube.videoPlayer, 20000)
         cy.getIframeBody(consumption.microsites.youtube.iframe).within(() => {   
@@ -271,6 +326,7 @@ describe("Microsites - Target Settings", () => {
         authoring.microsites.addTracks({target:captionsTracks.config1.name})
         authoring.microsites.configureLandingPage(homePage)
         cy.visit(homePage.url)
+        
         cy.contains(consumption.microsites.cardTitle,captionsTracks.config1.contents[0],{timeout:20000}).click()
         cy.waitForIframeToLoad(consumption.microsites.youtube.iframe, consumption.microsites.youtube.videoPlayer, 20000)
         cy.getIframeBody(consumption.microsites.youtube.iframe).within(() => {   
@@ -282,6 +338,53 @@ describe("Microsites - Target Settings", () => {
                 cy.contains("Hindi").click()
                 cy.contains(consumption.microsites.youtube.menuContent,"Hindi").should('be.visible',{timeout:10000})
             })
+        })
+
+    })
+
+    it("Visit the target track of microsite which has subtitle enabled and disabled for vimeo videos", () => {
+        authoring.common.login()
+
+         //Captions off from target track and checking in microsite consumption
+        authoring.microsites.removeMicrosite(microsite3.name)
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config4.name)
+        authoring.target.addTrack(captionsTracks.config4)
+        authoring.target.configure(captionsTracks.config4)
+        authoring.microsites.addMicrosite(microsite3)
+        authoring.microsites.setup(microsite3)
+        authoring.microsites.addTracks({target:captionsTracks.config4.name})
+        authoring.microsites.configureLandingPage(homePage4)
+        cy.visit(homePage4.url)
+        cy.contains(consumption.microsites.cardTitle,captionsTracks.config4.contents[0],{timeout:20000}).click()
+        cy.waitForIframeToLoad(consumption.microsites.vimeo.iframe, consumption.microsites.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.microsites.vimeo.iframe).within(() => {
+            cy.get(consumption.microsites.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.microsites.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label","None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+        })
+
+        //Captions on from target track and checking in microsite consumption
+        authoring.common.login()
+        authoring.microsites.removeMicrosite(microsite3.name)
+        authoring.target.visit()
+        authoring.target.deleteTrack(captionsTracks.config3.name)
+        authoring.target.addTrack(captionsTracks.config3)
+        authoring.target.configure(captionsTracks.config3)
+        authoring.microsites.addMicrosite(microsite3)
+        authoring.microsites.setup(microsite3)
+        authoring.microsites.addTracks({target:captionsTracks.config3.name})
+        authoring.microsites.configureLandingPage(homePage3)
+        cy.visit(homePage3.url)
+        cy.contains(consumption.microsites.cardTitle,captionsTracks.config3.contents[0],{timeout:20000}).click()
+
+        cy.waitForIframeToLoad(consumption.microsites.vimeo.iframe, consumption.microsites.vimeo.videoPlayer, 20000)
+        cy.getIframeBody(consumption.microsites.vimeo.iframe).within(() => {
+            cy.get(consumption.microsites.vimeo.videoPlayer).should('exist').trigger('mouseover',{force:true})
+            cy.get(consumption.microsites.vimeo.captions).should('be.visible', { timeout: 10000 }).click({ force: true })
+            cy.wait(1000)
+            cy.contains("div.vp-menu-option-label",captionsTracks.config3.captionsLanguage).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
         })
 
     })
