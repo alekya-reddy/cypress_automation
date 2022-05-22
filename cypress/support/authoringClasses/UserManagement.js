@@ -182,6 +182,9 @@ export class UserManagement extends Common {
             cy.get(this.generalSettings.contentTagsView).invoke("attr", "class").then(checkboxClass => {
                 if(contentTagsView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsView && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.generalSettings.contentTagsView).click()
+                }    
+            })
+        }       
 
         if(personalizationCreateEditView == true || personalizationCreateEditView == false){
             cy.contains('a', "Platform Settings").click()
