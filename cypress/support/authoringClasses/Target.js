@@ -511,16 +511,12 @@ export class Target extends Common {
                 cy.get('input[name="type"]').eq(1).click()
                 cy.wait(100)
                 cy.contains('button', "Update").click({force:true})
-                //cy.contains('label', "CTA").siblings("span").click()
                 cy.get('#emptyTextInput').parent('span').click()
                 cy.wait(100)
                 cy.get(this.endPromoter.ctaLabel).parent().within(() => {
                     cy.get("input").type(cta + "\n", {force:true})
                 })
                 cy.contains('button', "Update").click()
-                cy.get(this.pageSidebar.endPromoterToggle).parents().eq(1).within(() => {
-                    cy.contains("label", "cta").siblings("span").should("contain", cta)
-                })
             }
 
             if(delay){
