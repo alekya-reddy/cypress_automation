@@ -36,8 +36,8 @@ const role4 = {
 
 const role5 = {
     roleName: "Custom",
-    campaignToolsSettingsCRUD: false,
-    campaignToolsSettingsView:true
+    personalizationCreateEditView: false,
+    personalizationView:true
 }
 
 const role6 = {
