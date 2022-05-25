@@ -109,8 +109,8 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1)
         cy.go("back")
-        authoring.vex.editfolder(event1)
-        authoring.vex.editfolder(event4)
+        authoring.vex.editFolder(event1)
+        authoring.vex.editFolder(event4)
         
     })
 
