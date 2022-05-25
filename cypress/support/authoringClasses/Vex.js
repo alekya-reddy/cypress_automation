@@ -322,7 +322,7 @@ export class Vex extends Common {
         }
     }
 
-    editfolder(options){
+    editFolder(options){
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
@@ -336,12 +336,12 @@ export class Vex extends Common {
                 cy.get('input[name="name"]').eq(0).clear({force: true}).type(editedName)
             }
             if (Folder) {
-                this.setFolder(folder)
+                this.setFolder(Folder)
             }
              cy.contains('button', "Save Virtual Event").should("exist").click()
-
         })
     }
+
 
     eventSetup(setUp) {
         cy.get(this.eventSetupCheckbox).parent().invoke('attr', 'class').then((attr) => {
@@ -2433,9 +2433,8 @@ export class Vex extends Common {
             })
             if (verify !== false) {
                 cy.wait(3000);
-                cy.contains(this.antModal, "Add Virtual Event", { timeout: 10000 }).should('not.be.visible')
-                cy.containsExact(this.eventCardTitle, name, { timeout: 10000 }).should('exist')
-                this.goToEventConfig(name)
+                cy.contains(this.antModal, "Add Virtual Event", { timeout: 200000 }).should('not.exist')
+                cy.contains('h1', name, { timeout: 10000 }).should('exist')
             }
         } else {
             cy.get(this.cloneButton).click()

@@ -199,6 +199,7 @@ export class VexCX extends CommonCX {
                 }
             })
         }).then(() => {
+            cy.wait(3000)
             if (flag === true) {
                 cy.getIframeBody(this.youtube.iframe).within(() => {
                     cy.get("div.ytp-chrome-bottom").then(controllers => {
