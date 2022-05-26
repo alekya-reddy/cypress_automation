@@ -9,7 +9,8 @@ export class Recommend extends Common {
         this.deleteTrackIcon = "i[class*='delete Icon']";
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
-        this.editTrack = 'i[title="Edit Track"]';
+        this.editTrackInsideTrack = 'i[title="Edit Track"]'
+        this.editTrack = 'i[class*="edit-for"]';
         this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.contentClick = "div[draggable='true']:nth-child(2)";
@@ -97,7 +98,7 @@ export class Recommend extends Common {
         const parentFolder = options.parentFolder
         const labels = options.labels
    
-         cy.get(this.editTrack).click()
+         cy.get(this.editTrackInsideTrack).click()
          cy.contains(this.modal, "Edit Track").within(()=>{
             if (name) {
                 cy.get(this.editRecommend.nameInput).clear().type(name)
