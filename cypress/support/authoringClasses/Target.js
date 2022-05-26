@@ -15,6 +15,7 @@ export class Target extends Common {
         this.addFolder =  "button:contains('Add Folder')"
         this.editFolder = 'i[title="Edit Folder"]';
         this.deleteFolder = 'i[title="Delete Folder"]';
+        this.editTrackInsideTrack = 'i[title="Edit Track"]'
         this.editTrack = 'i[class*="edit-for"]';
         this.pageContents="div[draggable='true'] strong"
         this.addContentTo = 'input[name="addContentTo"]'
@@ -124,7 +125,7 @@ export class Target extends Common {
         const name = options.name
         const parentFolder = options.parentFolder
         const labels = options.labels
-        cy.get(this.editTrack).click()
+        cy.get(this.editTrackInsideTrack).click()
          cy.contains(this.modal, "Edit Track").within(()=>{
             if (name) {
                 cy.get(this.editTarget.nameInput).clear().type(name)
