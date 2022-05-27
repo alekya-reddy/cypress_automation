@@ -40,6 +40,11 @@ export class ContentLibrary extends Common{
             previewTargetTracks: "div[data-qa-hook='preview-section-target-tracks']",
             experienceTagsLocator: "span[class^='ExperienceTags']",
             usedInSectionArrow: 'div[class="ant-collapse-header"]',
+            previewThumbnail: "div[data-qa-hook='preview-section-thumbnail']",
+            iFrameSandboxToggle: "div[data-qa-hook='iFrameSandbox']",
+            iFrameSandbox: ".sc-bgRGRH.kLMzOK",
+            usedInDownArrow: ".ant-collapse-header",
+            usedInUpArrow: ".ant-collapse-item.ant-collapse-item-active",
         };
         this.advancedEditComponent = {
             publicTitleInput: "#title",
