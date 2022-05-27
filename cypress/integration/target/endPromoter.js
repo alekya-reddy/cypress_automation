@@ -126,11 +126,11 @@ describe("Target - Add New content", () => {
             authoring.target.configure(targetwithForm)
             cy.clearCookies()
             cy.visit(targetwithEndPromoter.url + "/watch")
-            //Ensure When form stratergy has set then that form always should take precedence over exit form
+            //Ensure When form stratergy has set then that form always should take precedence over endform
             cy.get(consumption.target.endPromoterTitle).should('have.text', ' Standard Form').should("exist")
             cy.contains('#qa-modal', "Exit Promoter Test").should("not.exist")
             cy.wait(300)
-            //Ensure when user use 'X' button on formstratergy it shouldn't appear again and exit form should shows up
+            //Ensure when user use 'X' button on formstratergy it shouldn't appear again and endform should shows up
             cy.get(consumption.common.closeModalButton).should("exist").click({force:true})
             cy.reload()
             cy.contains('#qa-modal', "Standard Form").should("not.exist")
@@ -145,14 +145,14 @@ describe("Target - Add New content", () => {
             authoring.target.configure(targetwithForm)
             cy.clearCookies()
             cy.visit(targetwithEndPromoter.url + "/watch")
-            //Ensure When form stratergy has set then that form always should take precedence over exit form
+            //Ensure When form stratergy has set then that form always should take precedence over end form
             cy.get(consumption.target.endPromoterTitle).should('have.text', ' Standard Form').should("exist")
             cy.get('#endPromoterCTA').should("not.exist")
             cy.contains('#qa-modal', "Exit Promoter Test").should("not.exist")
             cy.wait(100)
             cy.get('#emailInput').type(email + "\n")
 
-            //Ensure when user use 'X' button on formstratergy it shouldn't appear again and exit form should shows up
+            //Ensure when user use 'X' button on formstratergy it shouldn't appear again and end form should shows up
             cy.reload()
             cy.get('#endPromoterCTA').should("exist").click()
             cy.get('#qa-standard-form').should("exist") 
