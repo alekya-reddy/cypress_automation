@@ -11,6 +11,14 @@ const originalEvent = {
     }
 }
 
+const originalEventVimeo = {
+    name: 'vimeocaptions.js',
+    slug: 'vimeocaptions-js',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const originalSession = [
     {
         name: "ondemand session",
@@ -103,11 +111,120 @@ const originalSession = [
     }
 ]
 
+const vimeoSessions = [
+    {
+        name: "ondemand session",
+        slug: "ondemandession",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'The New Vimeo Player - used in cypress-2',
+        captions: 'on',
+        captionsLanguage: "English",
+    },
+    {
+        name: 'live session',
+        slug: 'livesession',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'The New Vimeo Player - used in cypress',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "English",
+        },
+        captionsLanguage: "English"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'The New Vimeo Player - used in cypress',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "English",
+        },
+        video: 'The New Vimeo Player - used in cypress-2',
+        captions: 'on',
+        captionsLanguage: "English"
+    },
+    {
+        name: "ondemand session with captions off",
+        slug: "ondemandsessionwithcaptionsoff",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'The New Vimeo Player - used in cypress-2',
+        captions: 'off'
+    },
+    {
+        name: "Session with suppliment content",
+        slug: "sessionsupplimentcontent",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'The New Vimeo Player - used in cypress-2',
+        contents: [
+            'PDF - Used by Cypress automation for VEX testing',
+            'Website - Used by Cypress automation for VEX testing',
+            'Image - Used by Cypress automation for VEX testing'
+        ],
+        captions: 'on',
+        captionsLanguage: "English",
+    },
+    {
+        name: 'live session with captions off',
+        slug: 'livesessionwithcaptionsoff',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'The New Vimeo Player - used in cypress',
+            liveVideoCaptions: 'off'
+        }
+    }
+]
+
 const landingPage = {
     name: "Landing-Page",
     slug: "landing-page",
     get url() {
-        return `${event.url}/${this.slug}`
+        return `${originalEvent.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    setHome: true,
+    blocks: [
+        {
+            type: "Session Group",
+            sessionGroup: "All Sessions",
+            verify: false
+        },
+    ]
+}
+
+const landingPage2 = {
+    name: "Landing-Page",
+    slug: "landing-page",
+    get url() {
+        return `${originalEventVimeo.url}/${this.slug}`
     },
     visibility: 'Public',
     setHome: true,
@@ -122,7 +239,7 @@ const landingPage = {
 
 
 describe('VEX - Virtual Event', function () {
-    it('Test the reset button in the event and session configuration pages', function () {
+    it('Visit the event which has subtitle enabled and disabled for youtube videos', function () {
         // Login, clean up 
         authoring.common.login();
         authoring.vex.visit()
@@ -183,4 +300,57 @@ describe('VEX - Virtual Event', function () {
             })
         })
     })
+
+    it('Visit the event which has subtitle enabled and disabled for vimeo videos', function () {
+        // Login, clean up 
+        authoring.common.login();
+        authoring.vex.visit()
+        authoring.vex.deleteVirtualEvent(originalEventVimeo.name)
+
+        // Set up an event 
+        authoring.vex.addVirtualEvent(originalEventVimeo)
+        authoring.vex.configureEvent(originalEventVimeo)
+
+        // Now add a session and set it up 
+        vimeoSessions.forEach(session => {
+            authoring.vex.addSession(session.name)
+            authoring.vex.configureSession(session)
+            cy.go('back')
+        })
+
+        // Verify captions enabled and disabled from sessions and verify in consumption
+        authoring.vex.deleteLandingPages(landingPage2.name)
+        authoring.vex.addLandingPages(landingPage2.name)
+        authoring.vex.configureLandingPage(landingPage2)
+        authoring.vex.goToPageEditor(landingPage2.name)
+
+        let i = 0;
+        cy.visit(originalEventVimeo.url)
+        vimeoSessions.forEach(session => {
+
+            cy.contains(consumption.vex.sessionCardTitle, session.name, { timeout: 10000 }).click()
+            if (session.type === 'Live' && i == 0) {
+                cy.get(consumption.vex.emailInput).clear().type("test@gmail.com")
+                cy.get(consumption.vex.submitButton).click()
+                i++;
+            }
+            cy.waitForIframeToLoad(consumption.vex.vimeo.iframe, consumption.vex.vimeo.videoPlayer, 20000)
+            cy.getIframeBody(consumption.vex.vimeo.iframe).within(() => {
+                cy.get(consumption.vex.vimeo.videoPlayer).should('exist').trigger('mouseover', { force: true })
+                cy.get(consumption.vex.vimeo.captions).should('be.visible', { timeout: 10000 }).click()
+                if (session.name === 'ondemand session with captions off' || session.name === 'live session with captions off') {
+                    cy.wait(1000)
+                    cy.contains("div.vp-menu-option-label", "None").parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+                    cy.go('back')
+                }
+                else {
+                    cy.contains("div.vp-menu-option-label", session.captionsLanguage, { timeout: 10000 }).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+                    cy.contains("Français").click()
+                    cy.contains("div.vp-menu-option-label", "Français", { timeout: 10000 }).parents("li[role='menuitemradio'][aria-checked='true']").should('exist')
+                    cy.go('back')
+                }
+            })
+        })
+    })
+
 })
