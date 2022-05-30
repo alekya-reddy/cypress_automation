@@ -38,7 +38,8 @@ workflows:
             cypress/integration/explore/*,\
             cypress/integration/recommend/*,\
             cypress/integration/settings/*,\ 
-            cypress/integration/target/*"
+            cypress/integration/target/*,\
+            cypress/integration/websiteTools/*"
   staging-governance-tues-thurs:
     triggers:
       - schedule:
@@ -52,7 +53,8 @@ workflows:
           name: Governance
           executor: latest-chrome
           browser: chrome
-          spec: "cypress/integration/userManagement/*"
+          spec: "cypress/integration/userManagement/*,\
+            cypress/integration/governance/*"
   qa-sat-mon:
     triggers:
       - schedule:
@@ -81,7 +83,8 @@ workflows:
             cypress/integration/explore/*,\
             cypress/integration/recommend/*,\
             cypress/integration/settings/*,\ 
-            cypress/integration/target/*"
+            cypress/integration/target/*,\
+            cypress/integration/websiteTools/*"
   qa-governance-sat-mon:
     triggers:
       - schedule:
@@ -95,4 +98,5 @@ workflows:
           name: Governance
           executor: latest-chrome
           browser: chrome
-          spec: "cypress/integration/userManagement/*"
+          spec: "cypress/integration/userManagement/*,\
+            cypress/integration/governance/*"          
