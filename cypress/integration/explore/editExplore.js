@@ -83,7 +83,7 @@ describe("Edit explore page", () => {
 
     })
 
-    it("Verify the Explore page is opening in OverLay for both Recommend and Target Tracs", () => {
+    it("Verify the Explore page is opening in OverLay for both Recommend and Target Tracks", () => {
         authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(recommendExplore.name)
@@ -96,11 +96,12 @@ describe("Edit explore page", () => {
         cy.visit(targetExplore.url)
         target.contents.forEach(targetContent => {
             cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            cy.contains("[id*='qa-explore-asset-title-grid']",targetContent).click()
+            cy.get(consumption.explore.overlay.modal).should("exist")
+            cy.contains('span','×').click({force:true})
         })
         recommend.contents.forEach(recommendContent => {
             cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
-            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
-            cy.get(consumption.explore.overlay.modal).should("exist")
         })
 
         authoring.explore.visit()
@@ -111,14 +112,15 @@ describe("Edit explore page", () => {
         authoring.explore.setOpenContentTrack("Overlay on the same window")
 
         // Verify consumption
-        cy.visit(targetExplore.url)
-        target.contents.forEach(recommendContent => {
-            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
-        })
-        recommend.contents.forEach(targetContent => {
-            cy.contains(consumption.explore.body.card, targetContent).should("exist")
-            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
+        cy.visit(recommendExplore.url)
+        recommend.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("exist")
+            cy.contains("[id*='qa-explore-asset-title-grid']",recommendContent).click()
             cy.get(consumption.explore.overlay.modal).should("exist")
+            cy.contains('span','×').click({force:true})
+        })
+        target.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("not.exist")
         })
 
     })
@@ -131,18 +133,22 @@ describe("Edit explore page", () => {
     
         cy.contains(authoring.explore.pageSidebar.container, `Target Track: ${target.name}`)
             authoring.explore.setOpenContentTrack("Redirect in the same window")
-            cy.pause()
 
         // Verify consumption
         cy.visit(targetExplore.url)
         target.contents.forEach(targetContent => {
             cy.contains(consumption.explore.body.card, targetContent).should("exist")
+            cy.contains("[id*='qa-explore-asset-title-grid']",targetContent).click()
+            cy.url("contains", "sharedresource?x=wNmH_P&lx=Wg5PmI", {timrout:10000}).should("exist")
+            cy.go("back")
+        cy.visit(targetExplore.url)
+        target.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("exist")
         })
+
+    })
         recommend.contents.forEach(recommendContent => {
-            cy.url("contains", "sharedresource?x=wNmH_P&lx=Wg5PmI", {timrout:10000}).should("exist")
             cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
-            cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click({force:true})
-            cy.url("contains", "sharedresource?x=wNmH_P&lx=Wg5PmI", {timrout:10000}).should("exist")
         })
     
         authoring.explore.visit()
@@ -153,18 +159,23 @@ describe("Edit explore page", () => {
         authoring.explore.setOpenContentTrack("Redirect in the same window")
     
         // Verify consumption
-        cy.visit(targetExplore.url)
-        target.contents.forEach(recommendContent => {
-            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
-        })
-
-        recommend.contents.forEach(targetContent => {
-            cy.contains(consumption.explore.body.card, targetContent).should("exist")
-            cy.get(consumption.explore.hero.assetTitle, {timeout: 10000}).click()
+        cy.visit(recommendExplore.url)
+        recommend.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("exist")
+            cy.contains("[id*='qa-explore-asset-title-grid']",recommendContent).click()
             cy.url("contains", "commonresource?x=oSOpYa&lx=Wg5PmI", {timrout:10000}).should("exist")
-        })
+            cy.go("back")
+        cy.visit(recommendExplore.url)
+        recommend.contents.forEach(recommendContent => {
+            cy.contains(consumption.explore.body.card, recommendContent).should("exist")
 
+        })
+        target.contents.forEach(targetContent => {
+            cy.contains(consumption.explore.body.card, targetContent).should("not.exist")
+        })
     })
+
+})
 
         it("Verify the Explore page to Open in new tab", () => {
             authoring.common.login()
@@ -179,11 +190,11 @@ describe("Edit explore page", () => {
             cy.visit(targetExplore.url)
             target.contents.forEach(targetContent => {
                 cy.contains(consumption.explore.body.card, targetContent).should("exist")
+                cy.contains("[id*='qa-explore-asset-title-grid']",targetContent).click()
+                cy.url().should("contains", targetExplore.url)
             })
             recommend.contents.forEach(recommendContent => {
                 cy.contains(consumption.explore.body.card, recommendContent, { timeout:20000 }).should("not.exist")
-                cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click()
-                cy.url().should("contains", targetExplore.url)
             })
     
             authoring.explore.visit()
@@ -194,13 +205,13 @@ describe("Edit explore page", () => {
     
             // Verify consumption
             cy.visit(targetExplore.url)
-            target.contents.forEach(recommendContent => {
-                cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("not.exist")
-            })
-            recommend.contents.forEach(targetContent => {
-                cy.contains(consumption.explore.body.card, targetContent).should("exist")
-                cy.get(consumption.explore.hero.assetTitle, {timeout: 30000}).click()
+            recommend.contents.forEach(recommendContent => {
+                cy.contains(consumption.explore.body.card, recommendContent, { timeout:10000 }).should("exist")
+                cy.contains("[id*='qa-explore-asset-title-grid']",recommendContent).click()
                 cy.url().should("contains", recommendExplore.url)
+            })
+            target.contents.forEach(targetContent => {
+                cy.contains(consumption.explore.body.card, targetContent).should("not.exist")
             })
         })
     })
