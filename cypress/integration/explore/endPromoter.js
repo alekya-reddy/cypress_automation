@@ -45,13 +45,13 @@ const explore = {
     }
 }
 
-describe("Explore - Dynamic Merge Field", () => {
-    it("Setup Recommend Track if not already done", () => {
+describe("Explore - End Promoter Behaviour", () => {
+    it("Setup Target Track if not already done", () => {
         cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
                 authoring.common.login()
-                authoring.recommend.addTrack(recommend)
-                authoring.recommend.configure(recommend)
+                authoring.recommend.addTrack(target)
+                authoring.recommend.configure(target)
             }
         })
     })
