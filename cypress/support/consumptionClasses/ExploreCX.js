@@ -15,6 +15,7 @@ export class ExploreCX extends CommonCX {
             personalizedImage: '#hero-personalized-image',
             fixedHeroImage: '#qa-explore-header-background > div > img',
             fillHeroImage: '#qa-explore-header-background > div[class="lx-header__full_image"]',
+            assetTitle: "[id*='qa-explore-asset-title-grid']"
         }
 
         this.body = {
