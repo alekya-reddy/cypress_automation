@@ -45,8 +45,8 @@ const ctas =[
         }
     ]
 
-describe("Recommend CTA buttons", () => {
-it("Add and delete CTA buttons", () => {
+describe("Recommend CTA Test", () => {
+it("Add and delete CTA For Sidebar and Verify On Consumption", () => {
     authoring.common.login()
     authoring.recommend.visit()
     //authoring.recommend.goToTrack(recommend.name)
@@ -95,7 +95,7 @@ it("Add and delete CTA buttons", () => {
                })
       })
 
-      it("Add and delete CTA buttons", () => {
+      it("Add and delete CTA For Topic-Sidebar and Verify On Consumption", () => {
         authoring.common.login()
         authoring.recommend.visit()
         authoring.recommend.goToTrack(recommend.name)

@@ -45,8 +45,8 @@ const Flowctas =[
         }
     ]
 
-describe("Target CTA buttons", () => {
-it("Add and delete CTA buttons", () => {
+describe("Target CTA Test", () => {
+it("Add and delete CTA For Flow and Verify On Consumption", () => {
     authoring.common.login()
     authoring.target.visit()
     //authoring.recommend.goToTrack(recommend.name)
