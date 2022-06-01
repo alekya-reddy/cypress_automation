@@ -36,17 +36,17 @@ const ctas =[
         },
         {
             ctaNumber: "CTA 3",
-            ctaName: "googleCTA",
+            ctaName: "emailCTA",
             location: "Before assets",
             buttonColor: "#04977d",
             fontColor: "#483d1e",
-            addcta: true
+            addcta: false
 
         }
     ]
 
-describe("Explore CTA buttons", () => {
-it.only("Add and delete CTA buttons", () => {
+describe("Recommend CTA buttons", () => {
+it("Add and delete CTA buttons", () => {
     authoring.common.login()
     authoring.recommend.visit()
     //authoring.recommend.goToTrack(recommend.name)
@@ -61,34 +61,35 @@ it.only("Add and delete CTA buttons", () => {
     })
 
     cy.visit(recommend.url) 
+    cy.wait(1000)
     cy.contains("button", "formcta").should("exist")
         //verify specific alignment selected gets applied to the cells
-     cy.get('[class*="pf-multi-cta pf-cta-1"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+     cy.get(consumption.recommend.ctaButtonClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                                        .should("have.css", "color", "rgb(72, 61, 30)")
                     
     cy.window().then((win) => {
-    cy.get('button[class*="pf-multi-cta pf-cta-1"]').then(($el) => {
+    cy.get(consumption.recommend.ctaButtonClass).then(($el) => {
     expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                                     
        })
   })
 
   cy.contains("a", "linkcta").should("exist")
-       cy.get('a[class*="pf-multi-cta pf-cta-2"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+       cy.get(consumption.recommend.ctaLinkClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                   .should("have.css", "color", "rgb(72, 61, 30)")
      cy.window().then((win) => {
-     cy.get('a[class*="pf-multi-cta pf-cta-2"]').then(($el) => {
+     cy.get(consumption.recommend.ctaLinkClass).then(($el) => {
      expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                 
              })
         })
 
-    cy.contains("a", "googleCtaLink").should("exist")
-       cy.get('a[class*="pf-multi-cta pf-cta-3"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+    cy.contains("a", "emailcta").should("exist")
+     cy.get(consumption.recommend.ctaLinkClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                   .should("have.css", "color", "rgb(72, 61, 30)")
       cy.window().then((win) => {
-     cy.get('a[class*="pf-multi-cta pf-cta-3"]').then(($el) => {
-    expect(win.getComputedStyle($el[0]).width).to.eq('119.945px')
+     cy.get(consumption.recommend.ctaLinkClass).then(($el) => {
+    expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                 
                      })
                })
@@ -106,34 +107,35 @@ it.only("Add and delete CTA buttons", () => {
         })
     
         cy.visit(recommend.url) 
+        cy.wait(1000)
         cy.contains("button", "formcta").should("exist")
             //verify specific alignment selected gets applied to the cells
-         cy.get('[class*="pf-multi-cta pf-cta-1"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+         cy.get(consumption.recommend.ctaButtonClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                                            .should("have.css", "color", "rgb(72, 61, 30)")
                         
         cy.window().then((win) => {
-        cy.get('button[class*="pf-multi-cta pf-cta-1"]').then(($el) => {
+        cy.get(consumption.recommend.ctaButtonClass).then(($el) => {
         expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                                         
            })
       })
     
       cy.contains("a", "linkcta").should("exist")
-           cy.get('a[class*="pf-multi-cta pf-cta-2"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+           cy.get(consumption.recommend.ctaLinkClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                       .should("have.css", "color", "rgb(72, 61, 30)")
          cy.window().then((win) => {
-         cy.get('a[class*="pf-multi-cta pf-cta-2"]').then(($el) => {
+         cy.get(consumption.recommend.ctaLinkClass).then(($el) => {
          expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                     
                  })
             })
     
-        cy.contains("a", "googleCtaLink").should("exist")
-           cy.get('a[class*="pf-multi-cta pf-cta-3"]').should("have.css", "background-color", "rgb(4, 151, 125)")
+        cy.contains("a", "emailcta").should("exist")
+           cy.get(consumption.recommend.ctaLinkClass).should("have.css", "background-color", "rgb(4, 151, 125)")
                                                       .should("have.css", "color", "rgb(72, 61, 30)")
           cy.window().then((win) => {
-         cy.get('a[class*="pf-multi-cta pf-cta-3"]').then(($el) => {
-        expect(win.getComputedStyle($el[0]).width).to.eq('119.945px')
+         cy.get(consumption.recommend.ctaLinkClass).then(($el) => {
+        expect(win.getComputedStyle($el[0]).width).to.eq('100px')
                                                     
                          })
               })

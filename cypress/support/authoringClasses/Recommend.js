@@ -420,10 +420,8 @@ export class Recommend extends Common {
         })
 
         if(addcta){
-            cy.log("in")
             cy.wait(3000)
             cy.contains('div', "+ Add CTA").click({force: true})
-            cy.wait(500)
         }
     }
 
@@ -454,8 +452,8 @@ export class Recommend extends Common {
         })
 
         if(addcta){
+            cy.wait(3000)
             cy.contains('div', "+ Add CTA").click({force: true})
-            cy.wait(2000)
         }
     }
 
