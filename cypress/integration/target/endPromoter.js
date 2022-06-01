@@ -58,10 +58,13 @@ describe("Target - Add New content", () => {
             //verify endPromoter will show up at the end of visiting  all assets
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             //verify it redirects to correct link when type = link has set
             cy.window().then(win => win.location.href = targetwithEndPromoter.endPromoterOptions1.link);
              cy.url().should('contain', targetwithEndPromoter.endPromoterOptions1.link)
@@ -74,10 +77,13 @@ describe("Target - Add New content", () => {
             authoring.target.configureEndPromoter(targetwithEndPromoter.endPromoterOptions2)
             cy.visit(targetwithEndPromoter.url + "/commonresource")
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
+            cy.get('#endPromoterCTA').should('not.exist')
             cy.get(consumption.target.endPromoterBlock).click()
             cy.wait(100)
             cy.get('#endPromoterCTA').click()
