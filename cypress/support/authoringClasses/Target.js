@@ -456,24 +456,6 @@ export class Target extends Common {
         }
     }    
 
-    // configureFlowCTA(flowCTA, verify){
-    //     cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
-    //         cy.contains("label", "CTA").siblings("span").click()
-    //     })
-    //     cy.get(this.popover).within(() => {
-    //         if(Cypress.$(this.clearValueIcon).length > 0){
-    //             cy.get(this.clearValueIcon).click()
-    //         }
-    //         cy.get("input").type(flowCTA + "\n", {force: true})
-    //         cy.contains("button", "Update").click()
-    //     })
-    //     if(verify !== false){
-    //         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
-    //             cy.containsExact("span", flowCTA, {timeout: 10000}).should("exist")
-    //         })
-    //     }
-    // }
-
     configureFlowCTA(config){
         const ctaNumber = config.ctaNumber
         const flowCTA = config.flowCTA

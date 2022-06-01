@@ -35,12 +35,12 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
         authoring.recommend.deleteTrack(recommend.name)
         authoring.recommend.addTrack(recommend)
         authoring.recommend.configure(recommend)
-
         authoring.recommend.addLinksAndShare("linkAndShareFlow.js") 
         cy.visit(recommend.url)
         cy.get('#email-button').should('exist')
 //we won't be able to automate if email subject text appears or not as it opens third party window
         cy.visit(authoring.configurations.pageUrls.linksAndSharings)
+        cy.wait(500)
         cy.get(authoring.common.pageContainer).contains('linkAndShareFlow.js').click()       
         cy.containsExact("div", recommend.name).parent().click({force: true})
         cy.get(authoring.recommend.pageControl).should('exist')
@@ -49,9 +49,7 @@ describe("Add LinksandShare and Verify Tracks On Sidebar", () => {
  })
 
        it('Date',()=>{
-
        authoring.configurations.lastUpdatedDate()
-
        cy.get(authoring.configurations.updatedDate, { timeout: 15000 }).invoke('text').then(dateText => {
        //I have used javascript function directly to match date on UI
        const today = authoring.configurations.lastUpdatedDate();
