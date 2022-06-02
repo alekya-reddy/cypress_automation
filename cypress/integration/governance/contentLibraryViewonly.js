@@ -37,27 +37,27 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.pageTitleBar).should('not.have.text', 'Content Library insights');
         cy.get(authoring.common.pageSidebar).should('not.exist');
         cy.get(authoring.common.pageBody).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.addedByDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.languageDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.topicDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.contentTypeDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.funnelStageDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.businessUnitDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.personaDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.industryDropDown).should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.estimatedCostDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.addedByDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.languageDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.topicDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.contentTypeDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.funnelStageDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.businessUnitDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.personaDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.industryDropDown).should('be.visible');
+        cy.get(authoring.contentLibrary.filterComponent.estimatedCostDropDown).should('be.visible');
         cy.get(authoring.common.pageSearch).should('be.visible').click();
         cy.get(authoring.common.pageSearch).type('12 Factor App{enter}');
         cy.wait(2000);
         cy.get(authoring.common.pageBody).should('contain', '12 Factor App');
         cy.get(authoring.common.pageSearch).clear();
         cy.wait(1000);
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryAll).should('be.visible').should('contain','Content in Library');
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryInTrack).should('be.visible').should('contain','In Content Track');
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryNotInTrack).should('be.visible').should('contain','Not in Content Track');
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryNew).should('be.visible').should('contain','New');
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryExpiring).should('be.visible').should('contain','Expiring');
-        cy.get(authoring.contentLibrary.sidebarComponent.summaryExpired).should('be.visible').should('contain','Expired');
+        cy.get(authoring.contentLibrary.filterComponent.summaryAll).should('be.visible').should('contain','Content in Library');
+        cy.get(authoring.contentLibrary.filterComponent.summaryInTrack).should('be.visible').should('contain','In Content Track');
+        cy.get(authoring.contentLibrary.filterComponent.summaryNotInTrack).should('be.visible').should('contain','Not in Content Track');
+        cy.get(authoring.contentLibrary.filterComponent.summaryNew).should('be.visible').should('contain','New');
+        cy.get(authoring.contentLibrary.filterComponent.summaryExpiring).should('be.visible').should('contain','Expiring');
+        cy.get(authoring.contentLibrary.filterComponent.summaryExpired).should('be.visible').should('contain','Expired');
         cy.contains('span','Internal Name').should('be.visible');
         cy.contains('span','External ID').should('be.visible');
         cy.contains('span','Updated').should('be.visible');
@@ -75,29 +75,120 @@ describe("View Only Permissions", () => {
         cy.get(authoring.common.previewSideBar).should('be.visible');
         cy.get(authoring.common.previewSideBar).find('#content-sidebar-preview-content').contains('Preview Content');
         cy.contains('Public Configuration').should('be.visible');
-        cy.get(authoring.contentLibrary.sidebarComponent.seoTitle).should('be.visible');
-        // cy.get(authoring.contentLibrary.sidebarComponent.contentType).should('be.visible').children().should('not.have.class', 'Icon__fa-pencil');
-        // cy.get(authoring.contentLibrary.sidebarComponent.topics).should('be.visible').children().should('not.have.class', 'Icon__fa-pencil');
-        // cy.get(authoring.contentLibrary.sidebarComponent.previewThumbnail).should('be.visible').children().should('not.have.class', 'Icon__fa-pencil');
-        // cy.get(authoring.contentLibrary.sidebarComponent.sourceUrl).should('be.visible').children().should('not.have.class', 'Icon__fa-pencil');
-        // cy.get(authoring.contentLibrary.sidebarComponent.slug).should('be.visible').children().should('not.have.class', 'Icon__fa-pencil');
+        cy.get(authoring.contentLibrary.sidebarComponent.seoTitle).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).find('textarea[class="EditableField__textarea"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+        cy.get(authoring.contentLibrary.sidebarComponent.contentType).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).should('not.have.class', 'Select-multi-value-wrapper');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.topics).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).should('not.have.class', 'Select-multi-value-wrapper');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.previewThumbnail).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).find(authoring.contentLibrary.sidebarComponent.checkBox).should('not.exist');
+            cy.get($el).should('not.have.text', 'Revert to default thumbnail');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.sourceUrl).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).find(authoring.contentLibrary.sidebarComponent.modalBody).should('not.exist');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.slug).then(($el) => {
+            cy.get($el).should('be.visible').click();
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+        cy.wait(1000);
         cy.get(authoring.contentLibrary.sidebarComponent.contentTypeEditIcon).should('not.exist');
         cy.get(authoring.contentLibrary.sidebarComponent.topicsEditIcon).should('not.exist');
         cy.get(authoring.contentLibrary.sidebarComponent.previewThumbnailEditIcon).should('not.exist');
         cy.get(authoring.contentLibrary.sidebarComponent.sourceUrlEditIcon).should('not.exist');
         cy.get(authoring.contentLibrary.sidebarComponent.slugEditIcon).should('not.exist');
+
+        //Internal Configuration section validation
         cy.contains('Internal Configuration');
         cy.scrollTo('bottom', { ensureScrollable: false});
-        cy.get(authoring.contentLibrary.sidebarComponent.funnelStage).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.estimatedCost).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.language).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.businessUnit).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.persona).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.industry).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.expiry).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.externalID).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.scoreThreshold).should('exist').trigger('mouseover');
-        cy.get(authoring.contentLibrary.sidebarComponent.iFrameSandbox).eq(0).trigger('mouseover');
+        cy.get(authoring.contentLibrary.sidebarComponent.funnelStage).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).click();
+            cy.get($el).find(authoring.contentLibrary.sidebarComponent.checkBox).should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+        
+        cy.get(authoring.contentLibrary.sidebarComponent.estimatedCost).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).click();
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.language).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).should('not.have.class', 'Select-multi-value-wrapper');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.businessUnit).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.persona).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.industry).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.expiry).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).find('input[type="date"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.externalID).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).find('input[type="text"]').should('not.exist');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+
+        cy.get(authoring.contentLibrary.sidebarComponent.scoreThreshold).then(($el) => {
+            cy.get($el).should('exist').trigger('mouseover');
+            cy.get($el).should('not.have.class', 'Select-multi-value-wrapper');
+            cy.get($el).should('not.have.text', 'Cancel');
+            cy.get($el).should('not.have.text', 'Save');
+        });
+        cy.get(authoring.contentLibrary.sidebarComponent.iFrameSandbox).eq(0).should('be.visible').click();
         cy.get(authoring.contentLibrary.sidebarComponent.iFrameSandboxToggle).should('be.visible').contains('OFF');
         cy.get(authoring.contentLibrary.sidebarComponent.usedInDownArrow).should('be.visible').contains('Used In');
         cy.wait(1000);

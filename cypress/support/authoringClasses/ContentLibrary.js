@@ -45,6 +45,21 @@ export class ContentLibrary extends Common{
             iFrameSandbox: ".sc-bgRGRH.kLMzOK",
             usedInDownArrow: ".ant-collapse-header",
             usedInUpArrow: ".ant-collapse-item.ant-collapse-item-active",
+            contentTypeEditIcon: "div[data-qa-hook='preview-section-content-type']>div>div>span>i",
+            topicsEditIcon: "div[data-qa-hook='preview-section-topics']>div>div>span>i",
+            previewThumbnailEditIcon: "div[data-qa-hook='preview-section-thumbnail']>div>div>span>i",
+            sourceUrlEditIcon: "div[data-qa-hook='preview-section-source-url']>div>div>span>i",
+            slugEditIcon: "div[data-qa-hook='preview-section-custom-url-slug']>div>div>span>i",
+            tableBody: "div[class*='Table__table-container']",
+            modalBody: "div[data-qa-hook='modal-body']",
+            checkBox: "div[data-qa-hook='checkbox']"
+        };
+        this.advancedEditComponent = {
+            publicTitleInput: "#title",
+            internalTitleInput: '#internalTitle',
+            descriptionInput: "#description"
+        };
+        this.filterComponent = {
             addedByDropDown: "div[data-qa-hook='added by-dropdown']",
             languageDropDown: "div[data-qa-hook='language-dropdown']",
             topicDropDown: "div[data-qa-hook='topic-dropdown']",
@@ -60,17 +75,6 @@ export class ContentLibrary extends Common{
             summaryNew: "#summary-new",
             summaryExpiring: "#summary-expiring",
             summaryExpired: "#summary-expired",
-            contentTypeEditIcon: "div[data-qa-hook='preview-section-content-type']>div>div>span>i",
-            topicsEditIcon: "div[data-qa-hook='preview-section-topics']>div>div>span>i",
-            previewThumbnailEditIcon: "div[data-qa-hook='preview-section-thumbnail']>div>div>span>i",
-            sourceUrlEditIcon: "div[data-qa-hook='preview-section-source-url']>div>div>span>i",
-            slugEditIcon: "div[data-qa-hook='preview-section-custom-url-slug']>div>div>span>i",
-            tableBody: ".Table__table-container_OUBqLv-Vv0jUu2ZtS5QNH",
-        };
-        this.advancedEditComponent = {
-            publicTitleInput: "#title",
-            internalTitleInput: '#internalTitle',
-            descriptionInput: "#description"
         };
         this.addContentComponent = {
             urlInput: "#multiple-urls"
