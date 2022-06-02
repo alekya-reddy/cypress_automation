@@ -10,6 +10,7 @@ export class TargetCX extends CommonCX {
         this.flowActiveItem = "#flow-active-item";
         this.signpostContainer = "#signposts-container";
         this.endPromoterTitle = "#qa-modal-header-title";
+        this.endPromoterBlock = '#qa-flow-next-teaser-wrapper'
         this.bottombarTitle = "#qa-bottom-bar-title";
         this.contentFrame = 'iframe[title="Content Window"]';
         this.limeLightVideo = {
