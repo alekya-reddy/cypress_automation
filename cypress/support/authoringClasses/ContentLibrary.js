@@ -40,11 +40,41 @@ export class ContentLibrary extends Common{
             previewTargetTracks: "div[data-qa-hook='preview-section-target-tracks']",
             experienceTagsLocator: "span[class^='ExperienceTags']",
             usedInSectionArrow: 'div[class="ant-collapse-header"]',
+            previewThumbnail: "div[data-qa-hook='preview-section-thumbnail']",
+            iFrameSandboxToggle: "div[data-qa-hook='iFrameSandbox']",
+            iFrameSandbox: ".sc-bgRGRH.kLMzOK",
+            usedInDownArrow: ".ant-collapse-header",
+            usedInUpArrow: ".ant-collapse-item.ant-collapse-item-active",
+            contentTypeEditIcon: "div[data-qa-hook='preview-section-content-type']>div>div>span>i",
+            topicsEditIcon: "div[data-qa-hook='preview-section-topics']>div>div>span>i",
+            previewThumbnailEditIcon: "div[data-qa-hook='preview-section-thumbnail']>div>div>span>i",
+            sourceUrlEditIcon: "div[data-qa-hook='preview-section-source-url']>div>div>span>i",
+            slugEditIcon: "div[data-qa-hook='preview-section-custom-url-slug']>div>div>span>i",
+            tableBody: "div[class*='Table__table-container']",
+            modalBody: "div[data-qa-hook='modal-body']",
+            checkBox: "div[data-qa-hook='checkbox']"
         };
         this.advancedEditComponent = {
             publicTitleInput: "#title",
             internalTitleInput: '#internalTitle',
             descriptionInput: "#description"
+        };
+        this.filterComponent = {
+            addedByDropDown: "div[data-qa-hook='added by-dropdown']",
+            languageDropDown: "div[data-qa-hook='language-dropdown']",
+            topicDropDown: "div[data-qa-hook='topic-dropdown']",
+            contentTypeDropDown: "div[data-qa-hook='content type-dropdown']",
+            funnelStageDropDown: "div[data-qa-hook='funnel stage-dropdown']",
+            businessUnitDropDown: "div[data-qa-hook='business unit-dropdown']",
+            personaDropDown: "div[data-qa-hook='persona-dropdown']",
+            industryDropDown: "div[data-qa-hook='industry-dropdown']",
+            estimatedCostDropDown: "div[data-qa-hook='estimated cost-dropdown']",
+            summaryAll: "#summary-all",
+            summaryInTrack: "#summary-in-track",
+            summaryNotInTrack: "#summary-not-in-track",
+            summaryNew: "#summary-new",
+            summaryExpiring: "#summary-expiring",
+            summaryExpired: "#summary-expired",
         };
         this.addContentComponent = {
             urlInput: "#multiple-urls"
