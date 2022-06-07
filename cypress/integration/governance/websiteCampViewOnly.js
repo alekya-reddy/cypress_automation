@@ -37,7 +37,7 @@ describe("View Only Permissions", () => {
            cy.contains('span', "Website Script Tag").should('be.visible')
            cy.contains('div', "Settings").should('be.visible')
            cy.contains('div', "Analytics").should('be.visible')
-           cy.contains('button', "Add Website URL").should("not.exist"
+           cy.contains('button', "Add Website URL").should("not.exist")
            cy.contains('span', "Enabled").should('be.visible')
            cy.contains('span', "Promoters Enabled").should('be.visible')
            cy.contains('a', website).should('be.visible').click()

@@ -9,6 +9,7 @@ export class ContentIntelligence extends Common {
         this.contentIntelligenceTab="#content-intelligence",
         this.topKeywordsTab = 'div[id="tab-panel"]',
         this.modalContainer = 'div[class*="modal-container"]',
+        this.topicNameClick = 'tr[role="row"]>td>div>div>button',
         this.pageSearch = 'input[name="search"]'
 
     }
