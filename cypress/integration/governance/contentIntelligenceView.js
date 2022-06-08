@@ -53,7 +53,7 @@ describe("View Only Permissions", () => {
            cy.contains("th", "Top Keywords").should("exist")
            cy.contains("th", "URL").should("exist")
            cy.contains("th", "Content").should("exist")
-           cy.contains("button", "B2B marketing in the on-demand economy").should("exist").click()
+           cy.get(authoring.contentIntelligence.topicNameClick).eq(0).click()
            cy.get(authoring.contentIntelligence.modalContainer).should("exist")
            cy.contains("button", "Details").should("exist").click()
            cy.contains("dt", "Title").should("exist")
