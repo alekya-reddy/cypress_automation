@@ -43,7 +43,7 @@ workflows:
   qa-governance-sat-mon:
     triggers:
       - schedule:
-          cron: "0 3 * * 1,6"
+          cron: "0 3 * * 1,4,6"
           filters:
             branches:
               only:
@@ -54,4 +54,5 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/userManagement/*,\
-            cypress/integration/governance/*"          
+            cypress/integration/governance/*"  
+          record: true        
