@@ -769,7 +769,7 @@ export class Configurations extends Common {
             })
         })
         cy.contains("button", "Save").click()
-        cy.contains("The record was saved successfully").should("exist")
+        cy.contains("The record was saved successfully",{timeout:20000}).should("exist")
         codes.forEach(code => {
             cy.contains('div[class="Select-value"]', code).should("not.exist")
         })
