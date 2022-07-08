@@ -13,7 +13,7 @@ workflows:
   qa-sat-mon:
     triggers:
       - schedule:
-          cron: "0 5 * * 1,6"
+          cron: "0 5 * * 1,2,3,4,6"
           filters:
             branches:
               only:
@@ -43,7 +43,7 @@ workflows:
   qa-governance-sat-mon:
     triggers:
       - schedule:
-          cron: "0 3 * * 1,6"
+          cron: "0 3 * * 1,2,3,4,6"
           filters:
             branches:
               only:
