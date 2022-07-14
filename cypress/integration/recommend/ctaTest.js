@@ -49,7 +49,6 @@ describe("Recommend CTA Test", () => {
 it("Add and delete CTA For Sidebar and Verify On Consumption", () => {
     authoring.common.login()
     authoring.recommend.visit()
-    //authoring.recommend.goToTrack(recommend.name)
     authoring.recommend.deleteTrack(recommend.name)
     authoring.recommend.addTrack(recommend)
     authoring.recommend.configure(recommend)
