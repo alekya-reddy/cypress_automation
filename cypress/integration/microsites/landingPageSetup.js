@@ -194,7 +194,7 @@ describe("Microsites - Landing page setup", () => {
         cy.contains(authoring.microsites.antTable.cell, defaultLandingPage.name, { timeout: 20000 }).should("exist")
              .parents(authoring.microsites.antTable.row).within(() => {
                 cy.get(authoring.microsites.antTable.cell).eq(9).should("contain", "Set as Home Page")
-                cy.contains("button", "Remove").should("exist")
+                cy.contains("a", "Remove").should("exist")
              })
 
         // And verify that the new landing page is now the home page
@@ -267,7 +267,7 @@ describe("Microsites - Landing page setup", () => {
         cy.contains(authoring.microsites.antTable.cell, landingPage.name, { timeout: 10000 }).should("exist")
              .parents(authoring.microsites.antTable.row).within(() => {
                 cy.get(authoring.microsites.antTable.cell).eq(5).should("not.contain", "Set as Home Page")
-                cy.contains("button", "Remove").should("exist")
+                cy.contains("a", "Remove").should("exist")
              })
 
         // Verify that the private landing page is not accessible on consumption side
