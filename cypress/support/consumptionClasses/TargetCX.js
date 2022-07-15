@@ -13,6 +13,8 @@ export class TargetCX extends CommonCX {
         this.endPromoterBlock = '#qa-flow-next-teaser-wrapper'
         this.bottombarTitle = "#qa-bottom-bar-title";
         this.contentFrame = 'iframe[title="Content Window"]';
+        this.ctaButtonClass = 'button[class*="pf-multi-cta pf-cta"]';
+        this.ctaLinkClass = 'a[class*="pf-multi-cta pf-cta"]';
         this.limeLightVideo = {
             splashScreen: "div[id='lookbook-video-player']>div>div>div>video",
             videoControlButton: "div[class='vjs-control-bar']>button:nth-child(1)",
