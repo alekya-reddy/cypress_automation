@@ -551,7 +551,7 @@ export class Microsites extends Common {
         tracks.forEach((track) => {
             cy.ifElementWithExactTextExists(this.antTable.cell, track, 1000, () => {
                 cy.containsExact(this.antTable.cell, track).siblings("td:contains('Remove')").within(() => {
-                    cy.contains('button', 'Remove').click()
+                    cy.contains('a', 'Remove').click()
                 })
                 cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
                 cy.wait(3000)
@@ -607,7 +607,7 @@ export class Microsites extends Common {
         this.tabToTracks()
         cy.get(this.antTable.row).then((rows) => {
             for (let i = rows.length - 1; i >= 0; i--) {
-                cy.get(this.antTable.row).eq(i).contains('button', 'Remove').click()
+                cy.get(this.antTable.row).eq(i).contains('a', 'Remove').click()
                 cy.contains(this.antModal, "Are you sure?").contains("button", "Delete").click()
             }
         })
@@ -661,7 +661,7 @@ export class Microsites extends Common {
         pages.forEach((page) => {
             cy.ifElementWithExactTextExists(this.antTable.cell, page, 1000, () => {
                 cy.containsExact(this.antTable.cell, page).siblings("td:contains('Remove')").within(() => {
-                    cy.contains('button', 'Remove').click()
+                    cy.contains('a', 'Remove').click()
                 })
                 cy.contains("button", "Yes").click()
             })
@@ -685,7 +685,7 @@ export class Microsites extends Common {
 
         this.tabToLandingPages()
         cy.contains('td', name).siblings("td").within(() => {
-            cy.contains("span", "Edit").click({force: true})
+            cy.contains("a", "Edit").click({force: true})
         })
         if (thumbnail){
             this.selectThumbnail(thumbnail)
@@ -736,7 +736,7 @@ export class Microsites extends Common {
 
     setToHomePage(page) {
         cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
-            cy.contains("button", "Set as Home Page").click({ force: true })
+            cy.contains("a", "Set as Home Page").click({ force: true })
         })
     }
 

@@ -465,23 +465,39 @@ export class Target extends Common {
         }
     }    
 
-    configureFlowCTA(flowCTA, verify){
+    configureFlowCTA(config){
+        const ctaNumber = config.ctaNumber
+        const flowCTA = config.flowCTA
+        const location = config.location
+        const buttonColor = config.buttonColor
+        const fontColor = config.fontColor
+        const addcta = config.addcta
+
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
-            cy.contains("label", "CTA").siblings("span").click()
+            cy.contains("label", ctaNumber).siblings("span").click({force:true})
         })
-        cy.get(this.popover).within(() => {
+
+            cy.get(this.popover).within(()=>{
             if(Cypress.$(this.clearValueIcon).length > 0){
                 cy.get(this.clearValueIcon).click()
             }
-            cy.get("input").type(flowCTA + "\n", {force: true})
-            cy.contains("button", "Update").click()
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(flowCTA + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(location + "\n", {force: true})
+            cy.get('#buttonColor').type(buttonColor)
+            cy.wait(100)
+            cy.get('#fontColor').type(fontColor)
+            cy.wait(200)
+            cy.contains('button', 'Update').click()
         })
-        if(verify !== false){
-            cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
-                cy.containsExact("span", flowCTA, {timeout: 10000}).should("exist")
-            })
+
+        if(addcta){
+            cy.wait(3000)
+            cy.contains('div', "+ Add CTA").click({force: true})
         }
     }
+
 
     configureEndPromoter(endPromoterOptions, verify){
         const { link, ctaLabel, cta, delay } = endPromoterOptions

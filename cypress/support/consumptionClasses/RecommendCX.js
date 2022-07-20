@@ -9,6 +9,8 @@ export class RecommendCX extends CommonCX {
         this.topicSidebarDropdown = "#qa-topic-sidebar-dropdown";
         this.topicSidebarHeaderTitle = "#qa-topic-sidebar-header-title";
         this.contentTitle = 'div[class="textLayer"]>span';
+        this.ctaButtonClass = 'button[class*="pf-multi-cta pf-cta"]';
+        this.ctaLinkClass = 'a[class*="pf-multi-cta pf-cta"]';
 
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 

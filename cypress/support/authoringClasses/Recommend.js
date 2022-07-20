@@ -300,9 +300,6 @@ export class Recommend extends Common {
         })
     }
 
-
-
-
     setAppearance(appearance, verify){
         cy.get(this.pageSidebar.appearanceLabel).siblings("span").click()
         cy.get(this.popover).within(()=>{
@@ -394,6 +391,70 @@ export class Recommend extends Common {
                     cy.containsExact("span", cta, {timeout: 10000}).should("exist")
                 })
             }
+        }
+    }
+
+    configureSidebarwithCtas(config){
+        const ctaNumber = config.ctaNumber
+        const ctaName = config.ctaName
+        const location = config.location
+        const buttonColor = config.buttonColor
+        const fontColor = config.fontColor
+        const addcta = config.addcta
+
+       cy.get(this.pageSidebar.sidebarToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click()
+        })
+            cy.get(this.popover).within(()=>{
+            if(Cypress.$(this.clearValueIcon).length > 0){
+                cy.get(this.clearValueIcon).click()
+            }
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(location + "\n", {force: true})
+            cy.get('#buttonColor').type(buttonColor)
+            cy.wait(100)
+            cy.get('#fontColor').type(fontColor)
+            cy.wait(200)
+            cy.contains('button', 'Update').click()
+        })
+
+        if(addcta){
+            cy.wait(3000)
+            cy.contains('div', "+ Add CTA").click({force: true})
+        }
+    }
+
+    configureTopicSidebarwithCtas(config){
+        const ctaNumber = config.ctaNumber
+        const ctaName = config.ctaName
+        const location = config.location
+        const buttonColor = config.buttonColor
+        const fontColor = config.fontColor
+        const addcta = config.addcta
+
+       cy.get(this.pageSidebar.topicSidebarToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click()
+        })
+            cy.get(this.popover).within(()=>{
+            if(Cypress.$(this.clearValueIcon).length > 0){
+                cy.get(this.clearValueIcon).click()
+            }
+            cy.get(this.dropdown.box).eq(0).click()
+            cy.get(this.dropdown.input).eq(0).type(ctaName + "\n", {force: true})
+            cy.get(this.dropdown.box).eq(1).click()
+            cy.get(this.dropdown.input).eq(1).type(location + "\n", {force: true})
+            cy.get('#buttonColor').type(buttonColor)
+            cy.wait(100)
+            cy.get('#fontColor').type(fontColor)
+            cy.wait(200)
+            cy.contains('button', 'Update').click()
+        })
+
+        if(addcta){
+            cy.wait(3000)
+            cy.contains('div', "+ Add CTA").click({force: true})
         }
     }
 
