@@ -311,7 +311,7 @@ const verifyAppearance = (appearance) => {
 
 const verifySessionGroup = (group) => {
     cy.contains(authoring.vex.groupRow, group.name).should("exist").within(()=>{
-        cy.contains("button", "Manage Sessions").click()
+        cy.contains("a", "Manage Sessions").click()
     })
     if(group.sessions){
         group.sessions.forEach( session => {

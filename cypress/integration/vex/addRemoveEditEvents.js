@@ -89,7 +89,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
         cy.reload()
-        cy.get(authoring.vex.eventNameInput).should('have.value', event.newName)
+        cy.get(authoring.vex.eventNameInput,{timeout:15000}).should('have.value', event.newName)
         cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
         cy.get(authoring.vex.externalIDInput).should("have.value", event.externalID)
 

@@ -57,7 +57,7 @@ describe("VEX - Create, Edit and Delete Folders", () => {
         cy.get(authoring.common.modal).within(() => {
             cy.get(authoring.vex.folder.folderNameInput).type(childFolderName[0])
             cy.get(authoring.vex.createVEXModal.dropdownSelect).eq(0).click()
-            cy.get(authoring.vex.createVEXModal.dropdownSelectField).eq(0).type(parentFolderName[0] + "\n")
+            cy.get(authoring.vex.createVEXModal.dropdownSelectField,{timeout:20000}).eq(0).type(parentFolderName[0] + "\n")
             cy.contains("button", "Create Folder").click()
         })
 

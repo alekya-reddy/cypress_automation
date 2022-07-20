@@ -246,7 +246,7 @@ describe('VEX - Sessions Groups', function () {
 
         // Confirm the initial order of sessions in group A
         cy.contains(authoring.vex.groupRow, groupA.name).within(() => {
-            cy.contains("button", "Manage Sessions").click()
+            cy.contains("a", "Manage Sessions").click()
         })
         for (let i = 0; i < groupA.sessions.length; i++) {
             cy.get(authoring.vex.draggableMenu).eq(i).siblings("span").should("contain", groupA.sessions[i])
@@ -317,13 +317,13 @@ describe('VEX - Sessions Groups', function () {
         cy.contains(authoring.vex.antModal, "Add Group").should("not.be.visible")
 
         // Add sessions to group cancel 
-        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Manage Sessions").click()
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("a", "Manage Sessions").click()
         cy.contains("button", "Add Sessions to Group").click()
         cy.contains(authoring.vex.antModal, "Add Sessions to Group").should("exist").contains("button", "Cancel").click()
         cy.contains(authoring.vex.antModal, "Add Sessions to Group").should("not.be.visible")
 
         // "Edit group name" input field validation, and test its cancel button
-        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Rename").click()
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("a", "Rename").click()
         cy.contains(authoring.vex.antModal, "Edit Session Group").should("exist").within(() => {
             cy.get(authoring.vex.groupNameInput).clear()
             cy.contains("button", "Submit").click()
@@ -336,12 +336,12 @@ describe('VEX - Sessions Groups', function () {
         cy.contains(authoring.vex.antModal, "Edit Session Group").should("not.be.visible")
 
         // Remove group cancel 
-        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Remove").click()
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("a", "Remove").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.exist")
 
         // Remove session from group cancel 
-        cy.contains(authoring.vex.sessionRow, groupA.sessions[0]).contains("button", "Remove").click()
+        cy.contains(authoring.vex.sessionRow, groupA.sessions[0]).contains("a", "Remove").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("exist").contains("button", "Cancel").click()
         cy.contains(authoring.vex.antModal, "Are you sure want to remove this record?").should("not.exist")
 
@@ -356,7 +356,7 @@ describe('VEX - Sessions Groups', function () {
         cy.contains("a", "Event Setup").click()
         authoring.vex.removeSession("Delete me")
         cy.contains("a", "Session Groups").click()
-        cy.contains(authoring.vex.groupRow, groupA.name).contains("button", "Manage Sessions").click()
+        cy.contains(authoring.vex.groupRow, groupA.name).contains("a", "Manage Sessions").click()
         cy.contains("span", "Delete me").should('not.exist')
     })
 

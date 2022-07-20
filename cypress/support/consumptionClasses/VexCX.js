@@ -36,7 +36,7 @@ export class VexCX extends CommonCX {
         this.sessionCard = ".pf-event-session-card";
         this.FilterByTopic = "#vex_topics";
         this.searchFilter = "#vex_search_button";
-        this.searchInputField = "#vex_search_input";
+        this.searchInputField = "[id*=vex_search_input]";
         this.sessionDescriptionStyle = "#vex-session-description div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.checkbox = "div[class='p-checkbox-box']"
@@ -48,7 +48,7 @@ export class VexCX extends CommonCX {
         this.businessUnitFilter = '#vex_businessUnits'
         this.languageFilter = '#vex_languages'
         this.searchInput = 'input[type="search"]'
-        this.searchButton = '#vex_search_button'
+        this.searchButton = "[id*='vex_search_button']"
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
         this.filterSearchBox = '.p-multiselect-filter-container'
         this.filterBoxheader = '.p-multiselect-header'
@@ -205,8 +205,8 @@ export class VexCX extends CommonCX {
             if (flag === true) {
                 cy.getIframeBody(this.youtube.iframe).within(() => {
                     cy.get("div.ytp-chrome-bottom").then(controllers => {
-                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.playButton).should('be.visible', { timeout: 10000 }).click({ force: true })
+                        cy.get(this.youtube.videoPlayer,{timeout:20000}).should('exist').trigger('mouseover')
+                        cy.get(this.youtube.playButton,{timeout:20000}).should('be.visible', { timeout: 10000 }).click({ force: true })
                     })
                 })
                 cy.get(this.youtube.audioMuteNotification).should('be.visible')
@@ -531,7 +531,7 @@ export class VexCX extends CommonCX {
 
     searchSessionGroup(searchTerm) {
         // Must be within session group block before using this function
-        cy.get(this.searchInputField).clear().type(searchTerm)
+        cy.get(this.searchInputField).eq(0).clear().type(searchTerm)
         cy.contains("button", "Search").click()
     }
 

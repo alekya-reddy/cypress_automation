@@ -130,7 +130,7 @@ export class Vex extends Common {
         this.supplementalContentCardTitle = 'span[class^="ant-typography"]';
         this.topicsTag = ".ant-select-selection-item";
         this.removeTopicTagButton = ".ant-select-selection-item-remove";
-        this.removeButton = "button:contains('Remove')";
+        this.removeButton = "a:contains('Remove')";
         this.removeonDemandVideo = '#remove-on-demand-video';
         this.isSimulive = 'input[name="videoSimulive"]';
         this.appearance = {
@@ -163,8 +163,8 @@ export class Vex extends Common {
         this.groupNameInput = "input[name='name']";
         this.groupRow = ".ant-list-item";
         this.sessionRow = ".ant-list-item";
-        this.removeGroupButton = "span:contains('Remove')";
-        this.renameGroupButton = "button:contains('Rename')";
+        this.removeGroupButton = "a:contains('Remove')";
+        this.renameGroupButton = "a:contains('Rename')";
         this.antSelector = ".ant-select-selector";
         this.engagementThresholdInput = "input[name='engagementThreshold']";
         this.engagementScoreInput = "input[name='engagementWeight']";
@@ -318,7 +318,7 @@ export class Vex extends Common {
 
         if (verify !== false) {
             cy.wait(2000) // To close the Add Event modal 
-            cy.contains('div', name, { timeout: 10000 }).should('exist')
+            cy.contains('div', name, { timeout: 20000 }).should('exist')
         }
     }
 
@@ -1458,7 +1458,7 @@ export class Vex extends Common {
 
         // Select the correct group
         cy.contains(this.groupRow, group, { timeout: 10000 }).within(() => {
-            cy.contains("button", "Manage Sessions").click()
+            cy.contains("a", "Manage Sessions").click()
         })
 
         // Add sessions to the group
@@ -1481,12 +1481,12 @@ export class Vex extends Common {
 
         // Select the correct group
         cy.contains(this.groupRow, group).within(() => {
-            cy.contains("button", "Manage Sessions").click()
+            cy.contains("a", "Manage Sessions").click()
         })
 
         // Remove sessions from the group
         sessions.forEach((session) => {
-            cy.contains(this.sessionRow, session).contains("button", "Remove").click()
+            cy.contains(this.sessionRow, session).contains("a", "Remove").click()
             cy.get(this.antModal).contains("button", "Yes").click()
         })
 
@@ -1763,7 +1763,7 @@ export class Vex extends Common {
         pages.forEach((page) => {
             cy.ifElementWithExactTextExists(this.antCell, page, 1000, () => {
                 cy.containsExact(this.antCell, page).siblings("td:contains('Remove')").within(() => {
-                    cy.contains('button', 'Remove').click()
+                    cy.contains('a', 'Remove').click()
                 })
                 cy.contains("button", "Yes").click()
             })
@@ -1780,7 +1780,7 @@ export class Vex extends Common {
             cy.get(this.pages.tableRow).then((rows) => {
                 for (let i = rows.length - 1; i >= 0; i--) {
                     cy.get(this.pages.tableRow).eq(i).within(() => {
-                        cy.contains('button', 'Remove').click()
+                        cy.contains('a', 'Remove').click()
                     })
                     cy.contains("button", "Yes").click()
                 }
@@ -1801,7 +1801,7 @@ export class Vex extends Common {
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
-            cy.contains("button", "Edit").click()
+            cy.contains("a", "Edit").click()
         })
 
         if (thumbnail) {
@@ -1855,16 +1855,16 @@ export class Vex extends Common {
 
     setToHomePage(page) {
         cy.containsExact(this.antCell, page, { timeout: 20000 }).parents(this.antTable.row).within(() => {
-            cy.ifElementWithExactTextExists("button", "Set as Home Page", 1500, () => {
-                cy.contains("button", "Set as Home Page").click({ force: true })
+            cy.ifElementWithExactTextExists("a", "Set as Home Page", 1500, () => {
+                cy.contains("a", "Set as Home Page").click({ force: true })
             })
         })
     }
 
     unsetHomePage(page) {
         cy.containsExact(this.antCell, page, { timeout: 20000 }).parents(this.antTable.row).within(() => {
-            cy.ifElementWithExactTextExists("button", "Unset", 1500, () => {
-                cy.contains("button", "Unset").click({ force: true })
+            cy.ifElementWithExactTextExists("a", "Unset", 1500, () => {
+                cy.contains("a", "Unset").click({ force: true })
             })
         })
     }
@@ -2031,8 +2031,10 @@ export class Vex extends Common {
         }
 
         if (spacing) {
+            cy.wait(2000)
             cy.containsExact("div", "Spacing").click()
-            cy.get("input:visible").clear().type(spacing)
+            cy.wait(2000)
+            cy.get("input[name*='spacing']").clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
         }
 
