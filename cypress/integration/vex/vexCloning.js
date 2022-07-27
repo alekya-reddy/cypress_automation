@@ -533,10 +533,13 @@ describe("VEX - Clone Event, Session, Landing Page", ()=>{
         // Clone session from within original session 
         authoring.vex.backToEvent(event.cloneName)
         authoring.vex.goToSessionConfig(sessions.onDemand.name)
+        
         verifySession(sessions.onDemand) // This just forces it to wait for supplemental content to load, which tends to cause modals to close, causing test flakiness
+        
         authoring.vex.cloneSession({
             name: sessions.onDemand.cloneName
         })
+    
         verifySession(sessions.onDemand, "cloned session") 
         authoring.vex.backToEvent(event.cloneName)
 

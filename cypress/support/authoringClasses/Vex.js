@@ -34,12 +34,12 @@ export class Vex extends Common {
         this.searchInput = 'input[class="ant-select-selection-search-input"]';
         this.sessionTableTitle = "div[class='ant-card-head-title']:contains('Sessions')";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-        this.clearSearch = 'i[title="Clear search"]',
-        this.eventsearchButton = 'input[name="page-search"]',
-        this.noEventFoundmsg = 'No virtual events found',
-        this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
+            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+            this.clearSearch = 'i[title="Clear search"]',
+            this.eventsearchButton = 'input[name="page-search"]',
+            this.noEventFoundmsg = 'No virtual events found',
+            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = "i[class*='Icon__fa-trash']";
@@ -49,9 +49,9 @@ export class Vex extends Common {
         this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
         this.eventSetupCheckbox = 'input[value="Event setup"]';
         this.antCell = ".ant-table-cell";
-        this.virtualEventsTab="#virtual-events";
+        this.virtualEventsTab = "#virtual-events";
         this.inputModal = 'div[class="ant-picker-body"]';
-        this.virtualEventsTab="#virtual-events";
+        this.virtualEventsTab = "#virtual-events";
         this.headerTitleLocator = 'div[data-qa-hook="header-title-show"]';
         this.headerTitleInput = 'input[name="headerTitle"]';
         this.heroSubtitleLocatorDefault = 'div[data-qa-hook="header-subtitle-default"]';
@@ -68,12 +68,12 @@ export class Vex extends Common {
         this.toggleChecked = 'button[class="ant-switch ant-switch-checked"]';
         this.analyticsOverviewDropdown = 'div[class="ant-select-item-option-content"]';
         this.editfolder = 'i[title="Edit Folder"]',
-        this.copyVex = 'span[aria-label="copy"]', 
-        this.dropDownModal = 'div[class="rc-virtual-list-holder-inner"]';
+            this.copyVex = 'span[aria-label="copy"]',
+            this.dropDownModal = 'div[class="rc-virtual-list-holder-inner"]';
         this.searchButton = '#vex_search_button';
         this.eventSessions = 'div.pf-event-sessions';
-        this.navItemRemove= 'span[aria-label="delete"]';
-        this.navItemEdit= 'span[aria-label="edit"]';
+        this.navItemRemove = 'span[aria-label="delete"]';
+        this.navItemEdit = 'span[aria-label="edit"]';
         this.sessionName = function (sessionName) {
             let escapedName = sessionName.replace(/(\W)/g, '\\$1')
             return `td[title="${escapedName}"]`
@@ -208,7 +208,7 @@ export class Vex extends Common {
             searchInputField: "#vex_search_input",
             searchOverrideLabel: "label[for*='searchConfiguration.searchButtonTitle']",
             filterToggle: "input[name*='.enable']",
-            pageTitle:"input[name='pageTitle']",
+            pageTitle: "input[name='pageTitle']",
             enableDescription: "input[name*='cardConfiguration.enableDescription']"
         };
         this.navigation = {
@@ -222,7 +222,7 @@ export class Vex extends Common {
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
             navRemoveBox: ".rst__rowToolbar",
-            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",
             navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
             navModal: "div[class='ant-modal-mask']"
         };
@@ -275,17 +275,17 @@ export class Vex extends Common {
         this.searchInputText = '#vex_search_input'
         this.searchButton = '#vex_search_button'
         this.eventSessions = 'div.pf-event-sessions'
-        this.navItemRemove= 'span[aria-label="delete"]',
-        this.liveCaptions="[name='captionConfig.liveCaptionEnabled']",
-        this.onDemandCaptions="[name='captionConfig.onDemandCaptionEnabled']"
+        this.navItemRemove = 'span[aria-label="delete"]',
+            this.liveCaptions = "[name='captionConfig.liveCaptionEnabled']",
+            this.onDemandCaptions = "[name='captionConfig.onDemandCaptionEnabled']"
     }
 
     visit() {
-        cy.visit(this.vexUrl,{timeout:120000});
+        cy.visit(this.vexUrl, { timeout: 120000 });
     }
 
-    waitForVexToLoad(){
-        cy.location('pathname', {timeout: 20000}).should('include', 'virtual-events');
+    waitForVexToLoad() {
+        cy.location('pathname', { timeout: 20000 }).should('include', 'virtual-events');
     }
 
     addVirtualEvent(options, verify) {
@@ -307,12 +307,12 @@ export class Vex extends Common {
             if (childFolder) {
                 cy.get(this.createVEXModal.dropdownfolder).click({ force: true }).type(childFolder + "\n")
             }
-            if(clone){
-                cy.get('input[class="ant-select-selection-search-input"]').eq(0).click({force: true}).type(clone + "\n")  
+            if (clone) {
+                cy.get('input[class="ant-select-selection-search-input"]').eq(0).type(clone,{force:true}).type('{downArrow}').type('{enter}')
                 cy.wait(200)
-                this.eventSetup(true)  
+                this.eventSetup(true)
             }
-           
+
             cy.contains('button', 'Add Virtual Event').click()
         })
 
@@ -322,23 +322,23 @@ export class Vex extends Common {
         }
     }
 
-    editFolder(options){
+    editFolder(options) {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
 
         cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
-        cy.get(`i[class*='edit-for-${name}']`).eq(0).click({force: true})
+        cy.get(`i[class*='edit-for-${name}']`).eq(0).click({ force: true })
         cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Virtual Event").should("exist")
 
             if (editedName) {
-                cy.get('input[name="name"]').eq(0).clear({force: true}).type(editedName)
+                cy.get('input[name="name"]').eq(0).clear({ force: true }).type(editedName)
             }
             if (Folder) {
                 this.setFolder(Folder)
             }
-             cy.contains('button', "Save Virtual Event").should("exist").click()
+            cy.contains('button', "Save Virtual Event").should("exist").click()
         })
     }
 
@@ -363,8 +363,8 @@ export class Vex extends Common {
         this.goToPage(this.virtualEventHomeTitle, this.vexUrl)
         cy.ifElementWithExactTextExists(this.eventCardTitle, eventName, 5000, () => {
             cy.contains(this.eventCardTitle, eventName, { timeout: 20000 }).should('exist')
-            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click({force:true})
-            cy.get(`i[class*='delete-${eventName}']`).eq(0).click({force:true})
+            cy.get(`a[id='configure-${eventName}']`).parents('td').prev('td').click({ force: true })
+            cy.get(`i[class*='delete-${eventName}']`).eq(0).click({ force: true })
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -379,7 +379,7 @@ export class Vex extends Common {
         cy.ifElementWithExactTextExists(this.eventCardTitle, name, 5000, () => {
             cy.contains(this.eventCardTitle, name, { timeout: 20000 }).should('exist')
             cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({ force: true })
             cy.contains(this.antModal, "Are you sure want to remove this vitrual event?").within(() => {
                 cy.contains('Yes').click()
             })
@@ -406,7 +406,7 @@ export class Vex extends Common {
     }
 
     goToEventConfig(event) {
-        cy.containsExact(this.eventCardTitle, event, {timeout: 20000}).should('exist')
+        cy.containsExact(this.eventCardTitle, event, { timeout: 20000 }).should('exist')
         cy.contains(this.eventCardTitle, event, { timeout: 20000 }).should('exist')
         cy.get(`a[id='configure-${event}']`).should('exist').click()
     }
@@ -658,7 +658,7 @@ export class Vex extends Common {
             this.setCookieConsent(cookieConsent)
         }
 
-        cy.contains('button', 'Save',{timeout:20000}).click();
+        cy.contains('button', 'Save', { timeout: 20000 }).click();
         cy.get(this.pageBody).should('contain', this.recordSavedMessage);
     }
 
@@ -692,7 +692,7 @@ export class Vex extends Common {
         const name = form.name
         const save = form.save == false ? false : true
         cy.wait(2000)
-        cy.contains(this.antRow, "Attendee Registration Form",{timeout:20000}).within(() => {
+        cy.contains(this.antRow, "Attendee Registration Form", { timeout: 20000 }).within(() => {
             cy.wait(4000)
             cy.get("input").clear({ force: true }).type(name, { force: true })
         })
@@ -800,7 +800,7 @@ export class Vex extends Common {
         cy.get(this.sessionName(sessionName), { timeout: 20000 }).parent().within(() => {
             cy.contains("a", "Configure").click()
         })
-        cy.get(this.pageTitleLocator,{ timeout: 20000 }).should('contain', sessionName, { timeout: 20000 });
+        cy.get(this.pageTitleLocator, { timeout: 20000 }).should('contain', sessionName, { timeout: 20000 });
     }
 
     filterSessionType(options) {
@@ -915,7 +915,7 @@ export class Vex extends Common {
     }
 
     pickOnDemandVideo(content) {
-        cy.get(this.selectVideoButton,{timeout:20000}).click();
+        cy.get(this.selectVideoButton, { timeout: 20000 }).click();
         cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
             cy.contains(this.contentPickerItem, content).click();
@@ -964,9 +964,9 @@ export class Vex extends Common {
         const form = config.form
         const formVisibility = config.formVisibility
         const stayOnPage = config.stayOnPage // Set to true if you want to stay on current session configuration and the name of the session has changed
-        const override=config.override
-        const captions=config.captions
-        const captionsLanguage=config.captionsLanguage
+        const override = config.override
+        const captions = config.captions
+        const captionsLanguage = config.captionsLanguage
 
         if (!stayOnPage) {
             cy.ifNoElementWithExactTextExists(this.pageTitleBar, name, 1000, () => {
@@ -981,7 +981,7 @@ export class Vex extends Common {
         if (visibility == 'Private') {
             cy.get(this.privateRadio).filter('.ant-radio-input').click();
         } else if (visibility == 'Public') {
-            cy.get(this.publicRadio,{timeout:20000}).click();
+            cy.get(this.publicRadio, { timeout: 20000 }).click();
         }
 
         if (slug) {
@@ -1037,17 +1037,17 @@ export class Vex extends Common {
             this.addSupplementalContent(contents);
         }
 
-        if(override){
-            const title=override.pageTitle
-            const description=override.pageDescription
-            const maxChars=override.maximumChars
-            
-            if(title){
+        if (override) {
+            const title = override.pageTitle
+            const description = override.pageDescription
+            const maxChars = override.maximumChars
+
+            if (title) {
                 cy.get(this.pages.pageTitle).clear().type(title)
             }
 
-            if(description){
-                if(maxChars){
+            if (description) {
+                if (maxChars) {
                     cy.get(this.pages.pageDescription).clear().type(maxChars)
                     cy.get(this.saveButton).click()
                     cy.contains("The page description for content must be 255 characters or less. Please type a shorter page description.").should('exist')
@@ -1056,14 +1056,14 @@ export class Vex extends Common {
             }
         }
 
-        if(captions){
-            if(captions==='on' || captions==='ON'){
+        if (captions) {
+            if (captions === 'on' || captions === 'ON') {
                 //default should be english
                 cy.get(this.onDemandCaptions).click()
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
                 cy.get(this.onDemandCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
-                cy.get(`div[class*='ant-select-dropdown'][style] div[label='${captionsLanguage}']:visible`).click({force:true})
+                cy.get(`div[class*='ant-select-dropdown'][style] div[label='${captionsLanguage}']:visible`).click({ force: true })
             }
         }
 
@@ -1075,7 +1075,7 @@ export class Vex extends Common {
             this.configureRocketChat(rocketChat)
         }
 
-       
+
     }
 
     setForm(form) {
@@ -1113,11 +1113,11 @@ export class Vex extends Common {
         const selectImageText = config.selectImageText ? config.selectImageText : "Change Image"
 
         cy.get(`button:contains('${selectImageText}')`).click()
-        cy.get(this.thumbnailSelector,{timeout:10000}).should('exist').within(() => {
+        cy.get(this.thumbnailSelector, { timeout: 10000 }).should('exist').within(() => {
             cy.contains('li', category).click()
             cy.get(`img[src*="${url}"]`).click()
             cy.get(this.saveButton).click()
-         })
+        })
         cy.get(`img[src*="${url}"]`).should('exist')
     }
 
@@ -1146,8 +1146,8 @@ export class Vex extends Common {
         const webexLink = config.webexLink
         const video = config.video
         const isSimulive = config.isSimulive
-        const captions=config.liveVideoCaptions
-        const captionsLanguage=config.captionsLanguage
+        const captions = config.liveVideoCaptions
+        const captionsLanguage = config.captionsLanguage
 
 
         if (start == 'now') {
@@ -1202,14 +1202,14 @@ export class Vex extends Common {
             })
         }
 
-        if(captions){
-            if(captions==='on' || captions==='ON'){
+        if (captions) {
+            if (captions === 'on' || captions === 'ON') {
                 //default should be english
                 cy.get(this.liveCaptions).click()
                 cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").should("contain", "English")
                 cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").click()
                 cy.get(this.liveCaptions).parents('label.ant-checkbox-wrapper').next("div.ant-row.ant-form-item").type(captionsLanguage)
-                cy.contains("[class='rc-virtual-list-holder-inner'] div[label]",captionsLanguage).click()
+                cy.contains("[class='rc-virtual-list-holder-inner'] div[label]", captionsLanguage).click()
             }
         }
 
@@ -1545,7 +1545,7 @@ export class Vex extends Common {
         cy.contains(this.antModal, "Add Navigation Item").should('exist')
         cy.get(this.navigation.labelInput).clear().type(label)
         cy.get(this.antSelector).eq(0).click()
-        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({ force: true })
         if (source && type !== "Link") {
             cy.get(this.antSelector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).click()
@@ -1571,7 +1571,7 @@ export class Vex extends Common {
         }
     }
     editNavItem(config) {
-        const to_edit=config.to_edit
+        const to_edit = config.to_edit
         const label = config.label
         const type = config.type
         const source = config.source
@@ -1579,21 +1579,21 @@ export class Vex extends Common {
         const verify = config.verify
 
         this.goToNavigation()
-        cy.contains(this.navigation.navTitle, to_edit,  { timeout: 5000 }).should('exist').parent().parent().within(() => {
-            cy.get(this.navigation.navEdit).should('exist').click({force:true})
+        cy.contains(this.navigation.navTitle, to_edit, { timeout: 5000 }).should('exist').parent().parent().within(() => {
+            cy.get(this.navigation.navEdit).should('exist').click({ force: true })
         })
         cy.contains(this.antModal, "Update Navigation Item").should('exist')
         cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
             cy.get(this.navigation.labelInput).filter(':visible').first().clear().type(label)
             cy.get(this.antDropSelect.selector).first().click()
         })
-        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({ force: true })
         if (source && type !== "Link") {
             cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
                 cy.get(this.antDropSelect.selector).eq(1).click()
             })
             cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
-        }    
+        }
         else if (source && type == "Link") {
             cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
                 cy.get(this.navigation.linkInput).clear().type(source)
@@ -1652,8 +1652,8 @@ export class Vex extends Common {
         const subject = config.subject // name of the nav item to be moved
         const target = config.target // name of the nav item that subject will connect to 
 
-        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart",{force: true})
-        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend",{force: true})
+        cy.containsExact(this.navigation.navTitle, subject).parents(this.navigation.navRow).children(this.navigation.navHandle).trigger("dragstart", { force: true })
+        cy.containsExact(this.navigation.navTitle, target).parents(this.navigation.navRow).children(this.navigation.navContent).children(this.navigation.navRemoveBox).trigger("drop").trigger("dragend", { force: true })
     }
 
     goToBlacklist() {
@@ -1797,7 +1797,7 @@ export class Vex extends Common {
         const pageDescription = config.pageDescription
         const verify = config.verify // must specify false to skip verification 
         const title = config.title
-        const thumbnail=config.thumbnail
+        const thumbnail = config.thumbnail
 
         this.goToLandingPage()
         cy.containsExact(this.antCell, name).siblings("td:contains('Edit')").within(() => {
@@ -1823,13 +1823,13 @@ export class Vex extends Common {
             if (slug) {
                 cy.get(this.pages.slugInput).clear().type(slug)
             }
-            if (pageTitle){
+            if (pageTitle) {
                 cy.get(this.pages.pageTitle).clear().type(pageTitle)
             }
-            if (pageDescription){
+            if (pageDescription) {
                 cy.get(this.pages.pageDescription).clear().type(pageDescription)
             }
-            if(title){
+            if (title) {
                 cy.get(this.pages.pageTitle).clear().type(title)
             }
             cy.contains("button", "Submit").click()
@@ -2351,7 +2351,7 @@ export class Vex extends Common {
         if (appearance) {
             cy.get("span[class='ant-select-selection-item']", { timeout: 10000 }).should('be.visible').click({ force: true })
             cy.wait(1000)
-            cy.get(this.appearance.input).type(appearance + "\n", {force: true})
+            cy.get(this.appearance.input).type(appearance + "\n", { force: true })
             cy.wait(1000)
             //it's working without this locator as well so commenting it
             //cy.get(`div[label="${appearance}"]`, { timeout: 10000 }).click()
@@ -2480,10 +2480,7 @@ export class Vex extends Common {
                 this.goToSessionConfig(name)
             }
         } else {
-            cy.angryClick({
-                clickElement: this.cloneButton,
-                checkElement: `${this.antModal}:contains('Clone this Session')`
-            })
+            cy.get(this.cloneButton).click()
             cy.contains(this.antModal, "Clone this Session", { timeout: 20000 }).should("exist").within(() => {
                 cy.get(this.sessionNameInput).should("exist").clear().type(name)
                 cy.contains("button", "Clone this Session").click()
@@ -2586,7 +2583,7 @@ export class Vex extends Common {
 
     saveSearchAndFiltersSettings() {
         cy.contains("button", "Save All Settings").should('be.visible').click();
-        cy.contains("span", "The record was saved successfully.",{timeout:20000}).should('be.visible')
+        cy.contains("span", "The record was saved successfully.", { timeout: 20000 }).should('be.visible')
     }
 
     tabToSearchAndFilter() {
@@ -2625,10 +2622,10 @@ export class Vex extends Common {
         const heading = config.heading
         const cardConfiguration = config.cardConfiguration
         let blockName = cardConfiguration.blockName
-        cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).click({force:true})
-        cy.contains(this.pages.sessionGroupRow, blockName,{timeout: 10000}).parent().within(() => {
+        cy.contains(this.pages.sessionGroupRow, blockName, { timeout: 10000 }).click({ force: true })
+        cy.contains(this.pages.sessionGroupRow, blockName, { timeout: 10000 }).parent().within(() => {
             cy.get(this.pages.editorMenu).within(() => {
-                cy.get(this.pages.menuBlock,{timeout:10000}).eq(3).should('exist',{timeout:10000}).click({force:true})
+                cy.get(this.pages.menuBlock, { timeout: 10000 }).eq(3).should('exist', { timeout: 10000 }).click({ force: true })
             })
         })
 
@@ -2637,13 +2634,13 @@ export class Vex extends Common {
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
                 cy.wait(3000)
-                cy.get("input[name='blocks.0.heading.fontSize']",{timeout:10000}).clear({force:true}).type(fontSize,{force:true})
+                cy.get("input[name='blocks.0.heading.fontSize']", { timeout: 10000 }).clear({ force: true }).type(fontSize, { force: true })
             }
-            cy.contains('span','Heading').should('exist',{timeout:10000}).click({force:true})
+            cy.contains('span', 'Heading').should('exist', { timeout: 10000 }).click({ force: true })
         }
 
-        if(cardConfiguration){
-            let enableDescription=cardConfiguration.enableDescription
+        if (cardConfiguration) {
+            let enableDescription = cardConfiguration.enableDescription
             cy.containsExact("div", "Card Configuration").click()
             if (enableDescription == false || enableDescription == true) {
                 cy.get(this.pages.enableDescription).parent().find("div[class^='ToggleSwitch']").invoke('attr', 'class').then((attr) => {
@@ -2716,13 +2713,13 @@ export class Vex extends Common {
 
     }
     setSessionDescription(sessionDescription) {
-        cy.get(this.sessionDescriptionCheckbox,{timeout: 10000}).parent().invoke('attr', 'class').then((attr) => {
+        cy.get(this.sessionDescriptionCheckbox, { timeout: 10000 }).parent().invoke('attr', 'class').then((attr) => {
             if ((sessionDescription == false && attr.includes("ant-checkbox-checked")) || (sessionDescription == true && !attr.includes("ant-checkbox-checked"))) {
                 cy.get(this.sessionDescriptionCheckbox).click()
             }
         })
 
-        cy.get(this.sessionDescriptionCheckbox,{timeout: 10000}).parent().invoke('attr', 'class').then((attr) => {
+        cy.get(this.sessionDescriptionCheckbox, { timeout: 10000 }).parent().invoke('attr', 'class').then((attr) => {
             if (sessionDescription == false) {
                 expect(attr.includes("ant-checkbox-checked")).to.be.false
             } else {

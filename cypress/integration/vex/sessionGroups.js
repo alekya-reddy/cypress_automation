@@ -244,6 +244,7 @@ describe('VEX - Sessions Groups', function () {
         authoring.vex.removeFromGroup(groupB)
         authoring.vex.addToGroup(groupB)
 
+     
         // Confirm the initial order of sessions in group A
         cy.contains(authoring.vex.groupRow, groupA.name).within(() => {
             cy.contains("a", "Manage Sessions").click()

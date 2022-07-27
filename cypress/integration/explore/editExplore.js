@@ -98,7 +98,6 @@ describe("Edit explore page", () => {
             cy.contains(consumption.explore.body.card, targetContent).should("exist")
             cy.contains(consumption.explore.hero.assetTitle, targetContent, { timeout: 10000 }).click()
             cy.get(consumption.explore.overlay.iframe).should("exist")
-            cy.pause()
             cy.contains('span', '×').click({ force: true })
         })
         recommend.contents.forEach(recommendContent => {

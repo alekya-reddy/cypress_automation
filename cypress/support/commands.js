@@ -269,7 +269,9 @@ Cypress.Commands.add("angryClick", (config)=>{
     const checkElement = config.checkElement // The element that should appear when clickElement is clicked
     const interval = config.interval || config.interval == 0 ? config.interval : 1000 // Interval between clicks
 
+    cy.wait(3000)
     let checkElementFound = Cypress.$(checkElement).length
+    cy.log(checkElementFound)
     if(checkElementFound < 1){
         let remainingRepeats = repeat - 1
         cy.get(clickElement).click()
