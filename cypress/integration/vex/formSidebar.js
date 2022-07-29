@@ -13,6 +13,7 @@ const event = {
 describe("Add form and validate sidebar with VEX", () => {
     it("Configure VEX and add form ", () => {
         authoring.common.login()
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
         authoring.configurations.deleteForm("VEXform")
 
         authoring.configurations.addForm("VEXform")

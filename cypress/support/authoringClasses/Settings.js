@@ -13,10 +13,10 @@ export class Settings extends Common {
             pageTitle: "Cookie Consent",
             cookieConsentSelect: "#cookie-consent-select",
             options: {
-                disable: "Disable Cookie Consent",
-                enableForAll: "Enable Cookie Consent for all web visitors",
-                enableForIP: "Enable Cookie Consent for web visitors with an originating IP from selected countries",
-                custom: "Enable Custom Cookie Consent"
+                disable: "Cookie Consent not required",
+                enableForAll: "Cookie Consent managed by PathFactory for all visitors",
+                enableForIP: "Cookie Consent managed by PathFactory for visitors with an originating IP from selected countries",
+                custom: "Cookie Consent managed by external cookie consent manager"
             }
         };
         this.oceAccount = {
@@ -131,7 +131,7 @@ export class Settings extends Common {
         let option = config.option 
 
         this.goToPage(this.cookieConsent.pageTitle, this.cookieConsent.pageUrl)
-        cy.get(this.cookieConsent.cookieConsentSelect).click()
+        cy.get(this.cookieConsent.cookieConsentSelect,{timeout:20000}).click()
         cy.get(this.dropdown.option(option)).click()
         cy.contains("button", "Save").click()
         cy.contains(this.messages.recordSaved,{timeout:20000}).should('exist')

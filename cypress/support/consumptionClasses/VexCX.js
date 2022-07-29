@@ -34,21 +34,21 @@ export class VexCX extends CommonCX {
         this.carouselArrow_color = "#qa-arrow-right";
         this.carouselArrow_bgColor = ".slick-next";
         this.sessionCard = ".pf-event-session-card";
-        this.FilterByTopic = "#vex_topics";
-        this.searchFilter = "#vex_search_button";
-        this.searchInputField = "#vex_search_input";
+        this.FilterByTopic = "#vex_topics_0";
+        this.searchFilter = "#vex_search_button_0";
+        this.searchInputField = "[id*=vex_search_input]";
         this.sessionDescriptionStyle = "#vex-session-description div:nth-child(2)";
         this.noResultsMsg = ".pf-event-sessions>div:nth-child(3)"
         this.checkbox = "div[class='p-checkbox-box']"
-        this.topicFilter = "#vex_topics"
-        this.availabilityFilter = '#vex_sessionTypes'
-        this.funnelStageFilter = '#vex_funnelStages'
-        this.industryFilter = '#vex_industries'
-        this.personaFilter = '#vex_personas'
-        this.businessUnitFilter = '#vex_businessUnits'
-        this.languageFilter = '#vex_languages'
+        this.topicFilter = "#vex_topics_0"
+        this.availabilityFilter = '#vex_sessionTypes_0'
+        this.funnelStageFilter = '#vex_funnelStages_0'
+        this.industryFilter = '#vex_industries_0'
+        this.personaFilter = '#vex_personas_0'
+        this.businessUnitFilter = '#vex_businessUnits_0'
+        this.languageFilter = '#vex_languages_0'
         this.searchInput = 'input[type="search"]'
-        this.searchButton = '#vex_search_button'
+        this.searchButton = "[id*='vex_search_button']"
         this.cancelFilterbox = 'button[class="p-multiselect-close p-link"]'
         this.filterSearchBox = '.p-multiselect-filter-container'
         this.filterBoxheader = '.p-multiselect-header'
@@ -94,8 +94,8 @@ export class VexCX extends CommonCX {
             volumeButtons: "[class='volume'] div",
             closeAudioNotification: "#video-tooltip-close-icon",
             audioMuteNotification: "div[id='video-tooltip']",
-            captions:"[aria-label='Choose captions']",
-            message:"[id='video-captions']"
+            captions: "[aria-label='Choose captions']",
+            message: "[id='video-captions']"
         };
         this.vidyard = {
             iframe: 'iframe[class*="vidyard-iframe"]',
@@ -133,7 +133,7 @@ export class VexCX extends CommonCX {
             pauseButton: '[title="Pause"]',
             video: "[class*='video-js']",
             audioMuteNotification: "div[id='video-tooltip']",
-            captionsCC:'[aria-label="Captions Menu"]'
+            captionsCC: '[aria-label="Captions Menu"]'
         };
 
         this.zoom = {
@@ -205,8 +205,8 @@ export class VexCX extends CommonCX {
             if (flag === true) {
                 cy.getIframeBody(this.youtube.iframe).within(() => {
                     cy.get("div.ytp-chrome-bottom").then(controllers => {
-                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
-                        cy.get(this.youtube.playButton).should('be.visible', { timeout: 10000 }).click({ force: true })
+                        cy.get(this.youtube.videoPlayer, { timeout: 20000 }).should('exist').trigger('mouseover', { force: true })
+                        cy.get(this.youtube.playButton, { timeout: 20000 }).should('be.visible', { timeout: 10000 }).click({ force: true })
                     })
                 })
                 cy.get(this.youtube.audioMuteNotification).should('be.visible')
@@ -222,7 +222,7 @@ export class VexCX extends CommonCX {
                 cy.get(this.youtube.audioMuteNotification).should('not.be.visible')
                 cy.getIframeBody(this.youtube.iframe).within(() => {
                     cy.get("div.ytp-chrome-bottom").then(controllers => {
-                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover')
+                        cy.get(this.youtube.videoPlayer).should('exist').trigger('mouseover', { force: true })
                         if (controllers.find(this.youtube.unmuteButton).length > 0) {
                         }
                         else
@@ -531,7 +531,7 @@ export class VexCX extends CommonCX {
 
     searchSessionGroup(searchTerm) {
         // Must be within session group block before using this function
-        cy.get(this.searchInputField).clear().type(searchTerm)
+        cy.get(this.searchInputField).eq(0).clear().type(searchTerm)
         cy.contains("button", "Search").click()
     }
 
@@ -547,13 +547,23 @@ export class VexCX extends CommonCX {
         let option
         let splittedValues = []
 
-        cy.get(`#vex_${filterName}`).should('be.visible', { timeout: 10000 }).click()
-        cy.wait(1000)
+        cy.get(`#vex_${filterName}_0`).should('be.visible', { timeout: 10000 }).click()
+        cy.get(`#vex_${filterName}_0`).then(filter => {
+            const count = filter.find("span.closebtn").length;
+            if (count > 0) {
+                cy.get(`#vex_${filterName}_0 span.closebtn`).each(closeBtn => {
+                    closeBtn.click()
+                    cy.wait(2000)
+                })
+            }
+        })
+
         indexes.forEach(index => {
-            cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').then(text => {
-                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').as(`optionValue${index}`)
+            cy.get(`div[class*='p-connected-overlay'][style] .p-multiselect-items li:nth-child(${index})[aria-selected="false"] span div:visible`, { timeout: 10000 }).invoke('text').then(text => {
+                cy.log(text)
+                cy.get(`div[class*='p-connected-overlay'][style] .p-multiselect-items li:nth-child(${index})[aria-selected="false"] span div:visible`, { timeout: 10000 }).invoke('text').as(`optionValue${index}`)
                 cy.wait(1000)
-                cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).click()
+                cy.get(`div[class*='p-connected-overlay'][style] .p-multiselect-items li:nth-child(${index})[aria-selected="false"] span div:visible`, { timeout: 10000 }).click()
                 cy.wait(1000)
             })
         })
@@ -568,7 +578,6 @@ export class VexCX extends CommonCX {
                 option = optionValue.toLowerCase();
                 arrayValues = option.split(" ");
                 length = arrayValues.length;
-
                 if (length > 1) {
                     let i = 0;
                     arrayValues.forEach(value => {
@@ -592,6 +601,7 @@ export class VexCX extends CommonCX {
                     values = option;
                 }
                 listValues.push(values)
+                cy.wait(1000)
             }).then(() => {
                 if (indexes.length === listValues.length) {
                     if (filterName === "topics" && exists === true) {

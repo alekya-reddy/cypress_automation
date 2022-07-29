@@ -43,7 +43,7 @@ export class CommonCX {
         };
         this.header = {
             locator: "#qa-header",
-            cookieSettings: "#qa-cookie-consent",
+            cookieSettings: "[title='Cookie Settings']",
             facebookIcon: "#facebook-link",
             settingButton: "#pf-event-cookie-consent-button"
         };
@@ -60,6 +60,23 @@ export class CommonCX {
         };
         this.backToHomePageButton = 'i[title="See All"]';
         this.flowHeader ='#qa-header-common'
+    }
+
+    check30MinCookie(wait){
+        // need to wait a few seconds for the cookie to be set properly, otherwise you'll get an expiry that's set 20 years in future 
+        for(let i = 0 ; i <= wait ; i += 500){
+            cy.getCookies({log: false}).then((cookies)=>{
+                let vid = cookies.find(cookie => cookie.name == 'vid') 
+                if(vid.expiry){
+                    cy.wait(500, {log: false})
+                }
+            })
+        }
+        let time= (Math.floor(Date.now()/1000)+1800).toString().substring(0,6)
+        cy.getCookies().then((cookies)=>{
+            let vid = cookies.find(cookie => cookie.name == 'vid')
+            expect((vid.expiry).toString()).to.contains(time)
+        })
     }
 
     checkSessionCookie(wait){
@@ -119,7 +136,7 @@ export class CommonCX {
             cy.get(this.header.settingButton).click()
         } else {
             // Miscrosites have a different id for the cookie settings button  
-            cy.get(this.navigation.cookieSettings).click()
+            cy.get(this.header.cookieSettings).click()
         }
         cy.get(this.cookieSettings.modal).should('exist').within(() => {
             cy.get(this.cookieSettings.toggle).invoke("text").then((current_state)=>{

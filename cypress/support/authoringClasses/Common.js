@@ -26,7 +26,7 @@ export class Common {
         this.antModal = ".ant-modal-content"; 
         this.antModalRoot = ".ant-modal-root";
         this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
-        this.vexNavigation = '#virtual-events';
+        this.vexNavigation = "[id='virtual-events-marketing-cta']";
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';

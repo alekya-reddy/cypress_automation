@@ -23,6 +23,7 @@ export class Configurations extends Common {
             routes: `${this.configRoute}/routes`,
             trackLabels: `${this.configRoute}/labels`
         };
+        this.pageSearch="input[name='page-search']"
         this.clearSearch = ".Search__closeIcon_cTCFsfpKe88w2HW42fAu4";
         this.updatedDate = "div[data-qa-hook='page-preview']>div>div>div:nth-child(3)>div";
         this.pageTitles = {
@@ -627,6 +628,7 @@ export class Configurations extends Common {
 
     deleteForm(name){
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
+        cy.get(this.pageSearch,{timeout:20000}).type(name)
         cy.ifElementWithExactTextExists(this.table.cellName, name, 20000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()

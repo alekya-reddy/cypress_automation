@@ -208,6 +208,7 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         authoring.common.login()
         //Verify blocks when single filter values are given in a query string URL
         cy.visit(event.url + `?topic=${singleSessionTagging.topics}&language=${singleSessionTagging.language}&businessUnit=${singleSessionTagging.businessUnits}`)
+        cy.get(consumption.vex.cookieConsent.accept).click()
         cy.get(consumption.vex.topicFilter).should('have.contain', singleSessionTagging.topics)
         cy.get(consumption.vex.businessUnitFilter).should('have.contain', singleSessionTagging.businessUnits)
         cy.get(consumption.vex.languageFilter).should('have.contain', singleSessionTagging.language)
@@ -246,6 +247,7 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.url().then(url => {
             cy.visit(url + queryString)
         })
+        cy.get(consumption.vex.cookieConsent.accept).click()
         cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist")
         cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist")
 
@@ -262,7 +264,7 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         filterOptions2.forEach((filters) => {
             consumption.vex.SelectFiltersAndVerifyAsQueryStringInURL(filters);
         })
-
+       
         consumption.vex.SearchTextAndVerifyAsQueryStringInURL(searchOptions);
 
         cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist").click()
@@ -270,12 +272,12 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.url().then(url => {
             expect(url).to.contain(queryString);
         })
-
+       
         cy.url().should('not.include', `search=${searchOptions.searchField}`)
         cy.url().should('not.include', `topic=${filterOptions2[0].filtername}`)
 
         cy.go('back');
-
+       
         //Applying Filters and verifying query string is persist and Filters functionality should not break
         //Select Filter options and verify applied filters showing as query strings in URL
         filterOptions.forEach((filters) => {
@@ -287,7 +289,7 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.url().then(url => {
             expect(url).to.contain(queryString);
         })
-
+        
         //Validation of allow query string to persist in VEX default landing page
         cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
