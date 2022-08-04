@@ -558,7 +558,7 @@ export class Configurations extends Common {
             cy.contains("button", "Add Widget").click() 
         })
         if(checkSuccess){
-            cy.get(this.modal).should("not.exist")
+            cy.get(this.modal,{timeout:20000}).should("not.exist")
             cy.containsExact(this.table.cellName, name).should('exist')
             if(code){
                 cy.contains(this.table.cellCode, code).should('exist')
