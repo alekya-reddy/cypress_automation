@@ -7,10 +7,13 @@ describe('VEX - Virtual Event', function() {
         if(authoring.common.env.TEST_ENV !== 'prod'){ // No superuser access on prod
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
-            cy.get(authoring.common.vexNavigation).should('exist').should('not.have.attr', 'style', 'opacity: 0.5;').click();
+            cy.get(authoring.common.contentActivation).click()
+            cy.get(authoring.vex.virtualEventsTab).should('exist').should('not.have.attr', 'style', 'opacity: 0.5;').click();
             cy.get(authoring.common.pageTitleLocator).should('contain', authoring.vex.virtualEventHomeTitle);
             //When virtual event toggled off, you should see vex appearance settings tab
+            cy.wait(3000)
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
+            cy.wait(3000)
             authoring.configurations.visit.appearances(); 
             cy.get(authoring.configurations.appearances.secondaryNav, {timeout: 10000}).within(() => {
                 cy.get('a[href$="virtual-event"]').should('not.exist');
@@ -21,8 +24,9 @@ describe('VEX - Virtual Event', function() {
         if(authoring.common.env.TEST_ENV !== 'prod'){
             authoring.common.login();
             authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'off');
-            cy.get("[id='virtual-events-marketing-cta']").should('exist').click();
-            cy.contains('Looking for a virtual event experience that offers more than a typical webinar platform').should('exist');
+            cy.get(authoring.common.contentActivation).click()
+            cy.get(authoring.vex.virtualEventsTab).should('exist').click();
+            cy.contains('PathFactory’s VEX offers an easy to use solution that allows you to package videos').should('exist');
             cy.get("a[href*='https://lp.pathfactory.com/drive-more-value-with-pathfactory.html?product_request=VEX']").should('exist');
             //When virtual event toggled off, you should not see vex appearance settings tab
             authoring.configurations.visit.appearances(); 
