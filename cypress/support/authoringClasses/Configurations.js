@@ -94,6 +94,8 @@ export class Configurations extends Common {
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
             imagePicker: "i[title='Select a thumbnail']",
+            selectCompanyImage: 'img[src="https://logo.clearbit.com/google.com"]',
+            selectUploadedImage: 'img[src="https://cdn.qa-pathfactory.com/assets/20/logos/8954/d464f02c-9348-41a0-a294-4b3cd1ad4968.png"]',
             recommendationTabsColor: 'span[id="recommendationTabColor"]>div>span',
             buttonBackgroundColorForGuide: 'span[id="headlineBackgroundColor"]>div>span',
             ForYouTabForGuide: 'div[title="For You"]',
@@ -239,7 +241,19 @@ export class Configurations extends Common {
                 submitButtonTextSettingsLP: "#submitButtonAppearance",
                 submitButtonTextWeightLP: "#buttonTextFontWeight",
                 submitButtonTextColorLP: "#buttonTextColor",
+            },
+            clearbitLogo: {
+                headerLogoVisible: "#qa-header-logo",
+                headerTitle: "#qa-header-title",
+                flowLogo: "#qa-logo-common",
+                cookieConsentButton: "#qa-flow-footer-cookie-consent-button",
+                clearbitText: '[href="https://clearbit.com"]',
+                headerCookieConsentButton: "#qa-header-cookie-consent-button",
+                flowCookieConsentButton: "#qa-flow-sidebar-cookie-consent-button",
+                
+
             }
+            
         };
         this.languages = {
             sidebar: "div[data-qa-hook='page-sidebar']",

@@ -23,11 +23,13 @@ export class Common {
         this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
+        this.cookieConsentAcceptButton = '#qa-gdpr-cookie-consent-accept-button';
         this.antModal = ".ant-modal-content"; 
         this.antModalRoot = ".ant-modal-root";
         this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
         this.vexNavigation = '#virtual-events';
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
+        this.selectAppearence = ".Select-arrow-zone";
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';

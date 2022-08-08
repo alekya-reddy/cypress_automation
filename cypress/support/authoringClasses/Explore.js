@@ -18,13 +18,15 @@ export class Explore extends Common {
         this.inputTopics = 'div[class="Select-placeholder"]';
         this.featuredContent = 'div[data-qa-hook="feature-content-preview"]';
         this.topicCarousel = 'div[data-qa-hook="carousel-assets"]';
-        this.recentUpdateTab = 'div[id="recently-updated-tab"]',
+        this.recentUpdateTab = 'div[id="recently-updated-tab"]';
         this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i',
+        this.exploreContent = "#qa-explore-asset-title-grid-0-0";
         
         
         this.createExploreModal = {
             nameInput: "#name",
             experienceType: 'input[name="experienceType"]',
+            dropDownList: '.Select-menu-outer',
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
@@ -104,7 +106,9 @@ export class Explore extends Common {
             cy.get(this.createExploreModal.nameInput).clear().type(name)
             cy.contains(this.experienceType, experienceType).click()
             cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
-            cy.get(this.createExploreModal.dropdownSelectField).eq(0).type(trackName + "\n")
+            cy.get(this.createExploreModal.dropdownSelect).eq(0).type(trackName + "\n")
+            //cy.wait(5000);
+            //cy.get(this.createExploreModal.dropDownList).click()
 
             if (parentFolder) {
                 cy.get(this.createExploreModal.dropdownSelect).eq(1).click()

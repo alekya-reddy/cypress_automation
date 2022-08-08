@@ -22,6 +22,7 @@ export class Target extends Common {
         this.contentClick = "div[draggable='true']:nth-child(2)",
         this.previewClick = "div[data-qa-hook='page-preview']>div>div:nth-child(2)>div>div>div:nth-child(2)>a:nth-child(2)", 
         this.previewLink = 'div[data-qa-hook="page-preview"]>div>div:nth-child(2)>div>div>div';
+        this.targetContent = ".sc-bmFGeJ",
         this.deleteContent = "span>i[title='remove']",
         this.removeModal = 'div[data-qa-hook="modal"]',
         this.removeButton = 'button[type="button"]',
