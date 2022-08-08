@@ -7,13 +7,13 @@ export class MicrositesCX extends CommonCX {
         this.gridLayout = 'div[class*="pf-microsite-grid"]';
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilter = "#microsite_topics"
-        this.contentTypeFilter = '#microsite_contentTypeName'
-        this.funnelStageFilter = '#microsite_funnelStages'
-        this.industryFilter = '#microsite_industries'
-        this.personaFilter = '#microsite_personas'
-        this.languageFilter = '#microsite_languages'
-        this.businessUnitFilter = '#microsite_businessUnits'
+        this.topicFilter = "#microsite_topics_0"
+        this.contentTypeFilter = '#microsite_contentTypeName_0'
+        this.funnelStageFilter = '#microsite_funnelStages_0'
+        this.industryFilter = '#microsite_industries_0'
+        this.personaFilter = '#microsite_personas_0'
+        this.languageFilter = '#microsite_languages_0'
+        this.businessUnitFilter = '#microsite_businessUnits_0'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
@@ -22,8 +22,8 @@ export class MicrositesCX extends CommonCX {
         this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
-        this.searchFilter = "#microsite_search_button";
-        this.searchInputField = "#microsite_search_input";
+        this.searchFilter = "#microsite_search_button_0";
+        this.searchInputField = "#microsite_search_input_0";
         this.carouselArrow_color = "#qa-arrow-right";
         this.carouselArrow_bgColor = ".slick-next";
         this.noResultsMsg = "#pf-microsite>div>div>div:nth-child(3)";

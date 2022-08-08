@@ -136,7 +136,7 @@ export class CommonCX {
             cy.get(this.header.settingButton).click()
         } else {
             // Miscrosites have a different id for the cookie settings button  
-            cy.get(this.header.cookieSettings).click()
+            cy.get(this.header.cookieSettings).eq(0).click()
         }
         cy.get(this.cookieSettings.modal).should('exist').within(() => {
             cy.get(this.cookieSettings.toggle).invoke("text").then((current_state)=>{

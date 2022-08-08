@@ -44,7 +44,7 @@ export class Microsites extends Common {
         this.setupPage = {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
-            appearanceInput: "input[class='ant-select-selection-search-input']",
+            appearanceInput: "input[type='search']",
             micrositeAppearance: "div[class='ant-select-item-option-content']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             contentTypeCheckbox: "input[name='config.displayContentType']",
@@ -291,15 +291,15 @@ export class Microsites extends Common {
         }
 
         if (slug) {
+            cy.wait(2000)
             cy.get(this.setupPage.slugInput).clear().type(slug)
+            cy.wait(2000)
         }
 
         if (appearance) {
             cy.get("label[title='Appearance']").parent('div').siblings('div').within(() => {
-                    cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
+                    cy.get(this.setupPage.appearanceInput).type(appearance,{force:true}).type('{downArrow}').type('{enter}')
                 })
-            cy.contains('div',appearance,{timeout:10000}).click({force:true})
-            //cy.get(this.setupPage.micrositeAppearance).click()
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 
@@ -499,7 +499,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             recommend.forEach((track) => {
-                cy.get(this.tracks.searchTrack).type(track + "\n")
+                cy.get(this.tracks.searchTrack,{timeout:20000}).type(track ,{force:true}).type('{downArrow}').type('{enter}')
             })
         }
 
@@ -509,7 +509,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             target.forEach((track) => {
-                cy.get(this.tracks.searchTrack).type(track + "\n")
+                cy.get(this.tracks.searchTrack,{timeout:20000}).type(track ,{force:true}).type('{downArrow}').type('{enter}')
                 cy.wait(4000)
             })
         }
