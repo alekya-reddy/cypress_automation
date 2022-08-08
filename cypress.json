@@ -5,7 +5,6 @@
     "video": false,
     "chromeWebSecurity": false,
     "execTimeout": 100000,
-    
     "retries": {
         "runMode": 2
     }
