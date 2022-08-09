@@ -19,6 +19,14 @@ const originalEventVimeo = {
     }
 }
 
+const originalEventBrightcove = {
+    name: 'brightcovecaption.js',
+    slug: 'brightcovecaption-js',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const originalSession = [
     {
         name: "ondemand session",
@@ -201,6 +209,100 @@ const vimeoSessions = [
             liveVideoCaptions: 'off'
         }
     }
+
+]
+
+const brightcoveSession = [
+    {
+        name: "ondemand session",
+        slug: "ondemandession",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'Brightcove - Used in Cypress automation to test VEX',
+        captions: 'on',
+        captionsLanguage: "English",
+    },
+    {
+        name: 'live session',
+        slug: 'livesession',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Brightcove - Used in Cypress automation to test VEX',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "English",
+        },
+        captionsLanguage: "English"
+    },
+    {
+        name: "Live ended with on-demand",
+        slug: "ended-fallback",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2011 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Brightcove - Used in Cypress automation to test VEX',
+            liveVideoCaptions: 'on',
+            captionsLanguage: "English",
+        },
+        video: 'Brightcove - Used in Cypress automation to test VEX',
+        captions: 'on',
+        captionsLanguage: "English"
+    },
+    {
+        name: "ondemand session with captions off",
+        slug: "ondemandsessionwithcaptionsoff",
+        visibility: 'Public',
+        description: 'Session description',
+        type: 'On Demand',
+        video: 'Brightcove - Used in Cypress automation to test VEX',
+        captions: 'off'
+    },
+    {
+        name: "Session with suppliment content",
+        slug: "sessionsupplimentcontent",
+        get url() {
+            return `${event.url}/${this.slug}`
+        },
+        visibility: 'Public',
+        type: 'On Demand',
+        video: 'Brightcove - Used in Cypress automation to test VEX',
+        contents: [
+            'PDF - Used by Cypress automation for VEX testing',
+            'Website - Used by Cypress automation for VEX testing',
+            'Image - Used by Cypress automation for VEX testing'
+        ],
+        captions: 'on',
+        captionsLanguage: "English",
+        CaptionsLanguage_en: "en",
+    },
+    {
+        name: 'live session with captions off',
+        slug: 'livesessionwithcaptionsoff',
+        get url() { return `${event.url}/${this.slug}`; },
+        visibility: 'Public',
+        type: 'Live',
+        live: {
+            start: 'Jun 24, 2010 8:00pm',
+            end: 'Jun 24, 2040 8:00pm',
+            timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+            type: 'Content Library',
+            video: 'Brightcove - Used in Cypress automation to test VEX',
+            liveVideoCaptions: 'off'
+        }
+    }
 ]
 
 const landingPage = {
@@ -352,5 +454,57 @@ describe('VEX - Virtual Event', function () {
             })
         })
     })
-
 })
+
+it('Visit the event which has subtitle enabled and disabled for brightcove videos', function () {
+    // Login, clean up 
+    authoring.common.login();
+    authoring.vex.visit()
+    authoring.vex.deleteVirtualEvent(originalEventBrightcove.name)
+
+    // Set up an event 
+    authoring.vex.addVirtualEvent(originalEventBrightcove)
+    authoring.vex.configureEvent(originalEventBrightcove)
+
+    // Now add a session and set it up 
+    brightcoveSession.forEach(session => {
+        authoring.vex.addSession(session.name)
+        authoring.vex.configureSession(session)
+        cy.go('back')
+    })
+
+    // Verify captions enabled and disabled from sessions and verify in consumption
+    authoring.vex.deleteLandingPages(landingPage2.name)
+    authoring.vex.addLandingPages(landingPage2.name)
+    authoring.vex.configureLandingPage(landingPage2)
+    authoring.vex.goToPageEditor(landingPage2.name)
+
+    let i = 0;
+    cy.visit(originalEventBrightcove.url)
+    brightcoveSession.forEach(session => {
+
+        cy.contains(consumption.vex.sessionCardTitle, session.name, { timeout: 10000 }).click()
+        if (session.type === 'Live' && i == 0) {
+            cy.get(consumption.vex.emailInput).clear({ force: true }).type("test@gmail.com")
+            cy.get(consumption.vex.submitButton).click()
+            i++;
+        }
+        cy.get(consumption.vex.brightcove.videoPlayer).should('exist').trigger('mouseover', { force: true })
+        cy.get(consumption.vex.brightcove.captionsCC, { timeout: 20000 }).should('be.visible', { timeout: 10000 }).click()
+        if (session.name === 'ondemand session with captions off' || session.name === 'live session with captions off') {
+            cy.wait(1000)
+            cy.get("[aria-label='Descriptions Menu']").invoke('attr', 'class').then((value) => {
+                expect(value).not.to.contains('vjs-disabled')
+            })
+            cy.go('back')
+        }
+        else {
+            cy.contains("[aria-label='Captions Menu']", 'fr').click()
+            cy.get("[aria-label='Descriptions Menu']").invoke('attr', 'class').then((value) => {
+                expect(value).to.contains('vjs-disabled')
+            })
+            cy.go('back')
+        }
+    })
+})
+

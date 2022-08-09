@@ -20,7 +20,7 @@ export class MicrositesCX extends CommonCX {
         this.searchInput = 'input[type="search"]'
         this.searchWithinFilterDropdown = "input[class='p-inputtext p-component p-multiselect-filter']"
         this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
-        this.arrowRight = "#qa-arrow-right"
+        this.arrowRight = "#qa-arrow-right-3"
         this.arrowLeft = "#qa-arrow-left";
         this.searchFilter = "#microsite_search_button";
         this.searchInputField = "#microsite_search_input";
