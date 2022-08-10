@@ -147,6 +147,8 @@ describe('Campaign Tools Module User Role', function() {
 
         // module navigation
         cy.get("#content-library").should("not.exist")
+        cy.get(authoring.common.contentActivation).should("exist")
+        cy.get(authoring.common.contentActivation).click()
         cy.get("#campaign-tools").should("exist")
         cy.get("#campaign-tools").click()
         cy.get("#target").should("exist")

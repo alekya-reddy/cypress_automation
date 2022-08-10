@@ -12,7 +12,9 @@ const user = {
 
 const role = {
     roleName: "Data Configuration Settings Role.Js",
-    dataConfigurationSettings: true
+    webhooksCRUD: true,
+    visitorActivityCRUD: true
+
 }
 
 const webhook = {
@@ -183,30 +185,30 @@ describe('User Experience Settings User Role', function() {
         cy.contains("div", "You don't have permission to view this page.")
 
                     // // User Experience
-        // Appearance
-        cy.visit(authoring.configurations.pageUrls.appearances)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // // Appearance
+        // cy.visit(authoring.configurations.pageUrls.appearances)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
-        // Languages
-        cy.visit(authoring.configurations.pageUrls.languages)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.languages).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // // Languages
+        // cy.visit(authoring.configurations.pageUrls.languages)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.languages).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
-        // Links&Sharings
-        cy.visit(authoring.configurations.pageUrls.linksAndSharings)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.linksAndSharings).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // // Links&Sharings
+        // cy.visit(authoring.configurations.pageUrls.linksAndSharings)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.linksAndSharings).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
-        // Forms
-        cy.visit(authoring.configurations.pageUrls.forms)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.forms).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // // Forms
+        // cy.visit(authoring.configurations.pageUrls.forms)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.forms).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
             
-        // CTAs
-        cy.visit(authoring.configurations.pageUrls.ctas)
-        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("not.exist")
-        cy.contains("div", "You don't have permission to view this page.")
+        // // CTAs
+        // cy.visit(authoring.configurations.pageUrls.ctas)
+        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.ctas).should("not.exist")
+        // cy.contains("div", "You don't have permission to view this page.")
 
         // // Data Configuration -- HAVE ACCESS
         // Webhooks

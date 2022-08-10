@@ -12,7 +12,7 @@ const user = {
 
 const role = {
     roleName: "Virtual Event Settings Role.Js",
-    vexSettingsCRUD: true
+    vexWidgetsCRUD: true
 }
 
 

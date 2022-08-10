@@ -12,18 +12,6 @@ export class UserManagement extends Common {
             roleName: "#roleName",
             deleteRoleIcon: 'i[title="Delete Role"]'
         }
-        this.generalSettings = {
-            imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
-            imageLibExtCodeAccProtectionView: "#img_lib_ext_code_access_proc-view",
-            contentTagsCreateEditView: "#content_tags-create-edit-delete",
-            contentTagsView: "#content_tags-view",
-            personalizationCreateEditView: "#personalization-create-edit-delete",
-            personalizationView: "#personalization-view",
-        }
-        this.dataConfigurationSettings = {
-            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete",
-            webhooksVisitorActivityView: "#data_configuration_settings-view",
-        }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
         this.pageTitle = "User Management"
         this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete",
@@ -34,7 +22,6 @@ export class UserManagement extends Common {
                 campaignToolsSettingsView: "#campaign_tools_settings-view",
                 trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
                 trackLabelsView: "#campaign_tools_track_labels-view",
-                campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view",
                 campaignsToolsView: "#campaign_tools_module_access-view"
             }
         this.vex = {
@@ -140,7 +127,6 @@ export class UserManagement extends Common {
             visitorActivityView,
             visitorActivityCRUD,
             userExperienceSettingsCreateEditViewPermission,
-            dataConfigurationSettings,
             trackLabelsView,
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
@@ -191,12 +177,7 @@ export class UserManagement extends Common {
         this.clickUserRole(roleName)
         if (imageLibraryCRUD == true || imageLibraryCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.contains('div', "General Settings").click()
-                }
-            })
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
             cy.get('#image_library-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((imageLibraryCRUD == false && attr.includes("ant-checkbox-checked")) || (imageLibraryCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#image_library-create-edit-delete').click()
@@ -207,10 +188,10 @@ export class UserManagement extends Common {
 
         if (imageLibraryView == true || imageLibraryView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#image_library-view').parent().invoke("attr", "class").then((attr) => {
@@ -223,10 +204,10 @@ export class UserManagement extends Common {
 
         if (accessProtectionCRUD == true || accessProtectionCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#access_protection-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -240,10 +221,10 @@ export class UserManagement extends Common {
 
         if (accessProtectionView == true || accessProtectionView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#access_protection-view').parent().invoke("attr", "class").then((attr) => {
@@ -257,10 +238,10 @@ export class UserManagement extends Common {
 
         if (externalCodeCRUD == true || externalCodeCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#external_codes-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -274,10 +255,10 @@ export class UserManagement extends Common {
 
         if (externalCodeView == true || externalCodeView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#external_codes-view').parent().invoke("attr", "class").then((attr) => {
@@ -292,10 +273,10 @@ export class UserManagement extends Common {
 
         if (contentTagsCreateEditView == true || contentTagsCreateEditView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#Content Tags-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -309,10 +290,10 @@ export class UserManagement extends Common {
 
         if (contentTagsView == true || contentTagsView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#Content Tags-view').parent().invoke("attr", "class").then((attr) => {
@@ -326,10 +307,12 @@ export class UserManagement extends Common {
 
         if (personalizationCreateEditView == true || personalizationCreateEditView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+                cy.log(attr + "innn")
+                cy.pause()
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "General Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
             cy.get('#personalization-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -341,7 +324,7 @@ export class UserManagement extends Common {
 
         if (personalizationView == true || personalizationView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "General Settings").click()
@@ -357,12 +340,7 @@ export class UserManagement extends Common {
 
         if (linksshareView == true || linksshareView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.contains('div', "User Experience Settings").click()
-                }
-            })
+            cy.get('div[class="ant-collapse-header"]').eq(1).click()
             cy.get('#links_and_sharing-view').parent().invoke("attr", "class").then((attr) => {
                 if ((linksshareView == false && attr.includes("ant-checkbox-checked")) || (linksshareView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#links_and_sharing-view').click()
@@ -373,7 +351,7 @@ export class UserManagement extends Common {
 
         if (linksshareCreateEditView == true || linksshareCreateEditView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -389,7 +367,7 @@ export class UserManagement extends Common {
 
         if (formsView == true || formsView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -404,7 +382,7 @@ export class UserManagement extends Common {
 
         if (formsCRUD == true || formsCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -419,7 +397,7 @@ export class UserManagement extends Common {
 
         if (cTASView == true || cTASView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -434,7 +412,7 @@ export class UserManagement extends Common {
 
         if (cTASCRUD == true || cTASCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -449,7 +427,7 @@ export class UserManagement extends Common {
 
         if (themesView == true || themesView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -465,7 +443,7 @@ export class UserManagement extends Common {
 
         if (themesCRUD == true || themesCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -480,7 +458,7 @@ export class UserManagement extends Common {
 
         if (appearanceView == true || appearanceView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -495,7 +473,7 @@ export class UserManagement extends Common {
 
         if (appearanceCRUD == true || appearanceCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -510,7 +488,7 @@ export class UserManagement extends Common {
 
         if (languagesCRUD == true || languagesCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -525,7 +503,7 @@ export class UserManagement extends Common {
 
         if (languagesView == true || languagesView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.contains('div', "User Experience Settings").click()
@@ -540,11 +518,10 @@ export class UserManagement extends Common {
 
         if (webhooksView == true || webhooksView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    
-                    cy.contains('div', "Data Configuration").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(2).click()
                 }
             })
             cy.get('#webhooks-view').parent().invoke("attr", "class").then((attr) => {
@@ -556,12 +533,15 @@ export class UserManagement extends Common {
 
         if (webhooksCRUD == true || webhooksCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+                cy.log("in" + attr)
+                cy.pause()
                 if (attr == false) {
-                    cy.wait(500)
-                    cy.contains('div', "User Experience Settings").click()
+                    //cy.get('div[class="ant-collapse-item"]').eq(0).click()
+                    cy.containsExact('div', "Data Configuration").click()
                 }
             })
+            cy.pause()
             cy.get('#webhooks-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((webhooksCRUD == false && attr.includes("ant-checkbox-checked")) || (webhooksCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#webhooks-create-edit-delete').click()
@@ -572,10 +552,10 @@ export class UserManagement extends Common {
 
         if (visitorActivityView == true || visitorActivityView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.contains('div', "User Experience Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(2).click()
                 }
             })
             cy.get('#visitor_activities-view').parent().invoke("attr", "class").then((attr) => {
@@ -588,14 +568,10 @@ export class UserManagement extends Common {
 
         if (visitorActivityCRUD == true || visitorActivityCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div', "User Experience Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-              cy.log("i am out")
-                cy.pause()
+            cy.contains('div[class*="ant-collapse-item"] div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
-                    cy.log("i am in")
-                    cy.pause()
                     cy.wait(500)
-                    cy.contains('div', "User Experience Settings").click()
+                    cy.get('div[class="ant-collapse-header"]').eq(2).click()
                 }
             })
             cy.get('#visitor_activities-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -607,7 +583,13 @@ export class UserManagement extends Common {
 
         if (trackLabelsView == true || trackLabelsView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get('div[class="ant-collapse-header"]').eq(3).click()
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr == false) {
+                    cy.wait(500)
+                    cy.get('div[class="ant-collapse-header"]').eq(3).click()
+                }
+            })
+
             cy.get('#campaign_tools_track_labels-view').parent().invoke("attr", "class").then((attr) => {
                 if ((trackLabelsView == false && attr.includes("ant-checkbox-checked")) || (trackLabelsView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#campaign_tools_track_labels-view').click()
@@ -617,7 +599,12 @@ export class UserManagement extends Common {
 
         if (trackLabelsCRUD == true || trackLabelsCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get('div[class="ant-collapse-header"]').eq(3).click()
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr == false) {
+                    cy.wait(500)
+                    cy.get('div[class="ant-collapse-header"]').eq(3).click()
+                }
+            })
             cy.get('#campaign_tools_track_labels-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((trackLabelsCRUD == false && attr.includes("ant-checkbox-checked")) || (trackLabelsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#campaign_tools_track_labels-create-edit-delete').click()
@@ -626,7 +613,7 @@ export class UserManagement extends Common {
         }
 
         if (vexWidgetsCRUD == true || vexWidgetsCRUD == false) {
-            cy.contains('a', "Product Permissions").click()
+            cy.contains('a', "Platform Settings").click()
             cy.get('div[class="ant-collapse-header"]').eq(4).click()
             cy.get('#virtual_event_settings-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((vexWidgetsCRUD == false && attr.includes("ant-checkbox-checked")) || (vexWidgetsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
@@ -636,7 +623,7 @@ export class UserManagement extends Common {
         }
 
         if (vexWidgetsView == true || vexWidgetsView == false) {
-            cy.contains('a', "Product Permissions").click()
+            cy.contains('a', "Platform Settings").click()
             cy.get('div[class="ant-collapse-header"]').eq(4).click()
             cy.get('#virtual_event_settings-view').parent().invoke("attr", "class").then((attr) => {
                 if ((vexWidgetsView == false && attr.includes("ant-checkbox-checked")) || (vexWidgetsView == true && !attr.includes("ant-checkbox-checked"))) {
@@ -644,25 +631,6 @@ export class UserManagement extends Common {
                 }
             })
         }
-
-
-        // if (campaignToolsSettingsCRUD == true || campaignToolsSettingsCRUD == false) {
-        //     cy.contains('a', "Product Permissions").click()
-        //     cy.get(this.campaignTools.campaignToolsSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
-        //         if (campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.campaignTools.campaignToolsSettingsCRUD).click()
-        //         }
-        //     })
-        // }
-
-        // if (campaignToolsSettingsView == true || campaignToolsSettingsView == false) {
-        //     cy.contains('a', "Product Permissions").click()
-        //     cy.get(this.campaignTools.campaignToolsSettingsView).invoke("attr", "class").then(checkboxClass => {
-        //         if (campaignToolsSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsView && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.campaignTools.campaignToolsSettingsView).click()
-        //         }
-        //     })
-        // }
 
         if (campaignsToolsView == true || campaignsToolsView == false) {
             cy.contains('a', "Product Permissions").click()
@@ -675,22 +643,6 @@ export class UserManagement extends Common {
                 })
             })
         }
-
-        // if (vexSettingsCRUD == true || vexSettingsCRUD == false) {
-        //     cy.contains('a', "Product Permissions").click()
-        //     cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
-        //         if (vexSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.vex.vexSettingsCRUD).click()
-        //         }
-        //     })
-        // }
-        // if (vexSettingsView == true || vexSettingsView == false) {
-        //     cy.get(this.vex.vexSettingsView).invoke("attr", "class").then(checkboxClass => {
-        //         if (vexSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsView && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.vex.vexSettingsView).click()
-        //         }
-        //     })
-        // }
 
 
         if (vexModuleCRUD == true || vexModuleCRUD == false) {
@@ -742,64 +694,47 @@ export class UserManagement extends Common {
 
         if (campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.contains('div', "Campaign Tools").click()
-            cy.containsExact('div', 'Module Access').parent('div').within(() => {
-                cy.get('#Module Access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+            cy.get('div[class="ant-collapse-header"]').eq(1).click()
+                cy.get('input[id*="Access-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
                     if ((campaignToolsModuleCRUD == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleCRUD == true && !attr.includes("ant-checkbox-checked"))) {
-                        cy.get('#Module Access-create-edit-delete').click()
+                        cy.get('input[id*="Access-create-edit-delete"]').click()
                     }
-                })
             })
         }
 
         if (contentLibraryView == true || contentLibraryView == false) {
             cy.contains('a', "Product Permissions").click()
             cy.get('div[class="ant-collapse-header"]').eq(0).click()
-            cy.containsExact('div', 'Feature Access').parent('div').within(() => {
                 cy.get('#content_library_feature_access-view').parent().invoke("attr", "class").then((attr) => {
                     if ((contentLibraryView == false && attr.includes("ant-checkbox-checked")) || (contentLibraryView == true && !attr.includes("ant-checkbox-checked"))) {
                         cy.get('#content_library_feature_access-view').click()
                     }
                 })
-            })
         }
 
         if (contentLibraryFeatureAccessCRUD == true || contentLibraryFeatureAccessCRUD == false) {
             cy.contains('a', "Product Permissions").click()
             cy.get('div[class="ant-collapse-header"]').eq(0).click()
-            cy.containsExact('div', 'Feature Access').parent('div').within(() => {
                 cy.get('#content_library_feature_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                     if ((contentLibraryFeatureAccessCRUD == false && attr.includes("ant-checkbox-checked")) || (contentLibraryFeatureAccessCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                         cy.get('#content_library_feature_access-create-edit-delete').click()
                     }
-                })
             })
         }
-var attr1=''
+
         if (contentLibraryInsightsView == true || contentLibraryInsightsView == false) {
             cy.contains('a', "Product Permissions").click()
-
-            cy.contains('div', "Content Library").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                cy.wait(500)
-                cy.pause()
-           attr1=attr
-                cy.log(attr1+"innnnnnnnn")
-                cy.pause()
+            cy.contains('div[class*="ant-collapse-item"] div', "Content Library").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
-                    cy.log("idfghjn")
                     cy.wait(500)
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
             })
-            cy.pause()
-                cy.containsExact('div', 'Content Library Insights').parent('div').within(() => {
-                    cy.get('#content_library_insights-view').parent().invoke("attr", "class").then((attr) => {
+            cy.get('#content_library_insights-view').parent().invoke("attr", "class").then((attr) => {
                         if ((contentLibraryInsightsView == false && attr.includes("ant-checkbox-checked")) || (contentLibraryInsightsView == true && !attr.includes("ant-checkbox-checked"))) {
                             cy.get('#content_library_insights-view').click()
                         }
                     })
-                
-            })
         }
 
         if (templetedExperiencecView == true || templetedExperiencecView == false) {
@@ -875,7 +810,7 @@ var attr1=''
 
         if (contentStratergyCRUD == true || contentStratergyCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.contains('div', "Content Intelligence").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Content Intelligence").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(5).click()
                 }
@@ -891,7 +826,7 @@ var attr1=''
         if (contentStratergyView == true || contentStratergyView == false) {
             cy.contains('a', "Product Permissions").click()
 
-            cy.contains('div', "Content Intelligence").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Content Intelligence").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(5).click()
                 }
@@ -957,11 +892,11 @@ var attr1=''
         
         if (campaignToolsAnalyticsOverviewView == true || campaignToolsAnalyticsOverviewView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
+            // cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            //     if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
-                }
-            })
+            //     }
+            // })
 
             cy.get('#pa_ct_overview-view').parent().invoke("attr", "class").then((attr) => {
                 if ((campaignToolsAnalyticsOverviewView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsOverviewView == true && !attr.includes("ant-checkbox-checked"))) {
@@ -989,7 +924,7 @@ var attr1=''
 
         if (campaignToolsAnalyticsVisitorView == true || campaignToolsAnalyticsVisitorView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
@@ -1005,7 +940,7 @@ var attr1=''
 
         if (campaignToolsAnalyticsContentView == true || campaignToolsAnalyticsContentView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
@@ -1021,7 +956,7 @@ var attr1=''
 
         if (campaignToolsAnalyticsReportView == true || campaignToolsAnalyticsReportView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
@@ -1037,7 +972,7 @@ var attr1=''
 
         if (campaignToolsAnalyticsLegacyView == true || campaignToolsAnalyticsLegacyView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
                 }
@@ -1049,16 +984,6 @@ var attr1=''
                 }
             })
             
-        }
-
-        if (vexAnalysticsView == true || vexAnalysticsView == false) {
-            cy.contains('a', "Analytics Permissions").click()
-            cy.get('div[class="ant-collapse-header"]').eq(2).click()
-            cy.get('#path_analytics_virtual_events-view').parent().invoke("attr", "class").then((attr) => {
-                if ((vexAnalysticsView == false && attr.includes("ant-checkbox-checked")) || (vexAnalysticsView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#path_analytics_virtual_events-view').click()
-                }
-            })
         }
 
         if (scheduleReportsView == true || scheduleReportsView == false) {
@@ -1073,7 +998,7 @@ var attr1=''
 
         if (WebsiteToolsAnalysticsOverviewView == true || WebsiteToolsAnalysticsOverviewView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(1).click()
                 }
@@ -1089,7 +1014,7 @@ var attr1=''
 
         if (WebsiteToolsAnalysticsAccountView == true || WebsiteToolsAnalysticsAccountView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(1).click()
                 }
@@ -1105,7 +1030,7 @@ var attr1=''
 
         if (WebsiteToolsAnalysticsVisitorView == true || WebsiteToolsAnalysticsVisitorView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(1).click()
                 }
@@ -1121,7 +1046,7 @@ var attr1=''
 
         if (WebsiteToolsAnalysticsContentView == true || WebsiteToolsAnalysticsContentView == false) {
             cy.contains('a', "Analytics Permissions").click()
-            cy.contains('div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.get('div[class="ant-collapse-header"]').eq(1).click()
                 }
@@ -1135,29 +1060,15 @@ var attr1=''
             
         }
 
-        // if (contentconfigurationsCRUD == true || contentconfigurationsCRUD == false) {
-        //     cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
-        //         if (contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
-        //         }
-        //     })
-        // }
-        // if (contentConfigurationView == true || contentConfigurationView == false) {
-        //     cy.get(this.contentIntelligence.contentConfigurationView).invoke("attr", "class").then(checkboxClass => {
-        //         if (contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !contentConfigurationView && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.contentIntelligence.contentConfigurationView).click()
-        //         }
-        //     })
-        // }
-
-        // if (webhooksVisitorActivityView == true || webhooksVisitorActivityView == false) {
-        //     cy.contains('a', "Platform Settings").click()
-        //     cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).invoke("attr", "class").then(checkboxClass => {
-        //         if (contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !webhooksVisitorActivityView && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).click()
-        //         }
-        //     })
-        // }
+        if (vexAnalysticsView == true || vexAnalysticsView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains('div', "Virtual Events").siblings('span').click()
+            cy.get('#path_analytics_virtual_events-view').parent().invoke("attr", "class").then((attr) => {
+                if ((vexAnalysticsView == false && attr.includes("ant-checkbox-checked")) || (vexAnalysticsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#path_analytics_virtual_events-view').click()
+                }
+            })
+        } 
 
         cy.contains("button", "Save").click()
         cy.get("body").should("contain", "The record was saved successfully.", { timeout: 3000 })
