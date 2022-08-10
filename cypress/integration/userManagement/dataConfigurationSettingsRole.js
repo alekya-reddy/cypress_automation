@@ -186,9 +186,9 @@ describe('User Experience Settings User Role', function() {
 
                     // // User Experience
         // // Appearance
-        // cy.visit(authoring.configurations.pageUrls.appearances)
-        // cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
-        // cy.contains("div", "You don't have permission to view this page.")
+        cy.visit(authoring.configurations.pageUrls.appearances)
+        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
+        cy.contains("div", "You don't have permission to view this page.")
 
         // // Languages
         // cy.visit(authoring.configurations.pageUrls.languages)

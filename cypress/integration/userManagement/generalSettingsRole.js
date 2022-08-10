@@ -345,8 +345,8 @@ describe('General Settings User Role', function() {
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.clickUserRole(role.roleName)
         cy.contains('a', "Platform Settings").click()
-        cy.get('div[class="ant-collapse-header"]').eq(0).click()
-        cy.get('#Content Tags-create-edit-delete').click()
+        cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
+        cy.get('input[id*="Tags-create-edit-delete"]').click()
     
         cy.contains("button", "Save").click()
         cy.get("body").should("contain", "The record was saved successfully.", {timeout: 4000})

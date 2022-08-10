@@ -131,7 +131,6 @@ export class UserManagement extends Common {
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
             campaignToolsSettingsView,
-            campaignsToolsView,
             vexView,
             vexSettingsCRUD,
             vexSettingsView,
@@ -139,6 +138,7 @@ export class UserManagement extends Common {
             websiteToolsModuleCRUD,
             websiteToolsView,
             campaignToolsModuleCRUD,
+            campaignToolsModuleView,
             contentLibraryInsightsView,
             contentLibraryFeatureAccessCRUD,
             contentLibraryView,
@@ -177,7 +177,7 @@ export class UserManagement extends Common {
         this.clickUserRole(roleName)
         if (imageLibraryCRUD == true || imageLibraryCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+            cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
             cy.get('#image_library-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((imageLibraryCRUD == false && attr.includes("ant-checkbox-checked")) || (imageLibraryCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#image_library-create-edit-delete').click()
@@ -191,7 +191,7 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
             cy.get('#image_library-view').parent().invoke("attr", "class").then((attr) => {
@@ -207,7 +207,7 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
             cy.get('#access_protection-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -224,7 +224,7 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
             cy.get('#access_protection-view').parent().invoke("attr", "class").then((attr) => {
@@ -241,7 +241,7 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
             cy.get('#external_codes-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
@@ -258,7 +258,7 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
             cy.get('#external_codes-view').parent().invoke("attr", "class").then((attr) => {
@@ -276,12 +276,12 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
-            cy.get('#Content Tags-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+            cy.get('input[id*="Tags-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
                 if ((contentTagsCreateEditView == false && attr.includes("ant-checkbox-checked")) || (contentTagsCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#Content Tags-create-edit-delete').click()
+                    cy.get('input[id*="Tags-create-edit-delete"]').click()
                 }
 
             })
@@ -293,12 +293,12 @@ export class UserManagement extends Common {
             cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
+                    cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
                 }
             })
-            cy.get('#Content Tags-view').parent().invoke("attr", "class").then((attr) => {
+            cy.get('input[id*="Tags-view"]').parent().invoke("attr", "class").then((attr) => {
                 if ((contentTagsView == false && attr.includes("ant-checkbox-checked")) || (contentTagsView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#Content Tags-view').click()
+                    cy.get('input[id*="Tags-view"]').click()
                 }
 
             })
@@ -307,14 +307,7 @@ export class UserManagement extends Common {
 
         if (personalizationCreateEditView == true || personalizationCreateEditView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                cy.log(attr + "innn")
-                cy.pause()
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(0).click()
-                }
-            })
+            cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
             cy.get('#personalization-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((personalizationCreateEditView == false && attr.includes("ant-checkbox-checked")) || (personalizationCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#personalization-create-edit-delete').click()
@@ -324,12 +317,7 @@ export class UserManagement extends Common {
 
         if (personalizationView == true || personalizationView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.contains('div[class*="ant-collapse-item"] div', "General Settings").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.contains('div', "General Settings").click()
-                }
-            })
+            cy.contains('div[class="ant-collapse-header"]', "General Settings").click()
             cy.get('#personalization-view').parent().invoke("attr", "class").then((attr) => {
                 if ((personalizationView == false && attr.includes("ant-checkbox-checked")) || (personalizationView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#personalization-view').click()
@@ -534,14 +522,10 @@ export class UserManagement extends Common {
         if (webhooksCRUD == true || webhooksCRUD == false) {
             cy.contains('a', "Platform Settings").click()
             cy.contains('div[class*="ant-collapse-item"] div', "Data Configuration").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                cy.log("in" + attr)
-                cy.pause()
                 if (attr == false) {
-                    //cy.get('div[class="ant-collapse-item"]').eq(0).click()
-                    cy.containsExact('div', "Data Configuration").click()
+                    //cy.contains('div[class="ant-collapse-header"]', "Data Configuration").click()
                 }
             })
-            cy.pause()
             cy.get('#webhooks-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((webhooksCRUD == false && attr.includes("ant-checkbox-checked")) || (webhooksCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#webhooks-create-edit-delete').click()
@@ -582,14 +566,8 @@ export class UserManagement extends Common {
         }
 
         if (trackLabelsView == true || trackLabelsView == false) {
-            cy.contains('a', "Product Permissions").click()
-            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(3).click()
-                }
-            })
-
+            cy.contains('a', "Platform Settings").click()
+            cy.contains('div[class="ant-collapse-header"]', "Campaign Tools").click()
             cy.get('#campaign_tools_track_labels-view').parent().invoke("attr", "class").then((attr) => {
                 if ((trackLabelsView == false && attr.includes("ant-checkbox-checked")) || (trackLabelsView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#campaign_tools_track_labels-view').click()
@@ -598,13 +576,8 @@ export class UserManagement extends Common {
         }
 
         if (trackLabelsCRUD == true || trackLabelsCRUD == false) {
-            cy.contains('a', "Product Permissions").click()
-            cy.contains('div[class*="ant-collapse-item"] div', "Campaign Tools").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
-                if (attr == false) {
-                    cy.wait(500)
-                    cy.get('div[class="ant-collapse-header"]').eq(3).click()
-                }
-            })
+            cy.contains('a', "Platform Settings").click()
+            cy.contains('div[class="ant-collapse-header"]', "Campaign Tools").click()
             cy.get('#campaign_tools_track_labels-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((trackLabelsCRUD == false && attr.includes("ant-checkbox-checked")) || (trackLabelsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('#campaign_tools_track_labels-create-edit-delete').click()
@@ -631,19 +604,6 @@ export class UserManagement extends Common {
                 }
             })
         }
-
-        if (campaignsToolsView == true || campaignsToolsView == false) {
-            cy.contains('a', "Product Permissions").click()
-            cy.contains('div', "Campaign Tools").click()
-            cy.containsExact('div', 'Module Access').parent('div').within(() => {
-                cy.get('#Module Access-view').parent().invoke("attr", "class").then((attr) => {
-                    if ((campaignsToolsView == false && attr.includes("ant-checkbox-checked")) || (campaignsToolsView == true && !attr.includes("ant-checkbox-checked"))) {
-                        cy.get('#Module Access-view').click()
-                    }
-                })
-            })
-        }
-
 
         if (vexModuleCRUD == true || vexModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
@@ -684,20 +644,22 @@ export class UserManagement extends Common {
             })
         }
 
-        // if (contentconfigurationsCRUD == true || contentconfigurationsCRUD == false) {
-        //     cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
-        //         if (contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-        //             cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
-        //         }
-        //     })
-        // }
-
         if (campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get('div[class="ant-collapse-header"]').eq(1).click()
+            cy.contains('div[class="ant-collapse-header"]', "Campaign Tools").click()
                 cy.get('input[id*="Access-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
                     if ((campaignToolsModuleCRUD == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                         cy.get('input[id*="Access-create-edit-delete"]').click()
+                    }
+            })
+        }
+
+        if (campaignToolsModuleView== true || campaignToolsModuleView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains('div[class="ant-collapse-header"]', "Campaign Tools").click()
+                cy.get('input[id*="Access-view"]').parent().invoke("attr", "class").then((attr) => {
+                    if ((campaignToolsModuleView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleView == true && !attr.includes("ant-checkbox-checked"))) {
+                        cy.get('input[id*="Access-view"]').click()
                     }
             })
         }
@@ -724,7 +686,7 @@ export class UserManagement extends Common {
 
         if (contentLibraryInsightsView == true || contentLibraryInsightsView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.contains('div[class*="ant-collapse-item"] div', "Content Library").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
+            cy.contains('div[class*="ant-collapse-item"]>div', "Content Library").parent('div').invoke('attr', 'aria-expanded').then((attr) => {
                 if (attr == false) {
                     cy.wait(500)
                     cy.get('div[class="ant-collapse-header"]').eq(0).click()
