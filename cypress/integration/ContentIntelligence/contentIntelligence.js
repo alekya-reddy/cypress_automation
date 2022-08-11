@@ -19,20 +19,20 @@ const role2 = {
 
 const role3 = {
     roleName: "Custom",
-    contentconfigurationsCRUD : false,
-    contentstrategyCRUD : false
+    contentconfigurationsCRUD: false,
+    contentstrategyCRUD: false
 }
 
 const role4 = {
     roleName: "Custom",
-    contentconfigurationsCRUD : true,
-    contentstrategyCRUD : false
+    contentconfigurationsCRUD: true,
+    contentstrategyCRUD: false
 }
 
 const role5 = {
     roleName: "Custom",
-    contentconfigurationsCRUD : false,
-    contentstrategyCRUD : true
+    contentconfigurationsCRUD: false,
+    contentstrategyCRUD: true
 }
 
 describe("Content Intelligence", () => {
@@ -48,7 +48,7 @@ describe("Content Intelligence", () => {
 
         cy.visit(authoring.contentIntelligence.contentStrategy)
         cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
-        
+
         // Content intelligence & website tools are disabled: Don't show both Content configurations and Content strategy
         authoring.common.login()
         authoring.clientHQ.visitOrgConfig()
@@ -92,7 +92,7 @@ describe("Content Intelligence", () => {
 
     })
 
-it("Verify Admin have Content Configuration and Strategy create/edit/delete permission", () => {
+    it("Verify Admin have Content Configuration and Strategy create/edit/delete permission", () => {
         authoring.common.login()
         authoring.common.login()
         authoring.clientHQ.visitOrgConfig()
@@ -100,79 +100,80 @@ it("Verify Admin have Content Configuration and Strategy create/edit/delete perm
         // assign that role to the user
         authoring.userManagement.visitUserListPage()
         authoring.userManagement.assignUserRoles(user.userName, [role1.roleName])
-        
-          // logout 
-          authoring.common.logout()
-          // login and check permissions
-          authoring.common.login(user.userName, user.password)
-          cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-          cy.visit(authoring.contentIntelligence.contentStrategy)
-          cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
-          cy.contains('span', "Key Marketing Topics").should('exist').click()
-          cy.contains('button', "Add Topics", { timeout: 20000 }).should('exist')
 
-        })
+        // logout 
+        authoring.common.logout()
+        // login and check permissions
+        authoring.common.login(user.userName, user.password)
+        cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+        cy.visit(authoring.contentIntelligence.contentStrategy)
+        cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+        cy.contains('span', "Key Marketing Topics").should('exist').click()
+        cy.reload()
+        cy.contains('button', "Add Topics", { timeout: 20000 }).should('exist')
 
-        it("Verify Author have Content Configuration and Strategy create/edit/delete permission", () => {
-                
-            authoring.common.login()
-            // assign that role to the user
-            authoring.userManagement.visitUserListPage()
-            authoring.userManagement.assignUserRoles(user.userName, [role2.roleName])
-            
-            // logout 
-          authoring.common.logout()
-          // login and check permissions
-          authoring.common.login(user.userName, user.password)
-          cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-          cy.visit(authoring.contentIntelligence.contentStrategy)
-          cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
-          cy.contains('span', "Key Marketing Topics").should('exist').click()
+    })
 
-        })
+    it("Verify Author have Content Configuration and Strategy create/edit/delete permission", () => {
+
+        authoring.common.login()
+        // assign that role to the user
+        authoring.userManagement.visitUserListPage()
+        authoring.userManagement.assignUserRoles(user.userName, [role2.roleName])
+
+        // logout 
+        authoring.common.logout()
+        // login and check permissions
+        authoring.common.login(user.userName, user.password)
+        cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+        cy.visit(authoring.contentIntelligence.contentStrategy)
+        cy.contains("Content Strategy Overview", { timeout: 10000 }).should('exist')
+        cy.contains('span', "Key Marketing Topics").should('exist').click()
+
+    })
 
     it("Custom role permission with ContentIntelligence checkbox disable", () => {
-                
-            authoring.common.login()
-            cy.visit(authoring.userManagement.userRoles.pageURL)
-            authoring.userManagement.configureUserRole(role3)
-            authoring.userManagement.visitUserListPage()
-            authoring.userManagement.assignUserRoles(user.userName, [role3.roleName])
 
-            // logout 
+        authoring.common.login()
+        cy.visit(authoring.userManagement.userRoles.pageURL)
+        authoring.userManagement.configureUserRole(role3)
+        authoring.userManagement.visitUserListPage()
+        authoring.userManagement.assignUserRoles(user.userName, [role3.roleName])
+
+        // logout 
         authoring.common.logout()
         // login and check permissions
         authoring.common.login(user.userName, user.password)
         cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('not.exist')
-            
-        })
 
-        it("Custom role permission with ContentIntelligence checkbox enable", () => {
-            authoring.common.login()
-            cy.visit(authoring.userManagement.userRoles.pageURL)
-            authoring.userManagement.configureUserRole(role4)
-            authoring.userManagement.visitUserListPage()
-            authoring.userManagement.assignUserRoles(user.userName, [role4.roleName])
+    })
 
-            // logout 
-            authoring.common.logout()
+    it("Custom role permission with ContentIntelligence checkbox enable", () => {
+        authoring.common.login()
+        cy.visit(authoring.userManagement.userRoles.pageURL)
+        authoring.userManagement.configureUserRole(role4)
+        authoring.userManagement.visitUserListPage()
+        authoring.userManagement.assignUserRoles(user.userName, [role4.roleName])
 
-        })
+        // logout 
+        authoring.common.logout()
 
-        it("Custom role permission with ContentIntelligence checkbox enable", () => {
-            authoring.common.login()
-            cy.visit(authoring.userManagement.userRoles.pageURL)
-            authoring.userManagement.configureUserRole(role5)
-            authoring.userManagement.visitUserListPage()
-            authoring.userManagement.assignUserRoles(user.userName, [role5.roleName])
+    })
 
-            // logout 
-            authoring.common.logout()
+    it("Custom role permission with ContentIntelligence checkbox enable", () => {
+        authoring.common.login()
+        cy.visit(authoring.userManagement.userRoles.pageURL)
+        authoring.userManagement.configureUserRole(role5)
+        authoring.userManagement.visitUserListPage()
+        authoring.userManagement.assignUserRoles(user.userName, [role5.roleName])
+
+        // logout 
+        authoring.common.logout()
         // login and check permissions
-            authoring.common.login(user.userName, user.password)
-            cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
-            cy.visit(authoring.contentIntelligence.contentStrategy)
-            cy.contains("Content Strategy Overview", { timeout: 20000 }).should('exist')
-            
-        })
+        authoring.common.login(user.userName, user.password)
+        cy.get(authoring.contentIntelligence.contentIntelligenceTab).should('exist')
+        cy.visit(authoring.contentIntelligence.contentStrategy)
+        cy.contains("Content Strategy Overview", { timeout: 20000 }).should('exist')
+
+    })
 })
