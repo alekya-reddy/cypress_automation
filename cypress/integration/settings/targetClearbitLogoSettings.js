@@ -12,6 +12,10 @@ const appearance2 = {
 
 const target = {
     name: 'clearbit logo',
+    slug: 'target-track-1',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}/openai`
+    }
 }
 
 const target1 = {
@@ -33,59 +37,62 @@ const trackName= target1.name
 const webContent = ["Website Common Resource", "Youtube Shared Resource","Bay cat Wikipedia","Texas Wikipedia","Pilgrimage - Wikipedia"]
 
 describe("Add Appearance and Verify LastUpdated Date", () => {
-    it("Add Appearance", () => {
-        authoring.common.login()
-       
-        //Campaign tools - target
-        authoring.target.visit();
-        authoring.target.deleteTrack(target.name)
-        authoring.target.addTrack(target)
+ it("Setup Target track if not already done", () => {
+        cy.request({url: target.url, failOnStatusCode: false}).then((response)=>{
+            cy.wait(2000)
+            if(response.status == 404){ 
+                authoring.common.login()
+                authoring.target.visit()
+                authoring.target.addTrack(target)
+                authoring.target.configure(target)
+            }
+            })
+            })
+            it("Set up if not already done", () => {
+            authoring.common.login() 
+            authoring.target.visit()
+            authoring.target.goToTrack(target.name)
 
-        cy.contains('Default').eq(0).click();
-        cy.get(authoring.common.selectAppearence).click();
-        cy.contains('companyLogos.js').click();
-        cy.contains('button', 'Update').click();
-
-        //Add contents
-        authoring.target.addContent([webContent[0]])
+            cy.contains('uploadedLogos.js').click();
+            cy.get(authoring.common.selectAppearence).click();
+            cy.contains('companyLogos.js').click();
+            cy.contains('button', 'Update').click(); 
 
         cy.get(authoring.target.pageSidebar.headerToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.get(authoring.target.pageSidebar.cookieConsentToggle).click();
+        cy.visit(target.url);
         cy.get(authoring.common.cookieConsentAcceptButton).click()
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
+        cy.wait(2000);
 
         cy.get(authoring.target.pageSidebar.flowToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.visit(target.url);
       
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.flowCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");       
         cy.go('back');
 
         cy.get(authoring.target.pageSidebar.headerToggle).click();
         cy.get(authoring.target.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
-        
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist');
+        cy.visit(target.url);
+    
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");     
         cy.go('back');
 
         cy.get(authoring.target.pageSidebar.flowToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.visit(target.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowCookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.flowCookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
 
@@ -97,42 +104,39 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
 
         cy.get(authoring.target.pageSidebar.headerToggle).click();
         cy.get(authoring.target.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.visit(target.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
+        cy.wait(2000);
 
         cy.get(authoring.target.pageSidebar.flowToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+         cy.visit(target.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.flowCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
 
         cy.get(authoring.target.pageSidebar.headerToggle).click();
         cy.get(authoring.target.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.visit(target.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist')
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist')
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
 
         cy.get(authoring.target.pageSidebar.flowToggle).click();
-        cy.get(authoring.target.targetContent).click();
-        cy.get(authoring.target.previewClick).invoke('removeAttr', 'target').click();
+        cy.visit(target.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowCookieConsentButton).should('not.exist')
-        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.flowCookieConsentButton).should('not.exist')
+        cy.get(authoring.configurations.appearances.clearbitText).should('not.exist');
 
         })
     })

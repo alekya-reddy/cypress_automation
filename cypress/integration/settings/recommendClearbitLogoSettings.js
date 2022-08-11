@@ -1,5 +1,5 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
-import{Explore}from '../../support/authoringClasses/Explore'
+import { Explore } from '../../support/authoringClasses/Explore'
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const consumption = createConsumptionInstance()
 
@@ -12,6 +12,10 @@ const appearance2 = {
 
 const recommend = {
     name: 'clearbit logo',
+    slug: 'recommend-track-01',
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}/openai`
+    }
 }
 
 const recommend1 = {
@@ -23,69 +27,72 @@ const exploreRecommend = {
     experienceType: 'Recommend',
     trackName: recommend1.name,
     slug: 'clearbit-logo-19',
-    
-    get url(){
+
+    get url() {
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
-}   
-const trackName= recommend1.name
+}
+const trackName = recommend1.name
 
-const webContent = ["Website Common Resource", "Youtube Shared Resource","Bay cat Wikipedia","Texas Wikipedia","Pilgrimage - Wikipedia"]
+const webContent = ["Website Common Resource", "Youtube Shared Resource", "Bay cat Wikipedia", "Texas Wikipedia", "Pilgrimage - Wikipedia"]
 
 describe("Add Appearance and Verify LastUpdated Date", () => {
-    it("Add Appearance", () => {
+    it("Setup recommend track if not already done", () => {
+        cy.request({ url: recommend.url, failOnStatusCode: false }).then((response) => {
+            cy.wait(2000)
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.recommend.visit()
+                authoring.recommend.addTrack(recommend)
+                authoring.recommend.configure(recommend)
+            }
+        })
+    })
+    it("Set up if not already done", () => {
         authoring.common.login()
+        authoring.recommend.visit()
+        authoring.recommend.goToTrack(recommend.name)
 
-        //Campaign tools - Recommend
-        authoring.recommend.visit();
-        authoring.recommend.deleteTrack(recommend.name)
-        authoring.recommend.addTrack(recommend)
-        
-        cy.contains('Default').eq(0).click();
+        cy.contains('uploadedLogos.js').eq(0).click();
         cy.get(authoring.common.selectAppearence).click();
         cy.contains('companyLogos.js').click();
         cy.contains('button', 'Update').click();
 
-        //Add contents
-        authoring.recommend.addContent([webContent[0]])
-
-        cy.get(authoring.recommend.pageSidebar.sidebarToggle).click();     
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();        
+        cy.get(authoring.recommend.pageSidebar.sidebarToggle).click();
+        cy.visit(recommend.url);
         cy.get(authoring.common.cookieConsentAcceptButton).click()
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");     
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.topicSidebarToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
-        
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should("exist");
+        // cy.get(authoring.recommend.recommendContent).click();
+        // cy.contains('Preview').invoke('removeAttr', 'target').click();
+        cy.visit(recommend.url);
+
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.headerToggle).click();
         cy.get(authoring.recommend.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
+        cy.visit(recommend.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.topicSidebarToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
-        
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should('not.exist');
+        cy.visit(recommend.url);
+
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
 
@@ -97,42 +104,38 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
 
         cy.get(authoring.recommend.pageSidebar.headerToggle).click();
         cy.get(authoring.recommend.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
+        cy.visit(recommend.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.topicSidebarToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
+        cy.visit(recommend.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.headerToggle).click();
         cy.get(authoring.recommend.pageSidebar.cookieConsentToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
+        cy.visit(recommend.url);
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.topicSidebarToggle).click();
-        cy.get(authoring.recommend.recommendContent).click();
-        cy.contains('Preview').invoke('removeAttr', 'target').click();
-        
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should('not.exist');
+        cy.visit(recommend.url);
+
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
-       
-        })
+
     })
+})

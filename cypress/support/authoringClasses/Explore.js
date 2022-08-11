@@ -107,8 +107,6 @@ export class Explore extends Common {
             cy.contains(this.experienceType, experienceType).click()
             cy.get(this.createExploreModal.dropdownSelect).eq(0).click()
             cy.get(this.createExploreModal.dropdownSelect).eq(0).type(trackName + "\n")
-            //cy.wait(5000);
-            //cy.get(this.createExploreModal.dropDownList).click()
 
             if (parentFolder) {
                 cy.get(this.createExploreModal.dropdownSelect).eq(1).click()

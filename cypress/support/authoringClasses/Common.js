@@ -164,7 +164,7 @@ export class Common {
     goToPage(pageTitle, pageUrl){
         cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
             if(text !== pageTitle){
-                cy.visit(pageUrl);
+            cy.visit(pageUrl);
             }
         })
     }

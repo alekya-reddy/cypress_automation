@@ -1,5 +1,5 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
-import{Explore}from '../../support/authoringClasses/Explore'
+import { Explore } from '../../support/authoringClasses/Explore'
 const authoring = createAuthoringInstance() // When nothing is specified, this defaults to our original 'automation' org
 const consumption = createConsumptionInstance()
 
@@ -22,24 +22,29 @@ const exploreTarget = {
     experienceType: 'Target',
     trackName: target1.name,
     slug: 'clearbit-logo-7',
-    //targetTrack: "https://automation.qa-pathfactory.com/authoring/content-library/target/65338",
-
-    get url(){
-    return `${authoring.common.baseUrl}/l/${this.slug}`
+    get url() {
+        return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 }
-    
-const trackName= target1.name
+
+const trackName = target1.name
 
 describe("Add Appearance and Verify LastUpdated Date", () => {
-    it("Add Appearance", () => {
-        authoring.common.login()
 
-        //Explore Target
-        authoring.explore.visit() 
-        authoring.explore.deleteExplore(exploreTarget.name)
-        authoring.explore.addExplore(exploreTarget)
-        authoring.explore.configureExplore(exploreTarget)
+    it("Set up if not already done", () => {
+        cy.request({ url: exploreTarget.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.explore.visit()
+                authoring.explore.addExplore(exploreTarget)
+                authoring.explore.configureExplore(exploreTarget)
+            }
+        })
+        })
+        it("Set up if not already done", () => {
+        authoring.common.login() 
+        authoring.explore.visit()
+        authoring.explore.goToExplorePage(exploreTarget.name)
 
         cy.contains('uploadedLogos.js').click();
         cy.get(authoring.common.selectAppearence).click();
@@ -57,24 +62,26 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.contains("a", exploreTarget.name).click();
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
-        cy.get(authoring.common.cookieConsentAcceptButton).click({force: true});
+        cy.wait(1000);
+        cy.get(authoring.common.cookieConsentAcceptButton).click({ force: true });
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");
-        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");    
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
-        
+        cy.wait(3000);
+
         cy.contains('Target Track: ').click();
         cy.get(authoring.target.pageSidebar.flowToggle).click();
         cy.go('back');
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
-       
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should("exist");
-        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");       
+
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
 
@@ -85,12 +92,13 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist');
-        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");     
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
+        cy.wait(5000);
 
         cy.contains('Target Track: ').click();
         cy.get(authoring.target.pageSidebar.flowToggle).click();
@@ -98,12 +106,12 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
-               
+
         //uploaded logos:
 
         cy.contains('companyLogos.js').click();
@@ -123,9 +131,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -136,8 +144,8 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should("exist");
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -149,9 +157,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.clearbitLogo.headerCookieConsentButton).should('not.exist')
+        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
+        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist')
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -162,9 +170,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.clearbitLogo.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.clearbitLogo.cookieConsentButton).should('not.exist');
+        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
+        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');;
 
     })
- })
+})
