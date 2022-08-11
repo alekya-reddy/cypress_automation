@@ -69,8 +69,6 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.go('back');
 
         cy.get(authoring.recommend.pageSidebar.topicSidebarToggle).click();
-        // cy.get(authoring.recommend.recommendContent).click();
-        // cy.contains('Preview').invoke('removeAttr', 'target').click();
         cy.visit(recommend.url);
 
         cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
