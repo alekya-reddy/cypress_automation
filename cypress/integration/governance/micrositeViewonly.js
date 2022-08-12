@@ -13,8 +13,11 @@ const user = {
 const role = {
     roleName: "Custom",
     campaignToolsModuleCRUD: false,
-    campaignsToolsView : true,
-    campaignToolsAnalyticsView: true
+    campaignToolsModuleView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
 }
 
 describe("View Only Permissions", () => {

@@ -119,15 +119,10 @@ describe("View Only Permissions", () => {
         cy.contains('span', "Delete").should("not.exist")
         cy.get(authoring.vex.pageNumber).should("exist")
         cy.contains('a', "Configure").should("exist").click()
-
-        cy.contains('label', "Thumbnail").should("exist")
-
-        cy.get(authoring.vex.radioButtonclick).invoke('attr', 'class').then(val => {
-            expect(val).to.equal(authoring.vex.radioButtonDisable)
-        })
+        cy.contains('button', "Change Image").should("not.exist")
 
         cy.contains('label', "Hero Banner Layout").should("exist")
-        
+
         //will remove it once view only bug get fixed
         //authoring.common.togglemethod('button[role="switch"]')
         authoring.common.togglemethod(authoring.vex.sessionSlugInput)
@@ -204,30 +199,7 @@ describe("View Only Permissions", () => {
         cy.get('div[draggable="true"]').should("not.exist")
 
         cy.contains('a', "Search & Filter").should("exist").click()
-        cy.contains('div', "Search").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Topic").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Business Unit").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Persona").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Industry").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Availability").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Funnel Stage").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
-        cy.contains('div', "Language").should("exist")
-        cy.get(authoring.vex.serachFilterToggle).next().click()
-        cy.get(authoring.vex.toggleChecked).should("not.exist")
+        cy.get(authoring.vex.toggleChecked).should("exist")
 
         cy.contains('a', "Event Blacklist").should("exist").click()
         cy.contains('span', "Add Email").should("not.exist")
@@ -237,7 +209,7 @@ describe("View Only Permissions", () => {
         cy.contains('div', "Registrants & Attendees").should("exist")
         cy.contains('div', "Data Tables").should("exist")
         cy.contains('div', "Prospects").should("exist")
-   
+
     })
 
 })

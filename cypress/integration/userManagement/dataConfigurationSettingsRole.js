@@ -12,7 +12,7 @@ const user = {
 
 const role = {
     roleName: "Data Configuration Settings Role.Js",
-    webhooksCRUD: true,
+    //webhooksCRUD: true,
     visitorActivityCRUD: true
 
 }
