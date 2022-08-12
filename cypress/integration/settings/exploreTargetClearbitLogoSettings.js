@@ -13,21 +13,17 @@ const appearance2 = {
 const target = {
     name: 'clearbit logo',
 }
-const target1 = {
-    name: 'clearbit logo',
-}
 
 const exploreTarget = {
     name: 'clearbit logo',
     experienceType: 'Target',
-    trackName: target1.name,
-    slug: 'clearbit-logo-7',
+    trackName: target.name,
+    slug: 'clearbitlogoExpTar',
     get url() {
         return `${authoring.common.baseUrl}/l/${this.slug}`
     }
 }
-
-const trackName = target1.name
+const trackName = target.name
 
 describe("Add Appearance and Verify LastUpdated Date", () => {
 
@@ -40,9 +36,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
                 authoring.explore.configureExplore(exploreTarget)
             }
         })
-        })
-        it("Set up if not already done", () => {
-        authoring.common.login() 
+    })
+    it("Set up if not already done", () => {
+        authoring.common.login()
         authoring.explore.visit()
         authoring.explore.goToExplorePage(exploreTarget.name)
 
@@ -65,9 +61,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.wait(1000);
         cy.get(authoring.common.cookieConsentAcceptButton).click({ force: true });
 
-        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
+        cy.get(consumption.common.header.headerLogoVisible).should('be.visible');
+        cy.get(consumption.common.header.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(consumption.common.header.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
@@ -79,8 +75,8 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
+        cy.get(consumption.common.flowLogo).should('be.visible');
+        cy.get(consumption.common.cookieConsent.cookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
@@ -92,9 +88,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist');
+        cy.get(consumption.common.header.headerLogoVisible).should('be.visible');
+        cy.get(consumption.common.header.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(consumption.common.header.headerCookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
@@ -106,8 +102,8 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
+        cy.get(consumption.common.flowLogo).should('be.visible');
+        cy.get(consumption.common.cookieConsent.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should("exist");
         cy.go('back');
         cy.go('back');
@@ -131,9 +127,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should("exist");
+        cy.get(consumption.common.header.headerLogoVisible).should('be.visible');
+        cy.get(consumption.common.header.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(consumption.common.header.headerCookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -144,8 +140,8 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.cookieConsentButton).should("exist");
+        cy.get(consumption.common.flowLogo).should('be.visible');
+        cy.get(consumption.common.cookieConsent.cookieConsentButton).should("exist");
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -157,9 +153,9 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.headerLogoVisible).should('be.visible');
-        cy.get(authoring.configurations.appearances.headerTitle).should('have.text', 'Recommended Content');
-        cy.get(authoring.configurations.appearances.headerCookieConsentButton).should('not.exist')
+        cy.get(consumption.common.header.headerLogoVisible).should('be.visible');
+        cy.get(consumption.common.header.headerTitle).should('have.text', 'Recommended Content');
+        cy.get(consumption.common.header.headerCookieConsentButton).should('not.exist')
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');
         cy.go('back');
         cy.go('back');
@@ -170,8 +166,8 @@ describe("Add Appearance and Verify LastUpdated Date", () => {
         cy.visit(exploreTarget.url);
         cy.get(authoring.explore.exploreContent).invoke('removeAttr', 'target').click();
 
-        cy.get(authoring.configurations.appearances.flowLogo).should('be.visible');
-        cy.get(authoring.configurations.appearances.cookieConsentButton).should('not.exist');
+        cy.get(consumption.common.flowLogo).should('be.visible');
+        cy.get(consumption.common.cookieConsent.cookieConsentButton).should('not.exist');
         cy.get(authoring.configurations.appearances.clearbitLogo.clearbitText).should('not.exist');;
 
     })

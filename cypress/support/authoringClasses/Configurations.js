@@ -100,12 +100,7 @@ export class Configurations extends Common {
             buttonBackgroundColorForGuide: 'span[id="headlineBackgroundColor"]>div>span',
             ForYouTabForGuide: 'div[title="For You"]',
             TrendingTabForGuide: 'div[title="Trending"]',
-            headerLogoVisible: "#qa-header-logo",
-            headerTitle: "#qa-header-title",
-            flowLogo: "#qa-logo-common",
-            cookieConsentButton: "#qa-flow-footer-cookie-consent-button",
-            headerCookieConsentButton: "#qa-header-cookie-consent-button",
-            flowCookieConsentButton: "#qa-flow-sidebar-cookie-consent-button",
+            
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
