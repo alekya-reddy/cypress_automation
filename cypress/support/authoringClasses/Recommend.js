@@ -236,7 +236,7 @@ export class Recommend extends Common {
             const singleContent=options.contents[index]
             cy.get(`img[alt='${singleContent}']`,{timeout:20000}).click()
             cy.get(this.pageSidebar.captions).invoke('css', 'background-color').then(val => {
-                if(val.includes('rgb(221, 221, 221)')){ //if radio button off
+                if(val.includes('rgb(204, 204, 204)')){ //if radio button off
                     this.setCaptions(captionsLanguage,captions,verify)
                 }
             })

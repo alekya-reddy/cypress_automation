@@ -7,16 +7,16 @@ export class Microsites extends Common {
         this.antSelector = ".ant-select-selector";
         this.pageTitle = "Microsites";
         this.clickAddedBy = "div[data-qa-hook='added by-dropdown']>div>div",
-        this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
-        this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
-        this.editFolder = 'i[title="Edit Folder"]';
+            this.addedbyButton = "div[data-qa-hook='added by-dropdown-item']>span",
+            this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
+            this.editFolder = 'i[title="Edit Folder"]';
         this.deleteFolder = 'i[title="Delete Folder"]';
         this.editmodal = 'div[class="rc-virtual-list-holder-inner"]';
         this.filtersToggle = 'button[aria-checked="false"]';
         this.clearSearch = 'i[title="Clear search"]',
-        this.searchButton = 'input[name="page-search"]',
-        this.noMicrositeFound = "No microsites found",
-        this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
+            this.searchButton = 'input[name="page-search"]',
+            this.noMicrositeFound = "No microsites found",
+            this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.micrositeLink = 'span[class="ant-typography"]';
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
@@ -44,7 +44,7 @@ export class Microsites extends Common {
         this.setupPage = {
             nameInput: "input[name='name']",
             slugInput: "input[name='customUrl']",
-            appearanceInput: "input[class='ant-select-selection-search-input']",
+            appearanceInput: "input[type='search']",
             micrositeAppearance: "div[class='ant-select-item-option-content']",
             cookieConsentCheckbox: "input[name='gdprCookieConsentEnabled']",
             contentTypeCheckbox: "input[name='config.displayContentType']",
@@ -115,7 +115,7 @@ export class Microsites extends Common {
             navHandle: ".rst__moveHandle",
             navContent: ".rst__rowContents",
             navRemoveBox: ".rst__rowToolbar",
-            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",    
+            navEdit: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='edit']",
             navDelete: ".rst__rowToolbar > .rst__toolbarButton > span[aria-label='delete']",
             navModal: "div[class='ant-modal-mask']"
         };
@@ -173,7 +173,7 @@ export class Microsites extends Common {
         })
 
         cy.wait(3000)
-    
+
         if (verify !== false) {
             cy.contains('div', name, { timeout: 10000 }).should('exist')
         }
@@ -182,10 +182,11 @@ export class Microsites extends Common {
     removeMicrosite(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
         cy.waitFor({ element: this.micrositesPage.cardTitle, to: "exist" })
+        cy.get("div[class*='PageSearch']").type(microsite)
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, microsite, 20000, () => {
             cy.contains(this.micrositesPage.cardTitle, microsite, { timeout: 20000 }).should('exist')
             cy.get(`a[id='configure-${microsite}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='delete-${microsite}']`).should('exist').click({force:true})
+            cy.get(`i[class*='delete-${microsite}']`).should('exist').click({ force: true })
             cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
                 cy.contains('Yes').click()
             })
@@ -193,14 +194,14 @@ export class Microsites extends Common {
         cy.containsExact(this.micrositesPage.cardTitle, microsite).should('not.exist')
 
     }
-     
-    editfolder(options){
+
+    editfolder(options) {
         const name = options.name
         const editedName = options.editedName
         const Folder = options.Folder
-            cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='edit-for-${name}']`).should('exist').click({force:true})
-          cy.get(this.antModal).within(() => {
+        cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
+        cy.get(`i[class*='edit-for-${name}']`).should('exist').click({ force: true })
+        cy.get(this.antModal).within(() => {
             cy.contains("div", "Edit Microsite").should("exist")
 
             if (editedName) {
@@ -209,7 +210,7 @@ export class Microsites extends Common {
             if (Folder) {
                 this.setFolder(folder)
             }
-             cy.contains('button', "Save Microsite").should("exist").click()
+            cy.contains('button', "Save Microsite").should("exist").click()
 
         })
     }
@@ -230,7 +231,7 @@ export class Microsites extends Common {
         cy.ifElementWithExactTextExists(this.micrositesPage.cardTitle, name, 20000, () => {
             cy.contains(this.micrositesPage.cardTitle, name, { timeout: 20000 }).should('exist')
             cy.get(`a[id='configure-${name}']`).parents('td').prev('td').click()
-            cy.get(`i[class*='delete-${name}']`).should('exist').click({force:true})
+            cy.get(`i[class*='delete-${name}']`).should('exist').click({ force: true })
             cy.contains(this.antModal, "Are you sure want to remove this microsite").within(() => {
                 cy.contains('Yes').click()
             })
@@ -238,7 +239,7 @@ export class Microsites extends Common {
         })
 
         cy.containsExact(this.micrositesPage.cardTitle, name).should('not.exist')
-    
+
     }
     removeMicrositeWithTrashIcon(microsite) {
         this.goToPage(this.pageTitle, this.pageUrl)
@@ -291,15 +292,15 @@ export class Microsites extends Common {
         }
 
         if (slug) {
+            cy.wait(2000)
             cy.get(this.setupPage.slugInput).clear().type(slug)
+            cy.wait(2000)
         }
 
         if (appearance) {
             cy.get("label[title='Appearance']").parent('div').siblings('div').within(() => {
-                    cy.get(this.setupPage.appearanceInput).clear({ force: true }).type(appearance , { force: true })
-                })
-            cy.contains('div',appearance,{timeout:10000}).click({force:true})
-            //cy.get(this.setupPage.micrositeAppearance).click()
+                cy.get(this.setupPage.appearanceInput).type(appearance, { force: true }).type('{downArrow}').type('{enter}')
+            })
             cy.get(`span[title='${appearance}']`).should("exist")
         }
 
@@ -499,7 +500,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             recommend.forEach((track) => {
-                cy.get(this.tracks.searchTrack).type(track + "\n")
+                cy.get(this.tracks.searchTrack, { timeout: 20000 }).type(track, { force: true }).type('{downArrow}').type('{enter}')
             })
         }
 
@@ -509,7 +510,7 @@ export class Microsites extends Common {
                 cy.get(this.antDropSelect.selector).click()
             })
             target.forEach((track) => {
-                cy.get(this.tracks.searchTrack).type(track + "\n")
+                cy.get(this.tracks.searchTrack, { timeout: 20000 }).type(track, { force: true }).type('{downArrow}').type('{enter}')
                 cy.wait(4000)
             })
         }
@@ -621,7 +622,7 @@ export class Microsites extends Common {
         })
     }
 
-    addLandingPages(list,verify) {
+    addLandingPages(list, verify) {
         const pages = [list].flat()
         this.tabToLandingPages()
         pages.forEach((page) => {
@@ -643,14 +644,14 @@ export class Microsites extends Common {
         this.tabToLandingPages()
 
         cy.contains("button", "Add Page").click()
-            cy.contains(this.antModal, "Add Page").within(() => {
-                cy.get(this.landingPages.nameInput).clear().type(name)
-        if(clone){
-         cy.get('span[class="ant-select-selection-item"]').click({force: true}).type(clone + "\n")  
-         cy.wait(200)
-                }
-                cy.contains("button", "Add Page").click()
-            })        
+        cy.contains(this.antModal, "Add Page").within(() => {
+            cy.get(this.landingPages.nameInput).clear().type(name)
+            if (clone) {
+                cy.get('span[class="ant-select-selection-item"]').click({ force: true }).type(clone + "\n")
+                cy.wait(200)
+            }
+            cy.contains("button", "Add Page").click()
+        })
     }
 
     removeLandingPages(list, verify) {
@@ -685,9 +686,9 @@ export class Microsites extends Common {
 
         this.tabToLandingPages()
         cy.contains('td', name).siblings("td").within(() => {
-            cy.contains("a", "Edit").click({force: true})
+            cy.contains("a", "Edit").click({ force: true })
         })
-        if (thumbnail){
+        if (thumbnail) {
             this.selectThumbnail(thumbnail)
         }
         cy.contains(this.antModal + ":visible", "Edit Landing Page").within(() => {
@@ -702,10 +703,10 @@ export class Microsites extends Common {
             if (slug) {
                 cy.get(this.landingPages.slugInput).clear().type(slug)
             }
-            if (pageTitle){
+            if (pageTitle) {
                 cy.get(this.landingPages.pageTitle).clear().type(pageTitle)
             }
-            if (pageDescription){
+            if (pageDescription) {
                 cy.get(this.landingPages.pageDescription).clear().type(pageDescription)
             }
             if (description) {
@@ -735,8 +736,12 @@ export class Microsites extends Common {
     }
 
     setToHomePage(page) {
-        cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
-            cy.contains("a", "Set as Home Page").click({ force: true })
+        cy.get(`td[title='${page}']`).siblings("td").eq(8).invoke('text').then(val => {
+            if (val.includes("Set as Home Page")) {
+                cy.containsExact(this.antTable.cell, page).siblings("td:contains('Set as Home Page')").within(() => {
+                    cy.contains("a", "Set as Home Page").click({ force: true })
+                })
+            }
         })
     }
 
@@ -747,17 +752,17 @@ export class Microsites extends Common {
 
         cy.get(`button:contains('${selectImageText}')`).click()
         cy.wait(1000)
-        cy.get(this.thumbnailSelector,{timeout:10000}).should('exist').within(() => {
+        cy.get(this.thumbnailSelector, { timeout: 10000 }).should('exist').within(() => {
             cy.wait(1000)
             cy.contains('li', category).click()
             cy.get(`img[src*="${url}"]`).click()
             cy.get(this.saveButton).click()
-         })
+        })
         cy.get(`img[src*="${url}"]`).should('exist')
     }
 
     goToPageEditor(page) {
-        cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')",{timeout: 8000}).within(() => {
+        cy.get(`td[title='${page}']`).siblings("td:contains('Modify Page')", { timeout: 8000 }).within(() => {
             cy.contains("a", "Modify Page").invoke("attr", "href").then((href) => {
                 cy.visit(`${this.baseUrl}${href}`)
             })
@@ -791,7 +796,7 @@ export class Microsites extends Common {
                 cy.containsExact("option", overrideLabel).should("exist")
             }
             else {
-                 cy.containsExact("option", filterName).should("exist")
+                cy.containsExact("option", filterName).should("exist")
             }
         }
     }
@@ -926,8 +931,8 @@ export class Microsites extends Common {
             cy.get(this.landingPages.spacingInput).clear().type(spacing)
             cy.containsExact("span", "Spacing").click()
         }
-        if (cellAlignment){
-                cy.get(this.landingPages.cellAlignment).select(cellAlignment)
+        if (cellAlignment) {
+            cy.get(this.landingPages.cellAlignment).select(cellAlignment)
         }
         if (topicFilter) {
             this.configureFilter("Topic Filter", topicFilter)
@@ -1334,7 +1339,7 @@ export class Microsites extends Common {
     }
 
     editNavItem(config) {
-        const to_edit=config.to_edit
+        const to_edit = config.to_edit
         const label = config.label
         const type = config.type
         const source = config.source
@@ -1350,11 +1355,11 @@ export class Microsites extends Common {
             cy.get(this.navigation.labelInputEdit).filter(':visible').first().clear().type(label)
             cy.get(this.antDropSelect.selector).first().click()
         })
-        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({force: true})
+        cy.get(this.antDropSelect.options(type)).filter(':visible').first().click({ force: true })
         if (source && type !== "Link") {
             cy.get(this.antDropSelect.selector).eq(1).click()
             cy.get(this.antDropSelect.options(source)).filter(':visible').first().click()
-        } 
+        }
         else if (source && type == "Link") {
             cy.get(this.navigation.navModal).parent().within(() => {//adjustment for hidden modals
                 cy.get(this.navigation.linkInput).clear().type(source)
@@ -1398,11 +1403,11 @@ export class Microsites extends Common {
         navItems.forEach((navItem) => {
             //cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
             //    cy.containsExact(this.navigation.navTitle, navItem).parents(this.navigation.navRow).within(() => {
-             //       cy.contains("button", "Remove").click()
+            //       cy.contains("button", "Remove").click()
             //    })
             //})
 
-            
+
             cy.ifElementWithExactTextExists(this.navigation.navTitle, navItem, 1000, () => {
                 cy.contains(this.navigation.navTitle, navItem).should('exist').parent().parent().within(() => {
                     cy.get(this.navigation.navDelete).should('exist').click()
@@ -1490,21 +1495,22 @@ export class Microsites extends Common {
         const heading = config.heading
         const cardConfiguration = config.cardConfiguration
         let blockName = cardConfiguration.blockName
-        cy.contains(this.landingPages.trackRow, blockName,{timeout: 10000}).parent().within(() => {
+        cy.contains(blockName, { timeout: 10000 }).click({ force: true })
+        cy.contains(this.landingPages.trackRow, blockName, { timeout: 10000 }).parent().within(() => {
             cy.get(this.landingPages.editorMenu).within(() => {
-                cy.get(this.landingPages.menuBlock).eq(3).click({force:true})
+                cy.get(this.landingPages.menuBlock).eq(3).click({ force: true })
             })
         })
         if (heading) {
             let fontSize = heading.fontSize
             cy.containsExact("div", "Heading").click()
             if (fontSize) {
-                cy.get("input[name='blocks.0.heading.fontSize']", {timeout:10000}).clear().type(fontSize)
+                cy.get("input[name='blocks.0.heading.fontSize']", { timeout: 10000 }).clear().type(fontSize)
             }
-            cy.contains('span','Heading').click()
+            cy.contains('span', 'Heading').click()
         }
-        if(cardConfiguration){
-            let enableDescription=cardConfiguration.enableDescription
+        if (cardConfiguration) {
+            let enableDescription = cardConfiguration.enableDescription
             cy.containsExact("div", "Card Configuration").click()
             if (enableDescription == false || enableDescription == true) {
                 cy.get(this.landingPages.enableDescription).parent().find("div[class^='ToggleSwitch']").invoke('attr', 'class').then((attr) => {
@@ -1633,7 +1639,7 @@ export class Microsites extends Common {
                     })
                 })
             })
-            cy.contains("button", "Save").click({force:true})
+            cy.contains("button", "Save").click({ force: true })
         })
     }
 }

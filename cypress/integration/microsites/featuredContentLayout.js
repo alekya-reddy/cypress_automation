@@ -165,8 +165,8 @@ describe("Microsites - Landing page featured content block setup", () => {
             cy.get(consumption.microsites.cardTitle).eq(0).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(1).should("be.visible")
             cy.get(consumption.microsites.cardTitle).eq(2).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(3).should("be.visible")
-            cy.get(consumption.microsites.cardTitle).eq(4).should("be.visible")
+            cy.get(consumption.microsites.cardTitle,{timeout:10000}).eq(3).should("be.visible")
+            cy.get(consumption.microsites.cardTitle,{timeout:10000}).eq(4).should("be.visible")
         })
     })
     it("Verify Grid layout for Cell Alignment", () => {
@@ -248,7 +248,7 @@ describe("Microsites - Landing page featured content block setup", () => {
         // Verify Grid layout
         cy.containsExact("h4", featuredBlockCarousel.name).should("exist").parent().within(()=>{
              //verify specific alignment not selected will cathc by default normal
-            cy.get(consumption.microsites.gridLayout).should("have.css", "justify-content", "normal")
+            cy.get(consumption.microsites.gridLayout,{timeout:10000}).should("have.css", "justify-content", "normal")
 
         }) 
 
