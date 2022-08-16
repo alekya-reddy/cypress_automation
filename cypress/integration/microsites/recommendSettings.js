@@ -177,7 +177,7 @@ const homePage4 = {
         }
     ]
 }
-describe("Microsites - Target Settings", () => {
+describe("Microsites -Recommend Settings", () => {
     it("Setup Microsite and target tracks if not already done", () => {
         cy.request({url: microsite.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
@@ -260,7 +260,7 @@ describe("Microsites - Target Settings", () => {
                 cy.get(consumption.microsites.youtube.videoPlayer).should('exist').trigger('mouseover')
                 cy.get(consumption.microsites.youtube.settings).should('be.visible',{timeout:10000}).click({force:true})
                 cy.wait(1000)
-                cy.contains("div.ytp-menuitem-label","Subtitles/CC").parents("div.ytp-menuitem").find(consumption.microsites.youtube.menuContent).invoke('text').then(text=>{
+                cy.contains("span","Subtitles/CC").parents("div.ytp-menuitem").find(consumption.microsites.youtube.menuContent).invoke('text').then(text=>{
                     if(text.includes("Off")){
                         cy.contains(consumption.microsites.youtube.menuContent,"Off").should('be.visible',{timeout:10000})
                     }
