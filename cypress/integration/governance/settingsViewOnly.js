@@ -15,7 +15,10 @@ const role1 = {
     imageLibraryCRUD: false,
     imageLibraryView: true,
     accessProtectionCRUD: false,
-    accessProtectionView: true
+    accessProtectionView: true,
+    externalCodeView: true,
+    externalCodeCRUD: false
+
 }
 
 const role2 = {
@@ -26,14 +29,22 @@ const role2 = {
 
 const role3 = {
     roleName: "Custom",
-    userExperienceSettingsCreateEditView: false,
-    userExperienceSettingsCreateEditViewPermission: true
+    appearanceCRUD: false,
+    appearanceView: true,
+    linksshareView: true,
+    linksshareCreateEditView: false,
+    formsView: true,
+    formsCRUD: false,
+    cTASView: true,
+    cTASCRUD: false,
 }
 
 const role4 = {
     roleName: "Custom",
     webhooksVisitorActivityCRUD: false,
-    webhooksVisitorActivityView: true
+    webhooksVisitorActivityView: true,
+    visitorActivityView: true,
+    visitorActivityCRUD: false
 }
 
 const role5 = {
@@ -79,6 +90,7 @@ describe("View Only Permissions", () => {
         //External Code View Permission
         cy.get("#configurations").should("exist").click()
         cy.contains("a", "External Code").should("exist").click()
+        cy.pause()
         cy.contains("button", "Add External Code").should("not.exist")
         cy.get(authoring.common.pageBody).should("exist")
         cy.contains('div', "Body Organization Settings").click()

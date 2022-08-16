@@ -141,7 +141,10 @@ describe("View Only Permissions", () => {
            cy.contains('button', "Save All Settings").should("not.exist")
 
            cy.contains('a', "Analytics").should("exist").click()
-           cy.contains('div', "Overview").should("exist")   
+           cy.contains('div', "Reach").should("exist")   
+           cy.contains('div', "Engagement").should("exist")
+           cy.contains('div', "Performance").should("exist")
+           cy.contains('div', "Scheduled Report").should("exist")
 
     })
 })

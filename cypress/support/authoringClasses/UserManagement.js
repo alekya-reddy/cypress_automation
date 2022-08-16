@@ -182,7 +182,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "General Settings").click()
             cy.get('#image_library-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((imageLibraryCRUD == false && attr.includes("ant-checkbox-checked")) || (imageLibraryCRUD == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#image_library-create-edit-delete').click()
+                    cy.get('#image_library-create-edit-delete').click({force: true})
                 }
 
             })
@@ -197,7 +197,7 @@ export class UserManagement extends Common {
             })
             cy.get('#image_library-view').parent().invoke("attr", "class").then((attr) => {
                 if ((imageLibraryView == false && attr.includes("ant-checkbox-checked")) || (imageLibraryView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#image_library-view').click()
+                    cy.get('#image_library-view').click({force: true})
                 }
 
             })
@@ -212,7 +212,7 @@ export class UserManagement extends Common {
             })
             cy.get('#access_protection-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((accessProtectionCRUD == false && attr.includes("ant-checkbox-checked")) || (accessProtectionCRUD == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#access_protection-create-edit-delete').click()
+                    cy.get('#access_protection-create-edit-delete').click({force: true})
                 }
 
             })
@@ -228,7 +228,7 @@ export class UserManagement extends Common {
             })
             cy.get('#access_protection-view').parent().invoke("attr", "class").then((attr) => {
                 if ((accessProtectionView == false && attr.includes("ant-checkbox-checked")) || (accessProtectionView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#access_protection-view').click()
+                    cy.get('#access_protection-view').click({force: true})
                 }
 
             })
@@ -244,7 +244,7 @@ export class UserManagement extends Common {
             })
             cy.get('#external_codes-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((externalCodeCRUD == false && attr.includes("ant-checkbox-checked")) || (externalCodeCRUD == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#external_codes-create-edit-delete').click()
+                    cy.get('#external_codes-create-edit-delete').click({force: true})
                 }
 
             })
@@ -260,7 +260,7 @@ export class UserManagement extends Common {
             })
             cy.get('#external_codes-view').parent().invoke("attr", "class").then((attr) => {
                 if ((externalCodeView == false && attr.includes("ant-checkbox-checked")) || (externalCodeView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#external_codes-view').click()
+                    cy.get('#external_codes-view').click({force: true})
                 }
 
             })
@@ -277,7 +277,7 @@ export class UserManagement extends Common {
             })
             cy.get('input[id*="Tags-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
                 if ((contentTagsCreateEditView == false && attr.includes("ant-checkbox-checked")) || (contentTagsCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('input[id*="Tags-create-edit-delete"]').click()
+                    cy.get('input[id*="Tags-create-edit-delete"]').click({force: true})
                 }
 
             })
@@ -293,7 +293,7 @@ export class UserManagement extends Common {
             })
             cy.get('input[id*="Tags-view"]').parent().invoke("attr", "class").then((attr) => {
                 if ((contentTagsView == false && attr.includes("ant-checkbox-checked")) || (contentTagsView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('input[id*="Tags-view"]').click()
+                    cy.get('input[id*="Tags-view"]').click({force: true})
                 }
 
             })
@@ -305,7 +305,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "General Settings").click()
             cy.get('#personalization-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((personalizationCreateEditView == false && attr.includes("ant-checkbox-checked")) || (personalizationCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#personalization-create-edit-delete').click()
+                    cy.get('#personalization-create-edit-delete').click({force: true})
                 }
             })
         }
@@ -315,7 +315,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "General Settings").click()
             cy.get('#personalization-view').parent().invoke("attr", "class").then((attr) => {
                 if ((personalizationView == false && attr.includes("ant-checkbox-checked")) || (personalizationView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#personalization-view').click()
+                    cy.get('#personalization-view').click({force: true})
                 }
 
             })
@@ -326,7 +326,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "User Experience Settings").click()
             cy.get('#links_and_sharing-view').parent().invoke("attr", "class").then((attr) => {
                 if ((linksshareView == false && attr.includes("ant-checkbox-checked")) || (linksshareView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#links_and_sharing-view').click()
+                    cy.get('#links_and_sharing-view').click({force: true})
                 }
             })
         }
@@ -341,7 +341,7 @@ export class UserManagement extends Common {
             })
             cy.get('#links_and_sharing-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
                 if ((linksshareCreateEditView == false && attr.includes("ant-checkbox-checked")) || (linksshareCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#links_and_sharing-create-edit-delete').click()
+                    cy.get('#links_and_sharing-create-edit-delete').click({force: true})
                 }
             })
         }
@@ -620,7 +620,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "Website Tools").click()
             cy.get('#website_tools_module_access-view').parent().invoke("attr", "class").then((attr) => {
                 if ((websiteToolsView == false && attr.includes("ant-checkbox-checked")) || (websiteToolsView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#website_tools_module_access-view').click()
+                    cy.get('#website_tools_module_access-view').click({force:true})
                 }
             })
         }
@@ -640,7 +640,7 @@ export class UserManagement extends Common {
             cy.contains(this.arrowExpand, "Campaign Tools").click()
             cy.get('input[id*="Access-view"]').parent().invoke("attr", "class").then((attr) => {
                 if ((campaignToolsModuleView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('input[id*="Access-view"]').click()
+                    cy.get('input[id*="Access-view"]').click({force:true})
                 }
             })
         }
@@ -941,7 +941,7 @@ export class UserManagement extends Common {
 
             cy.get('#pa_wt_account-view').parent().invoke("attr", "class").then((attr) => {
                 if ((WebsiteToolsAnalysticsAccountView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsAccountView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#pa_wt_account-view').click()
+                    cy.get('#pa_wt_account-view').click({force: true})
                 }
             })
 
@@ -965,7 +965,7 @@ export class UserManagement extends Common {
 
             cy.get('#Content-view').parent().invoke("attr", "class").then((attr) => {
                 if ((WebsiteToolsAnalysticsContentView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsContentView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('#Content-view').click()
+                    cy.get('#Content-view').click({force: true})
                 }
             })
 
