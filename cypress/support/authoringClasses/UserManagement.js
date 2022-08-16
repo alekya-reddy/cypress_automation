@@ -1,7 +1,7 @@
 import { Common } from "./Common";
 
-export class UserManagement extends Common { 
-    constructor(env, org, tld, userName, password, baseUrl){
+export class UserManagement extends Common {
+    constructor(env, org, tld, userName, password, baseUrl) {
         super(env, org, tld, userName, password, baseUrl);
         this.userList = {
             pageURL: `${this.baseUrl}/authoring/content-library/settings/user-management/user-list`,
@@ -12,31 +12,20 @@ export class UserManagement extends Common {
             roleName: "#roleName",
             deleteRoleIcon: 'i[title="Delete Role"]'
         }
-        this.generalSettings = {
-            imageLibExtCodeAccProtection: "#img_lib_ext_code_access_proc-create-edit-delete",
-            imageLibExtCodeAccProtectionView: "#img_lib_ext_code_access_proc-view",
-            contentTagsCreateEditView: "#content_tags-create-edit-delete",
-            contentTagsView: "#content_tags-view",
-            personalizationCreateEditView: "#personalization-create-edit-delete",
-            personalizationView: "#personalization-view",
-        }
-        this.dataConfigurationSettings = {
-            webhooksVisitorActivityCRUD: "#data_configuration_settings-create-edit-delete",
-            webhooksVisitorActivityView: "#data_configuration_settings-view",
-        }
         this.userRolePreview = 'div[data-qa-hook="preview-section-user-role"]'
-        this.pageTitle = "User Management"
-        this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete",
-        this.userExperienceSettingsCreateEditViewPermission = "#user_experience_settings-view",
-        this.campaignTools = {
-            campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
-            campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
-            campaignToolsSettingsView: "#campaign_tools_settings-view",
-            trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
-            trackLabelsView: "#campaign_tools_track_labels-view",
-            campaignToolsAnalyticsView: "#path_analytics_campaign_tools-view",
-            campaignsToolsView:"#campaign_tools_module_access-view"
-        }
+        this.pageTitle = "User Management",
+            this.arrowExpand = 'div[class="ant-collapse-header"]',
+            this.arrowColapse = 'div[class*="ant-collapse-item"] div',
+            this.userExperienceSettingsCreateEditView = "#user_experience_settings-create-edit-delete",
+            this.userExperienceSettingsCreateEditViewPermission = "#user_experience_settings-view",
+            this.campaignTools = {
+                campaignToolsModuleCRUD: "#campaign_tools_module_access-create-edit-delete",
+                campaignToolsSettingsCRUD: "#campaign_tools_settings-create-edit-delete",
+                campaignToolsSettingsView: "#campaign_tools_settings-view",
+                trackLabelsCRUD: "#campaign_tools_track_labels-create-edit-delete",
+                trackLabelsView: "#campaign_tools_track_labels-view",
+                campaignsToolsView: "#campaign_tools_module_access-view"
+            }
         this.vex = {
             vexSettingsCRUD: "#virtual_event_settings-create-edit-delete",
             vexSettingsView: "#virtual_event_settings-view",
@@ -70,61 +59,80 @@ export class UserManagement extends Common {
 
     }
 
-    visitUserListPage(){
+    visitUserListPage() {
         cy.visit(this.userList.pageURL);
     }
-    visitUserRolesPage(){
+    visitUserRolesPage() {
         cy.visit(this.userRoles.pageURL);
     }
 
-    clickUserRole(userRole){
+    clickUserRole(userRole) {
         cy.get(this.pageSidebar).within(() => {
-            cy.containsExact("div", userRole, {timeout: 10000}).should("exist").click()
+            cy.containsExact("div", userRole, { timeout: 10000 }).should("exist").click()
         })
     }
 
-    clickAddUserRole(){
+    clickAddUserRole() {
         cy.get(this.pageSidebar).within(() => {
-            cy.containsExact("div", "+ Add User Role", {timeout: 10000}).click()
+            cy.containsExact("div", "+ Add User Role", { timeout: 10000 }).click()
         })
     }
 
-    addNewUserRole(userRole, verify ){
+    addNewUserRole(userRole, verify) {
         cy.visit(this.userRoles.pageURL)
         cy.wait(2000)
-        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
-        cy.ifNoElementWithExactTextExists("div", userRole, 10000, ()=>{
+        cy.waitFor({ element: this.pageSidebar, to: "exist", wait: 10000 })
+        cy.ifNoElementWithExactTextExists("div", userRole, 10000, () => {
             this.clickAddUserRole()
-            cy.contains(this.modal, "Add User Role").within(()=>{
-                cy.get(this.userRoles.roleName).clear().type(userRole)        
+            cy.contains(this.modal, "Add User Role").within(() => {
+                cy.get(this.userRoles.roleName).clear().type(userRole)
                 cy.contains("button", "Add User Role").click()
-            }) 
+            })
             if (verify !== false) {
-                cy.waitFor({element: this.modal, to: "not.exist"})
+                cy.waitFor({ element: this.modal, to: "not.exist" })
                 cy.get(this.pageSidebar).within(() => {
-                    cy.containsExact("div", userRole, {timeout: 5000}).should("exist")
+                    cy.containsExact("div", userRole, { timeout: 5000 }).should("exist")
                 })
-            } 
+            }
         })
     }
 
     configureUserRole(options) {
-        const{
-            roleName, 
-            imageLibExtCodeAccProtectionAccess,
-            imageLibExtCodeAccProtectionView, 
-            contentTagsCreateEditView, 
+        const {
+            roleName,
+            imageLibraryCRUD,
+            imageLibraryView,
+            accessProtectionCRUD,
+            accessProtectionView,
+            externalCodeCRUD,
+            externalCodeView,
+            contentTagsCreateEditView,
             contentTagsView,
             personalizationCreateEditView,
             personalizationView,
-            userExperienceSettingsCreateEditView, 
+            linksshareView,
+            linksshareCreateEditView,
+            formsView,
+            formsCRUD,
+            cTASView,
+            cTASCRUD,
+            themesView,
+            themesCRUD,
+            appearanceCRUD,
+            appearanceView,
+            languagesView,
+            languagesCRUD,
+            vexWidgetsView,
+            vexWidgetsCRUD,
+            webhooksView,
+            webhooksCRUD,
+            visitorActivityView,
+            visitorActivityCRUD,
             userExperienceSettingsCreateEditViewPermission,
-            dataConfigurationSettings,
             trackLabelsView,
             trackLabelsCRUD,
             campaignToolsSettingsCRUD,
             campaignToolsSettingsView,
-            campaignsToolsView,
             vexView,
             vexSettingsCRUD,
             vexSettingsView,
@@ -132,327 +140,858 @@ export class UserManagement extends Common {
             websiteToolsModuleCRUD,
             websiteToolsView,
             campaignToolsModuleCRUD,
+            campaignToolsModuleView,
             contentLibraryInsightsView,
             contentLibraryFeatureAccessCRUD,
             contentLibraryView,
+            templetedExperiencecCRUD,
+            templetedExperiencecView,
+            goalsView,
+            goalsCRUD,
+            revenueIntelligenceView,
             userManagementCRUD,
+            userManagementView,
             organizationSettingsCRUD,
+            organizationSettingsView,
             redirectRulesCRUD,
-            campaignToolsAnalyticsView,
+            campaignToolsAnalyticsOverviewView,
+            campaignToolsAnalyticsAccountView,
+            campaignToolsAnalyticsVisitorView,
+            campaignToolsAnalyticsContentView,
+            campaignToolsAnalyticsReportView,
+            campaignToolsAnalyticsLegacyView,
             vexAnalysticsView,
-            WebsiteToolsAnalysticsView,
+            scheduleReportsView,
+            WebsiteToolsAnalysticsOverviewView,
+            WebsiteToolsAnalysticsVisitorView,
+            WebsiteToolsAnalysticsAccountView,
+            WebsiteToolsAnalysticsContentView,
             contentconfigurationsCRUD,
-            contentstrategyCRUD,
-            contentConfigurationView,
             contentStratergyView,
+            contentStratergyCRUD,
+            websiteContentLibraryCRUD,
+            websiteContentLibraryView,
+            contentConfigurationView,
             webhooksVisitorActivityView,
 
         } = options
 
         this.clickUserRole(roleName)
-        if(imageLibExtCodeAccProtectionAccess == true || imageLibExtCodeAccProtectionAccess == false){
+        if (imageLibraryCRUD == true || imageLibraryCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.imageLibExtCodeAccProtection).invoke("attr", "class").then(checkboxClass => {
-                if(imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionAccess && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.imageLibExtCodeAccProtection).click()
-                }       
-            })
-        } 
+            cy.contains(this.arrowExpand, "General Settings").click()
+            cy.get('#image_library-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((imageLibraryCRUD == false && attr.includes("ant-checkbox-checked")) || (imageLibraryCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#image_library-create-edit-delete').click({force: true})
+                }
 
-        if(imageLibExtCodeAccProtectionView == true || imageLibExtCodeAccProtectionView == false){
-            cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).invoke("attr", "class").then(checkboxClass => {
-                if(imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--unchecked") || !imageLibExtCodeAccProtectionView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.imageLibExtCodeAccProtectionView).click()
-                }       
-            })
-        } 
-    
-        if(contentTagsCreateEditView == true || contentTagsCreateEditView == false){
-            cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.contentTagsCreateEditView).invoke("attr", "class").then(checkboxClass => {
-                if(contentTagsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.contentTagsCreateEditView).click()
-                }       
             })
         }
 
-        if(contentTagsView == true || contentTagsView == false){
+        if (imageLibraryView == true || imageLibraryView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.contentTagsView).invoke("attr", "class").then(checkboxClass => {
-                if(contentTagsView && checkboxClass.includes("checkbox-container--unchecked") || !contentTagsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.contentTagsView).click()
-                }    
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
             })
-        }       
+            cy.get('#image_library-view').parent().invoke("attr", "class").then((attr) => {
+                if ((imageLibraryView == false && attr.includes("ant-checkbox-checked")) || (imageLibraryView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#image_library-view').click({force: true})
+                }
 
-        if(personalizationCreateEditView == true || personalizationCreateEditView == false){
-            cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.personalizationCreateEditView).invoke("attr", "class").then(checkboxClass => {
-                if(personalizationCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !personalizationCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.personalizationCreateEditView).click()
-                }       
             })
         }
 
-        if(personalizationView == true || personalizationView == false){
+        if (accessProtectionCRUD == true || accessProtectionCRUD == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.generalSettings.personalizationView).invoke("attr", "class").then(checkboxClass => {
-                if(personalizationView && checkboxClass.includes("checkbox-container--unchecked") || !personalizationView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.generalSettings.personalizationView).click()
-                }       
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
             })
+            cy.get('#access_protection-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((accessProtectionCRUD == false && attr.includes("ant-checkbox-checked")) || (accessProtectionCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#access_protection-create-edit-delete').click({force: true})
+                }
+
+            })
+
         }
-   
-        if(userExperienceSettingsCreateEditView == true || userExperienceSettingsCreateEditView == false){
+
+        if (accessProtectionView == true || accessProtectionView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.userExperienceSettingsCreateEditView).invoke("attr", "class").then(checkboxClass => {
-                if(userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.userExperienceSettingsCreateEditView).click()
-                }       
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
+            })
+            cy.get('#access_protection-view').parent().invoke("attr", "class").then((attr) => {
+                if ((accessProtectionView == false && attr.includes("ant-checkbox-checked")) || (accessProtectionView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#access_protection-view').click({force: true})
+                }
+
+            })
+
+        }
+
+        if (externalCodeCRUD == true || externalCodeCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
+            })
+            cy.get('#external_codes-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((externalCodeCRUD == false && attr.includes("ant-checkbox-checked")) || (externalCodeCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#external_codes-create-edit-delete').click({force: true})
+                }
+
+            })
+
+        }
+
+        if (externalCodeView == true || externalCodeView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
+            })
+            cy.get('#external_codes-view').parent().invoke("attr", "class").then((attr) => {
+                if ((externalCodeView == false && attr.includes("ant-checkbox-checked")) || (externalCodeView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#external_codes-view').click({force: true})
+                }
+
+            })
+
+        }
+
+
+        if (contentTagsCreateEditView == true || contentTagsCreateEditView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
+            })
+            cy.get('input[id*="Tags-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
+                if ((contentTagsCreateEditView == false && attr.includes("ant-checkbox-checked")) || (contentTagsCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('input[id*="Tags-create-edit-delete"]').click({force: true})
+                }
+
+            })
+
+        }
+
+        if (contentTagsView == true || contentTagsView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "General Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "General Settings").click()
+                }
+            })
+            cy.get('input[id*="Tags-view"]').parent().invoke("attr", "class").then((attr) => {
+                if ((contentTagsView == false && attr.includes("ant-checkbox-checked")) || (contentTagsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('input[id*="Tags-view"]').click({force: true})
+                }
+
+            })
+
+        }
+
+        if (personalizationCreateEditView == true || personalizationCreateEditView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowExpand, "General Settings").click()
+            cy.get('#personalization-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((personalizationCreateEditView == false && attr.includes("ant-checkbox-checked")) || (personalizationCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#personalization-create-edit-delete').click({force: true})
+                }
             })
         }
 
-        if(userExperienceSettingsCreateEditViewPermission == true || userExperienceSettingsCreateEditViewPermission == false){
+        if (personalizationView == true || personalizationView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.userExperienceSettingsCreateEditViewPermission).invoke("attr", "class").then(checkboxClass => {
-                if(userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--unchecked") || !userExperienceSettingsCreateEditViewPermission && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.userExperienceSettingsCreateEditViewPermission).click()
-                }       
+            cy.contains(this.arrowExpand, "General Settings").click()
+            cy.get('#personalization-view').parent().invoke("attr", "class").then((attr) => {
+                if ((personalizationView == false && attr.includes("ant-checkbox-checked")) || (personalizationView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#personalization-view').click({force: true})
+                }
+
             })
         }
 
-        if(contentLibraryView == true || contentLibraryView == false){
-            cy.get(this.contentLibrary.contentLibraryView).invoke("attr", "class").then(checkboxClass => {
-                if(contentLibraryView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentLibrary.contentLibraryView).click()
-                }       
-            })
-        }
-
-        if(dataConfigurationSettings == true || dataConfigurationSettings == false){
+        if (linksshareView == true || linksshareView == false) {
             cy.contains('a', "Platform Settings").click()
-            cy.get(this.dataConfigurationSettings.webhooksVisitorActivityCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(dataConfigurationSettings && checkboxClass.includes("checkbox-container--unchecked") || !dataConfigurationSettings && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.dataConfigurationSettings.webhooksVisitorActivityCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "User Experience Settings").click()
+            cy.get('#links_and_sharing-view').parent().invoke("attr", "class").then((attr) => {
+                if ((linksshareView == false && attr.includes("ant-checkbox-checked")) || (linksshareView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#links_and_sharing-view').click({force: true})
+                }
             })
         }
 
-        if(trackLabelsView == true || trackLabelsView == false){
+
+        if (linksshareCreateEditView == true || linksshareCreateEditView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#links_and_sharing-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((linksshareCreateEditView == false && attr.includes("ant-checkbox-checked")) || (linksshareCreateEditView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#links_and_sharing-create-edit-delete').click({force: true})
+                }
+            })
+        }
+
+        if (formsView == true || formsView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#forms-view').parent().invoke("attr", "class").then((attr) => {
+                if ((formsView == false && attr.includes("ant-checkbox-checked")) || (formsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#forms-view').click()
+                }
+            })
+        }
+
+        if (formsCRUD == true || formsCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#forms-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((formsCRUD == false && attr.includes("ant-checkbox-checked")) || (formsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#forms-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (cTASView == true || cTASView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#ctas-view').parent().invoke("attr", "class").then((attr) => {
+                if ((cTASView == false && attr.includes("ant-checkbox-checked")) || (cTASView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#ctas-view').click()
+                }
+            })
+        }
+
+        if (cTASCRUD == true || cTASCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#ctas-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((cTASCRUD == false && attr.includes("ant-checkbox-checked")) || (cTASCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#ctas-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (themesView == true || themesView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#themes-view').parent().invoke("attr", "class").then((attr) => {
+                if ((themesView == false && attr.includes("ant-checkbox-checked")) || (themesView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#themes-view').click()
+                }
+            })
+        }
+
+
+        if (themesCRUD == true || themesCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#themes-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((themesCRUD == false && attr.includes("ant-checkbox-checked")) || (themesCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#themes-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (appearanceView == true || appearanceView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#Appearances-view').parent().invoke("attr", "class").then((attr) => {
+                if ((appearanceView == false && attr.includes("ant-checkbox-checked")) || (appearanceView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Appearances-view').click()
+                }
+            })
+        }
+
+        if (appearanceCRUD == true || appearanceCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#Appearances-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((appearanceCRUD == false && attr.includes("ant-checkbox-checked")) || (appearanceCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Appearances-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (languagesCRUD == true || languagesCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#Languages-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((languagesCRUD == false && attr.includes("ant-checkbox-checked")) || (languagesCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Languages-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (languagesView == true || languagesView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "User Experience Settings").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "User Experience Settings").click()
+                }
+            })
+            cy.get('#Languages-view').parent().invoke("attr", "class").then((attr) => {
+                if ((languagesView == false && attr.includes("ant-checkbox-checked")) || (languagesView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Languages-view').click()
+                }
+            })
+        }
+
+        if (webhooksView == true || webhooksView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "Data Configuration").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Data Configuration").click()
+                }
+            })
+            cy.get('#webhooks-view').parent().invoke("attr", "class").then((attr) => {
+                if ((webhooksView == false && attr.includes("ant-checkbox-checked")) || (webhooksView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#webhooks-view').click()
+                }
+            })
+        }
+
+        if (webhooksCRUD == true || webhooksCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "Data Configuration").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Data Configuration").click()
+                }
+            })
+
+            cy.get('#webhooks-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((webhooksCRUD == false && attr.includes("ant-checkbox-checked")) || (webhooksCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#webhooks-create-edit-delete').click()
+                }
+            })
+        }
+
+
+        if (visitorActivityView == true || visitorActivityView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "Data Configuration").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Data Configuration").click()
+                }
+            })
+            cy.get('#visitor_activities-view').parent().invoke("attr", "class").then((attr) => {
+                if ((visitorActivityView == false && attr.includes("ant-checkbox-checked")) || (visitorActivityView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#visitor_activities-view').click()
+                }
+            })
+        }
+
+
+        if (visitorActivityCRUD == true || visitorActivityCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowColapse, "Data Configuration").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Data Configuration").click()
+                }
+            })
+            cy.get('#visitor_activities-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((visitorActivityCRUD == false && attr.includes("ant-checkbox-checked")) || (visitorActivityCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#visitor_activities-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (trackLabelsView == true || trackLabelsView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowExpand, "Campaign Tools").click()
+            cy.get('#campaign_tools_track_labels-view').parent().invoke("attr", "class").then((attr) => {
+                if ((trackLabelsView == false && attr.includes("ant-checkbox-checked")) || (trackLabelsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#campaign_tools_track_labels-view').click()
+                }
+            })
+        }
+
+        if (trackLabelsCRUD == true || trackLabelsCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowExpand, "Campaign Tools").click()
+            cy.get('#campaign_tools_track_labels-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((trackLabelsCRUD == false && attr.includes("ant-checkbox-checked")) || (trackLabelsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#campaign_tools_track_labels-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (vexWidgetsCRUD == true || vexWidgetsCRUD == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowExpand, "Virtual Events").click()
+            cy.get('#virtual_event_settings-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((vexWidgetsCRUD == false && attr.includes("ant-checkbox-checked")) || (vexWidgetsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#virtual_event_settings-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (vexWidgetsView == true || vexWidgetsView == false) {
+            cy.contains('a', "Platform Settings").click()
+            cy.contains(this.arrowExpand, "Virtual Events").click()
+            cy.get('#virtual_event_settings-view').parent().invoke("attr", "class").then((attr) => {
+                if ((vexWidgetsView == false && attr.includes("ant-checkbox-checked")) || (vexWidgetsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#virtual_event_settings-view').click()
+                }
+            })
+        }
+
+        if (vexModuleCRUD == true || vexModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.campaignTools.trackLabelsView).invoke("attr", "class").then(checkboxClass => {
-                if(trackLabelsView && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.trackLabelsView).click()
-                }       
+            cy.contains(this.arrowExpand, "Virtual Events").click()
+            cy.get('#virtual_events_module_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((vexModuleCRUD == false && attr.includes("ant-checkbox-checked")) || (vexModuleCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#virtual_events_module_access-create-edit-delete').click()
+                }
             })
         }
-        
-        if(trackLabelsCRUD == true || trackLabelsCRUD == false){
+
+        if (vexView == true || vexView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.campaignTools.trackLabelsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(trackLabelsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !trackLabelsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.trackLabelsCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "Virtual Events").click()
+            cy.get('#virtual_events_module_access-view').parent().invoke("attr", "class").then((attr) => {
+                if ((vexView == false && attr.includes("ant-checkbox-checked")) || (vexView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#virtual_events_module_access-view').click()
+                }
             })
         }
 
-        if(campaignToolsSettingsCRUD == true || campaignToolsSettingsCRUD == false){
+        if (websiteToolsModuleCRUD == true || websiteToolsModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.campaignTools.campaignToolsSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.campaignToolsSettingsCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "Website Tools").click()
+            cy.get('#website_tools_module_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((websiteToolsModuleCRUD == false && attr.includes("ant-checkbox-checked")) || (websiteToolsModuleCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#website_tools_module_access-create-edit-delete').click()
+                }
             })
         }
-
-        if(campaignToolsSettingsView == true || campaignToolsSettingsView == false){
+        if (websiteToolsView == true || websiteToolsView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.campaignTools.campaignToolsSettingsView).invoke("attr", "class").then(checkboxClass => {
-                if(campaignToolsSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsSettingsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.campaignToolsSettingsView).click()
-                }       
+            cy.contains(this.arrowExpand, "Website Tools").click()
+            cy.get('#website_tools_module_access-view').parent().invoke("attr", "class").then((attr) => {
+                if ((websiteToolsView == false && attr.includes("ant-checkbox-checked")) || (websiteToolsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#website_tools_module_access-view').click({force:true})
+                }
             })
         }
-        
-        if(campaignsToolsView == true || campaignsToolsView == false){
+
+        if (campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.campaignTools.campaignsToolsView).invoke("attr", "class").then(checkboxClass => {
-                if(campaignsToolsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignsToolsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.campaignsToolsView).click()
-                }       
+            cy.contains(this.arrowExpand, "Campaign Tools").click()
+            cy.get('input[id*="Access-create-edit-delete"]').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsModuleCRUD == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('input[id*="Access-create-edit-delete"]').click()
+                }
             })
         }
 
-        if(vexSettingsCRUD == true || vexSettingsCRUD == false){
+        if (campaignToolsModuleView == true || campaignToolsModuleView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.vex.vexSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(vexSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.vex.vexSettingsCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "Campaign Tools").click()
+            cy.get('input[id*="Access-view"]').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsModuleView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsModuleView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('input[id*="Access-view"]').click({force:true})
+                }
             })
         }
-        if(vexSettingsView == true || vexSettingsView == false){
-            cy.get(this.vex.vexSettingsView).invoke("attr", "class").then(checkboxClass => {
-                if(vexSettingsView && checkboxClass.includes("checkbox-container--unchecked") || !vexSettingsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.vex.vexSettingsView).click()
-                }       
-            })
-        }
-        if(vexModuleCRUD == true || vexModuleCRUD == false){
+
+        if (contentLibraryView == true || contentLibraryView == false) {
             cy.contains('a', "Product Permissions").click()
-            cy.get(this.vex.vexModuleCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(vexModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !vexModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.vex.vexModuleCRUD).click()
-                }       
-            })
-        }
-        if(vexView == true || vexView == false){
-            cy.get(this.vex.vexView).invoke("attr", "class").then(checkboxClass => {
-                if(vexView && checkboxClass.includes("checkbox-container--unchecked") || !vexView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.vex.vexView).click()
-                }       
-            })
-        }
-        if(websiteToolsModuleCRUD == true || websiteToolsModuleCRUD == false){
-            cy.get(this.websiteTools.websiteToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !websiteToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.websiteTools.websiteToolsModuleCRUD).click()
-                }       
-            })
-        }
-        if(websiteToolsView == true || websiteToolsView == false){
-            cy.get(this.websiteTools.websiteToolsView).invoke("attr", "class").then(checkboxClass => {
-                if(websiteToolsView && checkboxClass.includes("checkbox-container--unchecked") || !websiteToolsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.websiteTools.websiteToolsView).click()
-                }       
+            cy.contains(this.arrowExpand, "Content Library").click()
+            cy.get('#content_library_feature_access-view').parent().invoke("attr", "class").then((attr) => {
+                if ((contentLibraryView == false && attr.includes("ant-checkbox-checked")) || (contentLibraryView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_library_feature_access-view').click()
+                }
             })
         }
 
-        if(contentconfigurationsCRUD == true || contentconfigurationsCRUD == false){
-            cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
-                }       
+        if (contentLibraryFeatureAccessCRUD == true || contentLibraryFeatureAccessCRUD == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Content Library").click()
+            cy.get('#content_library_feature_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((contentLibraryFeatureAccessCRUD == false && attr.includes("ant-checkbox-checked")) || (contentLibraryFeatureAccessCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_library_feature_access-create-edit-delete').click()
+                }
             })
         }
 
-        if(contentstrategyCRUD == true || contentstrategyCRUD == false){
-            cy.get(this.contentIntelligence.contentstrategyCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(contentstrategyCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentstrategyCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentIntelligence.contentstrategyCRUD).click()
-                }       
+        if (contentLibraryInsightsView == true || contentLibraryInsightsView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowColapse, "Content Library").invoke('attr', 'aria-expanded').then(attr => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Content Library").click()
+                }
+            })
+            cy.get('#content_library_insights-view').parent().invoke("attr", "class").then((attr) => {
+                if ((contentLibraryInsightsView == false && attr.includes("ant-checkbox-checked")) || (contentLibraryInsightsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_library_insights-view').click()
+                }
             })
         }
 
-        if(campaignToolsModuleCRUD == true || campaignToolsModuleCRUD == false){
-            cy.get(this.campaignTools.campaignToolsModuleCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsModuleCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.campaignToolsModuleCRUD).click()
-                }       
+        if (templetedExperiencecView == true || templetedExperiencecView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Templated Experiences").click()
+            cy.get('#templated_experiences_feature_access-view').parent().invoke("attr", "class").then((attr) => {
+                if ((templetedExperiencecView == false && attr.includes("ant-checkbox-checked")) || (templetedExperiencecView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#templated_experiences_feature_access-view').click()
+                }
             })
         }
 
-        if(contentLibraryInsightsView == true || contentLibraryInsightsView == false){
-            cy.get(this.contentLibrary.contentLibraryInsightsView).invoke("attr", "class").then(checkboxClass => {
-                if(contentLibraryInsightsView && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryInsightsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentLibrary.contentLibraryInsightsView).click()
-                }       
+        if (templetedExperiencecCRUD == true || templetedExperiencecCRUD == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Templated Experiences").click()
+            cy.get('#templated_experiences_feature_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((templetedExperiencecCRUD == false && attr.includes("ant-checkbox-checked")) || (templetedExperiencecCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#templated_experiences_feature_access-create-edit-delete').click()
+                }
             })
         }
 
-        if(contentLibraryFeatureAccessCRUD == true || contentLibraryFeatureAccessCRUD == false){
-            cy.get(this.contentLibrary.contentLibraryFeatureAccessCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(contentLibraryFeatureAccessCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentLibraryFeatureAccessCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentLibrary.contentLibraryFeatureAccessCRUD).click()
-                }       
+        if (goalsCRUD == true || goalsCRUD == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Goals").click()
+            cy.get('#goals_module_access-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((goalsCRUD == false && attr.includes("ant-checkbox-checked")) || (goalsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#goals_module_access-create-edit-delete').click()
+                }
             })
         }
 
-        if(userManagementCRUD == true || userManagementCRUD == false){
+        if (goalsView == true || goalsView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Goals").click()
+            cy.get('#goals_module_access-view').parent().invoke("attr", "class").then((attr) => {
+                if ((goalsView == false && attr.includes("ant-checkbox-checked")) || (goalsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#goals_module_access-view').click()
+                }
+            })
+        }
+
+        if (revenueIntelligenceView == true || revenueIntelligenceView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Revenue Intelligence").click()
+            cy.get('#revenue_enablement_accounts-view').parent().invoke("attr", "class").then((attr) => {
+                if ((revenueIntelligenceView == false && attr.includes("ant-checkbox-checked")) || (revenueIntelligenceView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#revenue_enablement_accounts-view').click()
+                }
+            })
+        }
+
+        if (websiteContentLibraryCRUD == true || websiteContentLibraryCRUD == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Content Intelligence").click()
+            cy.get('#content_intelligence_content_configurations-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((websiteContentLibraryCRUD == false && attr.includes("ant-checkbox-checked")) || (websiteContentLibraryCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_intelligence_content_configurations-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (websiteContentLibraryView == true || websiteContentLibraryView == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowExpand, "Content Intelligence").click()
+            cy.get('#content_intelligence_content_configurations-view').parent().invoke("attr", "class").then((attr) => {
+                if ((websiteContentLibraryView == false && attr.includes("ant-checkbox-checked")) || (websiteContentLibraryView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_intelligence_content_configurations-view').click()
+                }
+            })
+        }
+
+
+        if (contentStratergyCRUD == true || contentStratergyCRUD == false) {
+            cy.contains('a', "Product Permissions").click()
+            cy.contains(this.arrowColapse, "Content Intelligence").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Content Intelligence").click()
+                }
+            })
+
+            cy.get('#content_intelligence_content_strategy-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((contentStratergyCRUD == false && attr.includes("ant-checkbox-checked")) || (contentStratergyCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_intelligence_content_strategy-create-edit-delete').click()
+                }
+            })
+        }
+
+        if (contentStratergyView == true || contentStratergyView == false) {
+            cy.contains('a', "Product Permissions").click()
+
+            cy.contains(this.arrowColapse, "Content Intelligence").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Content Intelligence").click()
+                }
+            })
+
+            cy.get('#content_intelligence_content_strategy-view').parent().invoke("attr", "class").then((attr) => {
+                if ((contentStratergyView == false && attr.includes("ant-checkbox-checked")) || (contentStratergyView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#content_intelligence_content_strategy-view').click()
+                }
+            })
+        }
+
+        if (userManagementCRUD == true || userManagementCRUD == false) {
             cy.contains('a', "Administrative Controls").click()
-            cy.get(this.administrativeControls.userManagementCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(userManagementCRUD && checkboxClass.includes("checkbox-container--unchecked") || !userManagementCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.administrativeControls.userManagementCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "User Management").click()
+            cy.get('#user_management-create-edit-delete').parent().invoke("attr", "class").then((attr) => {
+                if ((userManagementCRUD == false && attr.includes("ant-checkbox-checked")) || (userManagementCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#user_management-create-edit-delete').click()
+                }
             })
         }
 
-        if(organizationSettingsCRUD == true || organizationSettingsCRUD == false){
+        if (userManagementView == true || userManagementView == false) {
             cy.contains('a', "Administrative Controls").click()
-            cy.get(this.administrativeControls.organizationSettingsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(organizationSettingsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !organizationSettingsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.administrativeControls.organizationSettingsCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "User Management").click()
+            cy.get('#user_management-view').parent().invoke("attr", "class").then((attr) => {
+                if ((userManagementView == false && attr.includes("ant-checkbox-checked")) || (userManagementView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#user_management-view').click()
+                }
             })
         }
 
-        if(redirectRulesCRUD == true || redirectRulesCRUD == false){
+        if (organizationSettingsCRUD == true || organizationSettingsCRUD == false) {
             cy.contains('a', "Administrative Controls").click()
-            cy.get(this.administrativeControls.redirectRulesCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(redirectRulesCRUD && checkboxClass.includes("checkbox-container--unchecked") || !redirectRulesCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.administrativeControls.redirectRulesCRUD).click()
-                }       
+            cy.contains(this.arrowExpand, "Organization Settings").click()
+            cy.get('input[id*=Settings-create-edit-delete]').parent().invoke("attr", "class").then((attr) => {
+                if ((organizationSettingsCRUD == false && attr.includes("ant-checkbox-checked")) || (organizationSettingsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('input[id*=Settings-create-edit-delete]').click()
+                }
             })
         }
 
-        if(campaignToolsAnalyticsView == true || campaignToolsAnalyticsView == false){
-            cy.get(this.campaignTools.campaignToolsAnalyticsView).invoke("attr", "class").then(checkboxClass => {
-                if(campaignToolsAnalyticsView && checkboxClass.includes("checkbox-container--unchecked") || !campaignToolsAnalyticsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.campaignTools.campaignToolsAnalyticsView).click()
-                }       
-            })
-        }
-        if(vexAnalysticsView == true || vexAnalysticsView == false){
-            cy.get(this.vex.vexAnalysticsView).invoke("attr", "class").then(checkboxClass => {
-                if(vexAnalysticsView && checkboxClass.includes("checkbox-container--unchecked") || !vexAnalysticsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.vex.vexAnalysticsView).click()
-                }       
-            })
-        }
-        if(WebsiteToolsAnalysticsView == true || WebsiteToolsAnalysticsView == false){
-            cy.get(this.websiteTools.WebsiteToolsAnalysticsView).invoke("attr", "class").then(checkboxClass => {
-                if(WebsiteToolsAnalysticsView && checkboxClass.includes("checkbox-container--unchecked") || !WebsiteToolsAnalysticsView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.websiteTools.WebsiteToolsAnalysticsView).click()
-                }       
-            })
-        }
-        if(contentconfigurationsCRUD == true || contentconfigurationsCRUD == false){
-            cy.get(this.contentIntelligence.contentconfigurationsCRUD).invoke("attr", "class").then(checkboxClass => {
-                if(contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--unchecked") || !contentconfigurationsCRUD && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentIntelligence.contentconfigurationsCRUD).click()
-                }       
-            })
-        }
-        if(contentConfigurationView == true || contentConfigurationView == false){
-            cy.get(this.contentIntelligence.contentConfigurationView).invoke("attr", "class").then(checkboxClass => {
-                if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !contentConfigurationView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.contentIntelligence.contentConfigurationView).click()
-                }       
+        if (organizationSettingsView == true || organizationSettingsView == false) {
+            cy.contains('a', "Administrative Controls").click()
+            cy.contains(this.arrowExpand, "Organization Settings").click()
+            cy.get('#Organization Settings-view').parent().invoke("attr", "class").then((attr) => {
+                if ((organizationSettingsView == false && attr.includes("ant-checkbox-checked")) || (organizationSettingsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Organization Settings-view').click()
+                }
             })
         }
 
-        if(webhooksVisitorActivityView == true || webhooksVisitorActivityView == false){
-            cy.contains('a', "Platform Settings").click()
-            cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).invoke("attr", "class").then(checkboxClass => {
-                if(contentConfigurationView && checkboxClass.includes("checkbox-container--unchecked") || !webhooksVisitorActivityView && checkboxClass.includes("checkbox-container--checked")) {
-                    cy.get(this.dataConfigurationSettings.webhooksVisitorActivityView).click()
-                }       
+        if (campaignToolsAnalyticsOverviewView == true || campaignToolsAnalyticsOverviewView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Campaign Tools").click()
+
+            cy.get('#pa_ct_overview-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsOverviewView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsOverviewView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_ct_overview-view').click()
+                }
+            })
+
+        }
+
+        if (campaignToolsAnalyticsAccountView == true || campaignToolsAnalyticsAccountView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowColapse, "Campaign Tools").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Campaign Tools").click()
+                }
+            })
+
+            cy.get('#pa_ct_accounts-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsAccountView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsAccountView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_ct_accounts-view').click()
+                }
+            })
+
+        }
+
+        if (campaignToolsAnalyticsVisitorView == true || campaignToolsAnalyticsVisitorView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowColapse, "Campaign Tools").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Campaign Tools").click()
+                }
+            })
+
+            cy.get('#pa_ct_visitors-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsVisitorView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsVisitorView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_ct_visitors-view').click()
+                }
+            })
+
+        }
+
+        if (campaignToolsAnalyticsContentView == true || campaignToolsAnalyticsContentView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowColapse, "Campaign Tools").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Campaign Tools").click()
+                }
+            })
+
+            cy.get('#pa_ct_content-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsContentView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsContentView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_ct_content-view').click()
+                }
+            })
+
+        }
+
+        if (campaignToolsAnalyticsReportView == true || campaignToolsAnalyticsReportView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowColapse, "Campaign Tools").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Campaign Tools").click()
+                }
+            })
+
+            cy.get('#Reports-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsReportView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsReportView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Reports-view').click()
+                }
+            })
+
+        }
+
+        if (campaignToolsAnalyticsLegacyView == true || campaignToolsAnalyticsLegacyView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowColapse, "Campaign Tools").invoke('attr', 'aria-expanded').then((attr) => {
+                if (attr !== true) {
+                    cy.contains(this.arrowExpand, "Campaign Tools").click()
+                }
+            })
+
+            cy.get('#Legacy Analytics-view').parent().invoke("attr", "class").then((attr) => {
+                if ((campaignToolsAnalyticsLegacyView == false && attr.includes("ant-checkbox-checked")) || (campaignToolsAnalyticsLegacyView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Legacy Analytics-view').click()
+                }
+            })
+
+        }
+
+        if (scheduleReportsView == true || scheduleReportsView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Scheduled Reports").click()
+            cy.get('#path_analytics_schedule_reports-view').parent().invoke("attr", "class").then((attr) => {
+                if ((scheduleReportsView == false && attr.includes("ant-checkbox-checked")) || (scheduleReportsView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#path_analytics_schedule_reports-view').click()
+                }
+            })
+        }
+
+        if (WebsiteToolsAnalysticsOverviewView == true || WebsiteToolsAnalysticsOverviewView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Website Tools").click()
+
+            cy.get('#pa_wt_overview-view').parent().invoke("attr", "class").then((attr) => {
+                if ((WebsiteToolsAnalysticsOverviewView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsOverviewView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_wt_overview-view').click()
+                }
+            })
+
+        }
+
+        if (WebsiteToolsAnalysticsAccountView == true || WebsiteToolsAnalysticsAccountView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Website Tools").click()
+
+            cy.get('#pa_wt_account-view').parent().invoke("attr", "class").then((attr) => {
+                if ((WebsiteToolsAnalysticsAccountView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsAccountView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_wt_account-view').click({force: true})
+                }
+            })
+
+        }
+
+        if (WebsiteToolsAnalysticsVisitorView == true || WebsiteToolsAnalysticsVisitorView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Website Tools").click()
+
+            cy.get('#pa_wt_visitor-view').parent().invoke("attr", "class").then((attr) => {
+                if ((WebsiteToolsAnalysticsVisitorView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsVisitorView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#pa_wt_visitor-view').click()
+                }
+            })
+
+        }
+
+        if (WebsiteToolsAnalysticsContentView == true || WebsiteToolsAnalysticsContentView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Website Tools").click()
+
+            cy.get('#Content-view').parent().invoke("attr", "class").then((attr) => {
+                if ((WebsiteToolsAnalysticsContentView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsContentView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#Content-view').click({force: true})
+                }
+            })
+
+        }
+
+        if (vexAnalysticsView == true || vexAnalysticsView == false) {
+            cy.contains('a', "Analytics Permissions").click()
+            cy.contains(this.arrowExpand, "Virtual Events").click()
+            cy.get('#path_analytics_virtual_events-view').parent().invoke("attr", "class").then((attr) => {
+                if ((WebsiteToolsAnalysticsContentView == false && attr.includes("ant-checkbox-checked")) || (WebsiteToolsAnalysticsContentView == true && !attr.includes("ant-checkbox-checked"))) {
+                    cy.get('#path_analytics_virtual_events-view').click()
+                }
             })
         }
 
         cy.contains("button", "Save").click()
-        cy.get("body").should("contain", "The record was saved successfully.", {timeout: 3000})
+        cy.get("body").should("contain", "The record was saved successfully.", { timeout: 3000 })
     }
 
-
-    deleteUserRole(userRole, verify){
+    deleteUserRole(userRole, verify) {
         cy.visit(this.userRoles.pageURL)
-        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.waitFor({ element: this.pageSidebar, to: "exist", wait: 10000 })
         cy.get(this.pageSidebar).within(sidebar => {
-            if (sidebar.find(`div:contains("${userRole}")`).length > 0, {timeout: 5000}) {
+            if (sidebar.find(`div:contains("${userRole}")`).length > 0, { timeout: 5000 }) {
                 cy.containsExact("div", userRole).siblings("div").within(() => {
-                    cy.get(this.userRoles.deleteRoleIcon).click({force: true})
+                    cy.get(this.userRoles.deleteRoleIcon).click({ force: true })
                 })
                 cy.do(() => {
                     Cypress.$("button:contains('Delete Role')").click()
@@ -469,23 +1008,23 @@ export class UserManagement extends Common {
         // select user
         cy.get(this.pageBody).within(() => {
             cy.wait(2000)
-            cy.contains("span", userName, {timeout: 5000}).click()
+            cy.contains("span", userName, { timeout: 5000 }).click()
         })
         // remove all existing roles
-        cy.get(this.userRolePreview).within(()=>{
+        cy.get(this.userRolePreview).within(() => {
             cy.contains("h5", "User Role").click()
-            cy.get(this.dropdown.box).within( box => {
-                for (let i = 0; i < box.find(this.dropdown.selectedValue).length; i++){
+            cy.get(this.dropdown.box).within(box => {
+                for (let i = 0; i < box.find(this.dropdown.selectedValue).length; i++) {
                     cy.get("span[class='Select-value-icon']").first().click()
                 }
 
                 //assign new roles
                 roles.forEach(role => {
-                    cy.get(this.dropdown.input).type(role + "\n", {force: true})
+                    cy.get(this.dropdown.input).type(role + "\n", { force: true })
                 })
             })
             cy.contains("button", "Save").click()
-        })  
+        })
 
     }
 

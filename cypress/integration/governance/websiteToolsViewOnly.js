@@ -14,9 +14,10 @@ const role = {
     roleName: "Custom",
     websiteToolsModuleCRUD: false,
     websiteToolsView: true,
-    WebsiteToolsAnalysticsView: true,
-    contentconfigurationsCRUD: false,
-    contentConfigurationView: true
+    WebsiteToolsAnalysticsOverviewView: true,
+    WebsiteToolsAnalysticsAccountView: true,
+    WebsiteToolsAnalysticsVisitorView: true,
+    WebsiteToolsAnalysticsContentView: true
 }
 
 const domainName = "pathfactory-qa-wp.com"
@@ -52,13 +53,6 @@ describe("WT View Only Permissions", () => {
     cy.get(authoring.websiteTools.viewOnlyLocators.titlebar).should("exist").click()
     cy.get(authoring.websiteTools.viewOnlyLocators.domainCardInput).should("exist")
     authoring.common.togglemethod(authoring.websiteTools.viewOnlyLocators.domainCardInput)
-    cy.contains('div', "Load Eloqua Tracking Script").siblings('div').click()
-    cy.get(authoring.websiteTools.dropDownModal).should("not.exist")
-
-    authoring.common.togglemethod(authoring.websiteTools.viewOnlyLocators.recommendationsEnabled)
-
-    cy.contains('div', "External Link Action").siblings('div').click()
-    cy.get(authoring.websiteTools.dropDownModal).should("not.exist")
 
     cy.contains('span', "Save").should("not.exist")
     cy.contains('span', "Close").should("exist").click()
@@ -95,7 +89,7 @@ describe("WT View Only Permissions", () => {
 
     cy.get(authoring.websiteTools.targetElementID).should("exist")
 
-    cy.contains('span', "Featured Content").should("exist").click()
+    cy.contains('button', "Featured Content").should("exist").click()
     cy.contains('h3', "Edit Featured Content").should("not.exist")
     cy.contains('span', "Add Featured Content Items").should("not.exist")
     cy.contains('span', "Remove").should("not.exist")

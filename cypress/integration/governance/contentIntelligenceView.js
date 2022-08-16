@@ -12,9 +12,8 @@ const user = {
 
 const role = {
     roleName: "Custom",
-    contentstrategyCRUD: false,
+    contentStratergyCRUD: false,
     contentStratergyView: true,
-    contentConfigurationView: true
 }
 
 describe("View Only Permissions", () => {
