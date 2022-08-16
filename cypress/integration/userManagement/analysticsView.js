@@ -55,7 +55,8 @@ describe('Governanace Analytics for Tools', function() {
         //login and check permissions
         authoring.common.login(user.userName, user.password)
 
-        cy.get("#content-library").should("not.exist")
+        cy.get("#content-library").should("exist").click()
+        cy.contains('button', "Add Content").should("not.exist")
         cy.get(authoring.common.contentActivation).should("exist")
         cy.get(authoring.common.contentActivation).click()
         cy.get("#campaign-tools").should("exist")

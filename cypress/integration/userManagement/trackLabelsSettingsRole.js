@@ -317,7 +317,8 @@ describe('Track Labels Settings User Role', function() {
         authoring.common.login()
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.clickUserRole(role.roleName)
-        cy.get('#campaign_tools_track_labels-create-edit-delete', {timeout: 4000}).click()
+        cy.contains('a', "Platform Settings").click()
+        cy.contains(authoring.userManagement.arrowExpand, "Campaign Tools").click()
         cy.get('#campaign_tools_track_labels-create-edit-delete', {timeout: 4000}).click()
 
         cy.contains("button", "Save").click()
