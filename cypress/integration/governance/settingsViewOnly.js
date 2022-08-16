@@ -90,7 +90,6 @@ describe("View Only Permissions", () => {
         //External Code View Permission
         cy.get("#configurations").should("exist").click()
         cy.contains("a", "External Code").should("exist").click()
-        cy.pause()
         cy.contains("button", "Add External Code").should("not.exist")
         cy.get(authoring.common.pageBody).should("exist")
         cy.contains('div', "Body Organization Settings").click()
