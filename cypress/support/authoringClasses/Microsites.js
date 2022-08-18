@@ -1474,7 +1474,6 @@ export class Microsites extends Common {
     verifySearchAndFilterOptions(options) {
         options.forEach(option => {
             cy.contains(this.antTabs, option.label).should("be.visible").click()
-            cy.contains(this.searchAndFilter.swicthInnerLabel, "Show").should('be.visible')
             if (option.label != "Search") {
                 if (cy.get(this.searchAndFilter.listOption).find(this.searchAndFilter.itemsList).length > 1) {
                     cy.get(this.searchAndFilter.listOption).eq(1).invoke('attr', 'title').then(text => {

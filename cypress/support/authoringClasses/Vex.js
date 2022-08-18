@@ -1945,7 +1945,9 @@ export class Vex extends Common {
         const layout = config.layout
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
+        cy.wait(3000)
         cy.waitFor({ element: this.pages.addBlockButton, to: "exist", wait: 10000 })
+        cy.wait(2000)
         cy.get(this.pages.addBlockButton).eq(0).click({ force: true }) // Always pick first one and add to top 
 
         if (type == "html") {
@@ -2517,7 +2519,7 @@ export class Vex extends Common {
             }
         } else if (method == "clone button") {
             cy.containsExact(this.antCell, template).parent().within(() => {
-                cy.contains("button", "Clone").click()
+                cy.contains("a", "Clone").click()
             })
             cy.contains(this.antModal, "Clone this Page").within(() => {
                 cy.get(this.pages.nameInput).clear().type(name)

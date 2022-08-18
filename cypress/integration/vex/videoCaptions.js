@@ -268,7 +268,7 @@ describe('VEX - Virtual Event', function () {
 
             cy.contains(consumption.vex.sessionCardTitle, session.name, { timeout: 10000 }).click()
             if (session.type === 'Live' && i == 0) {
-                cy.get(consumption.vex.emailInput).clear().type("test@gmail.com")
+                cy.get(consumption.vex.emailInput).type("test@gmail.com",{force:true})
                 cy.get(consumption.vex.submitButton).click()
                 i++;
             }
@@ -330,7 +330,7 @@ describe('VEX - Virtual Event', function () {
 
             cy.contains(consumption.vex.sessionCardTitle, session.name, { timeout: 10000 }).click()
             if (session.type === 'Live' && i == 0) {
-                cy.get(consumption.vex.emailInput).clear().type("test@gmail.com")
+                cy.get(consumption.vex.emailInput).type("test@gmail.com",{force:true})
                 cy.get(consumption.vex.submitButton).click()
                 i++;
             }
