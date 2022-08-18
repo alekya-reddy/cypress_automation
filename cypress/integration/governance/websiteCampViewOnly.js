@@ -13,8 +13,11 @@ const user = {
 const role = {
     roleName: "Custom",
     campaignToolsModuleCRUD: false,
-    campaignsToolsView : true,
-    campaignToolsAnalyticsView: true
+    campaignToolsModuleView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
 }
 
 const website = "http://pathfactory-qa-wp.com/automation-analytics"
@@ -39,7 +42,7 @@ describe("View Only Permissions", () => {
            cy.contains('div', "Analytics").should('be.visible')
            cy.contains('button', "Add Website URL").should("not.exist")
            cy.contains('span', "Enabled").should('be.visible')
-           cy.contains('span', "Promoters Enabled").should('be.visible')
+           cy.contains('th', "Promoters Enabled").should('be.visible')
            cy.contains('a', website).should('be.visible').click()
 
            cy.contains('h5', "Enabled").should('be.visible')
@@ -57,10 +60,10 @@ describe("View Only Permissions", () => {
            cy.contains('label', "Language").should('be.visible').next().click()
            cy.get(authoring.common.popover).should("not.exist")
            cy.wait(500)
-           cy.contains('div', "Cookie Consent").should('be.visible')
+           cy.contains('div', "COOKIE CONSENT").should('be.visible')
            authoring.common.togglemethod(authoring.website.gdprCookie)
          
-           cy.contains('div', "In Page").should('be.visible')
+           cy.contains('div', "IN PAGE").should('be.visible')
            authoring.common.togglemethod(authoring.website.inpageEnabled)
         
           cy.contains('label', "Add In Page slots").should("not.exist")

@@ -13,7 +13,8 @@ const user =
 
 const role = {
     roleName: "General Settings Role.Js",
-    imageLibExtCodeAccProtectionAccess: true,
+    imageLibraryCRUD: true,
+    accessProtectionCRUD: true,
     contentTagsCreateEditView: true
 }
 
@@ -344,9 +345,9 @@ describe('General Settings User Role', function() {
         cy.visit(authoring.userManagement.userRoles.pageURL)
         authoring.userManagement.clickUserRole(role.roleName)
         cy.contains('a', "Platform Settings").click()
-        cy.get(authoring.userManagement.generalSettings.contentTagsCreateEditView, {timeout: 4000}).click()
-        cy.get(authoring.userManagement.generalSettings.contentTagsView, {timeout: 4000}).click()
-
+        cy.contains(authoring.userManagement.arrowExpand, "General Settings").click()
+        cy.get('input[id*="Tags-create-edit-delete"]').click()
+    
         cy.contains("button", "Save").click()
         cy.get("body").should("contain", "The record was saved successfully.", {timeout: 4000})
 

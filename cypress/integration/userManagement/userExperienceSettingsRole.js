@@ -13,7 +13,15 @@ const user =
 
 const role = {
     roleName: "User Experience Settings Role.Js",
-    userExperienceSettingsCreateEditView: true
+    linksshareView: true,
+    linksshareCreateEditView: true,
+    formsView: true,
+    formsCRUD: true,
+    cTASView: true,
+    cTASCRUD: true,
+    appearanceCRUD: true,
+    appearanceView: true,
+    languagesCRUD: true
 }
 
 const cta = {

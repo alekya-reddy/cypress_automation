@@ -63,8 +63,9 @@ describe('Virtual Events Module User Role', function() {
         authoring.common.login(user.userName, user.password)
 
         // module navigation
+        cy.get(authoring.common.contentActivation).click()
         cy.get("#content-library").should("not.exist")
-        cy.get("#campaign-tools").should("not.exist")
+        cy.get("#campaign-tools").should("exist")
         cy.get("#virtual-events").should("exist")
         cy.get("#website-tools").should("not.exist")
         cy.get("#content-configurations").should("not.exist")

@@ -435,7 +435,7 @@ export class Recommend extends Common {
         const addcta = config.addcta
 
        cy.get(this.pageSidebar.topicSidebarToggle).parents().eq(1).within(() => {
-            cy.contains("label", ctaNumber).siblings("span").click()
+            cy.contains("label", ctaNumber).siblings("span").click({force:true})
         })
             cy.get(this.popover).within(()=>{
             if(Cypress.$(this.clearValueIcon).length > 0){

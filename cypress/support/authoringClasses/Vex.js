@@ -64,8 +64,8 @@ export class Vex extends Common {
         this.pageNumber = 'li[class="ant-pagination-simple-pager"]';
         this.radioButtonclick = 'div[class="ant-radio-group ant-radio-group-outline"]>label:nth-child(2)';
         this.radioButtonDisable = 'ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-disabled';
-        this.serachFilterToggle = 'div[class="ant-switch-handle"]';
-        this.toggleChecked = 'button[class="ant-switch ant-switch-checked"]';
+        this.serachFilterToggle = 'button[role="switch"]';
+        this.toggleChecked = 'button[class*="ant-switch-disabled"]';
         this.analyticsOverviewDropdown = 'div[class="ant-select-item-option-content"]';
         this.editfolder = 'i[title="Edit Folder"]',
             this.copyVex = 'span[aria-label="copy"]',

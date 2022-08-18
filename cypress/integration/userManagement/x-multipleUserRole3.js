@@ -159,6 +159,7 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
 
         // module navigation
         cy.get("#content-library").should("not.exist")
+        cy.get(authoring.common.contentActivation).should("exist").click()
         cy.get("#campaign-tools").should("exist")
         cy.get("#campaign-tools").click()
         cy.get("#target").should("exist")
@@ -192,7 +193,7 @@ describe('Campaign Tools Module + CT Settings + User Experience Settings Access'
             cy.contains("a", "Webhooks").should("not.exist")
             cy.contains("a", "Visitor Activities").should("not.exist")
 
-            cy.contains("div", "Campaign Tools").should("not.exist")
+            cy.contains("div", "Campaign Tools").should("exist")
             cy.contains("a", "Segments").should("not.exist")
             cy.contains("a", "Routes").should("not.exist")
             cy.contains("a", "Track Labels").should("not.exist")
