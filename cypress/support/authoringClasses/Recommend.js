@@ -14,7 +14,6 @@ export class Recommend extends Common {
         this.recommendAnalytics = "a[id='TrackAnalyticsLink']";
         this.analyticsActivities = 'div[data-qa-hook="visitor-activities-card"]';
         this.contentClick = "div[draggable='true']:nth-child(2)";
-        this.recommendContent = ".sc-jffIyK";
         this.previewLink = 'div[data-qa-hook="page-preview"]>div>div:nth-child(2)>div>div>div';
         this.recommendCell = 'div[data-qa-hook="table-cell-internal-title"]>span';
         this.analyticsButton = "div[data-qa-hook='title-bar'] a",
