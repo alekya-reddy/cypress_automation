@@ -2032,19 +2032,23 @@ export class Configurations extends Common {
 
     }
 
-    configureAccessProtectionAppearance(options) {
-        const { appearance, thumbnail, submitButtonColor, verify } = options
-        const { headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP } = options
-        const { bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP } = options
-        const { emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP } = options
-        const { submitButtonFontFamilyLP, submitButtonFontWeightLP, submitButtonFontSizeLP, submitButtonTextFontColorLP, submitButtonRadiusLP } = options
+    configureAccessProtectionAppearance(options){
+        const {appearance,thumbnail,logo,submitButtonColor,verify} = options
+        const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
+        const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
+        const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
+        const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
 
         this.goToCampaignAppearance(appearance, "access-protection")
         if (thumbnail) {
             cy.get(this.appearances.imagePicker).first().click()
             this.pickThumbnail(thumbnail)
         }
-        if (submitButtonColor) {
+        if (logo) {
+            cy.get(this.appearances.imagePicker).eq(1).click()
+            this.pickThumbnail(logo)
+        }
+        if(submitButtonColor){
             const { r, g, b, a } = submitButtonColor
             this.pickColor({ button: this.appearances.accessProtection.submitButtonColorLP, r: r, g: g, b: b, a: a })
         }
