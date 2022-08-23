@@ -13,6 +13,7 @@ const event = {
 describe("Add form and validate sidebar with VEX", () => {
     it("Configure VEX and add form ", () => {
         authoring.common.login()
+        authoring.clientHQ.clientHQToggle(authoring.clientHQ.virtualEventToggle, 'on');
         authoring.configurations.deleteForm("VEXform")
 
         authoring.configurations.addForm("VEXform")
@@ -26,7 +27,7 @@ describe("Add form and validate sidebar with VEX", () => {
         authoring.vex.configureForm(form)
         //Ensure that added VEX shows on form sidebar and clicking on it will redirect to it's configuartion page
         authoring.configurations.visit.forms()
-        cy.reload()
+        cy.get(`input[name="page-search"]`,{ timeout: 20000 }).type(form.name)
         cy.contains(authoring.common.table.cellName, form.name, { timeout: 20000 }).click()
         cy.get('h5').contains('Virtual Events').next().click()
 
@@ -34,10 +35,9 @@ describe("Add form and validate sidebar with VEX", () => {
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event.name)
         authoring.configurations.visit.forms()
-        cy.reload()
+        cy.get(`input[name="page-search"]`,{ timeout: 20000 }).type(form.name)
         cy.contains(authoring.common.table.cellName, form.name, { timeout: 20000 }).click()
         cy.contains('Not added to any Virtual Events').should('exist')
-
     })
 
 })

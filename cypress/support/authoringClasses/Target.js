@@ -476,8 +476,12 @@ export class Target extends Common {
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
             cy.contains("label", ctaNumber).siblings("span").click({force:true})
             cy.contains("label", "CTA").siblings("span").click()
+        cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click({force:true})
+
         })
-        cy.get(this.popover).within(() => {
+
+            cy.get(this.popover).within(()=>{
             if(Cypress.$(this.clearValueIcon).length > 0){
                 cy.get(this.clearValueIcon).click()
             }
@@ -501,8 +505,14 @@ export class Target extends Common {
             cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
                 cy.containsExact("span", flowCTA, {timeout: 10000}).should("exist")
             })
+        })
+
+        if(addcta){
+            cy.wait(3000)
+            cy.contains('div', "+ Add CTA").click({force: true})
         }
     }
+
 
     configureEndPromoter(endPromoterOptions, verify){
         const { link, ctaLabel, cta, delay } = endPromoterOptions

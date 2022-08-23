@@ -14,7 +14,6 @@ const role = {
     roleName: "Campaign Tool Settings Role.Js",
     personalizationCreateEditView: true,
     trackLabelsCRUD: false,
-    trackLabelsView: false
 }
 
 const route = {

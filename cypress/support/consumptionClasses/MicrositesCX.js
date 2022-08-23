@@ -7,24 +7,24 @@ export class MicrositesCX extends CommonCX {
         this.gridLayout = 'div[class*="pf-microsite-grid"]';
         this.gridCard = ".pf-microsite-card";
         this.cardTitle = ".pf-microsite-card-title";
-        this.topicFilter = "#microsite_topics"
-        this.contentTypeFilter = '#microsite_contentTypeName'
-        this.funnelStageFilter = '#microsite_funnelStages'
-        this.industryFilter = '#microsite_industries'
-        this.personaFilter = '#microsite_personas'
-        this.languageFilter = '#microsite_languages'
-        this.businessUnitFilter = '#microsite_businessUnits'
+        this.topicFilter = "#microsite_topics_0"
+        this.contentTypeFilter = '#microsite_contentTypeName_0'
+        this.funnelStageFilter = '#microsite_funnelStages_0'
+        this.industryFilter = '#microsite_industries_0'
+        this.personaFilter = '#microsite_personas_0'
+        this.languageFilter = '#microsite_languages_0'
+        this.businessUnitFilter = '#microsite_businessUnits_0'
         this.filterByValue = "li[class='p-multiselect-item'] > span > span > div"
         this.filterByValueExisting = "li[class='p-multiselect-item p-highlight'] > span > span > div"
         this.clearFilterValue = "#qa-microsite-topic-filter-clear-selected"
-        this.searchInput = 'input[type="search"]'
+        this.searchInput = '#microsite_search_input_0'
         this.searchWithinFilterDropdown = "input[class='p-inputtext p-component p-multiselect-filter']"
         this.searchAndFiltersDDOptionText = "li.p-multiselect-item"
         this.arrowRight = "#qa-arrow-right"
         this.arrowLeft = "#qa-arrow-left";
-        this.searchFilter = "#microsite_search_button";
-        this.searchInputField = "#microsite_search_input";
-        this.carouselArrow_color = "#qa-arrow-right";
+        this.searchFilter = "#microsite_search_button_0";
+        this.searchInputField = "#microsite_search_input_0";
+        this.carouselArrow_color = "#qa-arrow-right-0";
         this.carouselArrow_bgColor = ".slick-next";
         this.noResultsMsg = "#pf-microsite>div>div>div:nth-child(3)";
         this.navigation = {
@@ -37,14 +37,13 @@ export class MicrositesCX extends CommonCX {
         };
         this.blocks = "[data-react-beautiful-dnd-draggable='0']"
         this.addBlockButtons = "button[class*='AddBlockButton']"
-        this.searchButton = '#microsite_search_button'
-        this.searchInput = '#microsite_search_input'
+        this.searchButton = '#microsite_search_button_0'
         this.removeFilters = "div[class='chip'] > span"
         this.filterLabel = "div[class='chip']"
         this.filterValues = "div.p-connected-overlay-enter-done .p-multiselect-items.p-component li div[class*='sc']"
         this.youtube = {
             // Within are a bunch of useful youtube apis that I got from playing with the 'video' element in the dev console 
-            iframe: 'iframe[title="YouTube video player"]',
+            iframe: 'iframe[id*="lookbook-video-player"]',
             videoPlayer: 'video',
             play: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'play()') },
             pause: function () { cy.invokeWithinFrame(this.iframe, this.videoPlayer, 'pause()') },
@@ -270,7 +269,7 @@ export class MicrositesCX extends CommonCX {
     }
     searchMicrositeCard(searchTerm) {
         // Must be within session group block before using this function
-        cy.get(this.searchInput).clear().type(searchTerm)
+        cy.get(this.searchInputField).clear().type(searchTerm)
         cy.get(this.searchFilter).click()
     }
 
@@ -305,7 +304,7 @@ export class MicrositesCX extends CommonCX {
         let option
         let splittedValues = []
 
-        cy.get(`#microsite_${filterName}`).should('be.visible', { timeout: 10000 }).click()
+        cy.get(`#microsite_${filterName}_0`).should('be.visible', { timeout: 10000 }).click()
         cy.wait(1000)
         indexes.forEach(index => {
             cy.get(`.p-multiselect-panel .p-multiselect-items li:nth-child(${index}) span div`, { timeout: 10000 }).invoke('text').then(text => {

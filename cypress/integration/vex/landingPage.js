@@ -213,7 +213,7 @@ describe("VEX - Landing Page Editor", ()=>{
         authoring.vex.editLandingPage({name: "Edit me", newName: "Delete me"})
         //verify helper text
         cy.contains('td', testLandingPage.name).siblings("td").within(() => {
-            cy.contains("span", "Edit").click({force: true})
+            cy.contains("a", "Edit").click({force: true})
         })
         cy.contains("div", "Used for title tag, meta title and og title. Appears in search result when event link is shared on social media.").should("exist")
         cy.contains("div", "Used for og image and appears when event link is shared on social media.")

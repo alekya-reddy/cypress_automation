@@ -12,9 +12,15 @@ const user = {
 
 const role = {
     roleName: "Analytics Role.Js",
-    campaignToolsAnalyticsView: true,
-    vexAnalysticsView: true,
-    WebsiteToolsAnalysticsView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
+    //vexAnalysticsView: true,
+    WebsiteToolsAnalysticsOverviewView: true,
+    WebsiteToolsAnalysticsVisitorView: true,
+    WebsiteToolsAnalysticsAccountView: true,
+    WebsiteToolsAnalysticsContentView: true,
     vexModuleCRUD: true,
     websiteToolsModuleCRUD: true,
     campaignToolsModuleCRUD: true,
@@ -49,7 +55,10 @@ describe('Governanace Analytics for Tools', function() {
         //login and check permissions
         authoring.common.login(user.userName, user.password)
 
-        cy.get("#content-library").should("not.exist")
+        cy.get("#content-library").should("exist").click()
+        cy.contains('button', "Add Content").should("not.exist")
+        cy.get(authoring.common.contentActivation).should("exist")
+        cy.get(authoring.common.contentActivation).click()
         cy.get("#campaign-tools").should("exist")
         cy.get("#target").should("not.exist")
         cy.get("#recommend").should("not.exist")

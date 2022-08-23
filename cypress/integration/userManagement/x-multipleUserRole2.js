@@ -72,7 +72,8 @@ describe('Content Library + Insights + Org Settings + User Management + Data Con
 
         // module navigation
         cy.get("#content-library").should("exist")
-        cy.get("#campaign-tools").should("not.exist")
+        cy.get(authoring.common.contentActivation).click()
+        cy.get("#campaign-tools").should("exist")
         cy.get("#target").should("not.exist")
         cy.get("#recommend").should("not.exist")
         cy.get("#explore").should("not.exist")
@@ -104,7 +105,7 @@ describe('Content Library + Insights + Org Settings + User Management + Data Con
             cy.contains("a", "Webhooks").should("exist")
             cy.contains("a", "Visitors Activities").should("exist")
 
-            cy.contains("div", "Campaign Tools").should("not.exist")
+            cy.contains("div", "Campaign Tools").should("exist")
             cy.contains("a", "Segments").should("not.exist")
             cy.contains("a", "Routes").should("not.exist")
             cy.contains("a", "Track Labels").should("not.exist")

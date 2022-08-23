@@ -447,8 +447,8 @@ const vexsessions = [
         cy.window().then(win => win.location.href = event.url);
         cy.get(consumption.common.ciscoEmailInput).type(ciscoEmail)
         cy.get(consumption.common.ciscoNextButton).click()
-        cy.wait(3000)
-        cy.get(consumption.common.ciscoPasswordInput,{timeout:10000}).type(ciscoPassowrd)
+        cy.wait(15000)
+        cy.get(consumption.common.ciscoPasswordInput,{timeout:30000}).type(ciscoPassowrd)
         cy.get(consumption.common.ciscoLogIn).click()
         cy.contains("Browse Sessions").should("exist")
         cy.window().then(win => win.location.href = vexsessions[1].url); //Visit Session consumption

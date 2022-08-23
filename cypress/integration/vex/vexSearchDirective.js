@@ -158,13 +158,13 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.visit(event.url)
         cy.wait(7000)
         // Verifying canonical URL of VEX
-        cy.get('link[rel="canonical"]').should("have.attr", "href", event.url);
+        cy.get('link[rel="canonical"]').should("have.attr", "href", (event.url).toLocaleLowerCase());
         //VEX landing page: include SEO configuration, og and twitter fields [We can verify SEO configurations with any SED values]
         cy.get('meta[property="og:site_name"]').should("have.attr", "content", "automation-vex");
         cy.get('meta[property="og:image"]').should("have.attr", "content", "https://cdn.qa-pathfactory.com/images/default.png"); 
         cy.get('meta[name="twitter:image"]').should("have.attr", "content", "https://cdn.qa-pathfactory.com/images/default.png"); 
         cy.get('meta[property="og:description"]').should("have.attr", "content", "Virtual Event"); 
-        cy.get('meta[property="twitter:description"]').should("have.attr", "content", "Virtual Event");
+        cy.get('meta[name="twitter:description"]').should("have.attr", "content", "Virtual Event");
         cy.get('meta[property="og:image:height"]').should("have.attr", "content", "384"); 
         cy.get('meta[property="og:image:width"]').should("have.attr", "content", "576");  
         cy.get('meta[property="og:type"]').should("have.attr", "content", "website");  
@@ -176,7 +176,7 @@ describe("VEX- Search Engine Directive and SEO configurations Validations", () =
         cy.wait(1000)
         //When the session URL is rendered from the session, should have a session URL as a canonical URL(in automation it returns event URL) in the page source.
         cy.contains(consumption.vex.sessionCardTitle, publicSession.name).should('exist').click()
-        cy.get('link[rel="canonical"]').should("have.attr", "href", event.url);
+        cy.get('link[rel="canonical"]').should("have.attr", "href", (publicSession.url).toLocaleLowerCase());
         //When any supplemental content URL is rendered from the server-side, should have a no_index and no_follow meta name robots the page source.
         cy.get(consumption.vex.supplementalContent).children("li").eq(0).click()
         //NOTE: In automation, "noindex, nofollow" doesn't display for supplemental content. But if you manually/ explicitily do 'View page source' it does return "noindex, nofollow".

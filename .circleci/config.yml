@@ -54,4 +54,20 @@ workflows:
           executor: latest-chrome
           browser: chrome
           spec: "cypress/integration/userManagement/*,\
-            cypress/integration/governance/*"          
+            cypress/integration/governance/*"  
+  staging-governance-record-test:
+    triggers:
+      - schedule:
+          cron: "30 18 * * 4"
+          filters:
+            branches:
+              only:
+                - develop
+    jobs:
+      - cypress/run:
+          name: Governance
+          executor: latest-chrome
+          browser: chrome
+          spec: "cypress/integration/userManagement/*,\
+            cypress/integration/governance/*"  
+          record: true      

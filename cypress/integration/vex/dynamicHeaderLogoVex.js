@@ -6,8 +6,8 @@ const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'look
 const headerAppearance = {
     appearance: "dynamicLogoFieldMerge.js",
     thumbnail: {
-        category: "Stock Images",
-        url: "/stock/sm/animal-dog-pet-cute.jpg",
+        category: "Uploaded Logos",
+        url: "assets/122/logos",
     }
 }
 
@@ -66,7 +66,7 @@ describe("VEX - Dynamic Header Logo", () => {
 
         cy.visit(event.url + `?lbhqip=${company.ip}`)
         cy.get(consumption.vex.vexHeader).within(() => {
-            cy.get(`img[src="${company.logo}"]`).should("exist")
+            cy.get(`img[src*='assets/122/logos']`).should("exist")
         })
 
         // Verify that dynamic logo is a default value when visiting with a spoofed IP address for which there is 

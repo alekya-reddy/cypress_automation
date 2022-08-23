@@ -12,7 +12,9 @@ const user = {
 
 const role = {
     roleName: "Data Configuration Settings Role.Js",
-    dataConfigurationSettings: true
+    webhooksCRUD: true,
+    visitorActivityCRUD: true
+
 }
 
 const webhook = {
@@ -25,7 +27,6 @@ const visitorActivity = {
     type: "Engagement Score",
     score: "2"
 }
-
 
 describe('User Experience Settings User Role', function() {
     it(user.roleDescription, function(){
@@ -183,7 +184,7 @@ describe('User Experience Settings User Role', function() {
         cy.contains("div", "You don't have permission to view this page.")
 
                     // // User Experience
-        // Appearance
+        // // Appearance
         cy.visit(authoring.configurations.pageUrls.appearances)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.appearances).should("not.exist")
         cy.contains("div", "You don't have permission to view this page.")

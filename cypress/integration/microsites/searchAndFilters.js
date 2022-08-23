@@ -377,6 +377,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         authoring.microsites.addSearchAndFilterOptions(searchAndFilterOptions2)
         authoring.microsites.saveSearchAndFiltersSettings();
         authoring.microsites.tabToLandingPages()
+        authoring.microsites.setToHomePage(defaultLandingPage.name)
         authoring.microsites.goToPageEditor(defaultLandingPage.name)
         authoring.microsites.deleteAllBlocks()
         //Verify Search and Filters Consumption - MultiSelect, Search
@@ -386,7 +387,6 @@ describe("Microsites - Search & Filters configuration, verification on landing p
         cy.visit(microsite.url)
         cy.wait(10000)
         //verify class block for track is visible and specified class name is also showing on consumption side
-
         cy.get('div[class*="pf-track-block class1, class2"]').should("exist")
         cy.get(authoring.microsites.landingPages.defaultClassonTrack).should("exist")
         cy.get(consumption.microsites.topicFilter).click()
@@ -613,6 +613,8 @@ describe("Microsites - Search & Filters configuration, verification on landing p
                 authoring.microsites.setToHomePage(defaultLandingPage.name)
             }
         })
+    
+        authoring.microsites.setToHomePage(defaultLandingPage.name)
         authoring.microsites.removeLandingPages(landingPage2.name)
         authoring.microsites.removeLandingPages(landingPage3.name)
         authoring.microsites.addLandingPages(landingPage2.name)
@@ -655,6 +657,7 @@ describe("Microsites - Search & Filters configuration, verification on landing p
                 authoring.microsites.setToHomePage(defaultLandingPage.name)
             }
         })
+        authoring.microsites.setToHomePage(defaultLandingPage.name)
         authoring.microsites.removeLandingPages(landingPage2.name)
         authoring.microsites.removeLandingPages(landingPage3.name)
         

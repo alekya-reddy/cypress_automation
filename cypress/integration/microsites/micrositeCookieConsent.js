@@ -80,48 +80,52 @@ describe("Microsite - Cookie Consent", () => {
 
         // Visit landing page
         cy.visit(microsite.url)
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
 
         // Visit target track with cookie consent on 
         cy.visit(tracks.targetConsentOn.firstContentUrl)
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
 
         // Visit target track with cookie consent off 
         cy.visit(tracks.targetConsentOff.firstContentUrl)
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
 
         // Visit recommend track with cookie message on 
         cy.visit(tracks.recommendMessageOn.firstContentUrl)
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist") 
         cy.get(consumption.microsites.cookieConsent.ok).should("not.exist") // the cookie message "ok" button should be overriden 
 
         // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
         cy.get(consumption.microsites.cookieConsent.accept).click({force: true})
         consumption.microsites.checkPersistentCookie(5000)
+       
         cy.visit(microsite.url)
         consumption.microsites.checkPersistentCookie(5000)
+        
         cy.visit(tracks.targetConsentOff.firstContentUrl)
         consumption.microsites.checkPersistentCookie(5000)
-
+       
+        
         // Toggle cookie consent off on a track - should set cookie consent to false for all tracks/landing pages 
         consumption.microsites.toggleCookieConsent("off")
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
+       
         cy.visit(tracks.recommendMessageOn.firstContentUrl)
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
         cy.visit(microsite.url)
-        consumption.microsites.checkSessionCookie(5000)
-
+        consumption.microsites.check30MinCookie(5000)
+      
         // Accept cookie consent on microsite landing page - should be accepted on all tracks/landing pages 
         consumption.microsites.toggleCookieConsent("on")
         consumption.microsites.checkPersistentCookie(5000)
         cy.visit(tracks.targetConsentOn.firstContentUrl)
         consumption.microsites.checkPersistentCookie(5000)
         consumption.microsites.toggleCookieConsent("off")
-        consumption.microsites.checkSessionCookie(5000)
+        consumption.microsites.check30MinCookie(5000)
 
         // Accept cookie consent via a standard form (CTA) - should set consent to accepted on all tracks/landing pages 
         cy.get(consumption.target.flowHeader).within(() => {

@@ -272,7 +272,7 @@ describe("Microsites - Appeararnace", () => {
                 .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.contentTypeTopicLabelsBackgroundColor))
                 .should("have.css", "font-family", micrositeAppearanceSettings.contentTypeTopicLabelsFontFamily)
         })
-
+        
         //Verify that the microsite appearance settings are applied correctly on consumption
         cy.visit(gridCarouselLandingPage.url)
         cy.contains("h4", target.name).parent().within(() => {
@@ -323,7 +323,7 @@ describe("Microsites - Appeararnace", () => {
                 .should("have.css", "font-family", micrositeAppearanceSettings.contentTypeTopicLabelsFontFamily)
             cy.get(consumption.microsites.searchInputField).type("abcd" + "\n", { force: true })
         })
-
+       
         cy.get(consumption.microsites.noResultsMsg)
             .should("have.css", "color", colorConfigToCSS(micrositeAppearanceSettings.landingPageNoResultsMsgColor))
             .should("have.css", "font-family", micrositeAppearanceSettings.landingPageNoResultsMsgFontFamily)
@@ -336,6 +336,7 @@ describe("Microsites - Appeararnace", () => {
         cy.visit(`${micrositeApp.url}/${navigation.recommend.reference.slug}/${navigation.recommend.reference.firtContentSlug}`)
         cy.get(consumption.microsites.navigation.header, { timeout: 10000 }).should("not.exist")
 
+        
         // Apply Layout as Grid and Turn on to show navigation header in the Appearances > Microsite settings
         authoring.configurations.visit.appearances()
         authoring.configurations.configureMicrositesAppearance({
@@ -365,6 +366,7 @@ describe("Microsites - Appeararnace", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.recommend.label, { timeout: 10000 }).click()
         cy.get(consumption.microsites.navigation.header, { timeout: 10000 }).should("exist")
 
+        
         //  Verify Header, Tracks and landing page appearence are inherited from microsite appearances
         cy.visit(gridCarouselLandingPage.url)
 
@@ -384,7 +386,7 @@ describe("Microsites - Appeararnace", () => {
         cy.contains(consumption.microsites.navigation.menuItem, navigation.recommend.label).click()
         cy.get(consumption.recommend.sidebarTitle).should("have.css", "font-family", newAppearanceSetting.titleAppearanceFont).should("have.css", "color", colorConfigToCSS(newAppearanceSetting.titleAppearancecolor))
         cy.get(consumption.recommend.sidebarBackground).should("have.css", "background-color", colorConfigToCSS(newAppearanceSetting.primaryColor))
-
+       
         // Verify that landing page will have grid layout for blocks as applied above
         authoring.microsites.visit()
         authoring.microsites.goToMicrositeConfig(micrositeApp.name)
@@ -397,16 +399,18 @@ describe("Microsites - Appeararnace", () => {
         //Override the heading font size at block level
         authoring.microsites.editExistingCard(editCardConfiguration)
 
+        cy.wait(3000)
         cy.get('h4').invoke('css', 'font-size').then(builderFontSize => {
             cy.wait(3000)
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);
         })
-
+        
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
-
+    
         // verify on consumption that navigation header appears on top as applied above
         cy.visit(gridCarouselLandingPage.url)
 
+        cy.wait(3000)
         // Verify consumption page has overriden heading font size value
         cy.get('h4').invoke('css', 'font-size').then(builderFontSize => {
             expect(builderFontSize).to.equal(editCardConfiguration.heading.fontSize);

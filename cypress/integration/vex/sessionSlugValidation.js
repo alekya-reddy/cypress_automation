@@ -64,7 +64,7 @@ describe('VEX - Virtual Event', function() {
         // Now attempt to save various values for slug for session2 to check error messages 
         authoring.vex.goToSessionConfig(session2.name)
         session2.testSlugs.forEach((slug)=>{
-            cy.get(authoring.vex.sessionSlugInput).clear().type(slug.value)
+            cy.get(authoring.vex.sessionSlugInput,{timeout:20000}).clear().type(slug.value)
             cy.get(authoring.vex.saveButton).click()
             cy.get('body').should('contain', slug.expect)
             slug.expect !== successfulSaveMessage ? cy.contains(genericErrorMessage).should('exist') : null ;

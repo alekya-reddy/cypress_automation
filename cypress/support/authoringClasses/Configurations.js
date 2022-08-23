@@ -1,16 +1,16 @@
 import { Common } from "./Common";
 
-export class Configurations extends Common { 
-    constructor(env, org, tld, userName, password, baseUrl){
+export class Configurations extends Common {
+    constructor(env, org, tld, userName, password, baseUrl) {
         super(env, org, tld, userName, password, baseUrl);
         this.configRoute = `${this.baseUrl}/authoring/content-library/config`;
         this.pageUrls = {
             webhooks: `${this.configRoute}/webhooks`,
             widgets: `${this.configRoute}/widgets`,
             externalCode: `${this.configRoute}/external-code`,
-            appearances: `${this.configRoute}/appearance`,
+            appearances: `${this.configRoute}/appearance/general`,
             guide: `${this.configRoute}/appearance/guide`,
-            languages:`${this.configRoute}/language`,
+            languages:`${this.configRoute}/language/access-protection`,
             forms: `${this.configRoute}/forms`,
             images: `${this.configRoute}/images/content`,
             accessProtection: `${this.configRoute}/access-protection/email-and-domain`,
@@ -23,6 +23,7 @@ export class Configurations extends Common {
             routes: `${this.configRoute}/routes`,
             trackLabels: `${this.configRoute}/labels`
         };
+        this.pageSearch = "input[name='page-search']"
         this.clearSearch = ".Search__closeIcon_cTCFsfpKe88w2HW42fAu4";
         this.updatedDate = "div[data-qa-hook='page-preview']>div>div>div:nth-child(3)>div";
         this.pageTitles = {
@@ -43,13 +44,13 @@ export class Configurations extends Common {
             trackLabels: "Labels Configuration"
         };
         this.visit = {
-            webhooks: ()=>{ cy.visit(this.pageUrls.webhooks) },
-            widgets: ()=>{ cy.visit(this.pageUrls.widgets) },
+            webhooks: () => { cy.visit(this.pageUrls.webhooks) },
+            widgets: () => { cy.visit(this.pageUrls.widgets) },
             externalCode: () => { cy.visit(this.pageUrls.externalCode) },
             appearances: () => { cy.visit(this.pageUrls.appearances) },
             languages: () => { cy.visit(this.pageUrls.languages) },
             forms: () => { cy.visit(this.pageUrls.forms) },
-            ctas: () => {cy.visit(this.pageUrls.ctas)}
+            ctas: () => { cy.visit(this.pageUrls.ctas) }
         };
         this.addWebhookModal = {
             name: "#name",
@@ -139,7 +140,7 @@ export class Configurations extends Common {
                 searchFiltersStyleFontSizeLarge: "#searchFiltersStyleFontSizeLarge",
                 searchFieldSettings: "#searchFieldInputFontFamily",
                 searchFieldFontFamily: "input[name='searchFieldInputFontFamily']",
-                searchFieldColor:  "#searchFieldInputColor > div > div > div",
+                searchFieldColor: "#searchFieldInputColor > div > div > div",
                 searchFieldBackgroundColor: "#searchFieldInputBackgroundColor > div > div > div",
                 searchFieldStyleFontSizeSmall: "#searchFieldInputFontSizeSmall",
                 searchFieldsStyleFontSizeMedium: "#searchFieldInputFontSizeMedium",
@@ -164,9 +165,9 @@ export class Configurations extends Common {
                 carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
                 noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
                 cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)",
-                heading:"#body-title-show"
+                heading: "#body-title-show"
             },
-            microsites: { 
+            microsites: {
                 hideNavigation: "div[data-qa-hook='checkbox']",
                 contentTypeTopicLabelsSettings: "#contentTypeLabelsStyleFontFamily",
                 contentTypeTopicLabelsFontFamily: "input[name='contentTypeLabelsStyleFontFamily']",
@@ -188,7 +189,7 @@ export class Configurations extends Common {
                 searchFiltersStyleFontSizeLarge: "#searchFiltersStyleFontSizeLarge",
                 searchFieldSettings: "#searchFieldInputFontFamily",
                 searchFieldFontFamily: "input[name='searchFieldInputFontFamily']",
-                searchFieldColor:  "#searchFieldInputColor > div > div > div",
+                searchFieldColor: "#searchFieldInputColor > div > div > div",
                 searchFieldBackgroundColor: "#searchFieldInputBackgroundColor > div > div > div",
                 searchFieldStyleFontSizeSmall: "#searchFieldInputFontSizeSmall",
                 searchFieldsStyleFontSizeMedium: "#searchFieldInputFontSizeMedium",
@@ -213,7 +214,7 @@ export class Configurations extends Common {
                 carouselArrowsPreview: "#landing-page-grid-preview > div:nth-child(3) > span > i",
                 noResultsMsgPreview: "#landing-page-grid-preview > div:nth-child(4)",
                 cardRadiusPreview: "#landing-page-grid-preview > div:nth-child(3) > div > div:nth-child(1) > div:nth-child(1)",
-                heading:"#body-title-show"   
+                heading: "#body-title-show"
             },
             explore: {
                 heroTitleStyle: "label[for='heroTitleFont']",
@@ -255,7 +256,7 @@ export class Configurations extends Common {
             code: "#code",
             explore: {
                 featuredLabelInput: "#featuredLabel",
-                searchInput : "#searchButtonTitle",
+                searchInput: "#searchButtonTitle",
                 searchPlaceholderInput: "#searchInputFieldPlaceholder",
                 contentTypeInput: "#filterByContentTypeTitle",
                 funnelStageInput: "#filterByFunnelStageTitle",
@@ -265,7 +266,7 @@ export class Configurations extends Common {
             },
             micrositeBuilder: {
                 searchButtonTitle: "#searchButtonTitle",
-                searchInputFieldPlaceholder : "#searchInputFieldPlaceholder",
+                searchInputFieldPlaceholder: "#searchInputFieldPlaceholder",
                 filterByContentTypeTitle: "#filterByContentTypeTitle",
                 filterByLanguageTitle: "#filterByLanguageTitle",
                 filterByFunnelStageTitle: "#filterByFunnelStageTitle",
@@ -275,11 +276,11 @@ export class Configurations extends Common {
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
                 saveSettings: "#save-microsite-builder-settings"
-        
+
             },
             vex: {
                 searchButtonTitle: "#searchButtonTitle",
-                searchInputFieldPlaceholder : "#searchInputFieldPlaceholder",
+                searchInputFieldPlaceholder: "#searchInputFieldPlaceholder",
                 filterByAvailabilityTitle: "#filterByAvailabilityTitle",
                 filterByLanguageTitle: "#filterByLanguageTitle",
                 filterByFunnelStageTitle: "#filterByFunnelStageTitle",
@@ -289,9 +290,9 @@ export class Configurations extends Common {
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
                 saveSettings: "#save-virtual-event-settings"
-        
+
             },
-            accessProtection:{
+            accessProtection: {
                 //locators for Landing page/authoring
                 title: "#title",
                 emailSuccessMsg: "#emailSuccess",
@@ -323,7 +324,7 @@ export class Configurations extends Common {
             deleteIcon: `i[title="Delete Segment"]`,
             editSegments: 'i[title="Edit Segment"]',
             cloneSegments: 'i[title="Clone Segment"]',
-            
+
         };
         this.routes = {
             nameInput: "#name",
@@ -357,40 +358,40 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /********************************* WEBHOOKS **************************************/
     /*********************************************************************************/
-    addWebhook(config){
+    addWebhook(config) {
         const name = config.name
         const url = config.url // The endpoint api to send webhook events to
         const type = config.type // Get this from the dropdown options 
         let alreadyExists = false
 
         this.goToPage(this.pageTitles.webhooks, this.pageUrls.webhooks)
-        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, ()=>{
+        cy.ifElementWithExactTextExists(this.table.cellName, name, 2000, () => {
             alreadyExists = true
         })
-        cy.get('body').then(()=>{
-            if(!alreadyExists){
+        cy.get('body').then(() => {
+            if (!alreadyExists) {
                 cy.contains("button", "Add Webhook").click()
-                cy.get(this.modal).within(()=>{
+                cy.get(this.modal).within(() => {
                     cy.get(this.addWebhookModal.name).clear().type(name)
-                    if(url){           
+                    if (url) {
                         cy.get(this.addWebhookModal.url).clear().type(url)
                     }
                     cy.get(this.dropdown.box).click()
                     cy.get(this.dropdown.option(type)).click()
                     cy.contains("button", "Add Webhook").click()
                 })
-                cy.get(this.modal, {timeout: 6000}).should("not.exist")
+                cy.get(this.modal, { timeout: 6000 }).should("not.exist")
             }
         })
         cy.contains(this.table.cellName, name).should("exist")
     }
 
-    deleteWebhook(list){
-        const webhooks = [list].flat() 
+    deleteWebhook(list) {
+        const webhooks = [list].flat()
 
         this.goToPage(this.pageTitles.webhooks, this.pageUrls.webhooks)
-        webhooks.forEach((webhook)=>{
-            cy.ifElementWithExactTextExists(this.table.cellName, webhook, 3000, ()=>{
+        webhooks.forEach((webhook) => {
+            cy.ifElementWithExactTextExists(this.table.cellName, webhook, 3000, () => {
                 cy.angryClick({
                     clickElement: this.table.cellName + `:contains('${webhook}')`,
                     checkElement: this.webhookPreview.name + `:contains('${webhook}')`
@@ -402,7 +403,7 @@ export class Configurations extends Common {
         })
     }
 
-    configureWebhook(config){
+    configureWebhook(config) {
         const name = config.name
         const on_off = config.on_off // should be 'on' or 'off'
         const eventFields = config.eventFields // object: key must be the exact text of the event field 
@@ -413,36 +414,36 @@ export class Configurations extends Common {
             checkElement: this.webhookPreview.name + `:contains('${name}')`
         })
 
-        if(on_off){
+        if (on_off) {
             this.toggle(this.webhookPreview.enableToggle, on_off)
         }
 
-        if(eventFields){
+        if (eventFields) {
             this.configureEventFields(eventFields)
         }
 
     }
 
-    configureEventFields(fields){
+    configureEventFields(fields) {
         // Sometimes, the modal randomly closes... not sure why. Gonna angry click it to open it again if it closes
         cy.angryClick({
             clickElement: this.webhookPreview.eventFields,
             checkElement: this.modal
         })
-        cy.get(this.modal).within(()=>{
-            Object.entries(fields).forEach((field)=>{
-                cy.ifNoElementWithExactTextExists(this.dropdown.selectedValue, field[0], 500, ()=>{
+        cy.get(this.modal).within(() => {
+            Object.entries(fields).forEach((field) => {
+                cy.ifNoElementWithExactTextExists(this.dropdown.selectedValue, field[0], 500, () => {
                     cy.log("adding field")
                     cy.contains("button", "Add Field").click()
                     cy.get(this.dropdown.selectedValue).last().click()
                     cy.get(this.dropdown.option(field[0])).click()
                 }, 'div')
-                cy.containsExact(this.dropdown.selectedValue, field[0]).parents().eq(7).within(()=>{
-                    cy.get("#value").invoke('attr', 'value').then((value)=>{
-                        if(value !== field[1]){
+                cy.containsExact(this.dropdown.selectedValue, field[0]).parents().eq(7).within(() => {
+                    cy.get("#value").invoke('attr', 'value').then((value) => {
+                        if (value !== field[1]) {
                             cy.get("#value").clear().type(field[1])
                         }
-                    }) 
+                    })
                 })
             })
             cy.contains("button", "Save").click()
@@ -452,18 +453,18 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /********************************* EXTERNAL CODE *********************************/
     /*********************************************************************************/
-    addExternalCode(config){
+    addExternalCode(config) {
         const { name, code, interceptCode } = config
 
         this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
         cy.contains("button", "Add External Code").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.externalCode.nameInput).clear().type(name)
-            if (code){
-                cy.get(this.externalCode.codeEditor).type(code, {force: true})
+            if (code) {
+                cy.get(this.externalCode.codeEditor).type(code, { force: true })
             }
             if (interceptCode) {
-                cy.get(this.externalCode.codeEditor).type(interceptCode, {force: true, parseSpecialCharSequences: false })
+                cy.get(this.externalCode.codeEditor).type(interceptCode, { force: true, parseSpecialCharSequences: false })
                 //NOTE: Commenting below piece of code, because in code editor , always same code is getting typed for diff code names.We can uncomment it later if required
                 // cy.intercept('POST', "/api/v3/external_codes", (req) => {
                 //     // It is necessary to intercept the request payload and set the code to what is intended
@@ -471,41 +472,41 @@ export class Configurations extends Common {
                 //     req.body.code = interceptCode
                 // })
             }
-            cy.contains("button", "Add External Code").click() 
+            cy.contains("button", "Add External Code").click()
         })
     }
 
-    openCodePreview(code){
-        cy.angryClick({clickElement: this.table.cellName + `:contains('${code}')`, checkElement: `${this.externalCode.previewName}:contains('${code}')`})
+    openCodePreview(code) {
+        cy.angryClick({ clickElement: this.table.cellName + `:contains('${code}')`, checkElement: `${this.externalCode.previewName}:contains('${code}')` })
     }
 
-    deleteExternalCode(list){
+    deleteExternalCode(list) {
         const codes = [list].flat()
 
         this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
-        codes.forEach((code)=>{
-            cy.ifElementWithExactTextExists(this.table.cellName, code, 1500, ()=>{
+        codes.forEach((code) => {
+            cy.ifElementWithExactTextExists(this.table.cellName, code, 1500, () => {
                 this.openCodePreview(code)
-                cy.contains(this.previewSideBar, code).should('exist').within(()=>{
+                cy.contains(this.previewSideBar, code).should('exist').within(() => {
                     cy.get(this.externalCode.deleteIcon).click()
                 })
-                cy.contains(this.modal, "Delete External Code?").within(()=>{
+                cy.contains(this.modal, "Delete External Code?").within(() => {
                     cy.contains("button", "Delete External Code").click()
                 })
             })
-            cy.ifNoElementWithExactTextExists(this.modal, "Delete External Code?", 10000, ()=>{}) // This just smart-waits for modal to disappear
-            cy.ifNoElementWithExactTextExists(this.table.cellName, code, 10000, ()=>{}) // This just smart-waits for widget to disappear
+            cy.ifNoElementWithExactTextExists(this.modal, "Delete External Code?", 10000, () => { }) // This just smart-waits for modal to disappear
+            cy.ifNoElementWithExactTextExists(this.table.cellName, code, 10000, () => { }) // This just smart-waits for widget to disappear
             cy.contains(this.table.cellName, code).should("not.exist")
         })
     }
 
-    editExternalCode(config){
+    editExternalCode(config) {
         const { name, newName, newCode, interceptCode, global } = config
 
         this.goToPage(this.pageTitles.externalCode, this.pageUrls.externalCode)
         this.openCodePreview(name)
-        if(newName){
-            cy.get(this.externalCode.previewName).click().within(()=>{
+        if (newName) {
+            cy.get(this.externalCode.previewName).click().within(() => {
                 cy.get(this.externalCode.nameInput).clear().type(newName)
                 cy.contains("button", "Save").click()
                 cy.contains(newName).should("exist")
@@ -518,18 +519,18 @@ export class Configurations extends Common {
             this.toggle(this.externalCode.globalToggle, global)
         }
 
-        if(newCode){
+        if (newCode) {
             cy.get("code").click()
-            cy.contains(this.modal, "Edit Code").within(()=>{
-                cy.get(this.externalCode.codeEditor).clear({force: true}).type(newCode, {force: true})
+            cy.contains(this.modal, "Edit Code").within(() => {
+                cy.get(this.externalCode.codeEditor).clear({ force: true }).type(newCode, { force: true })
                 cy.contains("button", "Save Code").click()
             })
             cy.get(this.modal).should('not.exist')
             cy.contains(this.table.cellCode, newCode).should('exist')
         }
 
-        if(interceptCode){
-            cy.contains(this.table.cellName, name).parent().invoke("attr", "data-qa-hook").then( val => {
+        if (interceptCode) {
+            cy.contains(this.table.cellName, name).parent().invoke("attr", "data-qa-hook").then(val => {
                 const matches = val.match(/\d+/g)
                 const id = matches[0]
 
@@ -538,8 +539,8 @@ export class Configurations extends Common {
                     req.body.code = interceptCode
                 })
                 cy.get("code").click()
-                cy.contains(this.modal, "Edit Code").within(()=>{
-                    cy.get(this.externalCode.codeEditor).clear({force: true}).type("replace me", {force: true})
+                cy.contains(this.modal, "Edit Code").within(() => {
+                    cy.get(this.externalCode.codeEditor).clear({ force: true }).type("replace me", { force: true })
                     cy.contains("button", "Save Code").click()
                 })
             })
@@ -549,37 +550,37 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /********************************* WIDGETS ***************************************/
     /*********************************************************************************/
-    addWidget(config){
+    addWidget(config) {
         let name = config.name
         let code = config.code
-        let checkSuccess = config.checkSuccess == false ? false : true 
+        let checkSuccess = config.checkSuccess == false ? false : true
 
         cy.contains("button", "Add Widget").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.widgets.nameInput).clear().type(name)
 
-            if (code){
-                cy.get(this.widgets.codeEditor).type(code, {force: true})
+            if (code) {
+                cy.get(this.widgets.codeEditor).type(code, { force: true })
             }
-            cy.contains("button", "Add Widget").click() 
+            cy.contains("button", "Add Widget").click()
         })
-        if(checkSuccess){
-            cy.get(this.modal).should("not.exist")
+        if (checkSuccess) {
+            cy.get(this.modal, { timeout: 20000 }).should("not.exist")
             cy.containsExact(this.table.cellName, name).should('exist')
-            if(code){
+            if (code) {
                 cy.contains(this.table.cellCode, code).should('exist')
             }
         }
     }
 
-    editWidget(config){
-        let name = config.name 
-        let newName = config.newName 
+    editWidget(config) {
+        let name = config.name
+        let newName = config.newName
         let newCode = config.newCode
 
         this.openWidgetPreview(name)
-        if(newName){
-            cy.get(this.widgets.previewName).click().within(()=>{
+        if (newName) {
+            cy.get(this.widgets.previewName).click().within(() => {
                 cy.get(this.widgets.nameInput).clear().type(newName)
                 cy.contains("button", "Save").click()
                 cy.contains(newName).should("exist")
@@ -587,10 +588,10 @@ export class Configurations extends Common {
             cy.containsExact(this.table.cellName, newName).should('exist')
         }
 
-        if(newCode){
+        if (newCode) {
             cy.get("code").click()
-            cy.contains(this.modal, "Update Widget").within(()=>{
-                cy.get(this.widgets.codeEditor).clear({force: true}).type(newCode, {force: true})
+            cy.contains(this.modal, "Update Widget").within(() => {
+                cy.get(this.widgets.codeEditor).clear({ force: true }).type(newCode, { force: true })
                 cy.contains("button", "Save Widget").click()
             })
             cy.get(this.modal).should('not.exist')
@@ -598,91 +599,92 @@ export class Configurations extends Common {
         }
     }
 
-    deleteWidgets(list){
-        let widgets = [list].flat() 
+    deleteWidgets(list) {
+        let widgets = [list].flat()
 
-        widgets.forEach((widget)=>{
-            cy.ifElementWithExactTextExists(this.table.cellName, widget, 1500, ()=>{
+        widgets.forEach((widget) => {
+            cy.ifElementWithExactTextExists(this.table.cellName, widget, 1500, () => {
                 this.openWidgetPreview(widget)
-                cy.contains(this.previewSideBar, widget).should('exist').within(()=>{
+                cy.contains(this.previewSideBar, widget).should('exist').within(() => {
                     cy.get(this.widgets.deleteIcon).click()
                 })
-                cy.contains(this.modal, "Delete Widget?").within(()=>{
+                cy.contains(this.modal, "Delete Widget?").within(() => {
                     cy.contains("button", "Delete Widget").click()
                 })
             })
-            cy.ifNoElementWithExactTextExists(this.modal, "Delete Widget?", 10000, ()=>{}) // This just smart-waits for modal to disappear
-            cy.ifNoElementWithExactTextExists(this.table.cellName, widget, 10000, ()=>{}) // This just smart-waits for widget to disappear
+            cy.ifNoElementWithExactTextExists(this.modal, "Delete Widget?", 10000, () => { }) // This just smart-waits for modal to disappear
+            cy.ifNoElementWithExactTextExists(this.table.cellName, widget, 10000, () => { }) // This just smart-waits for widget to disappear
             cy.containsExact(this.table.cellName, widget).should("not.exist")
         })
     }
 
-    openWidgetPreview(widget){
-        cy.angryClick({clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgets.previewName}:contains('${widget}')`})
+    openWidgetPreview(widget) {
+        cy.angryClick({ clickElement: this.table.cellName + `:contains('${widget}')`, checkElement: `${this.widgets.previewName}:contains('${widget}')` })
     }
 
     /*********************************************************************************/
     /************************************* FORMS *************************************/
     /*********************************************************************************/
-    addForm(name){
+    addForm(name) {
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
         cy.contains("button", "Add Form").click()
         cy.get(this.forms.nameInput).clear().type(name + "\n")
-        cy.waitFor({element: this.modal, to: "not.exist"})
-        cy.containsExact(this.table.cellName, name,{timeout:20000}).should("exist")
+        cy.waitFor({ element: this.modal, to: "not.exist" })
+        cy.containsExact(this.table.cellName, name, { timeout: 20000 }).should("exist")
     }
 
-    deleteForm(name){
+    deleteForm(name) {
         this.goToPage(this.pageTitles.forms, this.pageUrls.forms)
+        cy.get(this.pageSearch, { timeout: 20000 }).type(name)
         cy.ifElementWithExactTextExists(this.table.cellName, name, 20000, () => {
             cy.containsExact(this.table.cellName, name).click()
             cy.get(this.forms.delete).click()
             cy.contains("button", "Delete Form").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.containsExact(this.table.cellName, name).should("not.exist")
     }
 
     /*********************************************************************************/
     /********************************* APPEARANCE ************************************/
     /*********************************************************************************/
-    clickAppearance(appearance){
+    clickAppearance(appearance) {
         cy.get(this.appearances.sidebar).within(() => {
-            cy.containsExact("a", appearance, {timeout: 10000}).should("exist").click()
+            cy.containsExact("a", appearance, { timeout: 10000 }).should("exist").click()
         })
     }
 
-    clickAddAppearance(){
+    clickAddAppearance() {
         cy.get(this.appearances.sidebar).within(() => {
-            cy.containsExact("div", '+ Add Appearance', {timeout: 10000}).click()
+            cy.containsExact("div", '+ Add Appearance', { timeout: 10000 }).click()
         })
     }
 
-    gotoAppearanceTab(tabUrl){
+    gotoAppearanceTab(tabUrl) {
         // we need to pass in the url of the tab  
         cy.url().then((url) => {
-            if (!url.includes("/"+tabUrl)) {
+            if (!url.includes("/" + tabUrl)) {
                 const segements = url.split('/')
                 segements[segements.length - 1] = "" + tabUrl
-                var newurl = segements.join("/") 
+                var newurl = segements.join("/")
                 cy.visit(newurl, { timeout: 30000 })
             }
         })
-    } 
+    }
 
-    goToCampaignAppearance(appearance, campaignName){
+    goToCampaignAppearance(appearance, campaignName) {
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
         this.gotoAppearanceTab(campaignName)
     }
 
-    deleteAppearance(name, verify){
+    deleteAppearance(name, verify) {
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
-        cy.waitFor({element: this.appearances.sidebar, to: "exist", wait: 10000})
+        cy.waitFor({ element: this.appearances.sidebar, to: "exist", wait: 10000 })
         cy.get(this.appearances.sidebar).within(sidebar => {
             if (sidebar.find(`a:contains("${name}")`).length > 0) {
                 cy.containsExact("div", name).siblings("div").within(() => {
-                    cy.get(this.deleteIcon).click({force: true})
+                    cy.get(this.deleteIcon).click({ force: true })
                 })
                 cy.do(() => {
                     // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
@@ -696,77 +698,77 @@ export class Configurations extends Common {
             }
         })
     }
-   lastUpdatedDate(){
-    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    var today =  new Date();
-    var dd = String(today.getDate()).padStart(2, '0');
-    var mm = months[today.getMonth()]
-    var yyyy = today.getFullYear();
-    today = mm + ' ' + dd + ', ' + yyyy;
-    return today;
-   }
+    lastUpdatedDate() {
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = months[today.getMonth()]
+        var yyyy = today.getFullYear();
+        today = mm + ' ' + dd + ', ' + yyyy;
+        return today;
+    }
 
-    addNewAppearance(options){
-        const{name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor, verify} = options
+    addNewAppearance(options) {
+        const { name, primaryColor, titleAppearanceFont, bodyTextFont, bobyTextcolor, verify } = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
-        cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
+        cy.waitFor({ element: `div:contains('${name}')`, to: "exist", wait: 2000 })
         cy.wait(3000)
-       cy.ifNoElementWithExactTextExists("div", name, 5000, ()=>{
-            this.clickAddAppearance() 
-            if(name){
-                cy.contains(this.modal, "Add Appearance").within(()=>{
+        cy.ifNoElementWithExactTextExists("div", name, 5000, () => {
+            this.clickAddAppearance()
+            if (name) {
+                cy.contains(this.modal, "Add Appearance").within(() => {
                     cy.get(this.appearances.appearanceName).clear().type(name)
                 })
-            }    
-        
-            if(primaryColor){
+            }
+
+            if (primaryColor) {
                 const { r, g, b, a } = primaryColor
-                this.pickColor({button: this.appearances.primaryColor, r: r, g: g, b: b, a: a})
+                this.pickColor({ button: this.appearances.primaryColor, r: r, g: g, b: b, a: a })
             }
-        
-            if(titleAppearanceFont){
+
+            if (titleAppearanceFont) {
                 cy.get(this.appearances.titleFont).within(() => {
-                    cy.get(this.dropdown.input).type(titleAppearanceFont + "\n", {force: true})
+                    cy.get(this.dropdown.input).type(titleAppearanceFont + "\n", { force: true })
                 })
             }
-            
-            if(bodyTextFont){
+
+            if (bodyTextFont) {
                 cy.get(this.appearances.bodyTextFont).within(() => {
-                    cy.get(this.dropdown.input).type(bodyTextFont + "\n", {force: true})
+                    cy.get(this.dropdown.input).type(bodyTextFont + "\n", { force: true })
                 })
             }
-    
-            if(bobyTextcolor){
+
+            if (bobyTextcolor) {
                 const { r, g, b, a } = bodyTextFont
-                this.pickColor({button: this.appearances.bodyTextColor, r: r, g: g, b: b, a: a})
+                this.pickColor({ button: this.appearances.bodyTextColor, r: r, g: g, b: b, a: a })
             }
-            
-            cy.contains(this.modal, "Add Appearance").within(()=>{
+
+            cy.contains(this.modal, "Add Appearance").within(() => {
                 cy.contains("button", "Add Appearance").click()
             })
 
             if (verify !== false) {
-                cy.waitFor({element: this.modal, to: "not.exist"})
+                cy.waitFor({ element: this.modal, to: "not.exist" })
                 cy.get(this.appearances.sidebar).within(() => {
-                    cy.containsExact("div", name, {timeout: 5000}).should("exist")
+                    cy.containsExact("div", name, { timeout: 5000 }).should("exist")
                 })
             }
-        })  
+        })
     }
 
-    addAppearanceExternalCode(codes, verify){
+    addAppearanceExternalCode(codes, verify) {
         [codes].flat().forEach(code => {
-            cy.get("div[class*='withFormFieldLayout']:contains('External Codes')").find(".Select-control").find("input").type(code + "\n", {force: true})
+            cy.get("div[class*='withFormFieldLayout']:contains('External Codes')").find(".Select-control").find("input").type(code + "\n", { force: true })
         })
-        if(verify !== false){
+        if (verify !== false) {
             [codes].flat().forEach(code => {
-                cy.contains("span", code, {timeout: 10000}).should("exist")
+                cy.contains("span", code, { timeout: 10000 }).should("exist")
             })
         }
     }
 
-    removeAppearanceExternalCode(list){
+    removeAppearanceExternalCode(list) {
         const codes = [list].flat()
         cy.get(this.dropdown.box).within(box => {
             codes.forEach(code => {
@@ -776,18 +778,18 @@ export class Configurations extends Common {
             })
         })
         cy.contains("button", "Save").click()
-        cy.contains("The record was saved successfully").should("exist")
+        cy.contains("The record was saved successfully", { timeout: 20000 }).should("exist")
         codes.forEach(code => {
             cy.contains('div[class="Select-value"]', code).should("not.exist")
         })
     }
 
-    configureHeaderAppearance(options){
-        const { 
-            appearance, 
+    configureHeaderAppearance(options) {
+        const {
+            appearance,
             dynamicLogo,
             thumbnail,
-            verify 
+            verify
         } = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
@@ -806,16 +808,16 @@ export class Configurations extends Common {
 
         cy.contains("button", "Save Header Settings").click()
 
-        if (verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
         }
     }
 
-    configureFlowAppearance(options){
-        const { 
-            appearance, 
+    configureFlowAppearance(options) {
+        const {
+            appearance,
             thumbnail,
-            verify 
+            verify
         } = options
 
         this.goToCampaignAppearance(appearance, "flow")
@@ -825,17 +827,17 @@ export class Configurations extends Common {
             this.pickThumbnail(thumbnail)
         }
         cy.contains("button", "Save Flow Settings").click()
-        if (verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
         }
 
     }
 
-    configuretopicSidebarAppearance(options){
-        const { 
-            appearance, 
+    configuretopicSidebarAppearance(options) {
+        const {
+            appearance,
             thumbnail,
-            verify 
+            verify
         } = options
 
         this.goToCampaignAppearance(appearance, "topic-sidebar")
@@ -845,242 +847,242 @@ export class Configurations extends Common {
             this.pickThumbnail(thumbnail)
         }
         cy.contains("button", "Save Topic Sidebar Settings").click()
-        if (verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
         }
 
     }
 
-    configureVEXAppearance(options){
-        const {appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, layout, verify} = options
-        const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
-        const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
-        const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
-        const {sessionDescriptionFontFamily,sessionDescriptionFontWeight,sessionDescriptionFontSize,sessionDescriptionFontColor} = options
-        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
-        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
-        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
-        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
+    configureVEXAppearance(options) {
+        const { appearance, backgroundColor, headerBackgroundColor, hideNavigation, externalCodes, layout, verify } = options
+        const { headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor } = options
+        const { bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor } = options
+        const { activeFontFamily, activeBoldFont, activeFontSize, activeFontColor } = options
+        const { sessionDescriptionFontFamily, sessionDescriptionFontWeight, sessionDescriptionFontSize, sessionDescriptionFontColor } = options
+        const { landingPageCardRadius, landingPageSearchFilterRadius, landingPageSearchFilterFontFamily, landingPageSearchFilterColor, landingPageSearchFilterBackgroundColor } = options
+        const { landingPageHeadingStyleFontFamily, landingPageHeadingStyleColor, landingPageHeadingStyleFontSize, landingPageCarouselArrowsColor, landingPageCarouselArrowsBackgroundColor } = options
+        const { landingPageSearchFilterFontSize, landingPageSearchFieldFontFamily, landingPageSearchFieldColor, landingPageSearchFieldBackgroundColor, landingPageSearchFieldFontSize } = options
+        const { landingPageNoResultsMsgFontFamily, landingPageNoResultsMsgColor, landingPageNoResultsMsgFontSize } = options
 
         this.goToCampaignAppearance(appearance, "virtual-event")
-        if(backgroundColor){
+        if (backgroundColor) {
             const { r, g, b, a } = backgroundColor
-            this.pickColor({button: this.appearances.vex.backgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.backgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(headerBackgroundColor){
+        if (headerBackgroundColor) {
             const { r, g, b, a } = headerBackgroundColor
-            this.pickColor({button: this.appearances.vex.headerBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.headerBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(headerTitleFontFamily){
+        if (headerTitleFontFamily) {
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
-                cy.get(this.dropdown.input).type(headerTitleFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(headerTitleFontFamily + "\n", { force: true })
             })
         }
-        if(headerTitleBoldFont == true || headerTitleBoldFont == false){
+        if (headerTitleBoldFont == true || headerTitleBoldFont == false) {
             cy.get(this.appearances.vex.headerFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(headerTitleBoldFont && !fontWeightClass.includes("containerActive") || !headerTitleBoldFont && fontWeightClass.includes("containerActive")){
+                if (headerTitleBoldFont && !fontWeightClass.includes("containerActive") || !headerTitleBoldFont && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.vex.headerFontWeight).click()
                 }
             })
         }
-        if(headerTitleFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (headerTitleFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
                 cy.get(this.appearances[size[headerTitleFontSize]]).click()
             })
         }
-        if(headerTitleFontColor){
+        if (headerTitleFontColor) {
             const { r, g, b, a } = headerTitleFontColor
-            this.pickColor({button: this.appearances.vex.headerFontColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.headerFontColor, r: r, g: g, b: b, a: a })
         }
-        if(bodyFontFamily){
+        if (bodyFontFamily) {
             cy.get(this.appearances.vex.bodySettings).within(() => {
-                cy.get(this.dropdown.input).type(bodyFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(bodyFontFamily + "\n", { force: true })
             })
         }
-        if(bodyBoldFont == true || bodyBoldFont == false){
+        if (bodyBoldFont == true || bodyBoldFont == false) {
             cy.get(this.appearances.vex.bodyFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(bodyBoldFont && !fontWeightClass.includes("containerActive") || !bodyBoldFont && fontWeightClass.includes("containerActive")){
+                if (bodyBoldFont && !fontWeightClass.includes("containerActive") || !bodyBoldFont && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.vex.bodyFontWeight).click()
                 }
             })
         }
-        if(bodyFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (bodyFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.bodySettings).within(() => {
                 cy.get(this.appearances[size[bodyFontSize]]).click()
             })
         }
-        if(bodyFontColor){
+        if (bodyFontColor) {
             const { r, g, b, a } = bodyFontColor
-            this.pickColor({button: this.appearances.vex.bodyFontColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.bodyFontColor, r: r, g: g, b: b, a: a })
         }
 
-        if(activeFontFamily){
+        if (activeFontFamily) {
             cy.get(this.appearances.vex.activeSettings).within(() => {
-                cy.get(this.dropdown.input).type(activeFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(activeFontFamily + "\n", { force: true })
             })
         }
-        if(activeBoldFont == true || activeBoldFont == false){
+        if (activeBoldFont == true || activeBoldFont == false) {
             cy.get(this.appearances.vex.activeFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(activeBoldFont && !fontWeightClass.includes("containerActive") || !activeBoldFont && fontWeightClass.includes("containerActive")){
+                if (activeBoldFont && !fontWeightClass.includes("containerActive") || !activeBoldFont && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.vex.activeFontWeight).click()
                 }
             })
         }
-        if(activeFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (activeFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.activeSettings).within(() => {
                 cy.get(this.appearances[size[activeFontSize]]).click()
             })
         }
-        if(activeFontColor){
+        if (activeFontColor) {
             const { r, g, b, a } = activeFontColor
-            this.pickColor({button: this.appearances.vex.activeFontColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.activeFontColor, r: r, g: g, b: b, a: a })
         }
-        if(sessionDescriptionFontFamily){
+        if (sessionDescriptionFontFamily) {
             cy.get(this.appearances.vex.sessionDescriptionSettings).within(() => {
-                cy.get(this.dropdown.input).type(sessionDescriptionFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(sessionDescriptionFontFamily + "\n", { force: true })
             })
         }
-        if(sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false){
+        if (sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false) {
             cy.get(this.appearances.vex.sessionDescriptionFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(sessionDescriptionFontWeight && !fontWeightClass.includes("containerActive") || !sessionDescriptionFontWeight && fontWeightClass.includes("containerActive")){
+                if (sessionDescriptionFontWeight && !fontWeightClass.includes("containerActive") || !sessionDescriptionFontWeight && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.vex.sessionDescriptionFontWeight).click()
                 }
             })
         }
-        if(sessionDescriptionFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (sessionDescriptionFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.sessionDescriptionSettings).within(() => {
                 cy.get(this.appearances[size[sessionDescriptionFontSize]]).click()
             })
         }
-        if(sessionDescriptionFontColor){
+        if (sessionDescriptionFontColor) {
             const { r, g, b, a } = sessionDescriptionFontColor
-            this.pickColor({button: this.appearances.vex.sessionDescriptionFontColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.sessionDescriptionFontColor, r: r, g: g, b: b, a: a })
         }
-        if(hideNavigation == true || hideNavigation == false){
+        if (hideNavigation == true || hideNavigation == false) {
             cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
-                if(hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")){
+                if (hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.appearances.vex.hideNavigation).click()
                 }
             })
         }
-        if(externalCodes){
+        if (externalCodes) {
             this.addAppearanceExternalCode(externalCodes, verify)
         }
-        if(layout){
+        if (layout) {
             // Values should be "Grid" or "Carousel"
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.get(this.dropdown.box).click()
                 cy.get(this.dropdown.option(layout)).click()
             })
         }
-        if(landingPageCardRadius){
-            cy.get(this.appearances.vex.cardRadius).clear().type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
+        if (landingPageCardRadius) {
+            cy.get(this.appearances.vex.cardRadius).clear().type(`{selectall}${landingPageCardRadius}` + "\n", { force: true })
         }
-        if(landingPageSearchFilterRadius){
+        if (landingPageSearchFilterRadius) {
             cy.wait(1000)
-            cy.get(this.appearances.vex.searchFilterRadius).clear({force:true}).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+            cy.get(this.appearances.vex.searchFilterRadius).clear({ force: true }).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", { force: true })
             cy.wait(1000)
         }
-        if(landingPageSearchFilterFontFamily){
-                cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
-                    cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", {force: true})
+        if (landingPageSearchFilterFontFamily) {
+            cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageSearchFilterColor){
+        if (landingPageSearchFilterColor) {
             const { r, g, b, a } = landingPageSearchFilterColor
-            this.pickColor({button: this.appearances.vex.searchFilterColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.searchFilterColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFilterBackgroundColor){
+        if (landingPageSearchFilterBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFilterBackgroundColor
-            this.pickColor({button: this.appearances.vex.searchFilterBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.searchFilterBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFilterFontSize){
-            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+        if (landingPageSearchFilterFontSize) {
+            const size = { small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge" }
             cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageSearchFilterFontSize]]).click()
             })
         }
-        if(landingPageSearchFieldFontFamily){
+        if (landingPageSearchFieldFontFamily) {
             cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageSearchFieldColor){
+        if (landingPageSearchFieldColor) {
             const { r, g, b, a } = landingPageSearchFieldColor
-            this.pickColor({button: this.appearances.vex.searchFieldColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.searchFieldColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFieldBackgroundColor){
+        if (landingPageSearchFieldBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFieldBackgroundColor
-            this.pickColor({button: this.appearances.vex.searchFieldBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.searchFieldBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFieldFontSize){
-            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+        if (landingPageSearchFieldFontSize) {
+            const size = { small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge" }
             cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageSearchFieldFontSize]]).click()
             })
         }
-        if(landingPageHeadingStyleFontFamily){
+        if (landingPageHeadingStyleFontFamily) {
             cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageHeadingStyleColor){
+        if (landingPageHeadingStyleColor) {
             const { r, g, b, a } = landingPageHeadingStyleColor
-            this.pickColor({button: this.appearances.vex.headingStyleColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.headingStyleColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageHeadingStyleFontSize){
-            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+        if (landingPageHeadingStyleFontSize) {
+            const size = { small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge" }
             cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageHeadingStyleFontSize]]).click()
             })
         }
-        if(landingPageCarouselArrowsColor){
+        if (landingPageCarouselArrowsColor) {
             const { r, g, b, a } = landingPageCarouselArrowsColor
-            this.pickColor({button: this.appearances.vex.carouselArrowsColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.carouselArrowsColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageCarouselArrowsBackgroundColor){
+        if (landingPageCarouselArrowsBackgroundColor) {
             const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
-            this.pickColor({button: this.appearances.vex.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageNoResultsMsgFontFamily){
+        if (landingPageNoResultsMsgFontFamily) {
             cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageNoResultsMsgColor){
+        if (landingPageNoResultsMsgColor) {
             const { r, g, b, a } = landingPageNoResultsMsgColor
-            this.pickColor({button: this.appearances.vex.noResultsMsgColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.vex.noResultsMsgColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageNoResultsMsgFontSize){
-            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+        if (landingPageNoResultsMsgFontSize) {
+            const size = { small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge" }
             cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageNoResultsMsgFontSize]]).click()
             })
         }
         cy.contains("button", "Save Virtual Event Settings").click()
 
-        if(verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
             this.verifyVEXappearance(options)
         }
     }
 
-    verifyVEXappearance(options){
-        const {backgroundColor, headerBackgroundColor, hideNavigation, layout} = options
-        const {headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor} = options
-        const {bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor} = options
-        const {activeFontFamily, activeBoldFont, activeFontSize, activeFontColor} = options
-        const {sessionDescriptionFontFamily,sessionDescriptionFontWeight,sessionDescriptionFontSize,sessionDescriptionFontColor} = options
-        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
-        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
-        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
-        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
+    verifyVEXappearance(options) {
+        const { backgroundColor, headerBackgroundColor, hideNavigation, layout } = options
+        const { headerTitleFontFamily, headerTitleBoldFont, headerTitleFontSize, headerTitleFontColor } = options
+        const { bodyFontFamily, bodyBoldFont, bodyFontSize, bodyFontColor } = options
+        const { activeFontFamily, activeBoldFont, activeFontSize, activeFontColor } = options
+        const { sessionDescriptionFontFamily, sessionDescriptionFontWeight, sessionDescriptionFontSize, sessionDescriptionFontColor } = options
+        const { landingPageCardRadius, landingPageSearchFilterRadius, landingPageSearchFilterFontFamily, landingPageSearchFilterColor, landingPageSearchFilterBackgroundColor } = options
+        const { landingPageHeadingStyleFontFamily, landingPageHeadingStyleColor, landingPageHeadingStyleFontSize, landingPageCarouselArrowsColor, landingPageCarouselArrowsBackgroundColor } = options
+        const { landingPageSearchFilterFontSize, landingPageSearchFieldFontFamily, landingPageSearchFieldColor, landingPageSearchFieldBackgroundColor, landingPageSearchFieldFontSize } = options
+        const { landingPageNoResultsMsgFontFamily, landingPageNoResultsMsgColor, landingPageNoResultsMsgFontSize } = options
 
-        if(backgroundColor){
+        if (backgroundColor) {
             const { r, g, b, a } = backgroundColor
             cy.get(this.appearances.vex.backgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1090,7 +1092,7 @@ export class Configurations extends Common {
             })
         }
 
-        if(headerBackgroundColor){
+        if (headerBackgroundColor) {
             const { r, g, b, a } = headerBackgroundColor
             cy.get(this.appearances.vex.headerBackgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1100,25 +1102,25 @@ export class Configurations extends Common {
             })
         }
 
-        if(headerTitleFontFamily){
+        if (headerTitleFontFamily) {
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", headerTitleFontFamily)
             })
         }
 
-        if(headerTitleBoldFont == true || headerTitleBoldFont == false){
+        if (headerTitleBoldFont == true || headerTitleBoldFont == false) {
             const containOrNotContain = headerTitleBoldFont ? "contain" : "not.contain"
             cy.get(this.appearances.vex.headerFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
 
-        if(headerTitleFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (headerTitleFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.headerTitleSettings).within(() => {
                 cy.get(this.appearances[size[headerTitleFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
 
-        if(headerTitleFontColor){
+        if (headerTitleFontColor) {
             const { r, g, b, a } = headerTitleFontColor
             cy.get(this.appearances.vex.headerFontColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1128,25 +1130,25 @@ export class Configurations extends Common {
             })
         }
 
-        if(bodyFontFamily){
+        if (bodyFontFamily) {
             cy.get(this.appearances.vex.bodySettings).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", bodyFontFamily)
             })
         }
 
-        if(bodyBoldFont == true || bodyBoldFont == false){
+        if (bodyBoldFont == true || bodyBoldFont == false) {
             const containOrNotContain = bodyBoldFont ? "contain" : "not.contain"
             cy.get(this.appearances.vex.bodyFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
 
-        if(bodyFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (bodyFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.bodySettings).within(() => {
                 cy.get(this.appearances[size[bodyFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
 
-        if(bodyFontColor){
+        if (bodyFontColor) {
             const { r, g, b, a } = bodyFontColor
             cy.get(this.appearances.vex.bodyFontColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1156,24 +1158,24 @@ export class Configurations extends Common {
             })
         }
 
-        if(activeFontFamily){
+        if (activeFontFamily) {
             cy.get(this.appearances.vex.activeSettings).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", activeFontFamily)
             })
         }
 
-        if(activeBoldFont == true || activeBoldFont == false){
+        if (activeBoldFont == true || activeBoldFont == false) {
             const containOrNotContain = activeBoldFont ? "contain" : "not.contain"
             cy.get(this.appearances.vex.activeFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
 
-        if(activeFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (activeFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.activeSettings).within(() => {
                 cy.get(this.appearances[size[activeFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(activeFontColor){
+        if (activeFontColor) {
             const { r, g, b, a } = activeFontColor
             cy.get(this.appearances.vex.activeFontColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1182,33 +1184,33 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(hideNavigation == true || hideNavigation == false){
+        if (hideNavigation == true || hideNavigation == false) {
             cy.get(this.appearances.vex.hideNavigation).invoke("attr", "class").then(checkboxClass => {
                 const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
                 expect(checkboxClass).to.include(checkOrUnchecked)
             })
         }
-        if(layout){
+        if (layout) {
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.contains("span", layout).should("exist")
             })
         }
-        if(sessionDescriptionFontFamily){
+        if (sessionDescriptionFontFamily) {
             cy.get(this.appearances.vex.sessionDescriptionSettings).parent().within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", sessionDescriptionFontFamily)
             })
         }
-        if(sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false){
+        if (sessionDescriptionFontWeight == true || sessionDescriptionFontWeight == false) {
             const containOrNotContain = sessionDescriptionFontWeight ? "contain" : "not.contain"
             cy.get(this.appearances.vex.sessionDescriptionFontWeight).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
-        if(sessionDescriptionFontSize){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (sessionDescriptionFontSize) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.vex.sessionDescriptionSettings).parent().within(() => {
                 cy.get(this.appearances[size[sessionDescriptionFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(sessionDescriptionFontColor){
+        if (sessionDescriptionFontColor) {
             const { r, g, b, a } = sessionDescriptionFontColor
             cy.get(this.appearances.vex.sessionDescriptionFontColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1217,18 +1219,18 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageCardRadius){
+        if (landingPageCardRadius) {
             cy.get(this.appearances.vex.cardRadius).invoke("attr", "value").should("contain", landingPageCardRadius)
         }
-        if(landingPageSearchFilterRadius){
+        if (landingPageSearchFilterRadius) {
             cy.get(this.appearances.vex.searchFilterRadius).invoke("attr", "value").should("contain", landingPageSearchFilterRadius)
         }
-        if(landingPageSearchFilterFontFamily){
+        if (landingPageSearchFilterFontFamily) {
             cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageSearchFilterFontFamily)
             })
         }
-        if(landingPageSearchFilterColor){
+        if (landingPageSearchFilterColor) {
             const { r, g, b, a } = landingPageSearchFilterColor
             cy.get(this.appearances.vex.searchFilterColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1237,7 +1239,7 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageSearchFilterBackgroundColor){
+        if (landingPageSearchFilterBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFilterBackgroundColor
             cy.get(this.appearances.vex.searchFilterBackgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1246,18 +1248,18 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageSearchFilterFontSize){
-            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+        if (landingPageSearchFilterFontSize) {
+            const size = { small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge" }
             cy.get(this.appearances.vex.searchFilterSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageSearchFilterFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(landingPageSearchFieldFontFamily){
+        if (landingPageSearchFieldFontFamily) {
             cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageSearchFieldFontFamily)
             })
         }
-        if(landingPageSearchFieldColor){
+        if (landingPageSearchFieldColor) {
             const { r, g, b, a } = landingPageSearchFieldColor
             cy.get(this.appearances.vex.searchFieldColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1266,7 +1268,7 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageSearchFieldBackgroundColor){
+        if (landingPageSearchFieldBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFieldBackgroundColor
             cy.get(this.appearances.vex.searchFieldBackgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1275,18 +1277,18 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageSearchFieldFontSize){
-            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+        if (landingPageSearchFieldFontSize) {
+            const size = { small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge" }
             cy.get(this.appearances.vex.searchFieldSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageSearchFieldFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(landingPageHeadingStyleFontFamily){
+        if (landingPageHeadingStyleFontFamily) {
             cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageHeadingStyleFontFamily)
             })
         }
-        if(landingPageHeadingStyleColor){
+        if (landingPageHeadingStyleColor) {
             const { r, g, b, a } = landingPageHeadingStyleColor
             cy.get(this.appearances.vex.headingStyleColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1295,13 +1297,13 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageHeadingStyleFontSize){
-            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+        if (landingPageHeadingStyleFontSize) {
+            const size = { small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge" }
             cy.get(this.appearances.vex.headingStyleSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageHeadingStyleFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(landingPageCarouselArrowsColor){
+        if (landingPageCarouselArrowsColor) {
             const { r, g, b, a } = landingPageCarouselArrowsColor
             cy.get(this.appearances.vex.carouselArrowsColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1310,7 +1312,7 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageCarouselArrowsBackgroundColor){
+        if (landingPageCarouselArrowsBackgroundColor) {
             const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
             cy.get(this.appearances.vex.carouselArrowsBackgroundColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1319,12 +1321,12 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageNoResultsMsgFontFamily){
+        if (landingPageNoResultsMsgFontFamily) {
             cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", landingPageNoResultsMsgFontFamily)
             })
         }
-        if(landingPageNoResultsMsgColor){
+        if (landingPageNoResultsMsgColor) {
             const { r, g, b, a } = landingPageNoResultsMsgColor
             cy.get(this.appearances.vex.noResultsMsgColor).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -1333,39 +1335,39 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(landingPageNoResultsMsgFontSize){
-            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+        if (landingPageNoResultsMsgFontSize) {
+            const size = { small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge" }
             cy.get(this.appearances.vex.noResultMsgSettings).parent().within(() => {
                 cy.get(this.appearances.vex[size[landingPageNoResultsMsgFontSize]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-    } 
+    }
 
-    configureMicrositesAppearance(options){
-        const {appearance, hideNavigation, externalCodes, layout, verify} = options
-        const {contentTypeTopicLabelsFontFamily,contentTypeTopicLabelsFontWeight,contentTypeTopicLabelsFontStyle,contentTypeTopicLabelsTextDecoration,contentTypeTopicLabelsColor,contentTypeTopicLabelsBackgroundColor} = options
-        const {landingPageCardRadius,landingPageSearchFilterRadius,landingPageSearchFilterFontFamily,landingPageSearchFilterColor,landingPageSearchFilterBackgroundColor} = options
-        const {landingPageHeadingStyleFontFamily,landingPageHeadingStyleColor,landingPageHeadingStyleFontSize,landingPageCarouselArrowsColor,landingPageCarouselArrowsBackgroundColor} = options
-        const {landingPageSearchFilterFontSize,landingPageSearchFieldFontFamily,landingPageSearchFieldColor,landingPageSearchFieldBackgroundColor,landingPageSearchFieldFontSize} = options
-        const {landingPageNoResultsMsgFontFamily,landingPageNoResultsMsgColor,landingPageNoResultsMsgFontSize} = options
+    configureMicrositesAppearance(options) {
+        const { appearance, hideNavigation, externalCodes, layout, verify } = options
+        const { contentTypeTopicLabelsFontFamily, contentTypeTopicLabelsFontWeight, contentTypeTopicLabelsFontStyle, contentTypeTopicLabelsTextDecoration, contentTypeTopicLabelsColor, contentTypeTopicLabelsBackgroundColor } = options
+        const { landingPageCardRadius, landingPageSearchFilterRadius, landingPageSearchFilterFontFamily, landingPageSearchFilterColor, landingPageSearchFilterBackgroundColor } = options
+        const { landingPageHeadingStyleFontFamily, landingPageHeadingStyleColor, landingPageHeadingStyleFontSize, landingPageCarouselArrowsColor, landingPageCarouselArrowsBackgroundColor } = options
+        const { landingPageSearchFilterFontSize, landingPageSearchFieldFontFamily, landingPageSearchFieldColor, landingPageSearchFieldBackgroundColor, landingPageSearchFieldFontSize } = options
+        const { landingPageNoResultsMsgFontFamily, landingPageNoResultsMsgColor, landingPageNoResultsMsgFontSize } = options
 
         this.goToPage(this.pageTitles.appearances, this.pageUrls.appearances)
         this.clickAppearance(appearance)
         this.gotoAppearanceTab("microsite-builder")
 
-        if(hideNavigation == true || hideNavigation == false){
+        if (hideNavigation == true || hideNavigation == false) {
             cy.get(this.appearances.microsites.hideNavigation).invoke("attr", "class").then(checkboxClass => {
-                if(hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")){
+                if (hideNavigation && checkboxClass.includes("checkbox-container--unchecked") || !hideNavigation && checkboxClass.includes("checkbox-container--checked")) {
                     cy.get(this.appearances.microsites.hideNavigation).click()
                 }
             })
         }
 
-        if(externalCodes){
+        if (externalCodes) {
             this.addAppearanceExternalCode(externalCodes, verify)
         }
 
-        if(layout){
+        if (layout) {
             // Values should be "Grid" or "Carousel"
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.get(this.dropdown.box).click()
@@ -1373,119 +1375,119 @@ export class Configurations extends Common {
             })
         }
 
-        if(contentTypeTopicLabelsFontFamily){
-                cy.get(this.appearances.microsites.contentTypeTopicLabelsSettings).parent().within(() => {
-                    cy.get(this.dropdown.input).type(contentTypeTopicLabelsFontFamily + "\n", {force: true})
+        if (contentTypeTopicLabelsFontFamily) {
+            cy.get(this.appearances.microsites.contentTypeTopicLabelsSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(contentTypeTopicLabelsFontFamily + "\n", { force: true })
             })
         }
-        if(contentTypeTopicLabelsFontWeight == true || contentTypeTopicLabelsFontWeight == false){
+        if (contentTypeTopicLabelsFontWeight == true || contentTypeTopicLabelsFontWeight == false) {
             cy.get(this.appearances.microsites.contentTypeTopicLabelsFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(contentTypeTopicLabelsFontWeight && !fontWeightClass.includes("containerActive") || !contentTypeTopicLabelsFontWeight && fontWeightClass.includes("containerActive")){
+                if (contentTypeTopicLabelsFontWeight && !fontWeightClass.includes("containerActive") || !contentTypeTopicLabelsFontWeight && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.microsites.contentTypeTopicLabelsFontWeight).click()
                 }
             })
         }
-        if(contentTypeTopicLabelsFontStyle == true || contentTypeTopicLabelsFontStyle == false){
+        if (contentTypeTopicLabelsFontStyle == true || contentTypeTopicLabelsFontStyle == false) {
             cy.get(this.appearances.microsites.contentTypeTopicLabelsFontStyle).invoke("attr", "value").then(fonStyleValue => {
-                if(contentTypeTopicLabelsFontStyle && !fonStyleValue.includes("italic") || !contentTypeTopicLabelsFontStyle && fonStyleValue.includes("italic")){
+                if (contentTypeTopicLabelsFontStyle && !fonStyleValue.includes("italic") || !contentTypeTopicLabelsFontStyle && fonStyleValue.includes("italic")) {
                     cy.get(this.appearances.microsites.contentTypeTopicLabelsFontStyle).click()
                 }
             })
         }
-        if(contentTypeTopicLabelsTextDecoration == true || contentTypeTopicLabelsTextDecoration == false){
+        if (contentTypeTopicLabelsTextDecoration == true || contentTypeTopicLabelsTextDecoration == false) {
             cy.get(this.appearances.microsites.contentTypeTopicLabelsTextDecoration).invoke("attr", "value").then(fonStyleValue => {
-                if(contentTypeTopicLabelsTextDecoration && !fonStyleValue.includes("underline") || !contentTypeTopicLabelsTextDecoration && fonStyleValue.includes("underline")){
+                if (contentTypeTopicLabelsTextDecoration && !fonStyleValue.includes("underline") || !contentTypeTopicLabelsTextDecoration && fonStyleValue.includes("underline")) {
                     cy.get(this.appearances.microsites.contentTypeTopicLabelsTextDecoration).click()
                 }
             })
         }
-        if(contentTypeTopicLabelsColor){
+        if (contentTypeTopicLabelsColor) {
             const { r, g, b, a } = contentTypeTopicLabelsColor
-            this.pickColor({button: this.appearances.microsites.contentTypeTopicLabelsColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.contentTypeTopicLabelsColor, r: r, g: g, b: b, a: a })
         }
-        if(contentTypeTopicLabelsBackgroundColor){
+        if (contentTypeTopicLabelsBackgroundColor) {
             const { r, g, b, a } = contentTypeTopicLabelsBackgroundColor
-            this.pickColor({button: this.appearances.microsites.contentTypeTopicLabelsBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.contentTypeTopicLabelsBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageCardRadius){
-            cy.get(this.appearances.microsites.cardRadius).type(`{selectall}${landingPageCardRadius}` + "\n", {force: true})
+        if (landingPageCardRadius) {
+            cy.get(this.appearances.microsites.cardRadius).type(`{selectall}${landingPageCardRadius}` + "\n", { force: true })
         }
         cy.wait(1000)
-        if(landingPageSearchFilterRadius){
-            cy.get(this.appearances.microsites.searchFilterRadius).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", {force: true})
+        if (landingPageSearchFilterRadius) {
+            cy.get(this.appearances.microsites.searchFilterRadius).type(`{selectall}${landingPageSearchFilterRadius}` + "\n", { force: true })
         }
-        if(landingPageSearchFilterFontFamily){
-                cy.get(this.appearances.microsites.searchFilterSettings).parent().within(() => {
-                    cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", {force: true})
+        if (landingPageSearchFilterFontFamily) {
+            cy.get(this.appearances.microsites.searchFilterSettings).parent().within(() => {
+                cy.get(this.dropdown.input).type(landingPageSearchFilterFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageSearchFilterColor){
+        if (landingPageSearchFilterColor) {
             const { r, g, b, a } = landingPageSearchFilterColor
-            this.pickColor({button: this.appearances.microsites.searchFilterColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.searchFilterColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFilterBackgroundColor){
+        if (landingPageSearchFilterBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFilterBackgroundColor
-            this.pickColor({button: this.appearances.microsites.searchFilterBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.searchFilterBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFilterFontSize){
-            const size = {small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge"}
+        if (landingPageSearchFilterFontSize) {
+            const size = { small: "searchFiltersStyleFontSizeSmall", medium: "searchFiltersStyleFontSizeMedium", large: "searchFiltersStyleFontSizeLarge" }
             cy.get(this.appearances.microsites.searchFilterSettings).parent().within(() => {
                 cy.get(this.appearances.microsites[size[landingPageSearchFilterFontSize]]).click()
             })
         }
-        if(landingPageSearchFieldFontFamily){
+        if (landingPageSearchFieldFontFamily) {
             cy.get(this.appearances.microsites.searchFieldSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageSearchFieldFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageSearchFieldColor){
+        if (landingPageSearchFieldColor) {
             const { r, g, b, a } = landingPageSearchFieldColor
-            this.pickColor({button: this.appearances.microsites.searchFieldColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.searchFieldColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFieldBackgroundColor){
+        if (landingPageSearchFieldBackgroundColor) {
             const { r, g, b, a } = landingPageSearchFieldBackgroundColor
-            this.pickColor({button: this.appearances.microsites.searchFieldBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.searchFieldBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageSearchFieldFontSize){
-            const size = {small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge"}
+        if (landingPageSearchFieldFontSize) {
+            const size = { small: "searchFieldStyleFontSizeSmall", medium: "searchFieldsStyleFontSizeMedium", large: "searchFieldStyleFontSizeLarge" }
             cy.get(this.appearances.microsites.searchFieldSettings).parent().within(() => {
                 cy.get(this.appearances.microsites[size[landingPageSearchFieldFontSize]]).click()
             })
         }
-        if(landingPageHeadingStyleFontFamily){
+        if (landingPageHeadingStyleFontFamily) {
             cy.get(this.appearances.microsites.headingStyleSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageHeadingStyleFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageHeadingStyleColor){
+        if (landingPageHeadingStyleColor) {
             const { r, g, b, a } = landingPageHeadingStyleColor
-            this.pickColor({button: this.appearances.microsites.headingStyleColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.headingStyleColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageHeadingStyleFontSize){
-            const size = {small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge"}
+        if (landingPageHeadingStyleFontSize) {
+            const size = { small: "defaultHeadingFontSizeSmall", medium: "defaultHeadingFontSizeMedium", large: "defaultHeadingFontSizeLarge" }
             cy.get(this.appearances.microsites.headingStyleSettings).parent().within(() => {
                 cy.get(this.appearances.microsites[size[landingPageHeadingStyleFontSize]]).click()
             })
         }
-        if(landingPageCarouselArrowsColor){
+        if (landingPageCarouselArrowsColor) {
             const { r, g, b, a } = landingPageCarouselArrowsColor
-            this.pickColor({button: this.appearances.microsites.carouselArrowsColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.carouselArrowsColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageCarouselArrowsBackgroundColor){
+        if (landingPageCarouselArrowsBackgroundColor) {
             const { r, g, b, a } = landingPageCarouselArrowsBackgroundColor
-            this.pickColor({button: this.appearances.microsites.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.carouselArrowsBackgroundColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageNoResultsMsgFontFamily){
+        if (landingPageNoResultsMsgFontFamily) {
             cy.get(this.appearances.microsites.noResultMsgSettings).parent().within(() => {
-                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(landingPageNoResultsMsgFontFamily + "\n", { force: true })
             })
         }
-        if(landingPageNoResultsMsgColor){
+        if (landingPageNoResultsMsgColor) {
             const { r, g, b, a } = landingPageNoResultsMsgColor
-            this.pickColor({button: this.appearances.microsites.noResultsMsgColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.microsites.noResultsMsgColor, r: r, g: g, b: b, a: a })
         }
-        if(landingPageNoResultsMsgFontSize){
-            const size = {small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge"}
+        if (landingPageNoResultsMsgFontSize) {
+            const size = { small: "noResultsMessageFontSizeSmall", medium: "noResultsMessageFontSizeMedium", large: "noResultsMessageFontSizeLarge" }
             cy.get(this.appearances.microsites.noResultMsgSettings).parent().within(() => {
                 cy.get(this.appearances.microsites[size[landingPageNoResultsMsgFontSize]]).click()
             })
@@ -1493,31 +1495,31 @@ export class Configurations extends Common {
 
         cy.contains("button", "Save Microsite Builder Settings").click()
 
-        if(verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
             this.verifyMicrositeAppearance(options)
         }
-    
-    } 
 
-    verifyMicrositeAppearance(options){
-        const {hideNavigation, layout} = options
+    }
 
-        if(hideNavigation == true || hideNavigation == false){
+    verifyMicrositeAppearance(options) {
+        const { hideNavigation, layout } = options
+
+        if (hideNavigation == true || hideNavigation == false) {
             cy.get(this.appearances.microsites.hideNavigation).invoke("attr", "class").then(checkboxClass => {
                 const checkOrUnchecked = hideNavigation ? "checkbox-container--checked" : "checkbox-container--unchecked"
                 expect(checkboxClass).to.include(checkOrUnchecked)
             })
         }
 
-        if(layout){
+        if (layout) {
             cy.get("div[class*='withFormFieldLayout']:contains('Landing Page Layout')").within(() => {
                 cy.contains("span", layout).should("exist")
             })
         }
     }
 
-    configureExploreAppearance(options){
+    configureExploreAppearance(options) {
         const { appearance, externalCodes, verify } = options
         const { heroTitleFontFamily, heroTitleBoldFont, heroTitleFontSize, heroTitleFontColor, heroSubtitleFontFamily, heroSubtitleFontSize, heroSubtitleBoldFont, heroSubtitleFontColor } = options
 
@@ -1531,117 +1533,118 @@ export class Configurations extends Common {
 
         if (heroTitleFontFamily) {
             cy.get(this.appearances.explore.heroTitleFontFamily).within(() => {
-                cy.get(this.dropdown.input).type(heroTitleFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(heroTitleFontFamily + "\n", { force: true })
             })
         }
 
-        if(heroTitleBoldFont == true || heroTitleBoldFont == false){
+        if (heroTitleBoldFont == true || heroTitleBoldFont == false) {
             cy.get(this.appearances.explore.heroTitleFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(heroTitleBoldFont && !fontWeightClass.includes("containerActive") || !heroTitleBoldFont && fontWeightClass.includes("containerActive")){
+                if (heroTitleBoldFont && !fontWeightClass.includes("containerActive") || !heroTitleBoldFont && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.explore.heroTitleFontWeight).click()
                 }
             })
         }
 
-        if(heroTitleFontSize){
-            const size = {small: "#heroTitleFontSizeSmall", medium: "#heroTitleFontSizeMedium", large: "#heroTitleFontSizeLarge"}
+        if (heroTitleFontSize) {
+            const size = { small: "#heroTitleFontSizeSmall", medium: "#heroTitleFontSizeMedium", large: "#heroTitleFontSizeLarge" }
             cy.get(this.appearances.explore.heroTitleStyle).parent().within(() => {
                 cy.get(size[heroTitleFontSize]).click()
             })
         }
 
-        if(heroTitleFontColor){
+        if (heroTitleFontColor) {
             const { r, g, b, a } = heroTitleFontColor
-            this.pickColor({button: this.appearances.explore.heroTitleColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.explore.heroTitleColor, r: r, g: g, b: b, a: a })
         }
 
         if (heroSubtitleFontFamily) {
             cy.get(this.appearances.explore.heroSubtitleFontFamily).within(() => {
-                cy.get(this.dropdown.input).type(heroSubtitleFontFamily + "\n", {force: true})
+                cy.get(this.dropdown.input).type(heroSubtitleFontFamily + "\n", { force: true })
             })
         }
 
-        if(heroSubtitleBoldFont == true || heroSubtitleBoldFont == false){
+        if (heroSubtitleBoldFont == true || heroSubtitleBoldFont == false) {
             cy.get(this.appearances.explore.heroSubtitleFontWeight).invoke("attr", "class").then(fontWeightClass => {
-                if(heroSubtitleBoldFont && !fontWeightClass.includes("containerActive") || !heroSubtitleBoldFont && fontWeightClass.includes("containerActive")){
+                if (heroSubtitleBoldFont && !fontWeightClass.includes("containerActive") || !heroSubtitleBoldFont && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.explore.heroSubtitleFontWeight).click()
                 }
             })
         }
 
-        if(heroSubtitleFontSize){
-            const size = {small: "#heroSubtitleFontSizeSmall", medium: "#heroSubtitleFontSizeMedium", large: "#heroSubtitleFontSizeLarge"}
+        if (heroSubtitleFontSize) {
+            const size = { small: "#heroSubtitleFontSizeSmall", medium: "#heroSubtitleFontSizeMedium", large: "#heroSubtitleFontSizeLarge" }
             cy.get(this.appearances.explore.heroSubtitleStyle).parent().within(() => {
                 cy.get(size[heroSubtitleFontSize]).click()
             })
         }
 
-        if(heroSubtitleFontColor){
+        if (heroSubtitleFontColor) {
             const { r, g, b, a } = heroSubtitleFontColor
-            this.pickColor({button: this.appearances.explore.heroSubtitleFontColor, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.explore.heroSubtitleFontColor, r: r, g: g, b: b, a: a })
         }
 
         cy.contains("button", "Save Explore Settings").click()
-        
-        if(verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
         }
     }
-    
+
     /*********************************************************************************/
     /********************************* LANGUAGES **************************************/
     /*********************************************************************************/
-     
-    clickAddLanguage(){
+
+    clickAddLanguage() {
         cy.get(this.languages.sidebar).within(() => {
-            cy.containsExact("div", '+ Add Language', {timeout: 10000}).click()
+            cy.containsExact("div", '+ Add Language', { timeout: 10000 }).click()
         })
     }
 
-    clicklanguage(language){
+    clicklanguage(language) {
         cy.get(this.languages.sidebar).within(() => {
-            cy.containsExact("a", language, {timeout: 10000}).should("exist").click()
+            cy.containsExact("a", language, { timeout: 10000 }).should("exist").click()
         })
     }
-    
-    gotoLanguageTab(tabUrl){
+
+    gotoLanguageTab(tabUrl) {
         // we need to pass in the url of the tab 
         cy.url().then((url) => {
-            if (!url.includes("/"+tabUrl)) {
+            if (!url.includes("/" + tabUrl)) {
                 const segements = url.split('/')
                 segements[segements.length - 1] = "" + tabUrl
-                var newurl = segements.join("/") 
+                var newurl = segements.join("/")
                 cy.visit(newurl, { timeout: 20000 })
             }
         })
     }
 
-    addNewLanguage(options){
-        const {name, code} = options
+    addNewLanguage(options) {
+        const { name, code } = options
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
-        cy.waitFor({element: `div:contains('${name}')`, to: "exist", wait: 2000})
-       
-        cy.ifNoElementWithExactTextExists("div", name, 4000, ()=>{
-            this.clickAddLanguage()              
-            cy.contains(this.modal, "Add Language").within(()=>{
-                cy.get(this.dropdown.input).type(name + "\n", {force: true})
-                cy.ifElementWithExactTextExists("span", "Language Code" , 1000, ()=>{  
-                    cy.get(this.languages.code).clear().type(code)
+        cy.waitFor({ element: `div:contains('${name}')`, to: "exist", wait: 2000 })
+
+        cy.get("#sidebarScroller").then(sidebar => {
+            if (sidebar.find(`a:contains('${name}')`).length === 0) {
+                this.clickAddLanguage()
+                cy.contains(this.modal, "Add Language").within(() => {
+                    cy.get(this.dropdown.input).type(name + "\n", { force: true })
+                    cy.ifElementWithExactTextExists("span", "Language Code", 1000, () => {
+                        cy.get(this.languages.code).clear().type(code)
+                    })
+                    cy.contains("button", "Add Language").click()
                 })
-                cy.contains("button", "Add Language").click()
-            })
-    
-            cy.waitFor({element: this.modal, to: "not.exist"})
-            cy.get(this.languages.sidebar).within(() => {
-                cy.containsExact("div", name, {timeout: 5000}).should("exist")
-            })
-            
-        })    
+
+                cy.waitFor({ element: this.modal, to: "not.exist" })
+                cy.get(this.languages.sidebar).within(() => {
+                    cy.containsExact("div", name, { timeout: 5000 }).should("exist")
+                })
+            }
+        })
     }
 
-    configureExploreLanguage(options){
-        const {name, featuredLabel, search, searchInputPlaceholder, filterByContentType, verify} = options
-        const {filterByFunnelStage, filterByBusinessUnit, filterByPersona, filterByIndustryTitle} = options
+    configureExploreLanguage(options) {
+        const { name, featuredLabel, search, searchInputPlaceholder, filterByContentType, verify } = options
+        const { filterByFunnelStage, filterByBusinessUnit, filterByPersona, filterByIndustryTitle } = options
 
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
         this.clicklanguage(name)
@@ -1676,35 +1679,35 @@ export class Configurations extends Common {
         }
 
         if (filterByIndustryTitle) {
-            cy.get(this.languages.explore.industryTitleInput).clear().type(filterByIndustryTitle)   
+            cy.get(this.languages.explore.industryTitleInput).clear().type(filterByIndustryTitle)
         }
 
         cy.contains("button", "Save Explore Settings").click()
 
-        if (verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
         }
     }
 
-    resetLanguageSetting(options){
-        const{name, tab} = options
+    resetLanguageSetting(options) {
+        const { name, tab } = options
         this.clicklanguage(name)
         this.gotoLanguageTab(tab)
         cy.wait(5000)
-        cy.get("#reset-settings",{timeout:10000}).scrollIntoView().click()
+        cy.get("#reset-settings", { timeout: 10000 }).scrollIntoView().click()
         cy.wait(2000)
-        cy.contains(this.modal, "Are you sure?",{timeout:10000}).within(()=>{
+        cy.contains(this.modal, "Are you sure?", { timeout: 10000 }).within(() => {
             cy.wait(2000)
-            cy.contains("button", "Yes",{timeout:10000}).should("be.visible").click()
+            cy.contains("button", "Yes", { timeout: 10000 }).should("be.visible").click()
             cy.wait(2000)
-        })    
-        
-        cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        })
+
+        cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
     }
-//I have added hard wait to make this function work. In regression if it's still fail then will remove waits
-    deleteLanguage(name, verify){
+    //I have added hard wait to make this function work. In regression if it's still fail then will remove waits
+    deleteLanguage(name, verify) {
         this.goToPage(this.pageTitles.languages, this.pageUrls.languages)
-        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.waitFor({ element: this.pageSidebar, to: "exist", wait: 10000 })
         cy.wait(2000)
         cy.get(this.pageSidebar).within(sidebar => {
             cy.wait(2000)
@@ -1712,7 +1715,7 @@ export class Configurations extends Common {
                 cy.wait(2000)
                 cy.containsExact("div", name).siblings("div").within(() => {
                     cy.wait(2000)
-                    cy.get(this.deleteIcon).click({force: true})
+                    cy.get(this.deleteIcon).click({ force: true })
                 })
                 cy.do(() => {
                     // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
@@ -1731,23 +1734,23 @@ export class Configurations extends Common {
     /**************************** ACCESS PROTECTION **********************************/
     /*********************************************************************************/
 
-    addAccessProtectionGroup(name, description){
+    addAccessProtectionGroup(name, description) {
         cy.get("#group-card-add").click()
         cy.get(this.antModal).within(() => {
             cy.get(this.addAccessProtectionGroupModal.name).clear().type(name)
-            if(description) {
+            if (description) {
                 cy.get(this.addAccessProtectionGroupModal.description).clear().type(description)
             }
             cy.contains("button", "Add Group").click()
         })
     }
 
-    deleteAccessProtectionGroup(name){
-        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+    deleteAccessProtectionGroup(name) {
+        cy.waitFor({ element: this.pageSidebar, to: "exist", wait: 10000 })
         cy.get(this.pageSidebar).within(sidebar => {
             if (sidebar.find(`a:contains("${name}")`).length > 0) {
                 cy.containsExact("div", name).siblings("div").within(() => {
-                    cy.get(this.deleteIcon).click({force: true})
+                    cy.get(this.deleteIcon).click({ force: true })
                 })
                 cy.do(() => {
                     // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
@@ -1764,7 +1767,7 @@ export class Configurations extends Common {
     /******************************* CONTENT TAGS*************************************/
     /*********************************************************************************/
 
-    addTopicTag(name){
+    addTopicTag(name) {
         cy.contains("button", "Add Topic").click()
         cy.get(this.contentTags.nameInput).clear().type(name)
         cy.get(this.contentTags.nameInput).parent().within(() => {
@@ -1773,12 +1776,12 @@ export class Configurations extends Common {
         cy.contains("span", name).should("exist")
     }
 
-    deleteTopicTag(name){
+    deleteTopicTag(name) {
         cy.ifElementWithExactTextExists("span", name, 4000, () => {
-            cy.contains("span", name).parent().within(()=>{
+            cy.contains("span", name).parent().within(() => {
                 cy.get(this.deleteIcon).click()
             })
-            cy.get(this.popover).within(()=>{
+            cy.get(this.popover).within(() => {
                 cy.contains("button", "Delete").click()
             })
             cy.contains("span", name).should("not.exist")
@@ -1789,18 +1792,18 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /*********************************** CTAs ****************************************/
     /*********************************************************************************/
-    addCTA(options){
-        const {name, label, ctaType, destination} = options
+    addCTA(options) {
+        const { name, label, ctaType, destination } = options
         this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
         cy.contains("button", "Add CTA").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.ctas.nameInput).clear().type(name)
             cy.get(this.ctas.ctaLabel).clear().type(label)
             cy.get(this.ctas.ctaType).parent().contains(ctaType).click()
-            if (ctaType == "Form"){
-                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+            if (ctaType == "Form") {
+                cy.get(this.dropdown.input).type(destination + "\n", { force: true })
             }
-            else if (ctaType == "Link"){
+            else if (ctaType == "Link") {
                 cy.get(this.ctas.destinationLinkInput).type(destination)
             }
             else {
@@ -1808,18 +1811,18 @@ export class Configurations extends Common {
             }
             cy.contains("button", "Save").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.containsExact(this.table.cellName, name).should("exist")
     }
 
-    deleteCTA(name){
+    deleteCTA(name) {
         this.goToPage(this.pageTitles.ctas, this.pageUrls.ctas)
         cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
             cy.containsExact(this.table.cellName, name).click()
-            cy.get(this.ctas.delete).click({force:true})
+            cy.get(this.ctas.delete).click({ force: true })
             cy.contains("button", "Delete CTA").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.containsExact(this.table.cellName, name).should("not.exist")
     }
 
@@ -1827,14 +1830,14 @@ export class Configurations extends Common {
     /*********************************************************************************/
     /******************************* LINKS&SHARING ***********************************/
     /*********************************************************************************/
-    
+
 
     searchLinksAndSharing(name) {
         cy.wait(2000)
         cy.get(this.pageSidebar).within(() => {
             cy.get("input[name='search-experiences']").should("exist").type(name)
-         })
-        }
+        })
+    }
 
     addLinksAndSharing(name) {
         cy.get(this.pageSidebar).within(() => {
@@ -1844,18 +1847,18 @@ export class Configurations extends Common {
             cy.get(this.linksAndSharing.nameInput).type(name)
             cy.contains("button", "Add Configuration").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.get(this.pageSidebar).within(() => {
             cy.containsExact("div", name).should("exist")
         })
     }
 
     deleteLinksAndSharing(name) {
-        cy.waitFor({element: this.pageSidebar, to: "exist", wait: 10000})
+        cy.waitFor({ element: this.pageSidebar, to: "exist", wait: 10000 })
         cy.ifElementWithExactTextExists("div", name, 4000, () => {
-            if (cy.containsExact("div", name, {timeout: 3000})) {
+            if (cy.containsExact("div", name, { timeout: 3000 })) {
                 cy.containsExact("div", name).siblings("div").within(() => {
-                    cy.get(this.deleteIcon).click({force: true})
+                    cy.get(this.deleteIcon).click({ force: true })
                 })
                 cy.do(() => {
                     // Cypress.$() not affected by within(), so useful to get the delete button in the outside modal
@@ -1863,35 +1866,35 @@ export class Configurations extends Common {
                     // hence the need to put it inside a cy.do()
                     Cypress.$("button:contains('Delete Configuration')").click()
                 })
-            } 
+            }
         })
         cy.containsExact("div", name).should("not.exist")
     }
-     
+
     /*********************************************************************************/
     /****************************** VISITOR ACTIVITY *********************************/
     /*********************************************************************************/
 
-    addVisitorActivity(options){
-        const {name, type, score} = options
+    addVisitorActivity(options) {
+        const { name, type, score } = options
         cy.contains("button", "Add Activity").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.visitorActivity.nameInput).clear().type(name)
-            cy.get(this.dropdown.input).type(type + "\n", {force: true})
+            cy.get(this.dropdown.input).type(type + "\n", { force: true })
             cy.get(this.visitorActivity.scoreInput).clear().type(score)
             cy.contains("button", "Add Activity Definition").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.containsExact(this.table.cellName, name).should("exist")
     }
 
-    deleteVisitorActivity(name){
+    deleteVisitorActivity(name) {
         cy.ifElementWithExactTextExists(this.table.cellName, name, 4000, () => {
             cy.containsExact(this.table.cellName, name).click()
-            cy.get(this.visitorActivity.deleteIcon).click({force:true})
+            cy.get(this.visitorActivity.deleteIcon).click({ force: true })
             cy.contains("button", "Delete Activity").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.containsExact(this.table.cellName, name).should("not.exist")
     }
 
@@ -1901,25 +1904,25 @@ export class Configurations extends Common {
     /********************************** SEGMENTS *************************************/
     /*********************************************************************************/
 
-    addSegment(name){
+    addSegment(name) {
         cy.contains("button", "Create Segment").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.segments.nameInput).clear().type(name)
             cy.contains("button", "Create Segment").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
+        cy.waitFor({ element: this.modal, to: "not.exist" })
         cy.get(this.segments.editSegmentPreview).within(() => {
             cy.contains("button", "Save").click()
         })
         cy.containsExact("p", name).should("exist")
     }
 
-    deleteSegment(name){
+    deleteSegment(name) {
         cy.ifElementWithExactTextExists("p", name, 4000, () => {
             cy.contains("p", name).siblings("div").within(() => {
                 cy.get(this.segments.deleteIcon).click()
             })
-            cy.get(this.modal).within(()=>{
+            cy.get(this.modal).within(() => {
                 cy.contains("button", "Remove Segment").click()
             })
             cy.contains("p", name).should("not.exist")
@@ -1931,29 +1934,29 @@ export class Configurations extends Common {
     /*********************************************************************************/
 
     addRoute(options) {
-        const {name, type, destination} = options
+        const { name, type, destination } = options
         cy.contains("button", "Create Destination Route").click()
-        cy.get(this.modal).within(()=>{
+        cy.get(this.modal).within(() => {
             cy.get(this.routes.nameInput).clear().type(name)
             cy.get(this.routes.fallbackType).parent().contains(type).click()
-            if (type == "URL"){
+            if (type == "URL") {
                 cy.get(this.routes.fallbackUrl).type(destination)
             }
             else {
-                cy.get(this.dropdown.input).type(destination + "\n", {force: true})
+                cy.get(this.dropdown.input).type(destination + "\n", { force: true })
             }
             cy.contains("button", "Create Destination Route").click()
         })
-        cy.waitFor({element: this.modal, to: "not.exist"})
-        cy.contains("h4", name).should("exist") 
+        cy.waitFor({ element: this.modal, to: "not.exist" })
+        cy.contains("h4", name).should("exist")
     }
 
-    deleteRoute(name){
+    deleteRoute(name) {
         cy.ifElementWithExactTextExists("h4", name, 4000, () => {
             cy.contains("h4", name).siblings("span").within(() => {
                 cy.get(this.routes.deleteIcon).click()
             })
-            cy.get(this.modal).within(()=>{
+            cy.get(this.modal).within(() => {
                 cy.contains("button", "Remove Route").click()
             })
             cy.contains("h4", name).should("not.exist")
@@ -1965,7 +1968,7 @@ export class Configurations extends Common {
     /*********************************************************************************/
 
     addTrackLabel(name) {
-        cy.ifNoElementWithExactTextExists("span", name, 2000, ()=>{
+        cy.ifNoElementWithExactTextExists("span", name, 2000, () => {
             cy.contains("button", "Add Label").click()
             cy.get(this.trackLabels.nameInput).clear().type(name)
             cy.get(this.trackLabels.nameInput).parent().within(() => {
@@ -1975,12 +1978,12 @@ export class Configurations extends Common {
         cy.contains("span", name).should("exist")
     }
 
-    deleteTrackLabel(name){
+    deleteTrackLabel(name) {
         cy.ifElementWithExactTextExists("span", name, 4000, () => {
-            cy.contains("span", name).parent().within(()=>{
+            cy.contains("span", name).parent().within(() => {
                 cy.get(this.deleteIcon).click()
             })
-            cy.get(this.popover).within(()=>{
+            cy.get(this.popover).within(() => {
                 cy.contains("button", "Delete").click()
             })
             cy.contains("span", name).should("not.exist")
@@ -1992,8 +1995,8 @@ export class Configurations extends Common {
         const language = config.language
         const searchButton = config.searchButton
         const searchInput = config.searchInput
-        const availability =config.availability
-        const languageInput =config.languageInput
+        const availability = config.availability
+        const languageInput = config.languageInput
         const funnelStages = config.funnelStages
         const businessUnits = config.businessUnits
         const personas = config.personas
@@ -2004,170 +2007,165 @@ export class Configurations extends Common {
         this.clicklanguage(language)
         this.gotoLanguageTab("virtual-event")
         cy.wait(5000) //Languages-Virtual Event Tab loading wait
-        if (searchButton) 
-        {
+        if (searchButton) {
             cy.get(this.languages.vex.searchButtonTitle).clear().type(searchButton)
         }
-        if (searchInput) 
-        {
+        if (searchInput) {
             cy.get(this.languages.vex.searchInputFieldPlaceholder).clear().type(searchInput)
         }
-        if (availability) 
-        {
+        if (availability) {
             cy.get(this.languages.vex.filterByAvailabilityTitle).clear().type(availability)
         }
-        if (languageInput) 
-        {
+        if (languageInput) {
             cy.get(this.languages.vex.filterByLanguageTitle).clear().type(languageInput)
         }
-        if (funnelStages) 
-        {
+        if (funnelStages) {
             cy.get(this.languages.vex.filterByFunnelStageTitle).clear().type(funnelStages)
         }
-        if (businessUnits) 
-        {
+        if (businessUnits) {
             cy.get(this.languages.vex.filterByBusinessUnitTitle).clear().type(businessUnits)
         }
-        if (personas) 
-        {
+        if (personas) {
             cy.get(this.languages.vex.filterByPersonaTitle).clear().type(personas)
         }
-        if (industry) 
-        {
+        if (industry) {
             cy.get(this.languages.vex.filterByIndustryTitle).clear().type(industry)
         }
-        if (topics) 
-        {
+        if (topics) {
             cy.get(this.languages.vex.filterByTopicTitle).clear().type(topics)
         }
         cy.contains("button", "Save Virtual Event Settings").click()
-        cy.contains(this.messages.recordSaved, {timeout: 1000}).should("exist")
+        cy.contains(this.messages.recordSaved, { timeout: 1000 }).should("exist")
 
     }
 
     configureAccessProtectionAppearance(options){
-        const {appearance,thumbnail,submitButtonColor,verify} = options
+        const {appearance,thumbnail,logo,submitButtonColor,verify} = options
         const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
         const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
         const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
         const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
-        
+
         this.goToCampaignAppearance(appearance, "access-protection")
         if (thumbnail) {
             cy.get(this.appearances.imagePicker).first().click()
             this.pickThumbnail(thumbnail)
         }
+        if (logo) {
+            cy.get(this.appearances.imagePicker).eq(1).click()
+            this.pickThumbnail(logo)
+        }
         if(submitButtonColor){
             const { r, g, b, a } = submitButtonColor
-            this.pickColor({button: this.appearances.accessProtection.submitButtonColorLP, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.accessProtection.submitButtonColorLP, r: r, g: g, b: b, a: a })
         }
-        if(headerTextFontFamilyLP){
+        if (headerTextFontFamilyLP) {
             cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
-                cy.get(this.dropdown.input).type(headerTextFontFamilyLP + "\n", {force: true})
+                cy.get(this.dropdown.input).type(headerTextFontFamilyLP + "\n", { force: true })
             })
         }
-        if(headerTextBoldFontLP == true || headerTextBoldFontLP == false){
+        if (headerTextBoldFontLP == true || headerTextBoldFontLP == false) {
             cy.get(this.appearances.accessProtection.headerTextFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
-                if(headerTextBoldFontLP && !fontWeightClass.includes("containerActive") || !headerTextBoldFontLP && fontWeightClass.includes("containerActive")){
+                if (headerTextBoldFontLP && !fontWeightClass.includes("containerActive") || !headerTextBoldFontLP && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.accessProtection.headerTextFontWeightLP).click()
                 }
             })
         }
-        if(headerTextFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (headerTextFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
                 cy.get(this.appearances[size[headerTextFontSizeLP]]).click()
             })
         }
-        if(headerTextFontColorLP){
+        if (headerTextFontColorLP) {
             const { r, g, b, a } = headerTextFontColorLP
-            this.pickColor({button: this.appearances.accessProtection.headerTextFontColorLP, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.accessProtection.headerTextFontColorLP, r: r, g: g, b: b, a: a })
         }
-        if(bodyTextFamilyLP){
+        if (bodyTextFamilyLP) {
             cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
-                cy.get(this.dropdown.input).type(bodyTextFamilyLP + "\n", {force: true})
+                cy.get(this.dropdown.input).type(bodyTextFamilyLP + "\n", { force: true })
             })
         }
-        if(bodyTextBoldFontLP == true || bodyTextBoldFontLP == false){
+        if (bodyTextBoldFontLP == true || bodyTextBoldFontLP == false) {
             cy.get(this.appearances.accessProtection.bodyFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
-                if(bodyTextBoldFontLP && !fontWeightClass.includes("containerActive") || !bodyTextBoldFontLP && fontWeightClass.includes("containerActive")){
+                if (bodyTextBoldFontLP && !fontWeightClass.includes("containerActive") || !bodyTextBoldFontLP && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.accessProtection.bodyFontWeightLP).click()
                 }
             })
         }
-        if(bodyTextFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (bodyTextFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
                 cy.get(this.appearances[size[bodyTextFontSizeLP]]).click()
             })
         }
-        if(bodyTextFontColorLP){
+        if (bodyTextFontColorLP) {
             const { r, g, b, a } = bodyTextFontColorLP
-            this.pickColor({button: this.appearances.accessProtection.bodyFontColorLP, r: r, g: g, b: b, a: a})
+            this.pickColor({ button: this.appearances.accessProtection.bodyFontColorLP, r: r, g: g, b: b, a: a })
         }
-        if(emailAddressFamilyLP){
+        if (emailAddressFamilyLP) {
             cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
-                cy.get(this.dropdown.input).type(emailAddressFamilyLP + "\n", {force: true})
+                cy.get(this.dropdown.input).type(emailAddressFamilyLP + "\n", { force: true })
             })
         }
-        if(emailAddressBoldFontLP == true || emailAddressBoldFontLP == false){
+        if (emailAddressBoldFontLP == true || emailAddressBoldFontLP == false) {
             cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).invoke("attr", "class").then(fontWeightClass => {
-                if(emailAddressBoldFontLP && !fontWeightClass.includes("containerActive") || !emailAddressBoldFontLP && fontWeightClass.includes("containerActive")){
+                if (emailAddressBoldFontLP && !fontWeightClass.includes("containerActive") || !emailAddressBoldFontLP && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).click()
                 }
             })
         }
-        if(emailAddressFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (emailAddressFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
                 cy.get(this.appearances[size[emailAddressFontSizeLP]]).click()
             })
         }
-        if(emailAddressFontColorLP){
-            const { r, g, b, a } =  emailAddressFontColorLP
-            this.pickColor({button: this.appearances.accessProtection.emailAddressFontColorLP, r: r, g: g, b: b, a: a})
+        if (emailAddressFontColorLP) {
+            const { r, g, b, a } = emailAddressFontColorLP
+            this.pickColor({ button: this.appearances.accessProtection.emailAddressFontColorLP, r: r, g: g, b: b, a: a })
         }
-        if(submitButtonFontFamilyLP){
+        if (submitButtonFontFamilyLP) {
             cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
-                cy.get(this.dropdown.input).type(submitButtonFontFamilyLP + "\n", {force: true})
+                cy.get(this.dropdown.input).type(submitButtonFontFamilyLP + "\n", { force: true })
             })
         }
-        if(submitButtonFontWeightLP == true || submitButtonFontWeightLP == false){
+        if (submitButtonFontWeightLP == true || submitButtonFontWeightLP == false) {
             cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).invoke("attr", "class").then(fontWeightClass => {
-                if(submitButtonFontWeightLP && !fontWeightClass.includes("containerActive") || !submitButtonFontWeightLP && fontWeightClass.includes("containerActive")){
+                if (submitButtonFontWeightLP && !fontWeightClass.includes("containerActive") || !submitButtonFontWeightLP && fontWeightClass.includes("containerActive")) {
                     cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).click()
                 }
             })
         }
-        if(submitButtonFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (submitButtonFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
                 cy.get(this.appearances[size[submitButtonFontSizeLP]]).click()
             })
         }
-        if(submitButtonTextFontColorLP){
-            const { r, g, b, a } =  submitButtonTextFontColorLP
-            this.pickColor({button: this.appearances.accessProtection.submitButtonTextColorLP, r: r, g: g, b: b, a: a})
+        if (submitButtonTextFontColorLP) {
+            const { r, g, b, a } = submitButtonTextFontColorLP
+            this.pickColor({ button: this.appearances.accessProtection.submitButtonTextColorLP, r: r, g: g, b: b, a: a })
         }
-        if(submitButtonRadiusLP){
-            cy.get(this.appearances.accessProtection.submitButtonRadiusLP).type(`{selectall}${submitButtonRadiusLP}` + "\n", {force: true})
+        if (submitButtonRadiusLP) {
+            cy.get(this.appearances.accessProtection.submitButtonRadiusLP).type(`{selectall}${submitButtonRadiusLP}` + "\n", { force: true })
         }
-    
+
         cy.contains("button", "Save Access Protection Settings").click()
-        if(verify !== false){
-            cy.contains(this.messages.recordSaved, {timeout: 10000}).should("exist")
+        if (verify !== false) {
+            cy.contains(this.messages.recordSaved, { timeout: 10000 }).should("exist")
             this.verifyAccessProtectionAppearance(options)
-        }       
+        }
     }
 
-    verifyAccessProtectionAppearance(options){
-        const {submitButtonColor} = options
-        const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
-        const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
-        const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
-        const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
+    verifyAccessProtectionAppearance(options) {
+        const { submitButtonColor } = options
+        const { headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP } = options
+        const { bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP } = options
+        const { emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP } = options
+        const { submitButtonFontFamilyLP, submitButtonFontWeightLP, submitButtonFontSizeLP, submitButtonTextFontColorLP, submitButtonRadiusLP } = options
 
-        if(submitButtonColor){
+        if (submitButtonColor) {
             const { r, g, b, a } = submitButtonColor
             cy.get(this.appearances.accessProtection.submitButtonColorLP).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -2176,22 +2174,22 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(headerTextFontFamilyLP){
+        if (headerTextFontFamilyLP) {
             cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", headerTextFontFamilyLP)
             })
         }
-        if(headerTextBoldFontLP == true || headerTextBoldFontLP == false){
+        if (headerTextBoldFontLP == true || headerTextBoldFontLP == false) {
             const containOrNotContain = headerTextBoldFontLP ? "contain" : "not.contain"
             cy.get(this.appearances.accessProtection.headerTextFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
-        if(headerTextFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (headerTextFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.headerTextSettingsLP).within(() => {
                 cy.get(this.appearances[size[headerTextFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(headerTextFontColorLP){
+        if (headerTextFontColorLP) {
             const { r, g, b, a } = headerTextFontColorLP
             cy.get(this.appearances.accessProtection.headerTextFontColorLP).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -2200,22 +2198,22 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(bodyTextFamilyLP){
+        if (bodyTextFamilyLP) {
             cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", bodyTextFamilyLP)
             })
         }
-        if(bodyTextBoldFontLP == true || bodyTextBoldFontLP == false){
+        if (bodyTextBoldFontLP == true || bodyTextBoldFontLP == false) {
             const containOrNotContain = bodyTextBoldFontLP ? "contain" : "not.contain"
             cy.get(this.appearances.accessProtection.bodyFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
-        if(bodyTextFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (bodyTextFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.bodySettingsLP).within(() => {
                 cy.get(this.appearances[size[bodyTextFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(bodyTextFontColorLP){
+        if (bodyTextFontColorLP) {
             const { r, g, b, a } = bodyTextFontColorLP
             cy.get(this.appearances.accessProtection.bodyFontColorLP).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -2224,22 +2222,22 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(emailAddressFamilyLP){
+        if (emailAddressFamilyLP) {
             cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", emailAddressFamilyLP)
             })
         }
-        if(emailAddressBoldFontLP == true || emailAddressBoldFontLP == false){
+        if (emailAddressBoldFontLP == true || emailAddressBoldFontLP == false) {
             const containOrNotContain = emailAddressBoldFontLP ? "contain" : "not.contain"
             cy.get(this.appearances.accessProtection.emailAddressFontWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
-        if(emailAddressFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+        if (emailAddressFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.emailAddressSettingsLP).within(() => {
                 cy.get(this.appearances[size[emailAddressFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-        if(emailAddressFontColorLP){
+        if (emailAddressFontColorLP) {
             const { r, g, b, a } = emailAddressFontColorLP
             cy.get(this.appearances.accessProtection.emailAddressFontColorLP).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -2248,25 +2246,25 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(submitButtonFontFamilyLP){
+        if (submitButtonFontFamilyLP) {
             cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
                 cy.get(this.dropdown.selectedValue).invoke("text").should("eq", submitButtonFontFamilyLP)
             })
         }
-    
-        if(submitButtonFontWeightLP == true || submitButtonFontWeightLP == false){
+
+        if (submitButtonFontWeightLP == true || submitButtonFontWeightLP == false) {
             const containOrNotContain = submitButtonFontWeightLP ? "contain" : "not.contain"
             cy.get(this.appearances.accessProtection.submitButtonTextWeightLP).invoke("attr", "class").should(containOrNotContain, "containerActive")
         }
-    
-        if(submitButtonFontSizeLP){
-            const size = {small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge"}
+
+        if (submitButtonFontSizeLP) {
+            const size = { small: "fontSizeSmall", medium: "fontSizeMedium", large: "fontSizeLarge" }
             cy.get(this.appearances.accessProtection.submitButtonTextSettingsLP).within(() => {
                 cy.get(this.appearances[size[submitButtonFontSizeLP]]).invoke("attr", "class").should("contain", "letterActive")
             })
         }
-    
-        if(submitButtonTextFontColorLP){
+
+        if (submitButtonTextFontColorLP) {
             const { r, g, b, a } = submitButtonTextFontColorLP
             cy.get(this.appearances.accessProtection.submitButtonTextColorLP).within(() => {
                 cy.get("span").invoke("attr", "style").then(style => {
@@ -2275,7 +2273,7 @@ export class Configurations extends Common {
                 })
             })
         }
-        if(submitButtonRadiusLP){
+        if (submitButtonRadiusLP) {
             cy.get(this.appearances.accessProtection.submitButtonRadiusLP).invoke("attr", "value").should("contain", submitButtonRadiusLP)
         }
     }
@@ -2284,8 +2282,8 @@ export class Configurations extends Common {
         const language = config.language
         const title = config.title
         const emailSuccess = config.emailSuccess
-        const emailFailed =config.emailFailed
-        const unAuthorizedEmail =config.unAuthorizedEmail
+        const emailFailed = config.emailFailed
+        const unAuthorizedEmail = config.unAuthorizedEmail
         const emailConfirmMsg = config.emailConfirmMsg
         const emailInstructionMsg = config.emailInstructionMsg
         const helperMsg = config.helperMsg
@@ -2294,36 +2292,29 @@ export class Configurations extends Common {
         this.clicklanguage(language)
         this.gotoLanguageTab("access-protection")
         cy.wait(3000) //Languages-Access Protection Tab loading wait
-        if (title) 
-        {
+        if (title) {
             cy.get(this.languages.accessProtection.title).clear().type(title)
         }
-        if (emailSuccess) 
-        {
+        if (emailSuccess) {
             cy.get(this.languages.accessProtection.emailSuccessMsg).clear().type(emailSuccess)
         }
-        if (emailFailed) 
-        {
+        if (emailFailed) {
             cy.get(this.languages.accessProtection.emailFailedMsg).clear().type(emailFailed)
         }
-        if (unAuthorizedEmail) 
-        {
+        if (unAuthorizedEmail) {
             cy.get(this.languages.accessProtection.unAuthorizedEmailMsg).clear().type(unAuthorizedEmail)
         }
-        if (emailConfirmMsg) 
-        {
+        if (emailConfirmMsg) {
             cy.get(this.languages.accessProtection.emailConfirmedMsg).clear().type(emailConfirmMsg)
         }
-        if (emailInstructionMsg) 
-        {
+        if (emailInstructionMsg) {
             cy.get(this.languages.accessProtection.emailInstructionMsg).clear().type(emailInstructionMsg)
         }
-        if (helperMsg) 
-        {
+        if (helperMsg) {
             cy.get(this.languages.accessProtection.helperMsg).clear().type(helperMsg)
         }
         cy.contains("button", "Save Access Protection Settings").click()
-        cy.contains(this.messages.recordSaved, {timeout: 1000}).should("exist")
+        cy.contains(this.messages.recordSaved, { timeout: 1000 }).should("exist")
 
-    } 
+    }
 }
