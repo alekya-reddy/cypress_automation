@@ -23,11 +23,13 @@ export class Common {
         this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
-        this.antModal = ".ant-modal-content";
+        this.cookieConsentAcceptButton = '#qa-gdpr-cookie-consent-accept-button';
+        this.antModal = ".ant-modal-content"; 
         this.antModalRoot = ".ant-modal-root";
         this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
         this.vexNavigation = "[id='virtual-events-marketing-cta']";
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
+        this.selectAppearence = ".Select-arrow-zone";
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';
@@ -158,11 +160,10 @@ export class Common {
     visitHomeUrl() {
         cy.visit(this.baseUrl)
     }
-
-    goToPage(pageTitle, pageUrl) {
-        cy.get(this.pageTitleLocator).invoke('text').then((text) => {
-            if (text !== pageTitle) {
-                cy.visit(pageUrl);
+    goToPage(pageTitle, pageUrl){
+        cy.get(this.pageTitleLocator).invoke('text').then((text)=>{
+            if(text !== pageTitle){
+            cy.visit(pageUrl);
             }
         })
     }

@@ -464,7 +464,6 @@ export class Target extends Common {
             })
         }
     }    
-
     configureFlowCTA(config){
         const ctaNumber = config.ctaNumber
         const flowCTA = config.flowCTA
@@ -472,9 +471,14 @@ export class Target extends Common {
         const buttonColor = config.buttonColor
         const fontColor = config.fontColor
         const addcta = config.addcta
-
+    }
+    configureFlowCTA(flowCTA, verify){
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
             cy.contains("label", ctaNumber).siblings("span").click({force:true})
+            cy.contains("label", "CTA").siblings("span").click()
+        cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
+            cy.contains("label", ctaNumber).siblings("span").click({force:true})
+
         })
 
             cy.get(this.popover).within(()=>{
@@ -490,6 +494,17 @@ export class Target extends Common {
             cy.get('#fontColor').type(fontColor)
             cy.wait(200)
             cy.contains('button', 'Update').click()
+            cy.get("input").type(flowCTA + "\n", {force: true})
+            cy.contains("button", "Update").click()
+        })
+        if(addcta){
+            cy.wait(3000)
+            cy.contains('div', "+ Add CTA").click({force: true})
+        }
+        if(verify !== false){
+            cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
+                cy.containsExact("span", flowCTA, {timeout: 10000}).should("exist")
+            })
         })
 
         if(addcta){
@@ -779,4 +794,5 @@ export class Target extends Common {
     } 
 
 }
+
 
