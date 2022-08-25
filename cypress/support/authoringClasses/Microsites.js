@@ -53,6 +53,7 @@ export class Microsites extends Common {
             removeAccessProtectionGroup: ".ant-select-selection-item-remove",
             disallowGroups: ".ant-select-selection-item",
             showDescriptionCheckbox: "input[name='config.displayDescription']",
+            externalIDInput: "input[name*='externalId']",
         };
         this.tracks = {
             recommendRadio: "input[value='recommend']",
@@ -282,9 +283,15 @@ export class Microsites extends Common {
 
     setup(options) {
 
-        const { name, slug, externalCode, newName, appearance, language, cookieConsent, accessProtection, disallowGroups, contentType, topicTags, verify, showDescription } = options
+        const { name, slug, externalID, externalCode, newName, appearance, language, cookieConsent, accessProtection, disallowGroups, contentType, topicTags, verify, showDescription } = options
 
         this.goToMicrositeConfig(name)
+
+        if (externalID) {
+            externalID.forEach((externalid, index) => {
+                cy.get(this.setupPage.externalIDInput).eq(index).clear().type(externalid).should('have.value', externalid)
+            })
+        }
 
         if (newName) {
             cy.get(this.setupPage.nameInput).clear().type(newName)

@@ -16,7 +16,7 @@ export class Vex extends Common {
         this.configureButton = "button:contains('Configure')";
         this.removeDropdownButton = "li:contains('Remove') > span";
         this.eventNameInput = 'input[name="name"]';
-        this.externalIDInput = "input[name='externalId']";
+        this.externalIDInput = "input[name*='externalId']";
         this.cookieConsentCheckbox = "input[name='gdprCookieConsentEnabled']";
         this.sessionDescriptionCheckbox = "input[name='virtualEventConfig.displayDescription']";
         this.eventSlugInput = 'input[name="customUrl"]';
@@ -613,7 +613,9 @@ export class Vex extends Common {
         slug ? cy.get(this.eventSlugInput, { timeout: 20000 }).clear().type(slug) : null;
 
         if (externalID) {
-            cy.get(this.externalIDInput).clear().type(externalID)
+            externalID.forEach((externalid, index) => {
+                cy.get(this.externalIDInput).eq(index).clear().type(externalid).should('have.value', externalid)
+            })
         }
 
         if (form) {
