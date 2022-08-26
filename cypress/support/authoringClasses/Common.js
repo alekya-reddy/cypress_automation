@@ -123,6 +123,7 @@ export class Common {
         this.antRow = ".ant-row";
         this.antTabs = ".ant-tabs-nav-list .ant-tabs-tab-btn";
         this.checkboxContainer = 'div[data-qa-hook="checkbox"]';
+        this.checkboxBox= 'label[class="ant-checkbox-wrapper"]';
         this.accessProtection = {
             protectionTypeLabel: "label[for='protectionType']",
             accessProtectionLabel: "label:contains('Access Protection')",
