@@ -7,5 +7,6 @@
     "chromeWebSecurity": false,
     "retries": {
         "runMode": 2
-    }
+    },
+    "parseSpecialCharSequences": false
 }

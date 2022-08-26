@@ -103,7 +103,8 @@ export class Target extends Common {
             dropdownSelect: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(1)',
             dropdownSelectField: 'div[data-qa-hook="select-list"] > div > div > span:nth-child(1) > div:nth-child(2) > input'
         };
-        
+
+        this.cookieConsentToggle="[data-qa-hook='gdprCookieConsent']"
     }
 
     visit(){
@@ -476,7 +477,7 @@ export class Target extends Common {
         cy.get(this.pageSidebar.flowToggle).parents().eq(1).within(() => {
             cy.contains("label", ctaNumber).siblings("span").click({force:true})
         })
-
+        
             cy.get(this.popover).within(()=>{
             if(Cypress.$(this.clearValueIcon).length > 0){
                 cy.get(this.clearValueIcon).click()

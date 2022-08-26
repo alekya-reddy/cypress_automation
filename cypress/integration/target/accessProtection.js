@@ -143,7 +143,7 @@ describe("Target - Access Protection", () => {
             cy.contains("button", "Update").click()
         })      
     })
-    it("Validate access protection behavior on consumption page", () => {
+    it.only("Validate access protection behavior on consumption page", () => {
         //DEV-14558: Update design of access protection Language and Appearance 
         //Note: Not checking the confirmation email validations as we are not automating email access related scenarios
         //Verify if All Visitors is selected for Access protection, should allow any visitor after authentication in the track
@@ -151,7 +151,7 @@ describe("Target - Access Protection", () => {
         cy.visit(target.url)
         //verify Access Protection-Appearance & Languae settings applied properly in Target Track authentication page.
         cy.get(consumption.common.accessProtectionLogo)
-            .should('have.attr', 'src',"https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")
+            .should('have.css', 'background-image',`url("https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")`)
         cy.get(consumption.common.accessProtectionSubmitButton)
             .should("have.css", "background-color", colorConfigToCSS(targetAppearanceSettings.submitButtonColor))
             .should("have.css", "color", colorConfigToCSS(targetAppearanceSettings.submitButtonTextFontColorLP))

@@ -154,6 +154,7 @@ export class Common {
             contentDescriptionOverrideLabel: "label:contains('Content Description Override')",
             itemDescription: "div[data-qa-hook='item-description']"
         };
+        this.cookieConsentToggle = "[data-qa-hook='gdprCookieConsent']"
     }
     visitHomeUrl() {
         cy.visit(this.baseUrl)
@@ -234,9 +235,10 @@ export class Common {
         //     })
         // }
         // })
+        cy.wait(3000)
         cy.get(toggleLocator).then((toggle) => {
             let color = toggle.css("background-color")
-            if ((color == 'rgb(85, 85, 255)' && on_off.toUpperCase() == 'OFF') || (color == 'rgb(204, 204, 204)' && on_off.toUpperCase() == 'ON')) {
+            if ((color == 'rgb(85, 85, 255)' && on_off.toUpperCase() == 'OFF') || (color == 'rgb(85, 85, 255)' && on_off.toUpperCase() == 'off') || (color == 'rgb(204, 204, 204)' && on_off.toUpperCase() == 'ON') || (color == 'rgb(204, 204, 204)' && on_off.toUpperCase() == 'on')) {
                 toggle.click()
             }
         })
@@ -451,5 +453,14 @@ export class Common {
             cy.get(this.popover).should("not.exist")
             cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").should("contain", Description)
         }
+    }
+
+    checkCookieConsentToggle(value) {
+        cy.get(this.cookieConsentToggle).invoke('css', 'background-color').then((backgroundColor) => {
+            if (value === "on" || value === "ON")
+                expect(backgroundColor).to.contains("rgb(85, 85, 255)")
+            if (value === "off" || value === "OFF")
+                expect(backgroundColor).to.contains("rgb(204, 204, 204)")
+        })
     }
 }
