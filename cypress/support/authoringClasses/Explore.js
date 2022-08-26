@@ -21,7 +21,8 @@ export class Explore extends Common {
         this.recentUpdateTab = 'div[id="recently-updated-tab"]';
         this.editTopicCaousel = 'div[data-qa-hook="carousel-assets"]>div:nth-child(1)>span>div:nth-child(2)>span>i',
         this.exploreContent = "#qa-explore-asset-title-grid-0-0";
-        
+        this.antSelector = ".ant-select-selector";
+        this.carouselTopicDelete = 'i[class*="Icon__fa-trash"]'
         
         this.createExploreModal = {
             nameInput: "#name",
@@ -409,9 +410,21 @@ export class Explore extends Common {
 
     addTopicCarousel(topic){
         cy.containsExact('div', "Add Topic Carousel").siblings("div").click({force:true})
-        cy.contains(this.modal, "Manage Topic Carousels").within(()=>{
+        cy.contains('div', "Manage Topic Carousels").should("exist")
+        cy.get(this.modalBody).within(()=>{
             cy.get(this.inputTopics).click().type(topic + "\n")
         })
+    }
+    TopicCarouselSorting(config) {
+        const {type, topicName} = config
+        cy.wait(500)
+        cy.get(this.editTopicCaousel).eq(0).click({force:true})
+        cy.contains('tr', topicName).within(() => {
+            cy.get(this.antSelector).click()
+        })
+        cy.containsExact('div',type).click()
+        cy.get(`span[title='${type}']`).should('exist')
+        cy.contains('button', "Save Topic Carousels").click()
     }
 
     addCTAButton(config){
