@@ -14,7 +14,11 @@ const recomAppearanceSettings = {
     thumbnail: {
         category: "Stock Images",
         url: "/stock/sm/bench-forest-trees-path.jpg",
-    } ,
+    },
+    logo: {
+        category: "Uploaded Logos",
+        url: "https://cdn.qa-pathfactory.com/assets/131/logos/37102/3d8a5f18-9e64-4a77-b612-88035cea7c49.jpeg",
+    },
     headerTextFontFamilyLP: "Overpass",
     headerTextBoldFontLP: true,
     headerTextFontSizeLP: "large",
@@ -152,7 +156,7 @@ describe("Recommend - Access Protection", () => {
         cy.visit(recommend.url)
         //verify Access Protection-Appearance & Languae settings applied properly in Recom Track authentication page.
         cy.get(consumption.common.accessProtectionLogo)
-            .should("have.css", "background-image", "url('https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg')")
+            .should('have.attr', 'src',"https://cdn.qa-pathfactory.com/assets/131/logos/37102/3d8a5f18-9e64-4a77-b612-88035cea7c49.jpeg")
         cy.get(consumption.common.accessProtectionSubmitButton)
             .should("have.css", "background-color", colorConfigToCSS(recomAppearanceSettings.submitButtonColor))
             .should("have.css", "color", colorConfigToCSS(recomAppearanceSettings.submitButtonTextFontColorLP))

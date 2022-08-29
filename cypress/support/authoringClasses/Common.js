@@ -23,11 +23,13 @@ export class Common {
         this.modalBody = 'div[class="ant-modal-body"]';
         this.confirmationModal = '#confirmation-modal';
         this.closeModal = "i[title='Close modal']";
+        this.cookieConsentAcceptButton = '#qa-gdpr-cookie-consent-accept-button';
         this.antModal = ".ant-modal-content";
         this.antModalRoot = ".ant-modal-root";
         this.antModalMask = ".ant-modal-mask"; // The element that contains information about wheter or not the modal is hidden
         this.vexNavigation = "[id='virtual-events-marketing-cta']";
         this.contentPickerSearchBar = 'input[name="content-picker-search-bar"]';
+        this.selectAppearence = ".Select-arrow-zone";
         this.contentPickerItem = 'div[data-qa-hook="content-picker-item"]';
         this.saveButton = 'button:contains("Save")';
         this.cancelButton = 'button:contains("Cancel")';
@@ -121,6 +123,7 @@ export class Common {
         this.antRow = ".ant-row";
         this.antTabs = ".ant-tabs-nav-list .ant-tabs-tab-btn";
         this.checkboxContainer = 'div[data-qa-hook="checkbox"]';
+        this.checkboxBox = 'label[class="ant-checkbox-wrapper"]';
         this.accessProtection = {
             protectionTypeLabel: "label[for='protectionType']",
             accessProtectionLabel: "label:contains('Access Protection')",
@@ -159,7 +162,6 @@ export class Common {
     visitHomeUrl() {
         cy.visit(this.baseUrl)
     }
-
     goToPage(pageTitle, pageUrl) {
         cy.get(this.pageTitleLocator).invoke('text').then((text) => {
             if (text !== pageTitle) {
@@ -454,7 +456,6 @@ export class Common {
             cy.get(this.pagePreview.contentDescriptionOverrideLabel).siblings("span").should("contain", Description)
         }
     }
-
     checkCookieConsentToggle(value) {
         cy.get(this.cookieConsentToggle).invoke('css', 'background-color').then((backgroundColor) => {
             if (value === "on" || value === "ON")

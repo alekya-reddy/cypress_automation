@@ -12,6 +12,10 @@ const targetAppearanceSettings = {
         category: "Stock Images",
         url: "/stock/sm/bench-forest-trees-path.jpg",
     } ,
+    logo: {
+        category: "Uploaded Logos",
+        url: "https://cdn.qa-pathfactory.com/assets/130/logos/36515/a0f4e661-3f04-4a2a-866f-50c35f38b609.jpeg",
+    },
     headerTextFontFamilyLP: "Overpass",
     headerTextBoldFontLP: true,
     headerTextFontSizeLP: "large",

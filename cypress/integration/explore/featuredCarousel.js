@@ -74,7 +74,7 @@ describe("Explore - create new explore", () => {
         authoring.explore.goToExplorePage(exploreRecommend.name)
         cy.wait(500)
         cy.get(authoring.explore.editTopicCaousel).click()
-        cy.get(authoring.common.checkboxContainer).contains("Exclude featured assets from topic carousel", {timeout: 30000} ).click()
+        cy.get(authoring.common.checkboxBox).contains("Exclude featured assets from topic carousel", {timeout: 30000} ).click()
         cy.contains('button', "Save Topic Carousels").click()
         cy.contains(authoring.common.modal, "Manage Topic Carousels").should("not.exist")
         cy.wait(500)

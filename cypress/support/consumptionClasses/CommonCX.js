@@ -9,12 +9,12 @@ export class CommonCX {
         this.trackProtectionEmailInput = "#email";
         this.ciscoEmailInput = "#userInput";
         this.ciscoPasswordInput = "input[type='password']";
-        this.ciscoNextButton = "#login-button";
-        this.ciscoLogIn = "input[type='submit']";
-        this.accessProtectionLogo = "[aria-label='background image']";
-        this.accessProtectionHeaderText = "[class='title-container']";
-        this.accessProtectionBodyText = ".body-text-data";
-        this.accessProtectionSubmitButton = "input[type='submit']";
+        this.ciscoNextButton="#login-button";
+        this.ciscoLogIn="input[type='submit']";
+        this.accessProtectionLogo="div[class='logo-container'] img";
+        this.accessProtectionHeaderText="[class='image-title-container']";
+        this.accessProtectionBodyText=".body-text-data";
+        this.accessProtectionSubmitButton="input[type='submit']";
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
         this.customFormIframe = "#qa-custom-form";
@@ -39,13 +39,17 @@ export class CommonCX {
             messageBox: "#qa-cookie-consent",
             accept: "#qa-gdpr-cookie-consent-accept-button",
             decline: "#qa-gdpr-cookie-consent-decline-button",
-            ok: "#qa-cookie-consent-ok-button" // If cookie message toggled on instead of cookie consent, will get the "ok" button instead of "accept" or "decline"
+            cookieConsentButton: "#qa-flow-footer-cookie-consent-button",
+            ok: "#qa-cookie-consent-ok-button" // If cookie message toggled on instead of cookie consent, will get the "ok" button instead of "accept" or "decline" 
         };
         this.header = {
             locator: "#qa-header",
             cookieSettings: "[title='Cookie Settings']",
             facebookIcon: "#facebook-link",
-            settingButton: "#pf-event-cookie-consent-button"
+            settingButton: "#pf-event-cookie-consent-button",
+            headerLogoVisible: "#qa-header-logo",
+            headerTitle: "#qa-header-title",
+            headerCookieConsentButton: "#qa-header-cookie-consent-button",
         };
         this.cookieSettings = {
             modal: "div[id='qa-modal']:visible",
@@ -60,6 +64,9 @@ export class CommonCX {
         };
         this.backToHomePageButton = 'i[title="See All"]';
         this.flowHeader = '#qa-header-common'
+        this.flowHeader ='#qa-header-common';
+        this.flowLogo  ="#qa-logo-common";
+        this.flowCookieConsentButton ="#qa-flow-sidebar-cookie-consent-button"
     }
 
     check30MinCookie(wait) {

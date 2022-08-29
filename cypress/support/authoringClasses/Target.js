@@ -465,7 +465,7 @@ export class Target extends Common {
             })
         }
     }    
-
+    
     configureFlowCTA(config){
         const ctaNumber = config.ctaNumber
         const flowCTA = config.flowCTA
@@ -780,4 +780,5 @@ export class Target extends Common {
     } 
 
 }
+
 
