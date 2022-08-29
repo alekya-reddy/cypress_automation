@@ -1,4 +1,4 @@
- {
+{
     "projectId": "i3rte7",
     "env": {
         "TEST_ENV": "qa"
@@ -8,5 +8,5 @@
     "retries": {
         "runMode": 2
     },
-    "parseSpecialCharSequences": false
+    "numTestsKeptInMemory": 0
 }

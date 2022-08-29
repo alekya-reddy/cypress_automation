@@ -5,7 +5,7 @@ const consumption = createConsumptionInstance({ org: 'automation-target', tld: '
 
 const webContent = ["Youtube Shared Resource", "Bay cat Wikipedia", "Website Common Resource",]
 const pf_consentAccept = "1.864000.1.1"
-const pf_consentDecline_strictMode="0.-86400.0.0"
+const pf_consentDecline_strictMode = "0.-86400.0.0"
 const email = `test${Math.floor((Math.random() * 1000000000) + 1)}@pf.com`
 
 const target = {
@@ -46,7 +46,7 @@ const targetwithctaform = {
     header: "on",
     formsStrategy: "on",
     flow: "on",
-    flowCTA:  {
+    flowCTA: {
         ctaNumber: "CTA 1",
         flowCTA: "emailonly",
         location: "Before assets",
@@ -66,28 +66,64 @@ function validateAnalyticsData(visitor, email) {
     cy.contains('div', "Last 30 Days").should("exist")
     cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Visitors").should("exist").click()
     cy.contains('a', 'Visitor Journeys per Session').click()
-    if (!email)
-        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
-    else {
-        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
-        cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
+    for (let i = 0; i < 3; i++) {
+        cy.get('[data-qa-hook="table-cell-identity"]').eq(0).invoke('text').then(value => {
+            if (value.includes(email) || value.includes(visitor)) {
+                if (!email)
+                    cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
+                else {
+                    cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
+                    cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
+                }
+            }
+            else {
+                cy.wait(5000)
+                cy.reload()
+            }
+        })
+        if (i === 2) {
+            if (!email)
+                cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
+            else {
+                cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
+                cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
+            }
+        }
     }
 }
 
-function validateCtaAnalyticsDataForStrictMode(name,visitor, email) {
+function validateCtaAnalyticsDataForStrictMode(name, visitor, email) {
     cy.wait(5000)
     authoring.target.visit()
     authoring.target.goToTrack(name)
 
     cy.wait(3000)
-    cy.get("a[href*='analytics-overview']",{timeout:10000}).should("exist").click()
-    cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Events",{timeout:10000}).should("exist").click()
+    cy.get("a[href*='analytics-overview']", { timeout: 10000 }).should("exist").click()
+    cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Events", { timeout: 10000 }).should("exist").click()
     cy.contains('a', 'Form Captures').click()
-    if (!email)
-        cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
-    else {
-        cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('not.exist')
-        cy.contains('[data-qa-hook="table-cell-email"]', email).should('exist')
+    for (let i = 0; i < 3; i++) {
+        cy.get('[data-qa-hook="table-cell-email"]').eq(0).invoke('text').then(value => {
+            if (value.includes(email) || value.includes(visitor)) {
+                if (!email)
+                    cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
+                else {
+                    cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('not.exist')
+                    cy.contains('[data-qa-hook="table-cell-email"]', email).should('exist')
+                }
+            }
+            else {
+                cy.wait(5000)
+                cy.reload()
+            }
+        })
+        if (i === 2) {
+            if (!email)
+                cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
+            else {
+                cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('not.exist')
+                cy.contains('[data-qa-hook="table-cell-email"]', email).should('exist')
+            }
+        }
     }
 }
 
@@ -115,7 +151,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.target.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.target.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(visitor => {
-            cy.wait(3000)
+            cy.wait(5000)
             authoring.common.login()
             cy.closeSession()
             validateAnalyticsData(visitor)
@@ -180,7 +216,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor,email)
+            validateAnalyticsData(visitor, email)
         })
     })
 
@@ -220,7 +256,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist')
         cy.wait(100)
-        cy.get(consumption.common.ctaButton,{timeout:20000}).eq(0).click({force:true})
+        cy.get(consumption.common.ctaButton, { timeout: 20000 }).eq(0).click({ force: true })
         cy.get(consumption.common.standardForm.cookieConsentCheckbox).click()
         cy.get('#emailInput').type(email + "\n")
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
@@ -229,7 +265,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateCtaAnalyticsDataForStrictMode(targetwithctaform.name,visitor,email)
+            validateCtaAnalyticsDataForStrictMode(targetwithctaform.name, visitor, email)
         })
     })
 
@@ -249,7 +285,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist')
         cy.wait(100)
-        cy.get(consumption.common.ctaButton,{timeout:20000}).eq(0).click({force:true})
+        cy.get(consumption.common.ctaButton, { timeout: 20000 }).eq(0).click({ force: true })
         cy.get('#emailInput').type(email + "\n")
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.target.checkPf_consentCookie(5000, pf_consentDecline_strictMode)
@@ -258,7 +294,7 @@ describe("Target - Cookie consent Scenarios - Strict mode", () => {
 
     xit("Navigate to custom domain experienece and accept the cookie", () => {
         cy.clearCookies()
-        cy.visit(`http://custom.pathfactory-${authoring.common.env.TEST_ENV}-test.com/gdpr_custom_domain/fs-cio`,{timeout:120000})
+        cy.visit(`http://custom.pathfactory-${authoring.common.env.TEST_ENV}-test.com/gdpr_custom_domain/fs-cio`, { timeout: 120000 })
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')

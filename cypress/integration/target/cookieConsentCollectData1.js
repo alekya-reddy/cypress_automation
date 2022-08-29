@@ -139,6 +139,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
 
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.target.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.target.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime).then(visitor => {
@@ -161,6 +162,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
 
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.decline, { timeout: 20000 }).should('exist').click()
         consumption.target.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.target.check30MinCookie(5000).then(visitor => {
@@ -183,6 +185,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
 
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.contains(webContent[2], { timeout: 20000 }).click({ force: true })
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
         consumption.target.checkPf_consentCookie(5000)
@@ -206,6 +209,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
 
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.common.cookieConsentToggle("off")
         cy.reload()
@@ -234,6 +238,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         //Navigate to Consumption and accept cookie and validate the details
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.decline, { timeout: 20000 }).should('exist').click()
         consumption.common.cookieConsentToggle("on")
         cy.reload()
@@ -257,9 +262,9 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         authoring.common.checkCookieConsentToggle("ON")
         authoring.target.configure(targetwithform)
 
-        //Navigate to Consumption and accept cookie and validate the details
         cy.visit(targetwithform.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist')
         cy.wait(100)
         cy.get(consumption.common.standardForm.cookieConsentCheckbox).click()
@@ -284,9 +289,9 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         authoring.common.checkCookieConsentToggle("ON")
         authoring.target.configure(targetwithform)
 
-        //Navigate to Consumption and accept cookie and validate the details
         cy.visit(targetwithform.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.wait(100)
         cy.get('#emailInput').type(email + "\n")
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
@@ -310,9 +315,9 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         authoring.target.configure(targetwithctaform)
 
         cy.wait(3000)
-        //Navigate to Consumption and accept cookie and validate the details
         cy.visit(targetwithctaform.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist')
         cy.wait(100)
         cy.get(consumption.common.ctaButton, { timeout: 20000 }).eq(0).click({ force: true })
@@ -339,9 +344,9 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         authoring.target.configure(targetwithctaform)
 
         cy.wait(3000)
-        //Navigate to Consumption and accept cookie and validate the details
         cy.visit(targetwithctaform.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist')
         cy.wait(100)
         cy.get(consumption.common.ctaButton, { timeout: 20000 }).eq(0).click({ force: true })
@@ -369,6 +374,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         cy.visit(target.url + `?lb_email=${email}`)
         cy.url().should("include", "_pfses=")
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.target.checkPf_consentCookie(5000, pf_consentAccept)
@@ -420,6 +426,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
 
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('exist')
+        consumption.target.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.target.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.target.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime).then(visitor => {

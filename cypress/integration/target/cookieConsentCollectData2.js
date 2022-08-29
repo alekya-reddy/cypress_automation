@@ -273,7 +273,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig4,provide lb_email, Validate the VID , pf_consent and Analytics values", () => {
+    xit("Configure Cookie consent settings using cookieConsentConfig4,provide lb_email, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig4)
@@ -326,7 +326,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig7,accept the cookie, Validate the VID ,pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig7,accept the cookie in external cookie function, Validate the VID ,pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig7)
@@ -349,7 +349,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig8,decline the cookie, Validate the VID ,pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig8,decline the cookie in external cookie function, Validate the VID ,pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig8)

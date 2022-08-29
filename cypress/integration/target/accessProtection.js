@@ -143,7 +143,7 @@ describe("Target - Access Protection", () => {
             cy.contains("button", "Update").click()
         })      
     })
-    it.only("Validate access protection behavior on consumption page", () => {
+    it("Validate access protection behavior on consumption page", () => {
         //DEV-14558: Update design of access protection Language and Appearance 
         //Note: Not checking the confirmation email validations as we are not automating email access related scenarios
         //Verify if All Visitors is selected for Access protection, should allow any visitor after authentication in the track
