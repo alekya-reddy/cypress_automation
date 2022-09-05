@@ -60,39 +60,7 @@ const targetwithctaform = {
     }
 }
 
-function validateAnalyticsData(visitor, email) {
-    cy.wait(5000)
-    authoring.target.visit()
-    cy.get(authoring.target.targetAnalytics).should("exist").click()
-    cy.contains('div', "Last 30 Days").should("exist")
-    cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Visitors").should("exist").click()
-    cy.contains('a', 'Visitor Journeys per Session').click()
-    if (!email)
-        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
-    else {
-        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
-        cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
-    }
-}
-
-function validateCtaAnalyticsData(name, visitor, email) {
-    cy.wait(5000)
-    authoring.target.visit()
-    authoring.target.goToTrack(name)
-
-    cy.wait(3000)
-    cy.get("a[href*='analytics-overview']", { timeout: 10000 }).should("exist").click()
-    cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Events", { timeout: 10000 }).should("exist").click()
-    cy.contains('a', 'CTAs').click()
-    if (!email)
-        cy.contains('[data-qa-hook="table-cell-visitor"]', visitor).should('exist')
-    else {
-        cy.contains('[data-qa-hook="table-cell-visitor"]', visitor).should('not.exist')
-        cy.contains('[data-qa-hook="table-cell-visitor"]', email).should('exist')
-    }
-}
-
-const cookieConsentConfig = {
+const cookieConsentConfig1 = {
     visitorCookieLifeTime: 10,
     consentConfiguration: "Cookie Consent not required"
 }
@@ -108,9 +76,9 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
     it("Apply Cookie consent not required , Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
-        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig)
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
 
-        //When Cookie consent not required ,cookie toggle should be in disabled mode in authoring side
+        //When Cookie consent not required ,cookie consent toggle is not available on the authoring side
         authoring.target.deleteTrack(target.name)
         authoring.target.addTrack(target)
         cy.get(authoring.target.cookieConsentToggle).should('not.exist')
@@ -119,15 +87,15 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         cy.visit(target.url)
         cy.get(consumption.target.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.target.checkPf_consentCookie(5000)
-        consumption.target.checkVidValueAndExpiry(5000, cookieConsentConfig.visitorCookieLifeTime).then(visitor => {
-            cy.wait(3000)
+        consumption.target.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(visitor => {
+            cy.wait(2000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -146,11 +114,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,Decline the cookie, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and Decline the cookie, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -169,11 +137,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,Do not touch the cookie, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and Do not touch the cookie, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -193,11 +161,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,Decline cookie from Opt-in popup, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and Decline cookie from Opt-in popup, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -213,19 +181,19 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.target.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.common.cookieConsentToggle("off")
         cy.reload()
-        cy.wait(5000)
+        cy.wait(3000)
         consumption.target.checkPf_consentCookie(5000, pf_consentDecline)
-        cy.wait(5000)
+        cy.wait(3000)
         consumption.target.check30MinCookie(5000).then(visitor => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
             cy.log(visitor)
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,Accept cookie from Opt-in popup, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and Accept cookie from Opt-in popup, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -248,11 +216,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,accept the cookie on form, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and accept the cookie on form, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -275,11 +243,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor, email)
+            authoring.target.validateAnalyticsData(visitor, email)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,decline the cookie on form, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and decline the cookie on form, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -300,11 +268,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,accept the cookie on cta form, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and accept the cookie on cta form, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -329,11 +297,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateCtaAnalyticsData(targetwithctaform.name, visitor, email)
+            authoring.target.validateCtaAnalyticsData(targetwithctaform.name, visitor, email)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,decline the cookie on cta form, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and decline the cookie on cta form, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -357,11 +325,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateCtaAnalyticsData(targetwithctaform.name, visitor)
+            authoring.target.validateCtaAnalyticsData(targetwithctaform.name, visitor)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,provide lb_email,accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and provide lb_email,accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -382,11 +350,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor, email)
+            authoring.target.validateAnalyticsData(visitor, email)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,provide lb_email,accept the cookie on form with different email, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and provide lb_email,accept the cookie on form with different email, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -410,11 +378,11 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor, email2)
+            authoring.target.validateAnalyticsData(visitor, email2)
         })
     })
 
-    it("Configure Cookie consent settings using cookieConsentConfig2,accept the cookie and visit another org, Validate the VID , pf_consent and Analytics values", () => {
+    it("Configure Cookie consent settings using cookieConsentConfig2 object defined above and accept the cookie and visit another org, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -433,7 +401,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor)
         })
 
         cy.visit(`https://automation-microsites.${authoring.common.env.TEST_ENV}-pathfactory.com/c/watch-3?x=T9RdMJ`)

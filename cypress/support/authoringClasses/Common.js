@@ -457,6 +457,7 @@ export class Common {
         }
     }
     checkCookieConsentToggle(value) {
+        cy.wait(3000)
         cy.get(this.cookieConsentToggle).invoke('css', 'background-color').then((backgroundColor) => {
             if (value === "on" || value === "ON")
                 expect(backgroundColor).to.contains("rgb(85, 85, 255)")

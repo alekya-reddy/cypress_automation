@@ -79,11 +79,11 @@ export class CommonCX {
                 }
             })
         }
-        let time = (Math.floor(Date.now() / 1000) + 1800).toString().substring(0, 6)
+        let expectedExpiryTimeinSecs = (Math.floor(Date.now() / 1000) + 1800).toString().substring(0, 6)
         return cy.getCookies().then((cookies) => {
             let vid = cookies.find(cookie => cookie.name == 'vid')
             let vidValue=(vid.value).toString()
-            expect((vid.expiry).toString()).to.contains(time)
+            expect((vid.expiry).toString()).to.contains(expectedExpiryTimeinSecs)
              return vidValue;
         })
     }
@@ -239,7 +239,6 @@ export class CommonCX {
 
     checkPf_consentCookie(wait, value) {
         if (value) {
-            // need to wait a few seconds for the cookie to be set properly, otherwise you'll get an expiry that's set 20 years in future 
             for (let i = 0; i <= wait; i += 500) {
                 cy.getCookies({ log: false }).then((cookies) => {
                     let pf_consent = cookies.find(cookie => cookie.name == '_pf_consent')
@@ -265,7 +264,6 @@ export class CommonCX {
 
     checkVidValueAndExpiry(wait, noOfDays) {
         if (noOfDays) {
-            // need to wait a few seconds for the cookie to be set properly, otherwise you'll get an expiry that's set 20 years in future 
             for (let i = 0; i <= wait; i += 500) {
                 cy.getCookies({ log: false }).then((cookies) => {
                     let vid = cookies.find(cookie => cookie.name == 'vid')
@@ -277,10 +275,10 @@ export class CommonCX {
 
             return cy.getCookies().then((cookies) => {
                 let vid = cookies.find(cookie => cookie.name == 'vid')
-                let time = (Math.floor(Date.now() / 1000) + (86400 * noOfDays)).toString().substring(0, 6)
-                let videxpiry = vid.expiry.toString()
+                let expectedExpiryTimeinSecs = (Math.floor(Date.now() / 1000) + (86400 * noOfDays)).toString().substring(0, 6)
+                let actualExpiryTimeinSecs = vid.expiry.toString()
                 let vidValue = vid.value.toString()
-                expect(videxpiry).to.contains(time)
+                expect(actualExpiryTimeinSecs).to.contains(expectedExpiryTimeinSecs)
                 return vidValue;
             })
         }
