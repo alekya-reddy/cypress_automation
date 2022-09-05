@@ -9,12 +9,12 @@ export class CommonCX {
         this.trackProtectionEmailInput = "#email";
         this.ciscoEmailInput = "#userInput";
         this.ciscoPasswordInput = "input[type='password']";
-        this.ciscoNextButton="#login-button";
-        this.ciscoLogIn="input[type='submit']";
-        this.accessProtectionLogo="div[class='background-image']";
-        this.accessProtectionHeaderText="[class*='title-container']";
-        this.accessProtectionBodyText=".body-text-data";
-        this.accessProtectionSubmitButton="input[type='submit']";
+        this.ciscoNextButton = "#login-button";
+        this.ciscoLogIn = "input[type='submit']";
+        this.accessProtectionLogo = "div[class='background-image']";
+        this.accessProtectionHeaderText = "[class*='title-container']";
+        this.accessProtectionBodyText = ".body-text-data";
+        this.accessProtectionSubmitButton = "input[type='submit']";
         this.modal = "#qa-modal";
         this.closeModalButton = "#qa-modal-close";
         this.customFormIframe = "#qa-custom-form";
@@ -64,9 +64,9 @@ export class CommonCX {
         };
         this.backToHomePageButton = 'i[title="See All"]';
         this.flowHeader = '#qa-header-common'
-        this.flowHeader ='#qa-header-common';
-        this.flowLogo  ="#qa-logo-common";
-        this.flowCookieConsentButton ="#qa-flow-sidebar-cookie-consent-button"
+        this.flowHeader = '#qa-header-common';
+        this.flowLogo = "#qa-logo-common";
+        this.flowCookieConsentButton = "#qa-flow-sidebar-cookie-consent-button"
     }
 
     check30MinCookie(wait) {
@@ -82,9 +82,9 @@ export class CommonCX {
         let expectedExpiryTimeinSecs = (Math.floor(Date.now() / 1000) + 1800).toString().substring(0, 6)
         return cy.getCookies().then((cookies) => {
             let vid = cookies.find(cookie => cookie.name == 'vid')
-            let vidValue=(vid.value).toString()
+            let vidValue = (vid.value).toString()
             expect((vid.expiry).toString()).to.contains(expectedExpiryTimeinSecs)
-             return vidValue;
+            return vidValue;
         })
     }
 
@@ -292,13 +292,13 @@ export class CommonCX {
         }
     }
 
-    cookieConsentToggle(on_off){
-        cy.get(this.header.cookieSettings,{timeout:20000}).click({force:true})
-        cy.get(this.cookieSettings.toggle).invoke('css','background-color').then(colour=>{
-            if(colour ==="rgb(0, 169, 203)" && on_off==="off" || on_off==="OFF" ){
+    cookieConsentToggle(on_off) {
+        cy.get(this.header.cookieSettings, { timeout: 20000 }).click({ force: true })
+        cy.get(this.cookieSettings.toggle).invoke('css', 'background-color').then(colour => {
+            if (colour === "rgb(0, 169, 203)" && on_off === "off" || colour === "rgb(0, 169, 203)" && on_off === "OFF") {
                 cy.get(this.cookieSettings.toggle).click()
             }
-            if(colour ==="rgb(221, 221, 221)" && on_off==="on" || on_off==="ON" ){
+            if (colour === "rgb(221, 221, 221)" && on_off === "on" || colour === "rgb(221, 221, 221)" && on_off === "ON") {
                 cy.get(this.cookieSettings.toggle).click()
             }
         })
