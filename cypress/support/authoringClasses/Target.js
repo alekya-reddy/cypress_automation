@@ -836,7 +836,7 @@ export class Target extends Common {
         cy.get("a[href*='analytics-overview']", { timeout: 10000 }).should("exist").click()
         cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Events", { timeout: 10000 }).should("exist").click()
         cy.contains('a', 'Form Captures').click()
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < 2; i++) {
             cy.get('[data-qa-hook="table-cell-email"]').eq(0).invoke('text').then(value => {
                 if (value.includes(email) || value.includes(visitor)) {
                     if (!email)
@@ -851,7 +851,7 @@ export class Target extends Common {
                     cy.reload()
                 }
             })
-            if (i === 2) {
+            if (i === 1) {
                 if (!email)
                     cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
                 else {
