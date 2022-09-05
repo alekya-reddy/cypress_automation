@@ -78,7 +78,7 @@ describe("Target - Cookie consent Scenarios - Non Strict mode", () => {
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
 
-        //When Cookie consent not required ,cookie consent toggle is not available on the authoring side
+        //When Consent Configuration value is 'Cookie Consent not required' ,cookie consent toggle is not available on the authoring side
         authoring.target.deleteTrack(target.name)
         authoring.target.addTrack(target)
         cy.get(authoring.target.cookieConsentToggle).should('not.exist')
