@@ -95,10 +95,13 @@ export class Configurations extends Common {
             bodyTextFont: "#bodyOnWhite",
             bodyTextColor: "#bodyOnWhite > span[id='color']",
             imagePicker: "i[title='Select a thumbnail']",
+            selectCompanyImage: 'img[src="https://logo.clearbit.com/google.com"]',
+            selectUploadedImage: 'img[src="https://cdn.qa-pathfactory.com/assets/20/logos/8954/d464f02c-9348-41a0-a294-4b3cd1ad4968.png"]',
             recommendationTabsColor: 'span[id="recommendationTabColor"]>div>span',
             buttonBackgroundColorForGuide: 'span[id="headlineBackgroundColor"]>div>span',
             ForYouTabForGuide: 'div[title="For You"]',
             TrendingTabForGuide: 'div[title="Trending"]',
+            
             header: {
                 dynamicLogo: "div[data-qa-hook='dynamicLogo']",
             },
@@ -240,7 +243,11 @@ export class Configurations extends Common {
                 submitButtonTextSettingsLP: "#submitButtonAppearance",
                 submitButtonTextWeightLP: "#buttonTextFontWeight",
                 submitButtonTextColorLP: "#buttonTextColor",
+            },
+            clearbitLogo: {
+                clearbitText: '[href="https://clearbit.com"]'
             }
+            
         };
         this.languages = {
             sidebar: "div[data-qa-hook='page-sidebar']",
@@ -2032,19 +2039,23 @@ export class Configurations extends Common {
 
     }
 
-    configureAccessProtectionAppearance(options) {
-        const { appearance, thumbnail, submitButtonColor, verify } = options
-        const { headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP } = options
-        const { bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP } = options
-        const { emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP } = options
-        const { submitButtonFontFamilyLP, submitButtonFontWeightLP, submitButtonFontSizeLP, submitButtonTextFontColorLP, submitButtonRadiusLP } = options
+    configureAccessProtectionAppearance(options){
+        const {appearance,thumbnail,logo,submitButtonColor,verify} = options
+        const {headerTextFontFamilyLP, headerTextBoldFontLP, headerTextFontSizeLP, headerTextFontColorLP} = options
+        const {bodyTextFamilyLP, bodyTextBoldFontLP, bodyTextFontSizeLP, bodyTextFontColorLP} = options
+        const {emailAddressFamilyLP, emailAddressBoldFontLP, emailAddressFontSizeLP, emailAddressFontColorLP} = options
+        const {submitButtonFontFamilyLP,submitButtonFontWeightLP,submitButtonFontSizeLP,submitButtonTextFontColorLP,submitButtonRadiusLP} = options
 
         this.goToCampaignAppearance(appearance, "access-protection")
         if (thumbnail) {
             cy.get(this.appearances.imagePicker).first().click()
             this.pickThumbnail(thumbnail)
         }
-        if (submitButtonColor) {
+        if (logo) {
+            cy.get(this.appearances.imagePicker).eq(1).click()
+            this.pickThumbnail(logo)
+        }
+        if(submitButtonColor){
             const { r, g, b, a } = submitButtonColor
             this.pickColor({ button: this.appearances.accessProtection.submitButtonColorLP, r: r, g: g, b: b, a: a })
         }
