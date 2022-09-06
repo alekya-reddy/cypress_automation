@@ -31,7 +31,7 @@ export const constants = {
             reporterUser: 'qa-reporter',
             reporterUserPassword: 'Capybara12345',
             multiUser: 'qa-multiuser',
-            multiUserPassword: 'Fifa1234',
+            multiUserPassword: 'Capybara12345',
             oceOauthClientId: 'd9e1c003a74d47a0bc59a95432e123c4',
             oceOauthClientSecret: '4e7e7bfb-13af-467b-a13f-a802ed74ef7b',
             oceInstanceUrl: 'https://pathfactory-oce0002.cec.ocp.oraclecloud.com',
