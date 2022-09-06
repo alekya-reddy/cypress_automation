@@ -803,7 +803,7 @@ export class UserManagement extends Common {
 
         if (organizationSettingsCRUD == true || organizationSettingsCRUD == false) {
             cy.contains('a', "Administrative Controls").click()
-            cy.contains(this.arrowExpand, "Settings Access").click()
+            cy.contains(this.arrowExpand, "Organization Settings").click()
             cy.get('input[id*=Access-create-edit-delete]').parent().invoke("attr", "class").then((attr) => {
                 if ((organizationSettingsCRUD == false && attr.includes("ant-checkbox-checked")) || (organizationSettingsCRUD == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('input[id*=Access-create-edit-delete]').click()
@@ -813,7 +813,7 @@ export class UserManagement extends Common {
 
         if (organizationSettingsView == true || organizationSettingsView == false) {
             cy.contains('a', "Administrative Controls").click()
-            cy.contains(this.arrowExpand, "Settings Access").click()
+            cy.contains(this.arrowExpand, "Organization Settings").click()
             cy.get('input[id*"Settings"]').parent().invoke("attr", "class").then((attr) => {
                 if ((organizationSettingsView == false && attr.includes("ant-checkbox-checked")) || (organizationSettingsView == true && !attr.includes("ant-checkbox-checked"))) {
                     cy.get('input[id*"Settings"]').click()

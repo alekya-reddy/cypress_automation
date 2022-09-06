@@ -128,7 +128,7 @@ describe("View Only Permissions", () => {
         cy.contains('label', "Next Promoter Headline Override").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('a', "Website Overlay Embed").should("exist")
-        cy.contains('span', "Share").should("not.exist")
+        cy.contains('span', "Share").should("exist")
         cy.contains('span', "Preview").should("not.exist")
         cy.contains(authoring.target.deleteContent).should("not.exist")
         cy.contains('button', "Open in Cont. Library ").should("exist")

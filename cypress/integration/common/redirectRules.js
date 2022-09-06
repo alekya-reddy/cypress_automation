@@ -91,44 +91,26 @@ const redirectPath = "/l/newtrack123$"
 const incomingPathEdited = "/l/newtrack$Edit"
 
 describe("Redirect should appear as a new tab within organization settings", () => {
-    // it("verify add, edit and delete functionality for redirect rules", () => {
-    //     authoring.common.login()
-    //     cy.visit(authoring.settings.redirectRules.pageUrl)
-    //     cy.get(authoring.common.pageTitleBar).contains('Redirect Rules').should("exist")
-    //     //verify edit functionality
-    //     cy.contains(authoring.settings.redirectCells,incomingPath).within(()=>{
-    //         cy.contains('a', "Edit").should("exist").click()          
-    //     })
+    it("verify add, edit and delete functionality for redirect rules", () => {
+        authoring.common.login()
+        cy.visit(authoring.settings.redirectRules.pageUrl)
+        cy.get(authoring.common.pageTitleBar).contains('Redirect Rules').should("exist")
+        //verify edit functionality
+        cy.contains(authoring.settings.redirectCells,incomingPath).within(()=>{
+            cy.contains('a', "Edit").should("exist").click()          
+        })
 
-    //     cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPathEdited + "\n")
-    //     cy.contains('button', "Submit").click()
+        cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPathEdited + "\n")
+        cy.contains('button', "Submit").click()
+        cy.reload()
+        cy.contains(authoring.settings.redirectCells, incomingPathEdited, {timeout: 2000}).within(()=>{
+            cy.contains('a', "Edit").click()          
+        })
 
-    //     cy.contains(authoring.settings.redirectCells, incomingPathEdited, {timeout: 2000}).within(()=>{
-    //         cy.contains('a', "Edit").click()          
-    //     })
-    //     cy.pause()
+        cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPath + "\n")
+        cy.contains('button', "Submit").click()
 
-    //     cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPath + "\n")
-    //     cy.contains('button', "Submit").click()
-       
-    //      //verify delete functionality
-    //    cy.wait(2000)
-    //     cy.contains(authoring.settings.redirectCells, incomingPath, {timeout: 4000}).within(()=>{
-    //         cy.contains('span', "Delete").should("exist").click()          
-    //     })
-
-    //     cy.get(authoring.common.contentModal).within(()=>{
-    //         cy.contains('span', "Delete").should("exist").click()            
-    //     })
-        
-    //      //verify add functionality
-    //     cy.contains('tr', "/l/newtrack$").should("not.exist")
-    //     cy.contains('span', "+ Add Redirect Rule").should("exist").click()
-    //     cy.get(authoring.settings.incomingPath).type(incomingPath+ "\n")
-    //     cy.get(authoring.settings.redirectPath).type(redirectPath + "\n")
-    //     cy.contains('button', "Submit").click()
-
-    // })
+    })
 
     it("verify  Admin, and custom role  permission", function(){
     authoring.common.login()
@@ -147,6 +129,8 @@ describe("Redirect should appear as a new tab within organization settings", () 
     //verify that when redirect tab enables user has CRUD access and also super user can asses CRUD
     cy.get(authoring.common.pageTitleBar).contains('Redirect Rules').should("exist")
     cy.contains('span', "+ Add Redirect Rule").should("exist")
+    cy.contains('a', "Edit").should("exist")
+    cy.contains('button', "Delete").should("exist")
 
     })
      
@@ -170,7 +154,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
         
         })
 
-        it("redirec target", () => {
+        it("redirect target", () => {
             authoring.common.login()
             authoring.settings.deleteRedirectRule(target.incomingPath)
             authoring.target.visit()
@@ -211,7 +195,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
         
            })
 
-           it("redirec explore", () => {
+           it("redirect explore", () => {
             authoring.common.login()
             authoring.settings.deleteRedirectRule(explore.incomingPath)
             authoring.explore.visit()
@@ -252,7 +236,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
     })
 
 
-           it("redirec microsite", () => {
+           it("redirect microsite", () => {
             authoring.common.login()
             authoring.settings.deleteRedirectRule(microsite.incomingPath)
             authoring.microsites.visit()
@@ -297,7 +281,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
         
            })
 
-           it("redirec vex", () => {
+           it("redirect vex", () => {
             authoring.common.login()
             authoring.settings.deleteRedirectRule(vex.incomingPath)
             authoring.vex.visit()
@@ -309,7 +293,6 @@ describe("Redirect should appear as a new tab within organization settings", () 
             cy.url().should('contain', vex.slug)
 
             authoring.vex.visit()
-            //authoring.vex.goToEventConfig(vex)
             cy.get("a[id='configure-redirectTest']").should('exist').click()
             cy.get(authoring.vex.eventSlugInput, { timeout: 20000 }).clear().type(vex.redirectedslug)
             cy.contains('button', 'Save').click()
