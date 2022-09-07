@@ -1,7 +1,7 @@
 import { createAuthoringInstance, createConsumptionInstance } from '../../support/pageObject.js'
 
-const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'})
-const consumption = createConsumptionInstance({org: 'automation-vex', tld: 'lookbookhq'})
+const authoring = createAuthoringInstance({ org: 'automation-vex', tld: 'lookbookhq' })
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' })
 
 const widget = {
     name: "I am a widget",
@@ -41,7 +41,7 @@ const widget2 = {
 const event = {
     name: 'configWidgets2.js',
     slug: 'configwidgets2-js',
-    get url(){
+    get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
@@ -49,7 +49,7 @@ const event = {
 const session = {
     name: "configWidgets",
     slug: "configwidgets",
-    get url(){
+    get url() {
         return `${event.url}/${this.slug}`
     },
     visibility: 'Public',
@@ -57,8 +57,15 @@ const session = {
     video: 'Youtube - Used in Cypress automation for VEX testing'
 }
 
-describe("Widget Configuration", ()=>{
-    it("Test widget CRUD operations - Create, update, destroy - in the widget configurations", ()=>{
+const widgets = {
+    name: "widgets",
+    code: "<h1>123434 ",
+    checkSuccess: true
+
+}
+
+describe("Widget Configuration", () => {
+    it("Test widget CRUD operations - Create, update, destroy - in the widget configurations", () => {
         authoring.common.login()
         authoring.configurations.visit.widgets()
         cy.contains(authoring.configurations.pageTitleLocator, authoring.configurations.pageTitles.widgets).should('exist')
@@ -68,11 +75,11 @@ describe("Widget Configuration", ()=>{
         authoring.configurations.editWidget(widget)
 
         // Do some widget name input error validation in the add widget modal, and test cancel button for add widget modal 
-        authoring.configurations.addWidget({name: widget.newName, checkSuccess: false})
+        authoring.configurations.addWidget({ name: widget.newName, checkSuccess: false })
         cy.contains("has already been taken").should('exist')
         cy.contains("button", "Cancel").click()
         cy.contains(authoring.configurations.modal, "Add Widget").should("not.exist")
-        authoring.configurations.addWidget({name: " ", checkSuccess: false})
+        authoring.configurations.addWidget({ name: " ", checkSuccess: false })
         cy.contains("can't be blank").should('exist')
         cy.contains("button", "Cancel").click()
 
@@ -83,7 +90,7 @@ describe("Widget Configuration", ()=>{
         cy.get(authoring.configurations.widgets.nameInput).clear().type(widget.newName)
         cy.contains("button", "Save").click()
         cy.contains("has already been taken").should('exist')
-        cy.get(authoring.configurations.widgets.nameInput).clear() 
+        cy.get(authoring.configurations.widgets.nameInput).clear()
         cy.contains("button", "Save").click()
         cy.contains("can't be blank").should('exist')
         cy.contains("button", "Cancel").click()
@@ -107,7 +114,7 @@ describe("Widget Configuration", ()=>{
         authoring.vex.addWidget(widget2.name)
         authoring.vex.configureWidget(scriptWidget)
         authoring.vex.configureWidget(widget)
-        authoring.vex.configureWidget({name: widget.newName, live: true, onDemand: true})
+        authoring.vex.configureWidget({ name: widget.newName, live: true, onDemand: true })
         authoring.vex.configureWidget(widget2)
         authoring.vex.removeWidget(widget.newName)
 
@@ -116,7 +123,7 @@ describe("Widget Configuration", ()=>{
 
         // Expect scriptWidget
         cy.get(consumption.vex.cookieConsent.accept).click()
-        cy.contains("span", scriptWidget.publicName, {timeout: 20000}).should("exist").click()
+        cy.contains("span", scriptWidget.publicName, { timeout: 20000 }).should("exist").click()
         cy.waitForIframeToLoad(consumption.vex.widget.iframe, "#test", 10000)
         cy.getIframeBody(consumption.vex.widget.iframe).within(() => {
             cy.contains("button", "Add Text Div").click()
@@ -126,32 +133,32 @@ describe("Widget Configuration", ()=>{
         })
 
         // Expect widget
-        cy.contains("span", widget.name, {timeout: 20000}).should("exist").click()
+        cy.contains("span", widget.name, { timeout: 20000 }).should("exist").click()
         cy.waitForIframeToLoad(consumption.vex.widget.iframe, "h1", 10000)
         cy.getIframeBody(consumption.vex.widget.iframe).within(() => {
             cy.contains("h1", "Hello world").should("exist")
         })
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tabs distribute evenly to widget if more than one widget tabs enabled.
-        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css', 'width').then(tabWidth => {
             let index = tabWidth.indexOf("px");
             let TotalWidgetTabWidth = tabWidth.substr(0, index)
             let widgetCount
-            cy.get('li').then(count=>{
-                widgetCount=count.length-1
+            cy.get('li').then(count => {
+                widgetCount = count.length - 1
             })
-             cy.get('li').each(($el,index,$list)=>{
-                cy.wrap($el).invoke('attr', 'class').then(value=>{
-                    cy.log("value: "+value)
-                    if(value === 'p-tabview-ink-bar')
+            cy.get('li').each(($el, index, $list) => {
+                cy.wrap($el).invoke('attr', 'class').then(value => {
+                    cy.log("value: " + value)
+                    if (value === 'p-tabview-ink-bar')
                         return false;
-                        else{
-                            cy.wrap($el).invoke('css','width').then(actualWidth => {
-                                let parts = actualWidth.split("px");
-                                let actualWidgettabWidth = parts[0];
-                                expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
-                            })
-                        }
+                    else {
+                        cy.wrap($el).invoke('css', 'width').then(actualWidth => {
+                            let parts = actualWidth.split("px");
+                            let actualWidgettabWidth = parts[0];
+                            expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth / widgetCount).toString());
+                        })
+                    }
                 })
             })
         })
@@ -175,18 +182,52 @@ describe("Widget Configuration", ()=>{
 
         //DEV-14464:'[VEX] Improve widget tabs display'
         //Validate that the widget tab is equal to the container width when only one widget is present in widget container
-        cy.get(consumption.vex.widget.widgetContainer).invoke('css','width').then(tabWidth=>{
+        cy.get(consumption.vex.widget.widgetContainer).invoke('css', 'width').then(tabWidth => {
             let index = tabWidth.indexOf("px");
             let TotalWidgetTabWidth = tabWidth.substr(0, index);
-             cy.get('li').then(count=>{
-                const widgetCount = (Cypress.$(count).length)-1;
+            cy.get('li').then(count => {
+                const widgetCount = (Cypress.$(count).length) - 1;
                 expect(widgetCount).to.equal(1);
-                cy.get('li').invoke('css','width').then(actualWidth => {
+                cy.get('li').invoke('css', 'width').then(actualWidth => {
                     let parts = actualWidth.split("px");
                     let actualWidgettabWidth = parts[0];
-                    expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth/widgetCount).toString());
+                    expect(actualWidgettabWidth).to.eq((TotalWidgetTabWidth / widgetCount).toString());
                 })
             })
         })
     })
+
+
+    it.only('Add search for Virtual Event Widgets', () => {
+        authoring.common.login()
+        cy.visit(authoring.configurations.pageUrls.widgets)
+        cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.widgets).should("exist")
+        authoring.configurations.deleteWidgets(widgets.name)
+        authoring.configurations.addWidget(widgets)
+        cy.get(authoring.vex.eventsearchButton).should('exist')
+
+        let listingCount = 0;
+        cy.get(authoring.vex.widgetRecords)
+            .then(records => {
+                listingCount = Cypress.$(records).length;
+                cy.log("count is", listingCount)
+            })
+
+        cy.get(authoring.vex.eventsearchButton).type('widg')
+        cy.get(authoring.vex.widgetVerification).should('exist')
+        cy.get(authoring.vex.widgetRecords).should('have.length.greaterThan', 1)
+
+
+        cy.get(authoring.vex.eventsearchButton).type('gfhg%^$^%')
+        cy.contains(authoring.vex.noWidgetsFoundmsg)
+
+        cy.get(authoring.vex.eventsearchButton).clear()
+        cy.get(authoring.vex.widgetRecords)
+            .then(listing => {
+                const listingCount2 = Cypress.$(listing).length;
+                expect(listingCount2).to.eq(listingCount)
+
+            });
+    })
+
 })
