@@ -816,7 +816,7 @@ export class Target extends Common {
                     cy.reload()
                 }
             })
-            if (i === 2) {
+            if (i === 1) {
                 if (!email)
                     cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
                 else {
