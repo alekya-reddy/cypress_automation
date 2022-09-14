@@ -282,7 +282,10 @@ export class Configurations extends Common {
                 filterByIndustryTitle: "#filterByIndustryTitle",
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
-                saveSettings: "#save-virtual-event-settings"
+                saveSettings: "#save-virtual-event-settings",
+                onDemandSessionType: "#onDemandSessionType",
+                liveSessionType: "#liveSessionType",
+                descriptionHeading: "#sessionDescriptionHeader",
         
             },
             accessProtection:{
