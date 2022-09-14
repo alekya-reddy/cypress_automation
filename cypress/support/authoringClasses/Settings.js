@@ -72,7 +72,7 @@ export class Settings extends Common {
         };
         this.customQueryStrings = {
             pageUrl: `${this.settingsRoute}/sharing-links`,
-            pageTitle: "Custom Query Strings",
+            pageTitle: "Sharing Links",
             nameInput: "#name",
             valueInput: "#queryStrings"
         };
