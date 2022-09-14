@@ -238,6 +238,7 @@ export class CommonCX {
     }
 
     checkPf_consentCookie(wait, value) {
+        cy.wait(4000)
         if (value) {
             for (let i = 0; i <= wait; i += 500) {
                 cy.getCookies({ log: false }).then((cookies) => {

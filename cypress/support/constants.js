@@ -23,7 +23,7 @@ export const constants = {
             name: 'automation',
             subdomain: 'automation',
             superUser: 'qa-automation',
-            superUserPassword: "Capybara123",
+            superUserPassword: "Capybara12345",
             adminUser: 'user-automation',
             adminUserPassword: 'Capybara123',
             authorUser: 'qa-author',
