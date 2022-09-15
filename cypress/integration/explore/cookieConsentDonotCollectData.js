@@ -208,7 +208,7 @@ describe("Explore - Cookie consent Scenarios - Strict mode", () => {
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
-            authoring.target.validateAnalyticsData(visitor)
+            authoring.target.validateAnalyticsData(visitor,email)
         })
     })
 
