@@ -925,7 +925,7 @@ export class Vex extends Common {
         cy.get(this.selectVideoButton, { timeout: 20000 }).click();
         cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
-            cy.contains(this.contentPickerItem, content).click();
+            cy.contains(this.contentPickerItem, content,{timeout:10000}).click();
             cy.get(this.selectVideoButton).click();
         })
         cy.get(this.modal).should('not.exist');

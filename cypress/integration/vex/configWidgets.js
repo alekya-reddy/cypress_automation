@@ -198,7 +198,7 @@ describe("Widget Configuration", () => {
     })
 
 
-    it.only('Add search for Virtual Event Widgets', () => {
+    it('Add search for Virtual Event Widgets', () => {
         authoring.common.login()
         cy.visit(authoring.configurations.pageUrls.widgets)
         cy.contains(authoring.common.pageTitleLocator, authoring.configurations.pageTitles.widgets).should("exist")
