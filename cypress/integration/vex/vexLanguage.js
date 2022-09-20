@@ -131,7 +131,9 @@ const sessions1 = [
             video: 'Youtube - Used in Cypress automation for VEX testing',
             liveVideoCaptions: 'on',
             captionsLanguage: "English",
+
         },
+        description: 'Description Heading New',
         captionsLanguage: "English"
     },
     {
@@ -352,10 +354,15 @@ describe("VEX - Language Settings", () => {
 
     it.only("Verify customized VEX Language Session Settings fields in VEX landing page and consumption", () => {
         authoring.common.login()
-        cy.intercept("POST", `https://jukebox.${authoring.common.env.TEST_ENV}-pathfactory.com/api/public/v1/page_views`).as('pageView')
+        if (authoring.common.env.TEST_ENV === "qa") {
+            cy.intercept("POST", `https://jukebox.${authoring.common.env.TEST_ENV}-pathfactory.com/api/public/v1/page_views`).as('pageView')
+        }
+        else if (authoring.common.env.TEST_ENV === "staging") {
+            cy.intercept("POST", `https://jukebox.pathfactory-development.com/api/public/v1/page_views`).as('pageView')
+        }
         authoring.configurations.visit.languages()
         authoring.configurations.deleteLanguage('vexLanguage4')
-        authoring.configurations.addNewLanguage({name:"vexLanguage4", code:"v4"})
+        authoring.configurations.addNewLanguage({ name: "vexLanguage4", code: "v4" })
         authoring.configurations.clicklanguage('vexLanguage4')
         authoring.configurations.gotoLanguageTab("virtual-event")
         cy.wait(3000)
@@ -392,7 +399,7 @@ describe("VEX - Language Settings", () => {
         authoring.configurations.clicklanguage('vexLanguage4')
         authoring.configurations.gotoLanguageTab("virtual-event")
         cy.wait(3000)
-        cy.get(authoring.configurations.languages.vex.onDemandSessionType).clear().type(customVEXLanguageSessionSettings.onDemandSession)
+        cy.get(authoring.configurations.languages.vex.onDemandSessionType).clear().type(customVEXLanguageSessionSettings.onDemandSession, { delay: 100 })
         cy.get(authoring.configurations.languages.vex.liveSessionType).clear().type(customVEXLanguageSessionSettings.liveSession)
         cy.get(authoring.configurations.languages.vex.descriptionHeading).clear().type(customVEXLanguageSessionSettings.description)
         cy.contains("button", "Save Virtual Event Settings").click()
@@ -401,8 +408,13 @@ describe("VEX - Language Settings", () => {
         cy.wait('@pageView')
         cy.contains("div", customVEXLanguageSessionSettings.liveSession).should("exist")
         cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).should("exist")
-        cy.pause()
+        cy.visit(event2.url)
+        cy.wait('@pageView')
         cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).click()
+        cy.contains(customVEXLanguageSessionSettings.description).should("exist")
+        cy.visit(event2.url)
+        cy.wait('@pageView')
+        cy.contains("div", customVEXLanguageSessionSettings.liveSession).click()
         cy.contains(customVEXLanguageSessionSettings.description).should("exist")
     })
 })
