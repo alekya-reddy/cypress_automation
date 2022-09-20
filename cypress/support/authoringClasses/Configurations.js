@@ -289,6 +289,10 @@ export class Configurations extends Common {
                 filterByIndustryTitle: "#filterByIndustryTitle",
                 filterByTopicTitle: "#filterByTopicTitle",
                 noResultsMessage: "#noResultsMessage",
+                saveSettings: "#save-virtual-event-settings",
+                onDemandSessionType: "#onDemandSessionType",
+                liveSessionType: "#liveSessionType",
+                descriptionHeading: "#sessionDescriptionHeader",
                 saveSettings: "#save-virtual-event-settings"
 
             },
@@ -2295,8 +2299,8 @@ export class Configurations extends Common {
         if (title) {
             cy.get(this.languages.accessProtection.title).clear().type(title)
         }
+        cy.get(this.languages.accessProtection.emailSuccessMsg).clear().type(emailSuccess)
         if (emailSuccess) {
-            cy.get(this.languages.accessProtection.emailSuccessMsg).clear().type(emailSuccess)
         }
         if (emailFailed) {
             cy.get(this.languages.accessProtection.emailFailedMsg).clear().type(emailFailed)
