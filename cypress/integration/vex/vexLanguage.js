@@ -352,7 +352,7 @@ describe("VEX - Language Settings", () => {
         })
     })
 
-    it.only("Verify customized VEX Language Session Settings fields in VEX landing page and consumption", () => {
+    it("Verify customized VEX Language Session Settings fields in VEX landing page and consumption", () => {
         authoring.common.login()
         if (authoring.common.env.TEST_ENV === "qa") {
             cy.intercept("POST", `https://jukebox.${authoring.common.env.TEST_ENV}-pathfactory.com/api/public/v1/page_views`).as('pageView')
