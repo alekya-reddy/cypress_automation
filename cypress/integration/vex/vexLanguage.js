@@ -408,8 +408,6 @@ describe("VEX - Language Settings", () => {
         cy.wait('@pageView')
         cy.contains("div", customVEXLanguageSessionSettings.liveSession).should("exist")
         cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).should("exist")
-        cy.visit(event2.url)
-        cy.wait('@pageView')
         cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).click()
         cy.contains(customVEXLanguageSessionSettings.description).should("exist")
         cy.visit(event2.url)
