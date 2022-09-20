@@ -38,9 +38,14 @@ export class Vex extends Common {
             this.addedBycancel = "div[data-qa-hook='added by-dropdown']>span>i",
             this.clearSearch = 'i[title="Clear search"]',
             this.eventsearchButton = 'input[name="page-search"]',
+            //this.eventRecordNameswithHeader='table tbody.ant-table-tbody>tr>td:nth-Child(2)',
+            //this.eventRecordNames='table tbody.ant-table-tbody>tr.ant-table-row>td:nth-Child(2)',
             this.noEventFoundmsg = 'No virtual events found',
+            this.noWidgetsFoundmsg = 'No items found',
             this.folderbreadcrum = "h5#folder-breadcrumb-automationfolderchild";
         this.eventVerification = 'tbody[class="ant-table-tbody"]>tr:nth-child(2)';
+        this.widgetVerification="[class*='Table__table-body-container']";
+        this.widgetRecords="[data-qa-hook='table-cell-name']";
         this.eventClick = 'td[class*="ant-table-cell"]>a:nth-child(1)';
         this.trashIcon = "i[class*='Icon__fa-trash']";
         this.analyticsButton = 'div[data-qa-hook="page-body"]>div>ul>li';
@@ -48,7 +53,7 @@ export class Vex extends Common {
         this.pageTitle = 'input[name="landingExperience.pageTitle"]';
         this.pageDescription = 'textarea[name="landingExperience.pageDescription"]';
         this.eventSetupCheckbox = 'input[value="Event setup"]';
-        this.antCell = ".ant-table-cell";
+        this.antCell = ".ant-table-cell";   
         this.virtualEventsTab = "#virtual-events";
         this.inputModal = 'div[class="ant-picker-body"]';
         this.virtualEventsTab = "#virtual-events";
@@ -64,8 +69,8 @@ export class Vex extends Common {
         this.pageNumber = 'li[class="ant-pagination-simple-pager"]';
         this.radioButtonclick = 'div[class="ant-radio-group ant-radio-group-outline"]>label:nth-child(2)';
         this.radioButtonDisable = 'ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-disabled';
-        this.serachFilterToggle = 'div[class="ant-switch-handle"]';
-        this.toggleChecked = 'button[class="ant-switch ant-switch-checked"]';
+        this.serachFilterToggle = 'button[role="switch"]';
+        this.toggleChecked = 'button[class*="ant-switch-disabled"]';
         this.analyticsOverviewDropdown = 'div[class="ant-select-item-option-content"]';
         this.editfolder = 'i[title="Edit Folder"]',
             this.copyVex = 'span[aria-label="copy"]',
@@ -920,7 +925,7 @@ export class Vex extends Common {
         cy.get(this.selectVideoButton, { timeout: 20000 }).click();
         cy.get(this.modal).within(() => {
             cy.get(this.contentPickerSearchBar).clear().type(content);
-            cy.contains(this.contentPickerItem, content).click();
+            cy.contains(this.contentPickerItem, content,{timeout:10000}).click();
             cy.get(this.selectVideoButton).click();
         })
         cy.get(this.modal).should('not.exist');
@@ -1947,7 +1952,9 @@ export class Vex extends Common {
         const layout = config.layout
         const verify = config.verify // Do not verify if using HEX color for any color pickers
 
+        cy.wait(3000)
         cy.waitFor({ element: this.pages.addBlockButton, to: "exist", wait: 10000 })
+        cy.wait(2000)
         cy.get(this.pages.addBlockButton).eq(0).click({ force: true }) // Always pick first one and add to top 
 
         if (type == "html") {
@@ -2519,7 +2526,7 @@ export class Vex extends Common {
             }
         } else if (method == "clone button") {
             cy.containsExact(this.antCell, template).parent().within(() => {
-                cy.contains("button", "Clone").click()
+                cy.contains("a", "Clone").click()
             })
             cy.contains(this.antModal, "Clone this Page").within(() => {
                 cy.get(this.pages.nameInput).clear().type(name)

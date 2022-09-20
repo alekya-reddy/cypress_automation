@@ -12,9 +12,15 @@ const user = {
 
 const role = {
     roleName: "Analytics Role.Js",
-    campaignToolsAnalyticsView: true,
-    vexAnalysticsView: true,
-    WebsiteToolsAnalysticsView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
+    //vexAnalysticsView: true,
+    WebsiteToolsAnalysticsOverviewView: true,
+    WebsiteToolsAnalysticsVisitorView: true,
+    WebsiteToolsAnalysticsAccountView: true,
+    WebsiteToolsAnalysticsContentView: true,
     vexModuleCRUD: true,
     websiteToolsModuleCRUD: true,
     campaignToolsModuleCRUD: true,
@@ -50,6 +56,9 @@ describe('Governanace Analytics for Tools', function() {
         authoring.common.login(user.userName, user.password)
 
         cy.get("#content-library").should("not.exist")
+        cy.contains('button', "Add Content").should("not.exist")
+        cy.get(authoring.common.contentActivation).should("exist")
+        cy.get(authoring.common.contentActivation).click()
         cy.get("#campaign-tools").should("exist")
         cy.get("#target").should("not.exist")
         cy.get("#recommend").should("not.exist")
@@ -84,7 +93,10 @@ describe('Governanace Analytics for Tools', function() {
         cy.get(authoring.microsites.analyticsButton).contains("Analytics").should("exist")
         cy.get(authoring.microsites.analyticsButton).contains("Analytics").click({force: true})
         cy.wait(5000)
-        cy.get(authoring.microsites.analyticsOverview).contains("Overview").should("exist")
+        cy.contains('div', "Legacy Report").should("exist")
+        cy.contains('div', "Reach").should("exist")
+        cy.contains('div', "Engagement").should("exist")
+        cy.contains('div', "Performance").should("exist")
 
         authoring.website.visit()
         cy.get(authoring.website.websiteAnalytics).should("exist").click()

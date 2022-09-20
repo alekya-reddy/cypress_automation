@@ -13,8 +13,11 @@ const user = {
 const role = {
     roleName: "Custom",
     campaignToolsModuleCRUD: false,
-    campaignsToolsView : true,
-    campaignToolsAnalyticsView: true
+    campaignToolsModuleView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
 }
 
 describe("View Only Permissions", () => {
@@ -51,9 +54,9 @@ describe("View Only Permissions", () => {
            cy.contains('a', "DoNotDelete").should("exist").click()
            cy.contains(authoring.microsites.trashIcon).should("not.exist")
            cy.contains(authoring.microsites.cloneIcon).should("not.exist")
-           cy.contains('span', "Preview Microsite").should("not.exist")
-           cy.get(authoring.microsites.copyIcon).should("not.exist")
-           cy.get(authoring.microsites.sharebutton).should("not.exist")
+           cy.contains('span', "Preview Microsite").should("exist")
+           cy.get(authoring.microsites.copyIcon).should("exist")
+           cy.get(authoring.microsites.sharebutton).should("exist")
 
            cy.get(authoring.microsites.setupPage.nameInput).should('be.visible')
            cy.get(authoring.microsites.inputDisable).should("exist")
@@ -97,7 +100,7 @@ describe("View Only Permissions", () => {
            cy.contains('span', "Name").should("exist")
            cy.contains('th', "Visibility").should("exist")
            cy.contains('th', "Slug").should("exist")
-           cy.contains('th', "URL").should("not.exist")
+           cy.contains('th', "URL").should("exist")
            cy.contains('th', "Page Title").should("exist")
            cy.contains('th', "External ID").should("exist")
            cy.contains('th', "Home Page").should("exist")
@@ -138,7 +141,10 @@ describe("View Only Permissions", () => {
            cy.contains('button', "Save All Settings").should("not.exist")
 
            cy.contains('a', "Analytics").should("exist").click()
-           cy.contains('div', "Overview").should("exist")   
+           cy.contains('div', "Reach").should("exist")   
+           cy.contains('div', "Engagement").should("exist")
+           cy.contains('div', "Performance").should("exist")
+           cy.contains('div', "Legacy Report").should("exist")
 
     })
 })

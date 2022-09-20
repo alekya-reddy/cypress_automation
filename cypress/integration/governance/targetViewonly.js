@@ -14,8 +14,11 @@ const user = {
 const role = {
     roleName: "Custom",
     campaignToolsModuleCRUD: false,
-    campaignsToolsView: true,
-    campaignToolsAnalyticsView: true
+    campaignToolsModuleView: true,
+    campaignToolsAnalyticsOverviewView: true,
+    campaignToolsAnalyticsAccountView: true,
+    campaignToolsAnalyticsVisitorView: true,
+    campaignToolsAnalyticsContentView: true,
 }
 
 describe("View Only Permissions", () => {
@@ -125,8 +128,8 @@ describe("View Only Permissions", () => {
         cy.contains('label', "Next Promoter Headline Override").should('be.visible').next().click()
         cy.get(authoring.common.popover).should("not.exist")
         cy.contains('a', "Website Overlay Embed").should("exist")
-        cy.contains('span', "Share").should("not.exist")
-        cy.contains('span', "Preview").should("not.exist")
+        cy.contains('span', "Share").should("exist")
+        cy.contains('a', "Preview").should("exist")
         cy.contains(authoring.target.deleteContent).should("not.exist")
         cy.contains('button', "Open in Cont. Library ").should("exist")
         cy.contains('label', "PDF Start Page").should("not.exist")

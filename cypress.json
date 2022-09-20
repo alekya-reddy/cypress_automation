@@ -1,11 +1,13 @@
- {
+{
     "projectId": "i3rte7",
     "env": {
         "TEST_ENV": "qa"
     },
     "video": false,
     "chromeWebSecurity": false,
+    "execTimeout": 100000,
     "retries": {
         "runMode": 2
-    }
+    },
+    "numTestsKeptInMemory": 0
 }

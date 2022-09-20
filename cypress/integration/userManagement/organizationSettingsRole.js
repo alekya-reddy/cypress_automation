@@ -45,7 +45,6 @@ describe('Organization Settings User Role', function() {
 
         // configurations
         cy.get("#configurations").should("not.exist")
-        
         // settings
         cy.get("#settings").should("exist")
         cy.get("#settings").click()

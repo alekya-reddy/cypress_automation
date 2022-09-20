@@ -18,7 +18,7 @@ const supplementalContent2 = {
 }
 
 const videoContent2 = {
-    internalTitle: "Crewdragon",
+    internalTitle: "Crewdrag",
     url: "https://www.youtube.com/watch?v=FMi_m9-e9MU"
 }
 

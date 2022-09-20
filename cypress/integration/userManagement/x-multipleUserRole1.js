@@ -79,8 +79,9 @@ describe('Content Library + VEX + General Settings Access', function() {
         authoring.common.login(user.userName, user.password)
 
         // module navigation
+        cy.get(authoring.common.contentActivation).click()
         cy.get("#content-library").should("exist")
-        cy.get("#campaign-tools").should("not.exist")
+        cy.get("#campaign-tools").should("exist")
         cy.get("#target").should("not.exist")
         cy.get("#recommend").should("not.exist")
         cy.get("#explore").should("not.exist")
@@ -112,7 +113,7 @@ describe('Content Library + VEX + General Settings Access', function() {
             cy.contains("a", "Webhooks").should("not.exist")
             cy.contains("a", "Visitor Activities").should("not.exist")
 
-            cy.contains("div", "Campaign Tools").should("not.exist")
+            //cy.contains("div", "Campaign Tools").should("not.exist")
             cy.contains("a", "Segments").should("not.exist")
             cy.contains("a", "Routes").should("not.exist")
             cy.contains("a", "Track Labels").should("not.exist")

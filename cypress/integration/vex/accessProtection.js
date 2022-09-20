@@ -216,7 +216,7 @@ const vexsessions = [
     it("Visit event page on consumption side and verify that it asks for email", ()=>{
         cy.visit(event.url)
         //verify Access Protection-Appearance & Languae settings applied properly in VEX event authentication page.
-        cy.get(consumption.common.accessProtectionLogo)
+        cy.get(consumption.common.accessProtectionLogo,{timeout:20000})
             .should('have.css', 'background-image','url("https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")')
         cy.get(consumption.common.accessProtectionSubmitButton)
             .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.submitButtonColor))
@@ -377,7 +377,7 @@ const vexsessions = [
         //1.Preview only VEX sessions for which protection type "Email" is enabled 
         //verify Access Protection-Appearance & Languae settings applied properly in VEX session authentication page.
         cy.visit(vexsessions[0].url)
-        cy.get(consumption.common.accessProtectionLogo)
+        cy.get(consumption.common.accessProtectionLogo,{timeout:20000})
             .should('have.css', 'background-image','url("https://img.qa-pathfactory.com/stock/sm/bench-forest-trees-path.jpg")')
         cy.get(consumption.common.accessProtectionSubmitButton)
             .should("have.css", "background-color", colorConfigToCSS(vexAppearanceSettings.submitButtonColor))
