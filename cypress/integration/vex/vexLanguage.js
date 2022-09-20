@@ -142,7 +142,8 @@ const sessions1 = [
         },
         visibility: 'Public',
         type: 'On Demand',
-        video: 'Youtube - Used in Cypress automation for VEX testing'
+        video: 'Youtube - Used in Cypress automation for VEX testing',
+        description: 'Description Heading New'
     },
 ]
 
@@ -349,7 +350,7 @@ describe("VEX - Language Settings", () => {
         })
     })
 
-    it("Verify customized VEX Language Session Settings fields in VEX landing page and consumption", () => {
+    it.only("Verify customized VEX Language Session Settings fields in VEX landing page and consumption", () => {
         authoring.common.login()
         cy.intercept("POST", `https://jukebox.${authoring.common.env.TEST_ENV}-pathfactory.com/api/public/v1/page_views`).as('pageView')
         authoring.configurations.visit.languages()
@@ -400,5 +401,8 @@ describe("VEX - Language Settings", () => {
         cy.wait('@pageView')
         cy.contains("div", customVEXLanguageSessionSettings.liveSession).should("exist")
         cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).should("exist")
+        cy.pause()
+        cy.contains("div", customVEXLanguageSessionSettings.onDemandSession).click()
+        cy.contains(customVEXLanguageSessionSettings.description).should("exist")
     })
 })
