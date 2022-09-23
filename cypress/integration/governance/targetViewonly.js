@@ -130,6 +130,7 @@ describe("View Only Permissions", () => {
         cy.contains('a', "Website Overlay Embed").should("exist")
         cy.contains('span', "Share").should("exist")
         cy.contains('span', "Preview").should("not.exist")
+        cy.contains('a', "Preview").should("exist")
         cy.contains(authoring.target.deleteContent).should("not.exist")
         cy.contains('button', "Open in Cont. Library ").should("exist")
         cy.contains('label', "PDF Start Page").should("not.exist")

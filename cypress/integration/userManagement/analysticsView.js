@@ -55,7 +55,7 @@ describe('Governanace Analytics for Tools', function() {
         //login and check permissions
         authoring.common.login(user.userName, user.password)
 
-        cy.get("#content-library").should("exist").click()
+        cy.get("#content-library").should("not.exist")
         cy.contains('button', "Add Content").should("not.exist")
         cy.get(authoring.common.contentActivation).should("exist")
         cy.get(authoring.common.contentActivation).click()
@@ -93,7 +93,10 @@ describe('Governanace Analytics for Tools', function() {
         cy.get(authoring.microsites.analyticsButton).contains("Analytics").should("exist")
         cy.get(authoring.microsites.analyticsButton).contains("Analytics").click({force: true})
         cy.wait(5000)
-        cy.get(authoring.microsites.analyticsOverview).contains("Overview").should("exist")
+        cy.contains('div', "Legacy Report").should("exist")
+        cy.contains('div', "Reach").should("exist")
+        cy.contains('div', "Engagement").should("exist")
+        cy.contains('div', "Performance").should("exist")
 
         authoring.website.visit()
         cy.get(authoring.website.websiteAnalytics).should("exist").click()

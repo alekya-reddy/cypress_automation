@@ -647,5 +647,73 @@ export class Recommend extends Common {
             })
         }
     } 
+
+    validateAnalyticsData(visitor, email) {
+        cy.wait(2000)
+        this.visit()
+        cy.get(this.recommendAnalytics).should("exist").click()
+        cy.contains('div', "Last 30 Days").should("exist")
+        cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Visitors").should("exist").click()
+        cy.contains('a', 'Visitor Journeys per Session').click()
+        for (let i = 0; i < 2; i++) {
+            cy.get('[data-qa-hook="table-cell-identity"]').eq(0).invoke('text').then(value => {
+                if (value.includes(email) || value.includes(visitor)) {
+                    if (!email)
+                        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
+                    else {
+                        cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
+                        cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
+                    }
+                }
+                else {
+                    cy.wait(5000)
+                    cy.reload()
+                }
+            })
+            if (i === 1) {
+                if (!email)
+                    cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('exist')
+                else {
+                    cy.contains('[data-qa-hook="table-cell-identity"]', visitor).should('not.exist')
+                    cy.contains('[data-qa-hook="table-cell-identity"]', email).should('exist')
+                }
+            }
+        }
+    }
+
+    validateCtaAnalyticsDataForStrictMode(name, visitor, email) {
+        cy.wait(5000)
+        this.visit()
+        this.goToTrack(name)
+
+        cy.wait(3000)
+        cy.get("a[href*='analytics-overview']", { timeout: 10000 }).should("exist").click()
+        cy.contains('[role="menuitem"] div.ant-menu-submenu-title', "Events", { timeout: 10000 }).should("exist").click()
+        cy.contains('a', 'Form Captures').click()
+        for (let i = 0; i < 2; i++) {
+            cy.get('[data-qa-hook="table-cell-email"]').eq(0).invoke('text').then(value => {
+                if (value.includes(email) || value.includes(visitor)) {
+                    if (!email)
+                        cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
+                    else {
+                        cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('not.exist')
+                        cy.contains('[data-qa-hook="table-cell-email"]', email).should('exist')
+                    }
+                }
+                else {
+                    cy.wait(5000)
+                    cy.reload()
+                }
+            })
+            if (i === 1) {
+                if (!email)
+                    cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('exist')
+                else {
+                    cy.contains('[data-qa-hook="table-cell-email"]', visitor).should('not.exist')
+                    cy.contains('[data-qa-hook="table-cell-email"]', email).should('exist')
+                }
+            }
+        }
+    }
 }
 

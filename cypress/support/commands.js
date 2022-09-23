@@ -359,7 +359,7 @@ Cypress.Commands.add("closeSession", (config ={})=>{
     cy.request({
         url: `https://api.${constants.domain.pathfactory[constants.TEST_ENV]}/api/debug/close_sessions`,
         method: "POST",
-        headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIz"},
+        headers: {"Authorization": "Basic YXV0b21hdGlvblxxYS1hdXRvbWF0aW9uOkNhcHliYXJhMTIzNDU="},
         timeout: 60000,
         retryOnNetworkFailure: retryOnNetworkFailure, // Cypress will retry up to 4 times if true 
         failOnStatusCode: failOnStatusCode // Fails test if status not ok  
