@@ -814,9 +814,9 @@ export class UserManagement extends Common {
         if (organizationSettingsView == true || organizationSettingsView == false) {
             cy.contains('a', "Administrative Controls").click()
             cy.contains(this.arrowExpand, "Organization Settings").click()
-            cy.get('input[id*"Settings"]').parent().invoke("attr", "class").then((attr) => {
+            cy.get('input[id*="Access-view"]').parent().invoke("attr", "class").then((attr) => {
                 if ((organizationSettingsView == false && attr.includes("ant-checkbox-checked")) || (organizationSettingsView == true && !attr.includes("ant-checkbox-checked"))) {
-                    cy.get('input[id*"Settings"]').click()
+                    cy.get('input[id*="Access-view"]').click({force:true})
                 }
             })
         }
