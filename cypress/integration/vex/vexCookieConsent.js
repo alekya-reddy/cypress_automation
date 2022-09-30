@@ -3,15 +3,43 @@ import { createAuthoringInstance, createConsumptionInstance } from '../../suppor
 const authoring = createAuthoringInstance({ org: 'automation-vex', tld: 'lookbookhq' });
 const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' });
 
+const pf_consentDecline = "0.1800.0.0"
+const pf_consentAccept = "1.864000.1.1"
+const email = `test${Math.floor((Math.random() * 1000000000) + 1)}@pf.com`
+
+const standardForm = {
+    name: 'Standard Form Short',
+    uniqueLocator: "#email",
+    expect: () => {cy.get("#email", {timeout: 1000}).should("exist")},
+    fill: () => {consumption.vex.fillStandardForm(visitor)},
+}
+
+const formwithoutcookiecheckbox = {
+    name: 'eventRegistration.js',
+    uniqueLocator: "#email",
+    expect: () => {cy.get("#email", {timeout: 1000}).should("exist")},
+    fill: () => {consumption.vex.fillStandardForm(visitor)},
+}
+
 const event = {
     name: 'vexCookieConsent.js',
     slug: 'vexcookieconsent-js',
+    form: standardForm,
     get url() {
         return `${authoring.common.baseUrl}/${this.slug}`
     }
 }
 
-const session = {
+const event2 = {
+    name: 'vexCookieConsent2.js',
+    slug: 'vexCookieConsent2-js',
+    form:formwithoutcookiecheckbox,
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
+const sessions = [{
     name: "live content current",
     slug: "live-content-current",
     get url() {
@@ -26,14 +54,61 @@ const session = {
         type: 'Content Library',
         video: 'Youtube - Used in Cypress automation for VEX testing'
     }
+},
+{
+    name: "On-Demand",
+    cloneName: "Clone of On-Demand",
+    slug: "on-demand",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    description: "on demand description",
+    visibility: 'Public',
+    type: 'On Demand',
+    video: 'Youtube - Used in Cypress automation for VEX testing',
+    contents: [
+        'Website - Used by Cypress automation for VEX testing'
+    ]
+}
+]
+
+const landingPage = {
+    name: "Test Landing Page",
+    slug: "test-landing-page",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    setHome: true,
+    blocks: [
+        {
+            type: "Session Group",
+            sessionGroup: "All Sessions"
+        },
+    ]
 }
 
-const formWithCookieConsent = { name: 'vexCookieConsent.js1' }
-const formWithoutCookieConsent = { name: 'vexCookieConsent.js2' }
+const cookieConsentConfig1 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent not required"
+}
 
-const user = { email: "jo@gmail.com" }
+const cookieConsentConfig2 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent managed by PathFactory for all visitors",
+    noConsentOrDecline: "Collect data anonymously with 30-minute cookie",
+    consentDefault: "Enabled automatically for all products"
+}
+
+const cookieConsentConfig3 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent managed by PathFactory for all visitors",
+    noConsentOrDecline: "Do not collect data",
+    consentDefault: "Enabled automatically for all products"
+}
 
 describe("VEX - Cookie Consent", () => {
+
     it("Set up event if not already done", () => {
         cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
@@ -41,154 +116,142 @@ describe("VEX - Cookie Consent", () => {
                 authoring.vex.visit()
                 authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
-                authoring.vex.addSession(session.name)
-                authoring.vex.configureSession(session)
+                sessions.forEach(session => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.go('back')
+                })
+                authoring.vex.addLandingPages(landingPage.name)
+                authoring.vex.configureLandingPage(landingPage)
+            }
+        })
+
+        cy.request({ url: event2.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.addVirtualEvent(event2)
+                authoring.vex.configureEvent(event2)
+                sessions.forEach(session => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.go('back')
+                })
+                authoring.vex.addLandingPages(landingPage.name)
+                authoring.vex.configureLandingPage(landingPage)
             }
         })
     })
 
-    it("No cookie consent enabled, but it is enabled on the form", () => {
-        // Set the form and disable cookie consent 
+    it("VEX cookie consent - Cookie consent Not required at org level and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
+
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.goToEventConfig(event.name)
-        authoring.vex.configureForm(formWithCookieConsent)
-        authoring.vex.setCookieConsent(false)
-        cy.get(authoring.vex.saveButton).click()
-        cy.contains(authoring.vex.messages.recordSaved).should('exist')
-        cy.wait(2000)
 
-        // Visit consumption page and verify that vid cookie is persistentt cookie, and the cookie consent message box doesn't appear
-        cy.clearCookies()
+        cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should('not.have.attr','checked')
+        cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr','disabled')
+
         cy.visit(event.url)
+        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('not.exist')
-        consumption.vex.checkPersistentCookie(5000)
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')       
+        
+        cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
+        cy.contains("button", "Submit").click()
 
-        // Verify the form doesn't have the cookie consent checkbox (even though it is enabled on the form)
-        cy.get(consumption.vex.standardForm.emailInput).should('exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
+        cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        consumption.vex.checkPf_consentCookie(5000)
+        consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
     })
 
-    it("Cookie consent enabled but form doesn't have it", () => {
+    it("VEX cookie consent - Cookie consent Not enabled at form level ,accept cookie on box and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
 
-        // Set the form and enable cookie consent 
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
-        authoring.vex.configureForm(formWithoutCookieConsent)
-        authoring.vex.setCookieConsent(true)
-        cy.get(authoring.vex.saveButton).click()
-        cy.contains(authoring.vex.messages.recordSaved).should('exist')
-        cy.wait(2000)
+        authoring.vex.goToEventConfig(event2.name)
 
-        // Visit consumption page and verify that vid cookie is a session cookie to start with 
-        cy.clearCookies()
-        cy.visit(event.url)
-        consumption.vex.check30MinCookie(5000)
+        cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should('have.attr','checked')
+        cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr','disabled')
 
-        // Verify cookie consent message box exists
+        cy.window().then(win => win.location.href = event2.url);
+        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')   
+        cy.get(consumption.vex.cookieConsent.accept).should('exist').click()
+        
+        cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
+        cy.contains("button", "Submit").click()
 
-        // Go to session page and verify same thing 
-        cy.contains("a", session.name)
+        cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        consumption.vex.checkPf_consentCookie(5000,pf_consentAccept)
+        consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+        cy.get(consumption.vex.header.cookieSettings).should('exist')
+    })
+
+    it("VEX cookie consent - Cookie consent Not enabled at form level ,decline cookie on box and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event2.name)
+
+        cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should('have.attr','checked')
+        cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr','disabled')
+
+        cy.window().then(win => win.location.href = event2.url);
+        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')   
+        cy.get(consumption.vex.cookieConsent.decline).should('exist').click()
+        
+        cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
+        cy.contains("button", "Submit").click()
 
-        // Decline cookie consent and verify vid is still session cookie
-        cy.get(consumption.vex.cookieConsent.decline).click()
+        cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        consumption.vex.checkPf_consentCookie(5000,pf_consentDecline)
         consumption.vex.check30MinCookie(5000)
         cy.get(consumption.vex.header.cookieSettings).should('exist')
     })
 
-    it("Cookie consent enabled and form has it enabled as well", () => {
-        // Set the form and enable cookie consent 
+    it.only("VEX cookie consent - Cookie consent Not enabled at form level ,accept cookie on box and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
-        authoring.vex.configureForm(formWithCookieConsent)
-        authoring.vex.setCookieConsent(true)
-        cy.get(authoring.vex.saveButton).click()
-        cy.contains(authoring.vex.messages.recordSaved).should('exist')
-        cy.wait(2000)
+        authoring.vex.goToEventConfig(event2.name)
 
-        // Visit consumption page and verify that vid cookie is a session cookie to start with 
-        cy.clearCookies()
-        cy.visit(event.url)
-        consumption.vex.check30MinCookie(5000)
+        cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should('have.attr','checked')
+        cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr','disabled')
 
-        // Verify that the cookie consent message box is present, and clicking accept will change vid cookie to persistent 
+        cy.window().then(win => win.location.href = event2.url);
+        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
-        cy.get(consumption.vex.cookieConsent.accept).click()
-        cy.get(consumption.vex.cookieConsent.messageBox).should('not.exist')
-        consumption.vex.checkPersistentCookie(5000)
-
-        // Verify that the cookie settings gear is present in the header, and from here can toggle consent to true or false, which should change vid cookie accordingly 
-        consumption.vex.toggleCookieConsent("off")
-        consumption.vex.check30MinCookie(5000)
-        consumption.vex.toggleCookieConsent("on")
-        consumption.vex.checkPersistentCookie(5000)
-        consumption.vex.toggleCookieConsent("off")
-        consumption.vex.check30MinCookie(5000)
-
-        // Verify that the form has the cookie consent checkbox and that it correctly sets the vid cookie 
-        cy.get(consumption.vex.standardForm.emailInput).clear().type(user.email)
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')   
+        cy.get(consumption.vex.cookieConsent.accept).should('exist').click()
+        
+        cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
         cy.contains("button", "Submit").click()
-        cy.get(consumption.vex.standardForm.emailInput).should('exist') // Need to agree to cookie consent before you can continue 
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist').click()
-        cy.contains("button", "Submit").click()
-        cy.get(consumption.vex.standardForm.emailInput).should('not.exist')
-        consumption.vex.checkPersistentCookie(5000)
 
-        // Go to session page and verify vid cookie still persistent and the cookie settings is still accessible from here 
-        cy.visit(session.url)
-        consumption.vex.checkPersistentCookie(5000)
-        cy.get(consumption.vex.header.settingButton).should('exist')
-        consumption.vex.toggleCookieConsent("off")
-        consumption.vex.check30MinCookie(5000)
-    })
-
-    it("Cookie consent disabled on org settings", () => {
-        // Turn off cookie consent for the entire org, and verify this no longer exists on VEX on authoring side
-        authoring.common.login()
-        authoring.settings.configureCookieConsent({ option: authoring.settings.cookieConsent.options.disable })
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
-        cy.get(authoring.vex.cookieConsentCheckbox).should("not.exist")
-
-        // Confirm cookie consent no longer exists on VEX on consumption side
-        cy.visit(event.url)
-        cy.get(consumption.vex.header.cookieSettings).should('not.exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
-        consumption.vex.checkPersistentCookie(5000)
-
-        // Turn cookie consent on for the entire org, and verify this exists on VEX on authoring side
-        authoring.settings.visitCookieConsent()
-        authoring.settings.configureCookieConsent({ option: authoring.settings.cookieConsent.options.enableForAll })
-        authoring.vex.visit()
-        authoring.vex.goToEventConfig(event.name)
-        cy.wait(5000)
-        cy.get(authoring.vex.cookieConsentCheckbox).should("exist")
-
-        // Confirm cookie consent exists on VEX on consumption side 
-        cy.visit(event.url)
-        cy.wait(5000)
-        cy.get(consumption.vex.cookieConsent.decline).click()
-        cy.get(consumption.vex.cookieConsent.messageBox).should('not.exist')
-        cy.get(consumption.vex.header.cookieSettings, { timeout: 10000 }).should('exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist')
-        consumption.vex.check30MinCookie(5000)
+        cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        consumption.vex.checkPf_consentCookie(5000,pf_consentAccept)
+        consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+        cy.get(consumption.vex.header.cookieSettings).should('exist')
     })
 
     it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
-        cy.visit(event.url)
-        let cookieConsentOn = false
-        cy.ifElementExists(consumption.vex.cookieConsent.messageBox, 5000, () => {
-            cookieConsentOn = true
-        })
-        cy.get("body").then(() => {
-            if (cookieConsentOn == false) {
-                authoring.common.login()
-                authoring.settings.configureCookieConsent({ option: authoring.settings.cookieConsent.options.enableForAll })
-            }
-        })
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
     })
 })

@@ -41,9 +41,21 @@ const visitor = {
 
 const visitor2 = {
     email: "Test@gmail.com"
+}   
+
+const cookieConsentConfig1 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent not required"
 }
 
 describe("VEX - Blacklist", ()=>{
+
+    before(function() {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
+    })
+
     it("Set up if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
@@ -81,7 +93,7 @@ describe("VEX - Blacklist", ()=>{
         cy.contains(authoring.common.messages.invalidEmail2).should("exist")
         cy.contains("button:visible", "Cancel").click()
 
-        // Test add email input validation 
+        // Test add email input validation
         authoring.vex.addToBlacklist(visitor.email, false)
         cy.contains(authoring.common.messages.duplicateEntry2).should("exist")
         cy.contains("button", "Cancel").click()
@@ -117,7 +129,7 @@ describe("VEX - Blacklist", ()=>{
         // Verify that can't visit by entering url with query string directly 
         cy.clearCookies()
         cy.visit(session.url + visitor.lb_email_query_string)
-        cy.contains(consumption.vex.messages.blacklisted, {timeout: 10000}).should('exist')
+        cy.contains(consumption.vex.messages.blacklistMessage, {timeout: 10000}).should('exist')
         cy.get(consumption.vex.jukeBoxApp).should('not.exist')
 
         // Clear cookies and verify that a non-black-listed user can still attend 

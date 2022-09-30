@@ -28,7 +28,7 @@ describe("VEX - Added By and Search filter", ()=>{
         authoring.common.login()
         authoring.vex.visit()
         cy.get(authoring.vex.clickAddedBy).click()
-        cy.get(authoring.vex.addedbyButton).contains('cy-admin').click()
+        cy.get(authoring.vex.addedbyButton,{timeout:20000}).contains('cy-admin').click()
 
         //all VEX page that has the string in name or slug will return as search results 
         cy.get(authoring.vex.eventsearchButton).click().type(event.name)
@@ -59,7 +59,7 @@ describe("VEX - Added By and Search filter", ()=>{
             authoring.vex.visit()
             //only VEX with exact slug should return as search results
             cy.get(authoring.vex.eventsearchButton).click().type(Vex.slug)
-            cy.contains(Vex.name).should('exist')
+            cy.contains(Vex.name,{timeout:20000}).should('exist')
             cy.get(authoring.vex.clearSearch).click()
 
             //all VEX page that has the string in name or slug will return as search results 

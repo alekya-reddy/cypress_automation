@@ -5,6 +5,9 @@ const consumption = createConsumptionInstance({org: 'automation-microsites', tld
 
 const contents = authoring.common.env.orgs["automation-microsites"].resources
 const webContent = contents["Website Common Resource"]
+const pf_consentDecline = "0.1800.0.0"
+const pf_consentAccept = "1.864000.1.1"
+const email = `test${Math.floor((Math.random() * 1000000000) + 1)}@pf.com`
 
 const microsite = {
     name: "micrositeCookieConsent.js",
@@ -15,7 +18,7 @@ const microsite = {
 }
 
 const tracks = {
-    targetConsentOn: {
+    target: {
         name: "micrositeCookieConsent.js T1",
         slug: "mcct-1",
         contents: [webContent.title],
@@ -25,17 +28,7 @@ const tracks = {
         flowCTA: "Shared Resource Email Only",
         cookieConsent: "on"
     },
-    targetConsentOff: {
-        name: "micrositeCookieConsent.js T2",
-        slug: "mcct-2",
-        contents: [webContent.title],
-        get url(){ return `${microsite.url}/${this.slug}` },
-        get firstContentUrl(){ return `${this.url}/${webContent.slug}` },
-        flow: "on",
-        flowCTA: "Shared Resource Email Only",
-        cookieConsent: "off"
-    },
-    recommendMessageOn: {
+    recommend: {
         name: "micrositeCookieConsent.js R1",
         slug: "mccr-1",
         contents: [webContent.title],
@@ -44,7 +37,44 @@ const tracks = {
         sidebar: "on",
         sidebarOptions: { cta: "Shared Resource Email Only" },
         cookieMessage: "on"
+    },
+    targetwithform: {
+        name: "micrositetargetform.js",
+        slug: "micrositetargetform-js",
+        contents: [webContent.title],
+        get url(){ return `${microsite.url}/${this.slug}` },
+        get firstContentUrl(){ return `${this.url}/${webContent.slug}` },
+        flow: "on",
+        formsStrategy: "on",
+        formsStrategyOptions: {
+            trackRule: {
+                form: "Shared Resource Email Only",
+                timeOnTrack: '0',
+                showToUnknown: "on",
+                showToKnown: "off",
+                dismissable: "on"
+            }
+        }
     }
+}
+
+const cookieConsentConfig1 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent not required"
+}
+
+const cookieConsentConfig2 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent managed by PathFactory for all visitors",
+    noConsentOrDecline: "Collect data anonymously with 30-minute cookie",
+    consentDefault: "Enabled automatically for all products"
+}
+
+const cookieConsentConfig3 = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent managed by PathFactory for all visitors",
+    noConsentOrDecline: "Do not collect data",
+    consentDefault: "Enabled automatically for all products"
 }
 
 describe("Microsite - Cookie Consent", () => {
@@ -53,112 +83,304 @@ describe("Microsite - Cookie Consent", () => {
             if(response.status == 404){ 
                 authoring.common.login()
 
-                authoring.recommend.addTrack(tracks.recommendMessageOn)
-                authoring.recommend.configure(tracks.recommendMessageOn)
-                authoring.target.addTrack(tracks.targetConsentOff)
-                authoring.target.configure(tracks.targetConsentOff)
-                authoring.target.addTrack(tracks.targetConsentOn)
-                authoring.target.configure(tracks.targetConsentOn)
-
+                authoring.recommend.addTrack(tracks.recommend)
+                authoring.recommend.configure(tracks.recommend)
+                authoring.target.addTrack(tracks.target)
+                authoring.target.configure(tracks.target)
+                authoring.target.addTrack(tracks.targetwithform)
+                authoring.target.configure(tracks.targetwithform)
+            
                 authoring.microsites.addMicrosite(microsite)
                 authoring.microsites.setup(microsite)
                 authoring.microsites.addTracks({
-                    recommend: tracks.recommendMessageOn.name, 
-                    target: [tracks.targetConsentOn.name, tracks.targetConsentOff.name]
+                    recommend: tracks.recommend.name, 
+                    target: [tracks.target.name, tracks.targetwithform.name]
                 })
             }
         })
     })
 
-    it("Microsite cookie consent on - all tracks should have cookie consent enabled regardless of track settings", () => {
+    it("Microsite cookie consent - Cookie consent Not required at org level and validate pf_consent and VID cookies", () => {       
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
+
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.setup({
-            name: microsite.name,
-            cookieConsent: true
+            name: microsite.name
         })
 
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('not.have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+       
+         // Visit landing page
+         cy.visit(microsite.url)
+         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+         consumption.microsites.checkPf_consentCookie(5000)
+         consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+       
+        cy.visit(tracks.recommend.firstContentUrl)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+
+        cy.visit(tracks.target.firstContentUrl)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+    })
+
+    it("Microsite cookie consent- Collect Data - Accept cookie and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.setup({
+            name: microsite.name
+        })
+
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+        
         // Visit landing page
         cy.visit(microsite.url)
         consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
 
         // Visit target track with cookie consent on 
-        cy.visit(tracks.targetConsentOn.firstContentUrl)
+        cy.visit(tracks.target.firstContentUrl)
         consumption.microsites.check30MinCookie(5000)
-        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
-
-        // Visit target track with cookie consent off 
-        cy.visit(tracks.targetConsentOff.firstContentUrl)
-        consumption.microsites.check30MinCookie(5000)
-        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+        cy.get(consumption.target.cookieConsent.messageBox).should("exist")
 
         // Visit recommend track with cookie message on 
-        cy.visit(tracks.recommendMessageOn.firstContentUrl)
+        cy.visit(tracks.recommend.firstContentUrl)
         consumption.microsites.check30MinCookie(5000)
-        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist") 
-        cy.get(consumption.microsites.cookieConsent.ok).should("not.exist") // the cookie message "ok" button should be overriden 
+        cy.get(consumption.microsites.cookieConsent.messageBox, { timeout: 20000 }).should("exist") 
 
         // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
         cy.get(consumption.microsites.cookieConsent.accept).click({force: true})
-        consumption.microsites.checkPersistentCookie(5000)
-       
-        cy.visit(microsite.url)
-        consumption.microsites.checkPersistentCookie(5000)
-        
-        cy.visit(tracks.targetConsentOff.firstContentUrl)
-        consumption.microsites.checkPersistentCookie(5000)
-       
-        
-        // Toggle cookie consent off on a track - should set cookie consent to false for all tracks/landing pages 
-        consumption.microsites.toggleCookieConsent("off")
-        consumption.microsites.check30MinCookie(5000)
-       
-        cy.visit(tracks.recommendMessageOn.firstContentUrl)
-        consumption.microsites.check30MinCookie(5000)
-        cy.visit(microsite.url)
-        consumption.microsites.check30MinCookie(5000)
-      
-        // Accept cookie consent on microsite landing page - should be accepted on all tracks/landing pages 
-        consumption.microsites.toggleCookieConsent("on")
-        consumption.microsites.checkPersistentCookie(5000)
-        cy.visit(tracks.targetConsentOn.firstContentUrl)
-        consumption.microsites.checkPersistentCookie(5000)
-        consumption.microsites.toggleCookieConsent("off")
-        consumption.microsites.check30MinCookie(5000)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
 
-        // Accept cookie consent via a standard form (CTA) - should set consent to accepted on all tracks/landing pages 
-        cy.get(consumption.target.flowHeader).within(() => {
-            cy.get(consumption.target.ctaButton).click()
-        })
-        consumption.microsites.fillStandardForm({email: "salarian.scientist@gmail.com", cookieConsent: true})
-        consumption.microsites.checkPersistentCookie(5000)
         cy.visit(microsite.url)
-        consumption.microsites.checkPersistentCookie(5000)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+        
+        cy.visit(tracks.target.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+
+        cy.visit(tracks.recommend.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
     })
 
-    it("Microsite cookie consent off - should turn off cookie consent for all tracks and landing pages", () => {
+    it("Microsite cookie consent- Collect Data - Decline cookie and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
         authoring.common.login()
         authoring.microsites.visit()
         authoring.microsites.setup({
-            name: microsite.name,
-            cookieConsent: false
+            name: microsite.name
         })
 
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+
+        //Decline cookie consent - should be declined on all other tracks, as well as microsite landing pages
         cy.visit(microsite.url)
-        consumption.microsites.checkPersistentCookie(5000)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+        cy.get(consumption.microsites.cookieConsent.decline).click({force: true})
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
 
-        cy.visit(tracks.targetConsentOn.firstContentUrl)
-        consumption.microsites.checkPersistentCookie(5000)
+        cy.visit(tracks.target.firstContentUrl)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
 
-        cy.visit(tracks.targetConsentOff.firstContentUrl)
-        consumption.microsites.checkPersistentCookie(5000)
+        cy.visit(tracks.recommend.firstContentUrl)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+    })
 
-        cy.visit(tracks.recommendMessageOn.firstContentUrl)
-        consumption.microsites.checkPersistentCookie(5000)
-        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist") 
+    it("Microsite cookie consent- Do not Collect Data - Accept cookie and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig3)
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.setup({
+            name: microsite.name
+        })
+
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+        
+        // Visit landing page
+        cy.visit(microsite.url)
+        consumption.microsites.checkVidValueAndExpiry(5000)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+
+        // Visit target track with cookie consent on 
+        cy.visit(tracks.target.firstContentUrl)
+        consumption.microsites.checkVidValueAndExpiry(5000)
+        consumption.microsites.checkPf_consentCookie(5000)
+        cy.get(consumption.target.cookieConsent.messageBox).should("exist")
+
+        // Visit recommend track with cookie message on 
+        cy.visit(tracks.recommend.firstContentUrl)
+        consumption.microsites.checkVidValueAndExpiry(5000)
+        consumption.microsites.checkPf_consentCookie(5000)
+        cy.get(consumption.microsites.cookieConsent.messageBox, { timeout: 20000 }).should("exist") 
+
+        // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
+        cy.get(consumption.microsites.cookieConsent.accept).click({force: true})
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig3.visitorCookieLifeTime)
+
+        cy.visit(microsite.url)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig3.visitorCookieLifeTime)
+        
+        cy.visit(tracks.target.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig3.visitorCookieLifeTime)
+
+        cy.visit(tracks.recommend.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig3.visitorCookieLifeTime)
+    })
+
+    it("Microsite cookie consent- Do not Collect Data - Decline cookie and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.setup({
+            name: microsite.name
+        })
+
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+
+        //Decline cookie consent - should be declined on all other tracks, as well as microsite landing pages
+        cy.visit(microsite.url)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+        cy.get(consumption.microsites.cookieConsent.decline).click({force: true})
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+
+        cy.visit(tracks.target.firstContentUrl)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+
+        cy.visit(tracks.recommend.firstContentUrl)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+    })
+
+    it("Microsite cookie consent- Collect Data - Accept cookie on form and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.setup({
+            name: microsite.name
+        })
+
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+        
+        // Visit landing page
+        cy.visit(microsite.url)
+        consumption.microsites.check30MinCookie(5000)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+
+        // Visit target track with cookie consent on 
+        cy.visit(tracks.targetwithform.firstContentUrl)
+        consumption.microsites.check30MinCookie(5000)
+        cy.get(consumption.target.cookieConsent.messageBox).should("exist")
+
+        // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
+        cy.wait(3000)
+        cy.get(consumption.common.standardForm.cookieConsentCheckbox).click()
+        cy.get('#emailInput').type(email +"\n")
+        
+        cy.get(consumption.microsites.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+
+        cy.visit(microsite.url)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+        
+        cy.visit(tracks.target.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+
+        cy.visit(tracks.recommend.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentAccept)
+        consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
+    })
+
+    it("Microsite cookie consent- Collect Data - Decline cookie on form and validate pf_consent and VID cookies", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+
+        authoring.common.login()
+        authoring.microsites.visit()
+        authoring.microsites.setup({
+            name: microsite.name
+        })
+
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','checked')
+        cy.get(authoring.microsites.setupPage.cookieConsentCheckbox).should('have.attr','disabled')
+        
+        // Visit landing page
+        cy.visit(microsite.url)
+        consumption.microsites.check30MinCookie(5000)
+        cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+
+        // Visit target track with cookie consent on 
+        cy.visit(tracks.targetwithform.firstContentUrl)
+        consumption.microsites.check30MinCookie(5000)
+        cy.get(consumption.target.cookieConsent.messageBox).should("exist")
+
+        // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
+        cy.wait(3000)
+        cy.get('#emailInput').type(email +"\n")
+        
+        cy.get(consumption.microsites.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+
+        cy.visit(microsite.url)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+        
+        cy.visit(tracks.target.firstContentUrl)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
+
+        cy.visit(tracks.recommend.firstContentUrl)
+       consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
+        consumption.microsites.check30MinCookie(5000)
     })
 })

@@ -9,5 +9,6 @@
     "retries": {
         "runMode": 2
     },
-    "numTestsKeptInMemory": 0
+    "numTestsKeptInMemory": 0,
+    "experimentalSessionAndOrigin":true
 }
