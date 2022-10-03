@@ -196,7 +196,7 @@ export class Vex extends Common {
             addSessionGroupButton: "button:contains('Session Group')",
             tableRow: ".ant-table-row",
             editorMenu: "div[class^='BlockMenu']",
-            menuBlock: "div[class^='BlockAction']:visible",
+            menuBlock: "div[class^='BlockAction']",
             editMenu: "div[class^='BlockMenuWrapper']",
             hideSessionToggle: "[name*='hideSession']",
             classNameInput: "input[name*='className']",

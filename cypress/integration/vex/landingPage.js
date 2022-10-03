@@ -489,27 +489,27 @@ describe("VEX - Landing Page Editor", () => {
         cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
         authoring.vex.addAdvancedBlock(testLandingPage.blocks[9])
         cy.contains(authoring.vex.eventSessions, testLandingPage.blocks[9].sessionGroup).within(() => {
-        //cy.get(authoring.vex.sessionCardTitle).should("have.length", 1)
-        //blockContainer
-        cy.get(authoring.vex.blockContainer).eq(0).click()
-        cy.contains(authoring.vex.sessionCardTitle, demand_session.name).should('exist')
-        cy.get(authoring.vex.eventSessionsBlockName,'Demand Sessions').click()
-        cy.pause()
-       // cy.get(consumption.vex.sessionCardTitle, demand_session.name).scrollIntoView()
-       // cy.get(consumption.vex.sessionCardTitle, demand_session.name).trigger('mouseover').click({ force: true })
-        cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
-        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
-        cy.pause()
-        cy.contains('button', 'Confirm').click();
-        cy.log("demand session is added with toggle enabled")
+            //cy.get(authoring.vex.sessionCardTitle).should("have.length", 1)
+            //blockContainer
+            cy.get(authoring.vex.blockContainer).eq(0).click()
+            cy.contains(authoring.vex.sessionCardTitle, demand_session.name).should('exist')
+            cy.get(authoring.vex.eventSessionsBlockName, 'Demand Sessions').click()
+            cy.pause()
+            // cy.get(consumption.vex.sessionCardTitle, demand_session.name).scrollIntoView()
+            // cy.get(consumption.vex.sessionCardTitle, demand_session.name).trigger('mouseover').click({ force: true })
+            cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
+            cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+            cy.pause()
+            cy.contains('button', 'Confirm').click();
+            cy.log("demand session is added with toggle enabled")
 
         })
-       // *********************
+        // *********************
 
         //sessionGroup --demand sessions
         cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
         authoring.vex.addAdvancedBlock(testLandingPage.blocks[9]) //Adding a new block(All Sessions)to verify the configurations
-        cy.get(authoring.vex.eventSessions).should('contain','ondemand session').eq(1).click({ force: true })
+        cy.get(authoring.vex.eventSessions).should('contain', 'ondemand session').eq(1).click({ force: true })
         cy.pause()
         cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
         cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
@@ -530,10 +530,10 @@ describe("VEX - Landing Page Editor", () => {
         // Verify landing page is home page on consumption
         cy.window().then(win => win.location.href = event1.url);
         cy.reload()
-    
+
         //This is pageTitle
-         cy.title().should('eq', testLandingPage.pageTitle)
-    
+        cy.title().should('eq', testLandingPage.pageTitle)
+
         cy.contains("[class*='pf-event-session-card-title']", 'No sessions').should('not.exist')
         //This is pageTitle
         cy.contains(consumption.vex.sesessionCardTitle, demand_session.name, { timeout: 25000 }).should('exist')
@@ -545,9 +545,9 @@ describe("VEX - Landing Page Editor", () => {
         authoring.vex.goToPageEditor(testLandingPage.name)
         cy.wait(10000)
 
-        var sessions=["live session","ondemand session"]
-        sessions.forEach(session=>{
-            cy.contains("div[class*='pf-event-session-card-title']",session,{timeout:20000}).click({force:true})
+        var sessions = ["live session", "ondemand session"]
+        sessions.forEach(session => {
+            cy.contains("div[class*='pf-event-session-card-title']", session, { timeout: 20000 }).click({ force: true })
             cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
             cy.get(authoring.vex.pages.hideSessionToggle).click()
             cy.pause()
@@ -562,17 +562,17 @@ describe("VEX - Landing Page Editor", () => {
         // cy.pause()
         // cy.get(authoring.vex.pages.hideSessionToggle).click()
         // cy.pause()
-        
+
         // })
-        
-        
-            cy.contains('button', 'Save').click();
+
+
+        cy.contains('button', 'Save').click();
 
 
 
 
 
-//sessionGroup --live sessions *********************
+        //sessionGroup --live sessions *********************
         // //cy.get(authoring.vex.eventSessions).eq(1).click({ force: true }),,{timeout: 30000}
         // cy.get(authoring.vex.eventSessionsBlockName).eq(0).should('contain','Live Sessions').click({ force: true })
         // cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
@@ -607,14 +607,14 @@ describe("VEX - Landing Page Editor", () => {
         cy.reload()
         //This is pageTitle
         cy.title().should('eq', testLandingPage.pageTitle)
-        cy.contains("[class*='pf-event-sessions']", 'No Sessions').should('exist')        
+        cy.contains("[class*='pf-event-sessions']", 'No Sessions').should('exist')
         cy.contains(consumption.vex.sesessionCardTitle, demand_session.name, { timeout: 25000 }).should('exist')
         cy.contains(consumption.vex.sesessionCardTitle, live_session.name).should('exist')
 
-        
+
 
     })
-    it('visiting modal page',()=>{
+    it('visiting modal page', () => {
         cy.visit('https://automation-vex.qa-pathfactory.com/authoring/content-library/landing-pages/27796/vex')
         cy.get("#login-data").type("cy-admin")
         cy.get("#password").type("Cypress1234")
@@ -632,16 +632,16 @@ describe("VEX - Landing Page Editor", () => {
 
         authoring.vex.addAdvancedBlock(testLandingPage.blocks[9])
         cy.contains(consumption.vex.sessionGroup, testLandingPage.blocks[9].sessionGroup).within(() => {
-        cy.get(consumption.vex.sessionCardTitle).should("have.length", 1)
-        cy.contains(consumption.vex.sessionCardTitle, demand_session.name).should('exist')   
-        cy.pause()
-        cy.get(consumption.vex.sessionCardTitle, demand_session.name).scrollIntoView()
-        cy.get(consumption.vex.sessionCardTitle, demand_session.name).trigger('mouseover').click({ force: true })
-        cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
-        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
-        cy.pause()
-        cy.contains('button', 'Confirm').click();
-        cy.log("demand session is added with toggle enabled")
+            cy.get(consumption.vex.sessionCardTitle).should("have.length", 1)
+            cy.contains(consumption.vex.sessionCardTitle, demand_session.name).should('exist')
+            cy.pause()
+            cy.get(consumption.vex.sessionCardTitle, demand_session.name).scrollIntoView()
+            cy.get(consumption.vex.sessionCardTitle, demand_session.name).trigger('mouseover').click({ force: true })
+            cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
+            cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+            cy.pause()
+            cy.contains('button', 'Confirm').click();
+            cy.log("demand session is added with toggle enabled")
 
         })
 
@@ -660,59 +660,103 @@ describe("VEX - Landing Page Editor", () => {
         authoring.vex.addSession(demand_session.name, 'On Demand')
         authoring.vex.configureSession(demand_session)
         authoring.vex.backToEvent(event1.name)
-    
+
         //creating on live session
         authoring.vex.addSession(live_session.name, 'On Demand')
         authoring.vex.configureSession(live_session)
         authoring.vex.backToEvent(event1.name)
-    
+
         // Add, edit landing pages 
         authoring.vex.addLandingPages(testLandingPage.name)
         //authoring.vex.goToLandingPage()
         authoring.vex.setToHomePage(testLandingPage.name)
-    
+
         //creating sessions groups
         authoring.vex.addSessionGroup('No Sessions')
         authoring.vex.addSessionGroup('Demand Sessions')
         authoring.vex.addToGroup(sessionGroupA)
         authoring.vex.addSessionGroup('Live Sessions')
         authoring.vex.addToGroup(sessionGroupB)
-    
+
         //verify that go to landing page and modify the page
         authoring.vex.editLandingPage(testLandingPage)
         authoring.vex.setToHomePage(testLandingPage.name)
         authoring.vex.goToPageEditor(testLandingPage.name)
         cy.wait(4000)
-    
+
         //sessionGroup --no sessions
         authoring.vex.addAdvancedBlock(testLandingPage.blocks[8]) //Adding a new block(All Sessions)to verify the configurations
         cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
         cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
         cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
-        //cy.pause()
         cy.contains('button', 'Confirm').click();
-    
-    
+
+
         //*********************
         // Validate if all sessions from the events are shown in a block when the option is selected in the preview(Excluding Private session)
         cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
         authoring.vex.addAdvancedBlock(testLandingPage.blocks[9])
         cy.contains(authoring.vex.eventSessions, testLandingPage.blocks[9].sessionGroup).within(() => {
-        //cy.get(authoring.vex.sessionCardTitle).should("have.length", 1)
-        //blockContainer
-        cy.get(authoring.vex.blockContainer).eq(1).click()
-        cy.contains(authoring.vex.sessionCardTitle, demand_session.name).should('exist')
-        cy.get(authoring.vex.eventSessionsBlockName,'Demand Sessions').click()
-        cy.pause()
-       // cy.get(consumption.vex.sessionCardTitle, demand_session.name).scrollIntoView()
-       // cy.get(consumption.vex.sessionCardTitle, demand_session.name).trigger('mouseover').click({ force: true })
-        cy.get(authoring.vex.pages.menuBlock).eq(3).click({ force: true })
+            cy.get("div[class*='pf-event-session-card']").eq(0).click({ force: true })
+            cy.wait(1000)
+        })
+        cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
         cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
-        cy.pause()
         cy.contains('button', 'Confirm').click();
         cy.log("demand session is added with toggle enabled")
+
+        cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
+        authoring.vex.addAdvancedBlock(testLandingPage.blocks[10])
+        cy.contains(authoring.vex.eventSessions, testLandingPage.blocks[10].sessionGroup).within(() => {
+            cy.get("div[class*='pf-event-session-card']").eq(0).click({ force: true })
+            cy.wait(1000)
         })
+        cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
+        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+        cy.contains('button', 'Confirm').click();
+        cy.log("live session is added with toggle enabled")
+
+        cy.contains("button", "Save").click()
+        cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
+
+        cy.visit(event1.url)
+
+        cy.go("back")
+        cy.wait(4000)
+
+        cy.contains("div[data-react-beautiful-dnd-draggable='0']", testLandingPage.blocks[10].sessionGroup,{timeout:20000}).within(() => {
+            cy.get("div[class*='pf-event-session-card']").eq(0).click({ force: true })
+            cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
+            cy.wait(3000)
         })
+        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+        cy.wait(2000)
+        cy.contains('button', 'Confirm').click();
+        cy.log("live session is added with toggle disabled")
+
+        cy.pause()
+        cy.contains("div[data-react-beautiful-dnd-draggable='0']", testLandingPage.blocks[9].sessionGroup).within(() => {
+            cy.get("div[class*='pf-event-session-card']").eq(0).click({ force: true })
+            cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
+        })
+        cy.wait(2000)
+        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+        cy.wait(1000)
+        cy.pause()
+        cy.contains('button', 'Confirm').click();
+        cy.log("demand session is added with toggle disabled")
+
+        cy.contains("div[data-react-beautiful-dnd-draggable='0']", testLandingPage.blocks[8].sessionGroup).within(() => {
+            cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
+        })
+        cy.wait(2000)
+        cy.get(authoring.vex.pages.hideSessionToggle).dblclick()
+        cy.wait(1000)
+        cy.pause()
+        cy.contains('button', 'Confirm').click();
+        cy.log("No session is added with toggle disabled")
+        cy.pause()
+    })
 
 })
 
