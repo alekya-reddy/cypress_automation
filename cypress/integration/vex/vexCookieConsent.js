@@ -39,6 +39,15 @@ const event2 = {
     }
 }
 
+const event3 = {
+    name: 'vexCookieConsent3.js',
+    slug: 'vexcookieconsent3-js',
+    form: standardForm,
+    get url() {
+        return `${authoring.common.baseUrl}/${this.slug}`
+    }
+}
+
 const sessions = [{
     name: "live content current",
     slug: "live-content-current",
@@ -63,6 +72,42 @@ const sessions = [{
         return `${event.url}/${this.slug}`
     },
     description: "on demand description",
+    visibility: 'Public',
+    type: 'On Demand',
+    video: 'Youtube - Used in Cypress automation for VEX testing',
+    contents: [
+        'Website - Used by Cypress automation for VEX testing'
+    ]
+}
+]
+
+const sessionsWithForm = [{
+    name: "live content current",
+    slug: "live-content-current",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    visibility: 'Public',
+    type: 'Live',
+    form: standardForm.name,
+    formVisibility: "Always",
+    live: {
+        start: 'Jun 24, 2020 8:00pm',
+        end: 'Jun 24, 2041 8:00pm',
+        timeZone: '(GMT-05:00) Eastern Time (US & Canada)',
+        type: 'Content Library',
+        video: 'Youtube - Used in Cypress automation for VEX testing'
+    }
+},
+{
+    name: "On-Demand",
+    cloneName: "Clone of On-Demand",
+    slug: "on-demand",
+    get url() {
+        return `${event.url}/${this.slug}`
+    },
+    description: "on demand description",
+    form: standardForm.name,
     visibility: 'Public',
     type: 'On Demand',
     video: 'Youtube - Used in Cypress automation for VEX testing',
@@ -109,7 +154,7 @@ const cookieConsentConfig3 = {
 
 describe("VEX - Cookie Consent", () => {
 
-    it("Set up event if not already done", () => {
+    it.only("Set up event if not already done", () => {
         cy.request({ url: event.url, failOnStatusCode: false }).then((response) => {
             if (response.status == 404) {
                 authoring.common.login()
@@ -133,6 +178,22 @@ describe("VEX - Cookie Consent", () => {
                 authoring.vex.addVirtualEvent(event2)
                 authoring.vex.configureEvent(event2)
                 sessions.forEach(session => {
+                    authoring.vex.addSession(session.name)
+                    authoring.vex.configureSession(session)
+                    cy.go('back')
+                })
+                authoring.vex.addLandingPages(landingPage.name)
+                authoring.vex.configureLandingPage(landingPage)
+            }
+        })
+
+        cy.request({ url: event3.url, failOnStatusCode: false }).then((response) => {
+            if (response.status == 404) {
+                authoring.common.login()
+                authoring.vex.visit()
+                authoring.vex.addVirtualEvent(event3)
+                authoring.vex.configureEvent(event3)
+                sessionsWithForm.forEach(session => {
                     authoring.vex.addSession(session.name)
                     authoring.vex.configureSession(session)
                     cy.go('back')
@@ -229,24 +290,26 @@ describe("VEX - Cookie Consent", () => {
 
         authoring.common.login()
         authoring.vex.visit()
-        authoring.vex.goToEventConfig(event2.name)
+        authoring.vex.goToEventConfig(event3.name)
 
         cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should('have.attr','checked')
         cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr','disabled')
 
-        cy.window().then(win => win.location.href = event2.url);
+        cy.window().then(win => win.location.href = event3.url);
         cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')   
         cy.get(consumption.vex.cookieConsent.accept).should('exist').click()
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('exist').click()   
         
         cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
         cy.contains("button", "Submit").click()
 
-        cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        cy.get(consumption.vex.cookieConsent.messageBox,{timeout:20000}).should("not.exist")
+        consumption.vex.expectYoutube()
         consumption.vex.checkPf_consentCookie(5000,pf_consentAccept)
         consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
         cy.get(consumption.vex.header.cookieSettings).should('exist')
+        cy.go('back')
     })
 
     it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
