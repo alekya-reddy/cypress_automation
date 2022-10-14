@@ -256,7 +256,7 @@ export class Configurations extends Common {
             code: "#code",
             explore: {
                 featuredLabelInput: "#featuredLabel",
-                searchInput: "#searchButtonTitle",
+                searchInput: "input[name='searchButtonTitle']",
                 searchPlaceholderInput: "#searchInputFieldPlaceholder",
                 contentTypeInput: "#filterByContentTypeTitle",
                 funnelStageInput: "#filterByFunnelStageTitle",

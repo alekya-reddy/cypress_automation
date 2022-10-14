@@ -34,14 +34,14 @@ describe("Redirect should appear as a new tab within organization settings", () 
         cy.get(authoring.common.pageTitleBar).contains('Redirect Rules').should("exist")
         //verify edit functionality
         cy.contains(authoring.settings.redirectCells,incomingPath).within(()=>{
-            cy.contains('span', "Edit").should("exist").click()          
+            cy.contains('a', "Edit").should("exist").click()          
         })
 
         cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPathEdited + "\n")
         cy.contains('button', "Submit").click()
-
         cy.contains(authoring.settings.redirectCells, incomingPathEdited, {timeout: 2000}).within(()=>{
-            cy.contains('span', "Edit").should("exist").click()          
+            cy.wait(2000)
+            cy.contains('a', "Edit").should("exist").click()          
         })
 
         cy.get(authoring.settings.incomingPath, {timeout: 2000}).clear().type(incomingPath + "\n")

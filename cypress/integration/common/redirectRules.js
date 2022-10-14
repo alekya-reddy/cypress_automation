@@ -182,7 +182,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
         cy.ifElementWithExactTextExists("button", "Change", 1000, () => {
             cy.contains("button", "Change").click()
         })
-
+       
         cy.request({ url: target.url + "/openai", failOnStatusCode: false }).then((response) => {
             expect(response.status).to.equal(404)
         })
@@ -197,6 +197,7 @@ describe("Redirect should appear as a new tab within organization settings", () 
         cy.contains('button', "Submit").click()
 
         cy.visit(target.url + "/openai")
+        cy.wait(2000)
         cy.url().should('contain', target.redirectPath)
         cy.contains('span', "Website Common Resource").should("exist")
 
