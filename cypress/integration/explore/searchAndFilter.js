@@ -91,7 +91,7 @@ describe("Search and Filters validation - explore page", () => {
          //Validate HTML Encode
          cy.visit(targetExplore.url +`?topic=${htmlEncodeValue}`)
          cy.url().should('include', `topic=cloud%26computing`)
-         cy.contains('span',"Filter By Topic: Cloud & Computing").should('exist')
+         cy.contains('span',"Filter By Topic: cloud&computing").should('exist')
     })
 
 })

@@ -54,8 +54,7 @@ describe("Explore - Change Public Title", () => {
         cy.contains('button', 'Update').click()
 
         cy.visit(explore.url)
-        //cy.title().should('eq', explore.heroTitle)
-        cy.title().should('eq', explore.name)
+        cy.title().should('eq', explore.name, {timeout:10000})
 
     })
 })

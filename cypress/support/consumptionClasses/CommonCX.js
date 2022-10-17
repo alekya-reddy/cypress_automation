@@ -12,6 +12,7 @@ export class CommonCX {
         this.ciscoNextButton = "#login-button";
         this.ciscoLogIn = "input[type='submit']";
         this.accessProtectionLogo = "div[class='background-image']";
+        this.accessProtectionLogoUrl = "div[class='logo-container']>img";
         this.accessProtectionHeaderText = "[class*='title-container']";
         this.accessProtectionBodyText = ".body-text-data";
         this.accessProtectionSubmitButton = "input[type='submit']";
