@@ -141,7 +141,7 @@ export class Target extends Common {
             }
             if (parentFolder) {
                 cy.get(this.editTarget.dropdownSelect).eq(0).click()
-                cy.get(this.editTarget.dropdownSelectField).eq(0).type(parentFolder + "\n")
+                cy.get(this.editTarget.dropdownSelectField).eq(0).type(parentFolder + "\n",{force:true})
             }
             if (labels) {
                 cy.get(this.editTarget.dropdownSelect).eq(1).click()

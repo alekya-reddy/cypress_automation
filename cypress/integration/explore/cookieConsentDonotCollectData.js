@@ -112,6 +112,11 @@ const cookieConsentConfig1 = {
     consentDefault: "Enabled automatically for all products"
 }
 
+const cookieConsentConfig = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent not required"
+}
+
 describe("Explore - Cookie consent Scenarios - Strict mode", () => {
     it("Target explore - Configure Cookie consent settings using cookieConsentConfig1 object defined above and accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
         authoring.common.login()
@@ -375,4 +380,9 @@ describe("Explore - Cookie consent Scenarios - Strict mode", () => {
         consumption.explore.checkVidValueAndExpiry(5000);
     })
 
+    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig)
+    })
 })

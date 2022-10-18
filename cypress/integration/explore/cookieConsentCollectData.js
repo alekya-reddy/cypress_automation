@@ -112,6 +112,11 @@ const cookieConsentConfig1 = {
     consentDefault: "Enabled automatically for all products"
 }
 
+const cookieConsentConfig = {
+    visitorCookieLifeTime: 10,
+    consentConfiguration: "Cookie Consent not required"
+}
+
 describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
 
     it("Target explore - Configure Cookie consent settings using cookieConsentConfig1 object defined above and accept the cookie, Validate the VID , pf_consent and Analytics values", () => {
@@ -144,6 +149,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
             cy.closeSession()
             authoring.target.validateAnalyticsData(visitor)
         })
+        cy.go('back')
+        cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
     })
 
     it("Target explore - Configure Cookie consent settings using cookieConsentConfig1 object defined above and Decline the cookie, Validate the VID , pf_consent and Analytics values", () => {
@@ -172,6 +179,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.decline, { timeout: 20000 }).should('exist').click()
         consumption.explore.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.explore.check30MinCookie(5000).then(visitor => {
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
@@ -209,6 +218,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.explore.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.explore.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(visitor => {
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
@@ -244,6 +255,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.explore.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.explore.check30MinCookie(5000).then(visitor => {
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
@@ -276,6 +289,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.accept, { timeout: 20000 }).should('exist').click()
         consumption.explore.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.explore.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(visitor => {
+            cy.go('back')
+        cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
@@ -309,6 +324,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.decline, { timeout: 20000 }).should('exist').click()
         consumption.explore.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.explore.check30MinCookie(5000).then(visitor => {
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
@@ -347,6 +364,8 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         consumption.explore.checkPf_consentCookie(5000, pf_consentAccept)
         consumption.explore.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(visitor => {
             cy.wait(3000)
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             authoring.common.login()
             cy.closeSession()
             authoring.recommend.validateAnalyticsData(visitor, email)
@@ -381,11 +400,19 @@ describe("Explore - Cookie consent Scenarios - Non Strict mode", () => {
         cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
         consumption.explore.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.explore.check30MinCookie(5000).then(visitor => {
+            cy.go('back')
+            cy.get(consumption.explore.cookieConsent.messageBox, { timeout: 20000 }).should('not.exist')
             cy.wait(3000)
             authoring.common.login()
             cy.closeSession()
             authoring.recommend.validateAnalyticsData(visitor)
         })
+    })
+
+    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig)
     })
 
 })

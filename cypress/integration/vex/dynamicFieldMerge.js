@@ -330,7 +330,7 @@ describe("VEX - Dynamic Field Merge", () => {
         cy.clearCookies()
         cy.visit(event.url)
         cy.wait(5000)
-        cy.contains(consumption.vex.eventHeroTitle, "Header Title - Tech Mahindra", { timeout: 20000 }).should('exist')
+        cy.contains(consumption.vex.eventHeroTitle, "Header Title - ", { timeout: 20000 }).should('exist')
     })
 
     it("Verify session status showing in dynamic field merge", () => {

@@ -7,6 +7,7 @@ const contents = authoring.common.env.orgs["automation-microsites"].resources
 const webContent = contents["Website Common Resource"]
 const pf_consentDecline = "0.1800.0.0"
 const pf_consentAccept = "1.864000.1.1"
+const pf_consentDecline_strictMode = "0.-86400.0.0"
 const email = `test${Math.floor((Math.random() * 1000000000) + 1)}@pf.com`
 
 const microsite = {
@@ -263,7 +264,7 @@ describe("Microsite - Cookie Consent", () => {
     it("Microsite cookie consent- Do not Collect Data - Decline cookie and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
-        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig3)
 
         authoring.common.login()
         authoring.microsites.visit()
@@ -277,20 +278,21 @@ describe("Microsite - Cookie Consent", () => {
         //Decline cookie consent - should be declined on all other tracks, as well as microsite landing pages
         cy.visit(microsite.url)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("exist")
+        consumption.microsites.checkVidValueAndExpiry(5000)
         cy.get(consumption.microsites.cookieConsent.decline).click({force: true})
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
-        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
-        consumption.microsites.check30MinCookie(5000)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline_strictMode)
+        consumption.microsites.checkVidValueAndExpiry(5000)
 
         cy.visit(tracks.target.firstContentUrl)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
-        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
-        consumption.microsites.check30MinCookie(5000)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline_strictMode)
+        consumption.microsites.checkVidValueAndExpiry(5000)
 
         cy.visit(tracks.recommend.firstContentUrl)
         cy.get(consumption.microsites.cookieConsent.messageBox).should("not.exist")
-        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
-        consumption.microsites.check30MinCookie(5000)
+        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline_strictMode)
+        consumption.microsites.checkVidValueAndExpiry(5000)
     })
 
     it("Microsite cookie consent- Collect Data - Accept cookie on form and validate pf_consent and VID cookies", () => {
@@ -382,5 +384,11 @@ describe("Microsite - Cookie Consent", () => {
         cy.visit(tracks.recommend.firstContentUrl)
        consumption.microsites.checkPf_consentCookie(5000, pf_consentDecline)
         consumption.microsites.check30MinCookie(5000)
+    })
+
+    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+        authoring.common.login()
+        authoring.settings.navigateToCookieConsentSettings()
+        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
     })
 })
