@@ -92,7 +92,7 @@ describe('VEX - Virtual Event', function () {
         cy.reload()
         cy.get(authoring.vex.eventNameInput, { timeout: 15000 }).should('have.value', event.newName)
         cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
-        cy.get(authoring.vex.externalIDInput).should("have.value", event.externalID[0])
+        cy.get(authoring.vex.externalIDInput).eq(0).should("have.value", event.externalID[0])
 
         // Verify can add sessions to event 
         sessions.forEach((session) => {

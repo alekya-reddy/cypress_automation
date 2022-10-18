@@ -130,9 +130,24 @@ export class Settings extends Common {
     visitoceAccount() {
         cy.visit(this.oceAccount.pageUrl);
     }
+    deleteRedirectRule(name, verify){
+        cy.visit(this.redirectRules.pageUrl)
+        cy.wait(500)
+        cy.ifElementWithExactTextExists('td', name, 4000, () => {
+            cy.contains('tr', name).should("exist").within(() => { 
+                cy.contains('button', "Delete").click()
+            })
+            cy.contains(this.contentModal, "Are you sure you want to delete this?").contains("button", "Delete").click()
+        })
 
-    configureCookieConsent(config) {
-        let option = config.option
+        if(verify !== false){
+            cy.contains(this.pageTitleLocator, "Redirect Rules", {timeout: 20000}).should("exist")
+            cy.containsExact('td', name).should("not.exist")
+        }
+    }
+
+    configureCookieConsent(config){
+        let option = config.option 
 
         this.goToPage(this.cookieConsent.pageTitle, this.cookieConsent.pageUrl)
         cy.get(this.cookieConsent.consentConfigurationDD, { timeout: 20000 }).click()

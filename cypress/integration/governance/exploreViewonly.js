@@ -63,8 +63,8 @@ describe("View Only Permissions", () => {
         cy.get(authoring.explore.sitemapUrl).should("not.exist")
 
         cy.get(authoring.explore.emailIcon).should("not.exist")
-        cy.get(authoring.explore.shareExplore).should("not.exist")
-        cy.get(authoring.explore.previewExplore).should("not.exist")
+        cy.get(authoring.explore.shareExplore).should("exist")
+        cy.get(authoring.explore.previewExplore).should("exist")
         cy.get(authoring.explore.titleBar).contains("Analytics").should("exist")
         cy.get(authoring.explore.titleBar).contains("Analytics").click()
         cy.wait(3000)

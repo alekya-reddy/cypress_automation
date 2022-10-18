@@ -214,7 +214,7 @@ describe("Edit explore page", () => {
 
         //Verify in consumption that recommend asset should be visible with open in new tab and target asset should not be present
         cy.visit(recommendExplore.url)
-        recommend.contents(recommendContent => {
+        recommend.contents.forEach(recommendContent => {
             cy.contains(consumption.explore.body.card, recommendContent, { timeout: 10000 }).should("exist")
             cy.contains(consumption.explore.hero.assetTitle, recommendContent, { timeout: 10000 }).click()
             cy.get('#qa-explore-topic-list-grid-0-0').prev('a').invoke('attr', 'href').then(url => {

@@ -99,6 +99,7 @@ describe("Explore - language setting", () => {
         authoring.configurations.gotoLanguageTab("explore")
         cy.wait(1000)
         cy.get(authoring.configurations.languages.explore.searchInput).clear()
+        cy.wait(1000)
         cy.get(authoring.configurations.languages.explore.searchPlaceholderInput).clear()
         cy.get(authoring.configurations.languages.explore.contentTypeInput).clear()
         cy.get(authoring.configurations.languages.explore.funnelStageInput).clear()

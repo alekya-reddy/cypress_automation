@@ -58,7 +58,7 @@ export class Common {
         this.orgButton = 'div[data-qa-hook="modal"]>div:nth-child(2)>button:nth-child(2)';
         this.imperzonation = 'div[id="impersonation"]';
         this.orgDropdown = 'a[id="organization"]';
-        this.orgValue = 'div[class="Select-value"]';
+        this.orgValue = 'input[name="sharingDomainUrl"]';
         this.robotInput = 'textarea[class="ace_text-input"]';
         this.orgSave = 'button[id="save"]';
         this.editIconUserRoles = '.Select-value-icon';

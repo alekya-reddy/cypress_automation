@@ -94,6 +94,8 @@ const sessions = {
     }
 }
 
+const description = '{{session.page_title}} {{session.start_time}} {{session.end_time}} {{session.time_zone}}';
+
 const sessionExists = (options) => {
     const exists = options.yes
     const notExists = options.no
@@ -207,7 +209,6 @@ describe("VEX - Session searching, sorting and filters", ()=>{
         // Turn off all filters
         authoring.vex.filterSessionVisibility({public: false, private: false})
         authoring.vex.filterSessionType({onDemand: false, live: false})
-
         // Test sort by start date
         authoring.vex.toggleSortByDate("ascend")
         cy.viewport(2000, 1000) // Need to expland viewport or else the urls will get truncated in the DOM
@@ -225,4 +226,32 @@ describe("VEX - Session searching, sorting and filters", ()=>{
 
         // Not going to test the sort by created date - not very important 
     })
+
+    it("On demand session user can pass Page Title, Start Time, End time and Time Zone as field merge but on consumption side it will only show Page Title", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionConfig(sessions.publicOnDemand.name)
+        cy.get(authoring.vex.sessionDescription.editor).clear().type(description, { parseSpecialCharSequences: false })
+        cy.get(authoring.common.saveButton).click()
+
+        cy.visit(sessions.publicOnDemand.url)
+        cy.contains('div', sessions.publicOnDemand.name).should("exist")
+
+    })
+
+    it("Live session user can pass Page Title, Start Time, End time and Time Zone as field merge on consumption side, it will show the same", ()=>{
+        authoring.common.login()
+        authoring.vex.visit()
+        authoring.vex.goToEventConfig(event.name)
+        authoring.vex.goToSessionConfig(sessions.publicLive.name)
+        cy.get(authoring.vex.sessionDescription.editor).clear().type(description, { parseSpecialCharSequences: false })
+        cy.get(authoring.common.saveButton).click()
+
+        cy.visit(sessions.publicLive.url)
+        cy.contains('div', sessions.publicLive.name).should("exist")
+        cy.contains('p', "public live Jun 20, 2020 8:00pm EDT (GMT-04:00) Jun 24, 2041 8:00pm EDT (GMT-04:00) Eastern Time (US & Canada)").should("exist")
+
+    })
+
 })
