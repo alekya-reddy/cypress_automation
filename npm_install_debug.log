@@ -1,0 +1,66 @@
+npm verb cli [
+npm verb cli   '/usr/local/bin/node',
+npm verb cli   '/usr/local/bin/npm',
+npm verb cli   'install',
+npm verb cli   '--legacy-peer-deps',
+npm verb cli   '--loglevel',
+npm verb cli   'verbose'
+npm verb cli ]
+npm info using npm@8.5.0
+npm info using node@v16.14.2
+npm timing npm:load:whichnode Completed in 1ms
+npm timing config:load:defaults Completed in 0ms
+npm timing config:load:file:/usr/local/lib/node_modules/npm/npmrc Completed in 1ms
+npm timing config:load:builtin Completed in 1ms
+npm timing config:load:cli Completed in 0ms
+npm timing config:load:env Completed in 1ms
+npm timing config:load:file:/Users/teja/Documents/Teja/cypress_automation/tmpBstackPackages/.npmrc Completed in 0ms
+npm timing config:load:project Completed in 3ms
+npm timing config:load:file:/Users/teja/.npmrc Completed in 0ms
+npm timing config:load:user Completed in 0ms
+npm timing config:load:file:/usr/local/etc/npmrc Completed in 0ms
+npm timing config:load:global Completed in 0ms
+npm timing config:load:validate Completed in 0ms
+npm timing config:load:credentials Completed in 0ms
+npm timing config:load:setEnvs Completed in 0ms
+npm timing config:load Completed in 7ms
+npm timing npm:load:configload Completed in 7ms
+npm timing npm:load:setTitle Completed in 4ms
+npm timing config:load:flatten Completed in 1ms
+npm timing npm:load:display Completed in 3ms
+npm verb logfile /Users/teja/.npm/_logs/2022-08-26T14_50_36_173Z-debug-0.log
+npm timing npm:load:logFile Completed in 2ms
+npm timing npm:load:timers Completed in 0ms
+npm timing npm:load:configScope Completed in 0ms
+npm timing npm:load Completed in 17ms
+npm timing arborist:ctor Completed in 1ms
+npm timing arborist:ctor Completed in 0ms
+npm timing idealTree:init Completed in 4ms
+npm timing idealTree:userRequests Completed in 0ms
+npm timing idealTree:#root Completed in 0ms
+npm timing idealTree:buildDeps Completed in 1ms
+npm timing idealTree:fixDepFlags Completed in 0ms
+npm timing idealTree Completed in 5ms
+npm timing reify:loadTrees Completed in 6ms
+npm timing reify:diffTrees Completed in 0ms
+npm timing reify:retireShallow Completed in 0ms
+npm timing reify:createSparse Completed in 0ms
+npm timing reify:loadBundles Completed in 0ms
+npm timing reify:audit Completed in 0ms
+npm timing reify:unpack Completed in 0ms
+npm timing reify:unretire Completed in 0ms
+npm timing build:queue Completed in 0ms
+npm timing build:deps Completed in 1ms
+npm timing build Completed in 1ms
+npm timing reify:build Completed in 1ms
+npm timing reify:trash Completed in 0ms
+npm timing reify:save Completed in 1ms
+npm timing reify Completed in 11ms
+
+up to date, audited 1 package in 146ms
+
+found 0 vulnerabilities
+npm timing command:install Completed in 13ms
+npm verb exit 0
+npm timing npm Completed in 147ms
+npm info ok 
