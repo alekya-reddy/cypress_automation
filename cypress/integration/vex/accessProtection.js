@@ -422,7 +422,6 @@ describe("VEX - Access Protection", () => {
         })
         cy.visit(event.url)
         cy.window().then(win => win.location.href = vexsessions[1].url);
-        consumption.vex.enterEmailOrAcceptCookieIfExists()
         cy.get('h1', { timeout: 20000 }).contains('Log in to your account').should("exist")
         //4.Preview VEX , when Event has protection type="Cisco" and session has protection type="Email"//
         authoring.vex.visit()

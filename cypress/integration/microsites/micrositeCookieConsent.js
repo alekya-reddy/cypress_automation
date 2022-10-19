@@ -132,7 +132,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
     })
 
-    it("Microsite cookie consent- Collect Data - Accept cookie and validate pf_consent and VID cookies", () => {
+    it("Microsite cookie consent- Collect Data - Accept consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -179,7 +179,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig2.visitorCookieLifeTime)
     })
 
-    it("Microsite cookie consent- Collect Data - Decline cookie and validate pf_consent and VID cookies", () => {
+    it("Microsite cookie consent- Collect Data - Decline consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -212,7 +212,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.check30MinCookie(5000)
     })
 
-    it("Microsite cookie consent- Do not Collect Data - Accept cookie and validate pf_consent and VID cookies", () => {
+    it("Microsite cookie consent- Do not Collect Data - Accept consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig3)
@@ -261,7 +261,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.checkVidValueAndExpiry(5000, cookieConsentConfig3.visitorCookieLifeTime)
     })
 
-    it("Microsite cookie consent- Do not Collect Data - Decline cookie and validate pf_consent and VID cookies", () => {
+    it("Microsite cookie consent- Do not Collect Data - Decline consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig3)
@@ -319,7 +319,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.messageBox).should("exist")
 
-        // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
+        // Accept cookie consent on form - should be accepted on all other tracks, as well as microsite landing pages
         cy.wait(3000)
         cy.get(consumption.common.standardForm.cookieConsentCheckbox).click()
         cy.get('#emailInput').type(email +"\n")
@@ -365,7 +365,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.check30MinCookie(5000)
         cy.get(consumption.target.cookieConsent.messageBox).should("exist")
 
-        // Accept cookie consent on track - should be accepted on all other tracks, as well as microsite landing pages
+        // Decline cookie consent on form - should be declined on all other tracks, as well as microsite landing pages
         cy.wait(3000)
         cy.get('#emailInput').type(email +"\n")
         
@@ -386,7 +386,7 @@ describe("Microsite - Cookie Consent", () => {
         consumption.microsites.check30MinCookie(5000)
     })
 
-    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+    it("Afterhook: In case cookie consent left Enabled from last test scenario, turn it back off(Disabled) for the organization", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)

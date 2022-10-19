@@ -35,18 +35,7 @@ const session = {
 const moderator = session.rocketChat.moderators
 const notModerator = "tali.zorah@gmail.com"
 
-const cookieConsentConfig1 = {
-    visitorCookieLifeTime: 10,
-    consentConfiguration: "Cookie Consent not required"
-}
-
 describe("VEX - Dry run", () => {
-
-    before(function() {
-        authoring.common.login()
-        authoring.settings.navigateToCookieConsentSettings()
-        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
-    })
     
     it("Set up if not already done", () => {
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{

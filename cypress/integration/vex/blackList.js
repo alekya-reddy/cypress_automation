@@ -43,18 +43,7 @@ const visitor2 = {
     email: "Test@gmail.com"
 }   
 
-const cookieConsentConfig1 = {
-    visitorCookieLifeTime: 10,
-    consentConfiguration: "Cookie Consent not required"
-}
-
 describe("VEX - Blacklist", ()=>{
-
-    before(function() {
-        authoring.common.login()
-        authoring.settings.navigateToCookieConsentSettings()
-        authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)
-    })
 
     it("Set up if not already done", ()=>{
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{

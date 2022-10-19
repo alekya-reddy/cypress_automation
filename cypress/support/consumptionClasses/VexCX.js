@@ -689,19 +689,4 @@ export class VexCX extends CommonCX {
         }
     }
 
-    enterEmailOrAcceptCookieIfExists(){
-        cy.wait(3000)
-        cy.get('body').then(body=>{
-            if(body.find("#qa-cookie-consent")>0)
-            {
-                cy.get("#qa-gdpr-cookie-consent-accept-button").click()
-            }
-            if(body.find(this.emailInput)>0)
-            {
-                cy.get(this.emailInput).type("test@gmail.com")
-            }
-
-        })
-    }
-
 }

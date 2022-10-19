@@ -306,4 +306,31 @@ export class CommonCX {
         })
         cy.get(this.closeModalButton).click()
     }
+
+    validateVidValueAndExpiry(wait,visitorId) {
+        if (visitorId) {
+            for (let i = 0; i <= wait; i += 500) {
+                cy.getCookies({ log: false }).then((cookies) => {
+                    let vid = cookies.find(cookie => cookie.name == 'vid')
+                    if (vid.value) {
+                        cy.wait(500, { log: false })
+                    }
+                })
+            }
+
+            cy.getCookies().then((cookies) => {
+                let vid = cookies.find(cookie => cookie.name == 'vid')
+                let vidValue = vid.value.toString()
+                expect(vidValue).to.contains(visitorId)
+            })
+        }
+
+        else {
+            cy.wait(3000)
+            cy.getCookies().then((cookies) => {
+                let vid = cookies.find(cookie => cookie.name == 'vid')
+                expect(vid).to.be.undefined
+            })
+        }
+    }
 }

@@ -265,6 +265,9 @@ describe("VEX - Cookie Consent", () => {
         cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr', 'disabled')
 
         cy.visit(event1.url)
+        cy.get(consumption.vex.cookieConsent.messageBox).should('not.exist')
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
+
         cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('not.exist')
         cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
@@ -277,7 +280,7 @@ describe("VEX - Cookie Consent", () => {
         consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
     })
 
-    it("VEX cookie consent - Cookie consent Not enabled at form level ,accept cookie on box and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Cookie consent Not enabled at form level ,Accept consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -290,21 +293,25 @@ describe("VEX - Cookie Consent", () => {
         cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr', 'disabled')
 
         cy.window().then(win => win.location.href = event2.url);
-        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
         cy.get(consumption.vex.cookieConsent.accept).should('exist').click()
 
-        cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
-        cy.contains("button", "Submit").click()
-
+        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
         consumption.vex.checkPf_consentCookie(5000, pf_consentAccept)
-        consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
-        cy.get(consumption.vex.header.cookieSettings).should('exist')
+        consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(vidValue => {
+            cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
+            cy.contains("button", "Submit").click()
+            cy.get(consumption.vex.header.cookieSettings).should('exist')
+            cy.go('back')
+            consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+            consumption.vex.validateVidValueAndExpiry(5000, vidValue)
+            consumption.vex.checkPf_consentCookie(5000, pf_consentAccept)
+        })
     })
 
-    it("VEX cookie consent - Cookie consent Not enabled at form level ,decline cookie on box and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Cookie consent Not enabled at form level ,Decline consent on cookie consent dialog and validate pf_consent and VID cookies", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig2)
@@ -317,21 +324,27 @@ describe("VEX - Cookie Consent", () => {
         cy.get(authoring.vex.cookieConsentCheckbox).should('have.attr', 'disabled')
 
         cy.window().then(win => win.location.href = event2.url);
-        cy.contains("a", sessions[0].name).click()
         cy.get(consumption.vex.cookieConsent.messageBox).should('exist')
-        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
         cy.get(consumption.vex.cookieConsent.decline).should('exist').click()
 
+        cy.contains("a", sessions[0].name).click()
+        cy.get(consumption.vex.standardForm.cookieConsentCheckbox).should('not.exist')
         cy.get(consumption.vex.standardForm.emailInput).clear().type(email)
         cy.contains("button", "Submit").click()
 
         cy.get(consumption.vex.cookieConsent.messageBox).should("not.exist")
         consumption.vex.checkPf_consentCookie(5000, pf_consentDecline)
-        consumption.vex.check30MinCookie(5000)
-        cy.get(consumption.vex.header.cookieSettings).should('exist')
+        consumption.vex.check30MinCookie(5000).then(vidValue => {
+            cy.get(consumption.vex.header.cookieSettings).should('exist')
+            cy.go('back')
+            cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
+            consumption.vex.check30MinCookie(5000)
+            consumption.vex.validateVidValueAndExpiry(5000, vidValue)
+            consumption.vex.checkPf_consentCookie(5000, pf_consentDecline)
+        })
     })
 
-    it("VEX cookie consent - Accept cookie on cookie consent box ,navigate to session and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Accept consent on cookie consent dialog ,navigate to session and validate pf_consent and VID cookies", () => {
         sessions.forEach(session => {
             authoring.common.login()
             authoring.settings.navigateToCookieConsentSettings()
@@ -356,14 +369,18 @@ describe("VEX - Cookie Consent", () => {
             cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
             consumption.vex.expectYoutube()
             consumption.vex.checkPf_consentCookie(5000, pf_consentAccept)
-            consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
-            cy.get(consumption.vex.header.cookieSettings).should('exist')
-            cy.go('back')
-            cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
+            consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime).then(vidValue => {
+                cy.get(consumption.vex.header.cookieSettings).should('exist')
+                cy.go('back')
+                cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
+                consumption.vex.checkVidValueAndExpiry(5000, cookieConsentConfig1.visitorCookieLifeTime)
+                consumption.vex.validateVidValueAndExpiry(5000, vidValue)
+                consumption.vex.checkPf_consentCookie(5000, pf_consentAccept)
+            })
         })
     })
 
-    it("VEX cookie consent - Decline cookie on cookie consent box ,navigate to session and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Decline consent on cookie consent dialog,navigate to session and validate pf_consent and VID cookies", () => {
         sessionsWithFormWithoutcookieCheckobox.forEach(session => {
             authoring.common.login()
             authoring.settings.navigateToCookieConsentSettings()
@@ -387,14 +404,18 @@ describe("VEX - Cookie Consent", () => {
             cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
             consumption.vex.expectYoutube()
             consumption.vex.checkPf_consentCookie(5000, pf_consentDecline)
-            consumption.vex.check30MinCookie(5000)
-            cy.get(consumption.vex.header.cookieSettings).should('exist')
-            cy.go('back')
-            cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
+            consumption.vex.check30MinCookie(5000).then(vidValue => {
+                cy.get(consumption.vex.header.cookieSettings).should('exist')
+                cy.go('back')
+                cy.get(consumption.vex.cookieConsent.messageBox, { timeout: 20000 }).should("not.exist")
+                consumption.vex.check30MinCookie(5000)
+                consumption.vex.validateVidValueAndExpiry(5000, vidValue)
+                consumption.vex.checkPf_consentCookie(5000, pf_consentDecline)
+            })
         })
     })
 
-    it("VEX cookie consent - Do not collect data - Accept cookie on cookie consent box ,navigate to session and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Do not collect data - Accept consent on cookie consent dialog,navigate to session and validate pf_consent and VID cookies", () => {
         sessions.forEach(session => {
             authoring.common.login()
             authoring.settings.navigateToCookieConsentSettings()
@@ -427,7 +448,7 @@ describe("VEX - Cookie Consent", () => {
         })
     })
 
-    it("VEX cookie consent - Do not collect data - Decline cookie on cookie consent box ,navigate to session and validate pf_consent and VID cookies", () => {
+    it("VEX cookie consent - Do not collect data - Decline consent on cookie consent dialog ,navigate to session and validate pf_consent and VID cookies", () => {
         sessionsWithFormWithoutcookieCheckobox.forEach(session => {
             authoring.common.login()
             authoring.settings.navigateToCookieConsentSettings()
@@ -459,7 +480,7 @@ describe("VEX - Cookie Consent", () => {
         })
     })
 
-    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+    it("Afterhook: In case cookie consent left Enabled from last test scenario, turn it back off(Disabled) for the organization", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig1)

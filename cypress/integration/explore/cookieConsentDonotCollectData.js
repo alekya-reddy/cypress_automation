@@ -380,7 +380,7 @@ describe("Explore - Cookie consent Scenarios - Strict mode", () => {
         consumption.explore.checkVidValueAndExpiry(5000);
     })
 
-    it("Afterhook: In case cookie consent left disabled from last test scenario, turn it back on for the organization", () => {
+    it("Afterhook: In case cookie consent left Enabled from last test scenario, turn it back off(Disabled) for the organization", () => {
         authoring.common.login()
         authoring.settings.navigateToCookieConsentSettings()
         authoring.settings.cookieConsentOrganizationSettings(cookieConsentConfig)
