@@ -183,7 +183,7 @@ describe("VEX - Landing Page Editor", () => {
         })
     })
 
-    it("Test landing page", () => {
+    it.only("Test landing page", () => {
         cy.viewport(1500, 1000)
         authoring.common.login()
         authoring.vex.visit()
@@ -269,7 +269,7 @@ describe("VEX - Landing Page Editor", () => {
         authoring.vex.goToLandingPage()
         authoring.vex.goToPageEditor(testLandingPage.name)
         cy.contains(authoring.vex.pages.sessionGroupRow, deleteSessionGroup.name).should("not.exist")
-
+        cy.wait(5000)
         //Validate if all sessions from the events are shown in a block when the option is selected in the landing page builder.(Including Private Event)
         cy.contains(authoring.vex.pages.sessionGroupRow, testLandingPage.blocks[0].sessionGroup).within(() => {
             cy.get(authoring.vex.pages.sessionCardTitleName).should("have.length", 8)
@@ -368,18 +368,18 @@ describe("VEX - Landing Page Editor", () => {
         cy.get(consumption.vex.landingPage.block).should("not.exist")
     })
 
-    //hide session event 
+    //hide block VEX event 
     const event1 = {
-        name: 'VEXhideSession.js',
-        slug: 'VEXhideSession-js',
+        name: 'VEXhideBlock.js',
+        slug: 'VEXhideBlock-js',
         get url() {
             return `${authoring.common.baseUrl}/${this.slug}`
         }
     }
 
-    const demand_session = {
+    const onDemand_Session = {
         name: "ondemand session",
-        slug: "ondemandession",
+        slug: "ondemandsession",
         visibility: 'Public',
         description: 'Session description',
         type: 'On Demand',
@@ -387,7 +387,7 @@ describe("VEX - Landing Page Editor", () => {
         captions: 'on',
         captionsLanguage: "English",
     }
-    const sessionGroupDemand = {
+    const onDemandSessionGroup = {
         name: "Demand Sessions",
         sessions: ["ondemand session"]
     }
@@ -409,7 +409,7 @@ describe("VEX - Landing Page Editor", () => {
         },
         captionsLanguage: "English"
     }
-    const sessionGroupLive = {
+    const liveSessionGroup = {
         name: "Live Sessions",
         sessions: ["live session"]
     }
@@ -434,7 +434,7 @@ describe("VEX - Landing Page Editor", () => {
             },
             {
                 type: "Session Group",
-                sessionGroup: 'Demand Sessions'
+                sessionGroup: 'OnDemand Sessions'
             },
             {
                 type: "Session Group",
@@ -443,16 +443,16 @@ describe("VEX - Landing Page Editor", () => {
         ]
     }
 
-    it('User able to hide blocks that have no session under it when no filter has been applied', () => {
+    it('User is able to hide blocks that have no sessions under it when no filter has been applied', () => {
         authoring.common.login()
         authoring.vex.visit()
         authoring.vex.deleteVirtualEvent(event1.name)
         authoring.vex.addVirtualEvent(event1)
         authoring.vex.configureEvent(event1)
 
-        //creating on demand session
-        authoring.vex.addSession(demand_session.name, 'On Demand')
-        authoring.vex.configureSession(demand_session)
+        //creating ondemand session
+        authoring.vex.addSession(onDemand_Session.name, 'On Demand')
+        authoring.vex.configureSession(onDemand_Session)
         authoring.vex.backToEvent(event1.name)
 
         //creating on live session
@@ -460,24 +460,23 @@ describe("VEX - Landing Page Editor", () => {
         authoring.vex.configureSession(live_session)
         authoring.vex.backToEvent(event1.name)
 
-        // Add, edit landing pages 
+        // Add landing page
         authoring.vex.addLandingPages(testLandingPage1.name)
-        authoring.vex.setToHomePage(testLandingPage1.name)
 
         //creating sessions groups
-        authoring.vex.addSessionGroup('No Sessions')
-        authoring.vex.addSessionGroup('Demand Sessions')
-        authoring.vex.addToGroup(sessionGroupDemand)
-        authoring.vex.addSessionGroup('Live Sessions')
-        authoring.vex.addToGroup(sessionGroupLive)
+        authoring.vex.addSessionGroup(testLandingPage1.blocks[0].sessionGroup)
+        authoring.vex.addSessionGroup(testLandingPage1.blocks[1].sessionGroup)
+        authoring.vex.addToGroup(onDemandSessionGroup)
+        authoring.vex.addSessionGroup(testLandingPage1.blocks[2].sessionGroup)
+        authoring.vex.addToGroup(liveSessionGroup)
 
-        //verify that go to landing page and modify the page
+        //Edit the landing page and modify the page and set to Homepage
         authoring.vex.editLandingPage(testLandingPage1)
         authoring.vex.setToHomePage(testLandingPage1.name)
         authoring.vex.goToPageEditor(testLandingPage1.name)
         cy.wait(5000)
 
-        //creating sessions and enabling hide session toggle in modify page
+        //creating sessions and enabling hide sessions block toggle in modify page
         testLandingPage1.blocks.forEach((session_created) => {
             if (session_created === testLandingPage1.blocks[0]) {
                 authoring.vex.addAdvancedBlock(session_created)
@@ -499,44 +498,52 @@ describe("VEX - Landing Page Editor", () => {
         })
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
         cy.visit(event1.url)
-        cy.contains(authoring.vex.eventSessions, 'No Sessions').should('not.exist')
-        cy.contains(consumption.vex.sesessionCardTitle, demand_session.name, { timeout: 25000 }).should('exist')
+        cy.wait(4000)
+        cy.contains(authoring.vex.eventSessions, testLandingPage1.blocks[0].sessionGroup).should('not.exist') 
+        cy.contains(consumption.vex.sesessionCardTitle, onDemand_Session.name, { timeout: 25000 }).should('exist')
         cy.contains(consumption.vex.sesessionCardTitle, live_session.name).should('exist')
         //go back to Modify page
         cy.go("back")
         cy.reload()
         cy.wait(4000)
 
-        //Disabling hidesession toggle for all blocks
+        //Disabling hide sessions toggle for all blocks
         testLandingPage1.blocks.forEach((session_created1) => {
             cy.contains(authoring.vex.pages.blockContainer, session_created1.sessionGroup, { timeout: 20000 }).within(() => {
                 if (session_created1 === testLandingPage1.blocks[0]) {
+                    cy.get(authoring.vex.eventSessions).eq(0).click({ force: true })
                     cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
+                    cy.wait(3000)
                 }
                 else {
                     cy.get(authoring.vex.pages.sessionCard).eq(0).click({ force: true })
                     cy.get(authoring.vex.pages.menuBlock, { timeout: 10000 }).eq(3).click({ force: true })
                 }
             })
-            cy.wait(3000)
-            cy.get(authoring.vex.pages.hideSessionToggle, { timeout: 10000 }).dblclick({ force: true })
-            //checking toggle value background color
             cy.wait(5000)
+            cy.get(authoring.vex.pages.hideSessionToggle, { timeout: 10000 }).dblclick({ force: true })
+            cy.wait(5000)
+            //checking hide block toggle value background color
             cy.get(authoring.vex.pages.hideSessionToggle).parent("div[class*='ToggleElement']").find("label div[class*='ToggleSwitch'] span").invoke('css', 'background-color').then(color => {
                 cy.log("toggle color is when disabled " + color)
-                if (color == 'rgb(34, 150, 254)') {
-                    cy.get(authoring.vex.pages.hideSessionToggle, { timeout: 5000 }).click({ force: true })
+                if (color === 'rgb(34, 150, 254)') {
+                    cy.get(authoring.vex.pages.hideSessionToggle, { timeout: 2000 }).click()
+                    cy.wait(5000)
+                    cy.log("toggle color is when disabled 1" + color)
                 }
             })
+            cy.wait(5000)
             cy.get(authoring.vex.pages.hideSessionToggle).should('not.be.checked')
             cy.contains('button', 'Confirm').click();
             cy.log(session_created1.sessionGroup + " is added with toggle disabled")
         })
+       
+        cy.contains('button', 'Save').click();
         cy.contains('p', 'Page saved', { timeout: 20000 }).should('be.visible')
         cy.visit(event1.url)
         cy.wait(4000)
-        cy.contains(authoring.vex.eventSessions, 'No Sessions').should('exist')
-        cy.contains(consumption.vex.sesessionCardTitle, demand_session.name, { timeout: 25000 }).should('exist')
+        cy.contains(authoring.vex.eventSessions, testLandingPage1.blocks[0].sessionGroup).should('exist')
+        cy.contains(consumption.vex.sesessionCardTitle, onDemand_Session.name, { timeout: 25000 }).should('exist')
         cy.contains(consumption.vex.sesessionCardTitle, live_session.name).should('exist')
     })
 })
