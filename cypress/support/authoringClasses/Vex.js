@@ -197,6 +197,8 @@ export class Vex extends Common {
             tableRow: ".ant-table-row",
             editorMenu: "div[class^='BlockMenu']",
             menuBlock: "div[class^='BlockAction']",
+            editMenu: "div[class^='BlockMenuWrapper']",
+            hideSessionToggle: "[name*='hideSession']",
             classNameInput: "input[name*='className']",
             blockContainer: "div[data-react-beautiful-dnd-draggable='0']",
             sessionGroupRow: ".pf-event-sessions",
@@ -1965,7 +1967,7 @@ export class Vex extends Common {
 
         // The menu of the most recently added one will be visible 
         cy.get(this.pages.editorMenu).within(() => {
-            cy.get(this.pages.menuBlock).eq(3).click() // This opens up the block editor modal 
+            cy.get(this.pages.menuBlock).eq(3).click({force: true}) // This opens up the block editor modal 
         })
 
         if (content) {
