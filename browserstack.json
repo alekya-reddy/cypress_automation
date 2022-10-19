@@ -32,9 +32,9 @@
         "npm_dependencies": {},
         "package_config_options": {},
         "headless": true,
-        "specs": ["cypress/integration/recommend/**/*"]
+        "specs": ["cypress/integration/recommend/accessProtection.js",
+                  "cypress/integration/recommend/dynamicHeaderLogoRecommend.js",
+                  "cypress/integration/recommend/cookieConsentCollectData.js"]
     
     }
 }
-
-
