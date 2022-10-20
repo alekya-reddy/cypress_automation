@@ -122,7 +122,6 @@ describe("Widget Configuration", () => {
         cy.visit(session.url)
 
         // Expect scriptWidget
-        cy.get(consumption.vex.cookieConsent.accept).click()
         cy.contains("span", scriptWidget.publicName, { timeout: 20000 }).should("exist").click()
         cy.waitForIframeToLoad(consumption.vex.widget.iframe, "#test", 10000)
         cy.getIframeBody(consumption.vex.widget.iframe).within(() => {

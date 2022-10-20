@@ -208,7 +208,6 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         authoring.common.login()
         //Verify blocks when single filter values are given in a query string URL
         cy.visit(event.url + `?topic=${singleSessionTagging.topics}&language=${singleSessionTagging.language}&businessUnit=${singleSessionTagging.businessUnits}`)
-        cy.get(consumption.vex.cookieConsent.accept).click()
         cy.get(consumption.vex.topicFilter).should('have.contain', singleSessionTagging.topics)
         cy.get(consumption.vex.businessUnitFilter).should('have.contain', singleSessionTagging.businessUnits)
         cy.get(consumption.vex.languageFilter).should('have.contain', singleSessionTagging.language)
@@ -247,7 +246,6 @@ describe("VEX- Multiple Query strings support on filters for VEX", () => {
         cy.url().then(url => {
             cy.visit(url + queryString)
         })
-        cy.get(consumption.vex.cookieConsent.accept).click()
         cy.contains(consumption.vex.sessionCardTitle, publicSession[1].name).should("exist")
         cy.contains(consumption.vex.sessionCardTitle, publicSession[0].name).should("exist")
 

@@ -238,13 +238,14 @@ describe('VEX - Sessions Groups', function () {
 
         // Add sessions to the groups 
         authoring.vex.addToGroup(groupA)
+        cy.wait(2000)
         authoring.vex.addToGroup(groupB)
 
         // Remove sessions from a group (then add it back)
         authoring.vex.removeFromGroup(groupB)
         authoring.vex.addToGroup(groupB)
 
-     
+        cy.wait(2000)
         // Confirm the initial order of sessions in group A
         cy.contains(authoring.vex.groupRow, groupA.name).within(() => {
             cy.contains("a", "Manage Sessions").click()
@@ -350,8 +351,8 @@ describe('VEX - Sessions Groups', function () {
         cy.contains("button", "Add Sessions to Group").click()
         cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
         cy.get(authoring.vex.antDropSelect.options("Delete me")).should('exist').click()
-        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("button", "Submit").click({ force: true })
-        cy.contains(authoring.vex.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click()
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group",{timeout:10000}).contains("button", "Submit").click({ force: true })
+        cy.contains(authoring.vex.antModal, "Add Sessions to Group",{timeout:10000}).contains("span", "Select Sessions").click()
         cy.get(authoring.vex.antDropSelect.options("Delete me")).should('not.exist')
         // then delete that session and revisit group (there was a bug where this caused internal server error)
         cy.contains("a", "Event Setup").click()

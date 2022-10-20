@@ -57,12 +57,12 @@ const deleteSessionGroup = {
 
 const carouselSessionGroup = {
     name: "Carousel Session Group",
-    sessions: [carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
+    sessions: [carouselSession1.name, carouselSession2.name, carouselSession3.name, carouselSession4.name, carouselSession5.name, carouselSession6.name]
 }
 
 const gridSessionGroup = {
     name: "Grid Session Group",
-    sessions: [carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
+    sessions: [carouselSession1.name, carouselSession2.name, carouselSession3.name, carouselSession4.name, carouselSession5.name, carouselSession6.name]
 }
 
 const firstBlockText = "I should be first"
@@ -166,6 +166,7 @@ describe("VEX - Landing Page Editor", () => {
             if (response.status == 404) {
                 authoring.common.login()
                 authoring.vex.visit()
+                authoring.vex.deleteVirtualEvent(event.name)
                 authoring.vex.addVirtualEvent(event)
                 authoring.vex.configureEvent(event)
                 const sessions = [publicSession, privateSession, carouselSession1, carouselSession2, carouselSession3, carouselSession4, carouselSession5, carouselSession6]
@@ -271,7 +272,7 @@ describe("VEX - Landing Page Editor", () => {
         cy.contains(authoring.vex.pages.sessionGroupRow, deleteSessionGroup.name).should("not.exist")
         cy.wait(5000)
         //Validate if all sessions from the events are shown in a block when the option is selected in the landing page builder.(Including Private Event)
-        cy.contains(authoring.vex.pages.sessionGroupRow, testLandingPage.blocks[0].sessionGroup).within(() => {
+        cy.contains(authoring.vex.pages.sessionGroupRow, testLandingPage.blocks[0].sessionGroup,{timeout:20000}).within(() => {
             cy.get(authoring.vex.pages.sessionCardTitleName).should("have.length", 8)
             cy.contains(authoring.vex.pages.sessionCardTitle, carouselSession1.name).should('exist')
             cy.contains(authoring.vex.pages.sessionCardTitle, carouselSession2.name).should('exist')
@@ -328,8 +329,8 @@ describe("VEX - Landing Page Editor", () => {
             cy.get(consumption.vex.sessionCardTitle).eq(3).should("be.visible")
             cy.get(consumption.vex.sessionCardTitle).eq(4).should("not.be.visible")
             cy.get(consumption.vex.sessionCardTitle).eq(5).should("not.be.visible")
-            cy.get(consumption.vex.landingPage.arrowRight).click({ force: true })
-            cy.get(consumption.vex.sessionCardTitle).eq(0).should("not.be.visible")
+            cy.get(consumption.vex.landingPage.arrowRight,{timeout:20000}).click({force: true})
+            cy.get(consumption.vex.sessionCardTitle,{timeout:20000}).eq(0).should("not.be.visible")
             cy.get(consumption.vex.sessionCardTitle).eq(1).should("be.visible")
             cy.get(consumption.vex.sessionCardTitle).eq(2).should("be.visible")
             cy.get(consumption.vex.sessionCardTitle).eq(3).should("be.visible")

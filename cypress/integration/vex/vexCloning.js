@@ -226,7 +226,7 @@ const verifyEventSetup = (event) => {
     cy.get(`span[title="${event.form.name}"]`).should("exist")
     cy.get(`span[title="${event.language}"]`).should("exist")
     cy.contains(authoring.vex.antRow, "Access Protection").should("contain", event.trackProtection)
-    cy.get(authoring.vex.cookieConsentCheckbox).parent().should("have.class", "ant-checkbox-checked")
+    cy.get(authoring.vex.cookieConsentCheckbox,{timeout:20000}).should("have.attr", "disabled")
 }
 
 const verifySession = (session, howCloned) => {

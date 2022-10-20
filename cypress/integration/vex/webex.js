@@ -64,8 +64,6 @@ describe('VEX - Webex', function() {
     it('Verify on consumption side that webex can be viewed', function(){
         cy.visit(session.url)
 
-        cy.get(consumption.vex.cookieConsent.accept).click()
-
         // Fill out the registration form to get rid of it 
         cy.get(consumption.vex.emailInput).clear().type("bobman@gmail.com")
         cy.contains("button", "Submit").click()

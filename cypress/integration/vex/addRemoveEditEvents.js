@@ -1,6 +1,7 @@
-import { createAuthoringInstance } from '../../support/pageObject.js';
+import { createAuthoringInstance,createConsumptionInstance } from '../../support/pageObject.js';
 
-const authoring = createAuthoringInstance({org: 'automation-vex', tld: 'lookbookhq'}); 
+const authoring = createAuthoringInstance({ org: 'automation-vex', tld: 'lookbookhq' });
+const consumption = createConsumptionInstance({ org: 'automation-vex', tld: 'lookbookhq' });
 
 const event = {
     name: '3 addRemoveEditEvents.js',
@@ -59,9 +60,9 @@ const sessions = [
     }
 ]
 
-describe('VEX - Virtual Event', function() {
+describe('VEX - Virtual Event', function () {
 
-    it('Confirm can add, remove and edit events', function() {
+    it('Confirm can add, remove and edit events', function () {
         // Set up
         authoring.common.login();
         authoring.vex.visit();
@@ -76,7 +77,7 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event) // Function already contains assertion that event was successfully created 
 
         // Verify that you cannot add an event with same name as existing one 
-        authoring.vex.addVirtualEvent(event,false)
+        authoring.vex.addVirtualEvent(event, false)
         cy.contains(authoring.vex.antModal, "has already been taken").should('exist')
         cy.contains('button', 'Cancel').click()
         cy.get(authoring.vex.antModal).should('not.be.visible')
@@ -89,14 +90,14 @@ describe('VEX - Virtual Event', function() {
         authoring.vex.addVirtualEvent(event)
         authoring.vex.configureEvent(event)
         cy.reload()
-        cy.get(authoring.vex.eventNameInput,{timeout:15000}).should('have.value', event.newName)
+        cy.get(authoring.vex.eventNameInput, { timeout: 15000 }).should('have.value', event.newName)
         cy.get(authoring.vex.eventSlugInput).should('have.value', event.slug)
         cy.get(authoring.vex.externalIDInput).eq(0).should("have.value", event.externalID[0])
 
         // Verify can add sessions to event 
-        sessions.forEach((session)=>{
+        sessions.forEach((session) => {
             authoring.vex.addSession(session.name, session.type); // Already contains assertion that session successfully created
-        }) 
+        })
 
         // Verify can remove session 
         authoring.vex.removeSession(sessions[2].name) // Already contains assertion that session successfully removed 
@@ -104,7 +105,7 @@ describe('VEX - Virtual Event', function() {
         // Add another event and check the validation for event slug 
         authoring.vex.deleteVirtualEvent(event2.name)
         authoring.vex.addVirtualEvent(event2)
-        cy.get(authoring.vex.eventSlugInput, {timeout: 10000}).clear().type(event.slug)
+        cy.get(authoring.vex.eventSlugInput, { timeout: 10000 }).clear().type(event.slug)
         cy.contains("button", "Save").click()
         cy.contains(authoring.vex.messages.saveFailed).should('exist')
         cy.contains(authoring.vex.messages.duplicateEntry).should('exist')
@@ -112,40 +113,43 @@ describe('VEX - Virtual Event', function() {
         // Not testing here, but when you enter blank event slug, it auto-generates a valid slug 
         // Not testing here, but any invalid event slug input that is not a duplicate, it would auto-generate a valid slug 
     })
-       
-       it('Confirm can drag and drop events to folder and root folder available as a option', function() {
+
+    it('Confirm can drag and drop events to folder and root folder available as a option', function () {
         authoring.common.login();
         authoring.vex.visit();
-        cy.contains("span", folder.name,{timeout:10000}).click()
+        cy.contains("span", folder.name, { timeout: 10000 }).click()
         authoring.vex.deleteVirtualEvent(event0.name)
         authoring.vex.addVirtualEvent(event0)
         cy.go("back")
-         
-        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+
+        cy.contains("div", folder.name, { timeout: 10000 }).siblings('div').invoke('text').then(text => {
             expect(text).to.equal('2')
         })
 
         cy.contains('td', event0.name).prev().click()
-        cy.contains("a", event0.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",folder2.name,{timeout:10000}).trigger("drop").trigger("dragend")
+        cy.contains("a", event0.name, { timeout: 10000 }).trigger("dragstart")
+        cy.contains("div", folder2.name, { timeout: 10000 }).trigger("drop").trigger("dragend")
         cy.wait(1000)
-        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+        cy.contains("div", folder.name, { timeout: 10000 }).siblings('div').invoke('text').then(text => {
             expect(text).to.equal('1')
-        }) 
+        })
 
-        cy.contains("span", folder2.name,{timeout:10000}).click()
+        cy.contains("span", folder2.name, { timeout: 10000 }).click()
         cy.contains('td', event0.name).prev().click()
-        cy.contains("a", event0.name,{timeout:10000}).trigger("dragstart")
-        cy.contains("div",folder.name,{timeout:10000}).trigger("drop").trigger("dragend") 
+        cy.contains("a", event0.name, { timeout: 10000 }).trigger("dragstart")
+        cy.contains("div", folder.name, { timeout: 10000 }).trigger("drop").trigger("dragend")
         cy.wait(1000)
-        cy.contains("div",folder.name,{timeout:10000}).siblings('div').invoke('text').then(text=>{
+        cy.contains("div", folder.name, { timeout: 10000 }).siblings('div').invoke('text').then(text => {
             expect(text).to.equal('2')
         })
 
-     })
-     it('Verify Delete Option For Multi-Select', function() {
+    })
+    it('Verify Delete Option For Multi-Select', function () {
         authoring.common.login();
         authoring.vex.visit();
+        authoring.vex.deleteVirtualEvent(event3.name)
+        authoring.vex.deleteVirtualEvent(event4.name)
+        authoring.vex.deleteVirtualEvent(event5.name)
         authoring.vex.addVirtualEvent(event3)
         authoring.vex.addVirtualEvent(event4)
         authoring.vex.addVirtualEvent(event5)
@@ -156,13 +160,13 @@ describe('VEX - Virtual Event', function() {
         cy.contains('h5', " Select: ").should("exist")
         cy.contains('h5', "3").should("exist")
         cy.contains('button', " Delete").should("exist").click()
-        cy.get(authoring.common.modalBody).within(()=>{
+        cy.get(authoring.common.modalBody).within(() => {
             cy.contains('span', "Yes").should("exist").click()
         })
         cy.contains('td', event3.name).should("not.exist")
         cy.contains('td', event4.name).should("not.exist")
         cy.contains('td', event5.name).should("not.exist")
 
-     })
-          
+    })
+
 })

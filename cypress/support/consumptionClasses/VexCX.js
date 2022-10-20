@@ -689,5 +689,4 @@ export class VexCX extends CommonCX {
         }
     }
 
-
 }

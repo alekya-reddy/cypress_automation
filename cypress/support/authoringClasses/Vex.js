@@ -1471,10 +1471,10 @@ export class Vex extends Common {
         })
 
         // Add sessions to the group
-        cy.contains("button", "Add Sessions to Group").click()
-        cy.contains(this.antModal, "Add Sessions to Group").contains("span", "Select Sessions").click() // this opens the dropdown list 
+        cy.contains("button", "Add Sessions to Group",{timeout:20000}).click()
+        cy.contains(this.antModal, "Add Sessions to Group",{timeout:20000}).contains("span", "Select Sessions",{timeout:20000}).click() // this opens the dropdown list 
         sessions.forEach((session) => {
-            cy.get(this.antDropSelect.options(session)).click()
+            cy.get(this.antDropSelect.options(session),{timeout:20000}).click()
         })
         cy.contains(this.antModal, "Add Sessions to Group").contains("button", "Submit").click({ force: true }) // have to force click because dropdown is in the way
 

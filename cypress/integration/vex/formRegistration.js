@@ -11,7 +11,7 @@ const noForm = {
 }
 
 const deleteForm = {
-    name: "formRegistration.js"
+    name: "formRegistration1.js"
 }
 
 const standardForm = {

@@ -36,6 +36,7 @@ const moderator = session.rocketChat.moderators
 const notModerator = "tali.zorah@gmail.com"
 
 describe("VEX - Dry run", () => {
+    
     it("Set up if not already done", () => {
         cy.request({url: event.url, failOnStatusCode: false}).then((response)=>{
             if(response.status == 404){ 
