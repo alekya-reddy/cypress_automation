@@ -87,8 +87,9 @@ describe('Reporter Role Permissions', function() {
        cy.contains('h1', "Website Campaigns", {timeout: 4000}).should("exist")
        cy.contains('button',"Add Website URL").should("not.exist")
        cy.contains('span', "Website Script Tag").should("not.exist")
-       cy.contains('div',"Clicks", {timeout: 25000}).should("exist")
-       cy.contains('div',"Promoter Impressions").should("exist")
+       cy.contains('div',"Reach", {timeout: 25000}).should("exist")
+       cy.contains('div',"Promoter Performance").should("exist")
+       
        cy.get(authoring.common.nameSetting).click()
        cy.get(authoring.common.clientHq).should("not.exist")
        cy.get("#user-management").should("not.exist")
