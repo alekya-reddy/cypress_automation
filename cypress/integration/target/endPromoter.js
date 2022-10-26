@@ -119,7 +119,7 @@ describe("Target - Add New content", () => {
               cy.get(authoring.target.visitorButton).trigger('mouseover')
               cy.get(authoring.target.visitorActivities).click()
               cy.wait(30000)
-              cy.get(authoring.target.session).contains('Session Details').should("exist")
+              cy.contains('div','Session Details').should("exist")
               cy.get(authoring.target.analyticsRows).within(()=>{
               cy.get(authoring.target.targetAsset).next().contains(email).should("exist")
               
